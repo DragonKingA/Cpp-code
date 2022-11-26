@@ -868,6 +868,303 @@ https://blog.csdn.net/qq_64162685/article/details/124002779?ops_request_misc=%25
 //     }
 // }
 
+//3.Find the multiple
+//以下两组代码只能用G++交,递归频繁调用时最好用G++交
+// #include <iostream>
+// #include <queue>
+// using namespace std;
+// void BFS(long long int num)
+// {
+//     queue<long long int> q;
+//     q.push(1);
+//     while(!q.empty())
+//     {
+//         long long int m=q.front();
+//         q.pop();
+//         if(m%num==0)
+//         {
+//             cout<<m<<endl;
+//             return;
+//         }
+//         q.push(m*10);
+//         q.push(m*10+1);
+//     }
+// }
+// int main()
+// {   
+//     long long int n;
+//     while(cin>>n, n) BFS(n);
+//     return 0;
+// }
+//打表法：可输入前获取全部情况结果存在数组里，比上述代码耗时短，而空间利用也不会太多
+// #include <iostream>
+// #include <queue>
+// using namespace std;
+// long long res[202], n, i=1;
+// void BFS(long long num)
+// {
+//     queue<long long> q;
+//     q.push(1);
+//     while(!q.empty())
+//     {
+//         long long m=q.front();
+//         q.pop();
+//         if(m%num==0)
+//         {
+//             res[num]=m;
+//             return;
+//         }
+//         q.push(m*10);
+//         q.push(m*10+1);
+//     }
+// }
+// int main()
+// {   
+//     while(i<=200) BFS(i++);
+//     while(cin>>n, n) cout<<res[n]<<endl;
+//     return 0;
+// }
+//*设置最大递归终止点：由上述打的表得知要得到结果最多位数为19位，即19次递归，故可以到了第20次就终止递归线程
+//该代码C++和G++都不会超时，且最快
+// #include <iostream>
+// using namespace std;
+// bool fl;
+// int n;
+// void BFS(long long m, int x){
+//     if(x>19 || fl);//fl为真就终止该递归线程
+//     else if(m%n==0){
+//         cout<<m<<endl;
+//         fl=1;
+//         return;
+//     }else{
+//         BFS(m*10,x+1);
+//         BFS(m*10+1,x+1);
+//     }
+// }
+// int main(){   
+//     while(cin>>n, n) {
+//         fl=0;
+//         BFS(1,1);
+//     }
+//     return 0;
+// }
+
+//4.Catch That Cow
+// #include <iostream>
+// #include <queue>
+// using namespace std;
+// typedef pair<int,int> p;
+// bool ocu[100005];
+// int x1,x2,f,s,nx;
+// void BFS()
+// {
+//     queue<p> q;
+//     q.push(p(x1,0));
+// 	ocu[x1]=1;
+//     while(q.size())
+//     {
+//         f=q.front().first;
+//         s=q.front().second;
+//         q.pop();
+//         if(f==x2)
+//         {
+//             cout<<s;
+//             return;
+//         }
+// 		for(int i=1;i<=3;i++)
+// 		{
+// 			switch(i)
+// 			{
+// 				case 1:nx=2*f;break;
+// 				case 2:nx=f-1;break;
+// 				case 3:nx=f+1;break;
+// 			}
+// 			if(nx>=0&&nx<=100000&&!ocu[nx])//注意条件顺序，谨防越界访问
+// 			{
+// 				ocu[nx]=1;
+// 				q.push(p(nx,s+1));
+// 			}
+// 		}
+//     }
+// }
+// int main()
+// { 
+//     cin>>x1>>x2;
+//     BFS();
+//     return 0;
+// }
+
+
+
+
+//1不是质数
+// #include <iostream>
+// #include <cstring>
+// #include <cmath>
+// using namespace std;
+// //#define ipow(q,p) (int)pow(q,p)
+// int T,a,b,ne,flag;
+// bool fl[10000];//该数是否变换到过,记得恢复状态！！！直接fl[数字]
+// bool isPrime(int n)
+// {
+// 	for(int i=31;i<sqrt(n);i++)
+// 		if(n%i==0) return 0;
+// 	return 1;
+// }
+// void BFS(int n, int ct)
+// {
+// 	if(flag) return;
+// 	if(n==b)
+// 	{
+// 		cout<<ct<<endl;
+// 		flag=1;
+// 		return;
+// 	}
+// 	if(ct>7000)
+// 	{
+// 		cout<<"Impossible"<<endl;
+// 		flag=1;
+// 		return;
+// 	}
+// 	for(int i=0;i<4;i++)
+// 	{
+// 		//if(index==i) continue;
+// 		for(int j=0,ch=n/(int)pow(10,i)%10;j<=9;j++)
+// 		{
+// 			//4个BFS
+// 			// switch(i)
+// 			// {
+// 			// 	case 0: ne=
+// 			// }
+// 			if(ch==j) continue;
+// 			ne = n - (j-ch)*(int)pow(10,i);
+// 			if(ne>=1000&& ne<=9999 && isPrime(ne) && !fl[ne])
+// 			{
+// 				//cout << "next num = " << ne << endl;
+// 				fl[ne]=1;
+// 				BFS(ne,ct+1);
+// 				fl[ne]=0;
+// 			}
+// 		}
+// 	}
+	
+// }
+// int main()
+// {
+// 	cin>>T;
+// 	while(T--)
+// 	{
+// 		cin>>a>>b;
+// 		memset(fl,0,sizeof(fl));
+// 		flag=0;
+// 		BFS(a,0);
+// 	}
+// 	return 0;
+// }
+
+#include <iostream>
+#include <cstring>
+#include <cmath>
+#include <queue>
+using namespace std;
+int T,a,b,ne,res,sz,t;
+queue<int> q;
+bool prime[10000];//素数表打印，避免多次递归中重复运算
+bool vis[10000];
+#define Operate(x) {if(!vis[x] && prime[x]) {q.push(x); vis[x] = 1;}}
+void isPrime()
+{
+	for(int n=1000;n<=9999;n++)
+	{
+		prime[n]=1;
+		for(int i=2;i<=sqrt(n);i++)//CE 就 换成n/2
+			if(n%i==0) {prime[n]=0; break;}
+	}
+}
+bool BFS()
+{
+	q.push(a);
+	vis[a]=1;
+	res=-1;
+	while(sz = q.size())
+	{
+		res++;
+		while(sz--)//每次循环掉所有原先队列中的元素, 即保证当前层的元素都是上一步变化产生的
+		{
+			t = q.front();
+			q.pop();
+			if(t == b) return 1;
+			for(int i=0;i<=9;i++)
+			{
+				if(i!=0)
+				{
+					ne = i*1000 + t%1000;
+					Operate(ne);
+				}
+				ne = i*100 + t%100 + t/1000*1000;
+				Operate(ne);
+				ne = i*10 + t%10 + t/100*100;
+				Operate(ne);
+				ne = i + t/10*10;
+				Operate(ne);
+			}
+		}
+	}
+	return 0;//队列跑完了都没有就是找不到
+}
+int main()
+{
+	isPrime();
+	cin>>T;
+	while(T--)
+	{
+		memset(vis, 0, sizeof(vis));
+		while(q.size()) q.pop();
+		cin>>a>>b;
+		if(BFS()) cout<<res<<endl;
+		else cout<<"Impossible"<<endl;
+	}
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -879,6 +1176,7 @@ https://blog.csdn.net/qq_64162685/article/details/124002779?ops_request_misc=%25
 //DFS（深度优先搜索）
 //一般是递归实现，有时候同一个问题其代码比BFS短
 //可以用于解决全路径数问题
+
 //1.红与黑(DFS实现)
 // #include <iostream>
 // using namespace std;
@@ -968,6 +1266,208 @@ https://blog.csdn.net/qq_64162685/article/details/124002779?ops_request_misc=%25
 //     }
 //     return 0;
 // }
+
+//3.*棋盘问题
+// #include <iostream>
+// #include <cstring>
+// using namespace std;
+// int n,k,cnt=0;
+// bool d[10];//0无，1有
+// char pic[10][10];
+// void DFS(int y, int num)
+// {
+//     if(num==k) 
+//     {
+//         cnt++;
+//         return;
+//     }
+//     if(y>=n) return;
+//     for(int x=0;x<n;x++)
+//     {
+//         if(pic[y][x]=='#' && !d[x])
+//         {
+//             d[x]=1;
+//             // cout << "Now at " << x << " " << y << endl;
+//             DFS(y+1, num+1);
+//             d[x]=0;
+//         }
+//     }
+//     DFS(y+1, num);//*重点
+//     /*
+//         因为存在n>k的情况，起初是以第一行为起始，开始计数放棋数，当出现像
+//         3 1
+//         # .
+//         . #
+//         # .
+//         的案例时，第一行判断完就已经有num==k的情况并计数，同样第二行和第三行显然可以作为新的起始行重新判断也会出现num==k的情况，共计3次
+//         而对于是否新建起始行，我们判断是否y>=n碰界，是则停止即可，此时就不会存在第四行新建，整个递归程序结束
+//     */
+// }
+// int main()
+// {
+//     while(cin>>n>>k,(n+1)&&(k+1))
+//     {
+//         for(int i=0;i<n;i++) cin>>pic[i];
+//         memset(d, 0, sizeof(d));
+//         cnt=0;
+//         DFS(0, 0);
+//         cout << cnt << endl;
+//     }
+//     return 0;
+// }
+
+//4.Oil Deposits
+// #include <iostream>
+// using namespace std;
+// int n, m, cnt;
+// int dir[8][2] = {{-1,0}, {-1,-1}, {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}};
+// char pic[105][105];
+// void DFS(int x, int y)
+// {
+//     pic[y][x]='*';
+//     for(int i=0,nx,ny;i<8;i++)
+//     {
+//         nx = x + dir[i][0];
+//         ny = y + dir[i][1];
+//         if(nx>=0&&nx<m&&ny>=0&&ny<n&&pic[ny][nx]=='@') DFS(nx, ny);
+//     }
+// }
+// int main()
+// {
+//     while(!(cin>>n>>m).eof(), m&&n)
+//     {
+//         for(int i=0;i<n;i++) cin>>pic[i];
+//         cnt=0;
+//         for(int i=0;i<n;i++)
+//             for(int j=0;j<m;j++)
+//                 if(pic[i][j]=='@')
+//                 {
+//                     DFS(j, i);
+//                     cnt++;
+//                 }
+//         cout << cnt << endl;
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//N皇后问题(未修改)
+// #include <iostream>
+// using namespace std;
+// int n, k, cnt=0;
+// int col[10]{};//存一列里有没有放
+// char pic[10][10];
+// bool check(int x, int y)
+// {   
+//     for(int i=0;i<y;i++)
+//         if(col[i]==x)
+//             return false;
+//     return true;
+// }
+// void DFS(int y)
+// {
+//     if(y==n)
+//     {
+//         cnt++;
+//         return;
+//     }
+//     for(int i=0;i<n;i++)
+//     {
+//         if(pic[y][i]=='#' && check(i, y))
+//         {
+//             col[y] = i;
+//             DFS(y+1);
+//         }
+//     }
+// }
+// int main()
+// {
+//     while(cin>>n>>k,(n+1)&&(k+1))
+//     {
+//         for(int i=0;i<n;i++) cin>>pic[i];
+//         cnt=0;
+//         DFS(0);
+//         cout<<cnt<<endl;
+//     }
+    
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
