@@ -1425,28 +1425,6 @@ ans[5][5]呈现最短路径示意图(ans[y][x]):
 // 	}
 // 	return 0;
 // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 ..............................
 ..............................
@@ -1669,6 +1647,702 @@ M..........................#@#
 @............................@
 3927
 */
+
+
+
+
+
+// #include <cstring>
+// #include <iostream>
+// #include <queue>
+// using namespace std;
+// typedef pair<int,int> p;
+// typedef pair<p,int> pp;
+// int a,b,c,sz,res,temp,t1,t2,op;
+// int ans[11][600][10],save;
+// bool BFS(bool fl)
+// {
+//     queue<pp> q;
+//     memset(ans,0,sizeof ans);
+//     if(fl)
+//     {
+//         q.push(pp(p(a,0),1));
+//         ans[0][0][1]=-1;
+//     }
+//     else
+//     {
+//         q.push(pp(p(0,b),2));
+//         ans[0][0][2]=-1;
+//     }
+//     res=0;
+//     while(sz=q.size())
+//     {
+//         res++;
+//         int ind=0;
+//         while(sz--)
+//         {
+//             pp te=q.front(); 
+//             q.pop();
+//             op=te.second;
+//             if(((t1=te.first.first)==c)||((t2=te.first.second)==c))
+//             {
+//                 save=ans[res][ind-1][op];
+//                 return 1;
+//             }
+//             if(res>9) return (res=0);
+//             //operate1() operate2()
+//             if(op!=1&&t1!=a) 
+//             {
+//                 q.push(pp(p(a,t2),1));
+//                 ans[res][ind][1]=op;
+//             }
+//             if(op!=2&&t2!=b) 
+//             {
+//                 q.push(pp(p(t1,b),2));
+//                 ans[res][ind][2]=op;
+//             }
+//             if(op!=3&&t1>0)
+//             {
+//                 q.push(pp(p(0,t2),3));
+//                 ans[res][ind][3]=op;
+//             }
+//             if(op!=4&&t2>0) 
+//             {
+//                 q.push(pp(p(t1,0),4));
+//                 ans[res][ind][4]=op;
+//             }
+//             if(op!=5&&t2!=b) 
+//             {
+//                 if(t1>0)
+//                 {
+//                     if(t1<b-t2) 
+//                     {
+//                         q.push(pp(p(0,t2+t1),5));
+//                     }
+//                     else 
+//                     {
+//                         q.push(pp(p(t1+t2-b,b),5));
+//                     }
+//                     ans[res][ind][5]=op;
+
+//                 }
+//             }
+//             if(op!=6&&t1!=a) 
+//             {
+//                 if(t2>0)
+//                 {
+//                     if(t2<a-t1) 
+//                     {
+//                         q.push(pp(p(t1+t2,0),6));
+//                     }
+//                     else 
+//                     {
+//                         q.push(pp(p(a,t1+t2-a),6));
+//                     }
+//                     ans[res][ind][6]=op;
+//                 }
+//             }
+//             ind++;
+//             //cout<<"res="<<res<<endl;
+//         }
+//     }
+//     return 0;
+// }
+// int main()
+// {
+//     cin>>a>>b>>c;
+//     //if(BFS(1)) temp=res;
+//     if(BFS(0)) res=min(res,temp);
+//     if(res) cout<<res<<endl;
+//     else cout<<"impossible";
+//     return 0;
+// }
+
+// #include <cstring>
+// #include <iostream>
+// #include <queue>
+// using namespace std;
+// typedef pair<int,int> p;
+// typedef pair<p,p> pp;
+// int a,b,c,sz,res,temp,t1,t2,op,ind;
+// p ans[105][105];
+// bool BFS(bool fl)
+// {
+//     queue<pp> q;
+//     if(fl)
+//     {
+//         q.push(pp(p(a,0),p(1,0)));
+//     }
+//     else
+//     {
+//         q.push(pp(p(0,b),p(2,0)));
+//     }
+//     res=0;
+//     while(sz=q.size())
+//     {
+//         res++;
+//         //int ind=0;
+//         while(sz--)
+//         {
+//             pp te=q.front(); 
+//             q.pop();
+//             op=te.second.first;
+//             ind=te.second.second;
+//             if(((t1=te.first.first)==c)||((t2=te.first.second)==c))
+//             {
+//                 return 1;
+//             }
+//             if(res>9) return (res=0);
+//             if(op!=1&&t1!=a) 
+//             {
+//                 q.push(pp(p(a,t2),p(1,ind+1)));
+//             }
+//             if(op!=2&&t2!=b) 
+//             {
+//                 q.push(pp(p(t1,b),p(2,ind+1)));
+//             }
+//             if(op!=3&&t1>0)
+//             {
+//                 q.push(pp(p(0,t2),p(3,ind+1)));
+//             }
+//             if(op!=4&&t2>0) 
+//             {
+//                 q.push(pp(p(t1,0),p(4,ind+1)));
+//             }
+//             if(op!=5&&t2!=b) 
+//             {
+//                 if(t1>0)
+//                 {
+//                     if(t1<b-t2) 
+//                     {
+//                         q.push(pp(p(0,t2+t1),p(5,ind+1)));
+//                     }
+//                     else 
+//                     {
+//                         q.push(pp(p(t1+t2-b,b),p(5,ind+1)));
+//                     }
+
+//                 }
+//             }
+//             if(op!=6&&t1!=a) 
+//             {
+//                 if(t2>0)
+//                 {
+//                     if(t2<a-t1) 
+//                     {
+//                         q.push(pp(p(t1+t2,0),p(6,ind+1)));
+//                     }
+//                     else 
+//                     {
+//                         q.push(pp(p(a,t1+t2-a),p(6,ind+1)));
+//                     }
+//                 }
+//             }
+//             //ind++;
+//         }
+//     }
+//     return 0;
+// }
+// int main()
+// {
+//     cin>>a>>b>>c;
+//     //if(BFS(1)) temp=res;
+//     if(BFS(0)) res=min(res,temp);
+//     if(res) cout<<res<<endl;
+//     else cout<<"impossible";
+//     return 0;
+// }
+
+
+/*
+3 5 4
+w1=0,w2=5;
+w1=3,w2=2;
+w1=0,w2=2;
+w1=2,w2=0;
+w1=2,w2=5;
+w1=3,w2=4;(w2满足条件)
+任意一个w==c即可
+
+7  5
+w1=7,w2=1
+
+规定
+w1->a->1,w2->b->2
+0=NULL
+FILL(1)=1
+FILL(2)=2
+DROP(1)=3
+DROP(2)=4
+POUR(1,2)=5
+POUR(2,1)=6
+{{w1,w2}, op}
+*/
+
+// #include <cstdio>
+// #include <cstring>
+// #include <iostream>
+// #include <queue>
+// using namespace std;
+// typedef pair<int,int> p;
+// typedef pair<p,int> pp;
+// int a,b,c,res1=0,res2=0,t1,t2,op,vis[105][105];
+// pp t,ans[105][105],END1,END2,BEGIN1{p(a,0),1},BEGIN2{p(0,b),2};
+// #define PriOP(t) {switch(t){\
+//         case 1:case 2:printf("FILL(%d)\n",t);break;\
+//         case 3:case 4:printf("DROP(%d)\n",t-2);break;\
+//         case 5:printf("POUR(1,2)\n");break;\
+//         case 6:printf("POUR(2,1)\n");break;}}
+// void Pri(int w1,int w2,int cnt)
+// {
+//     if(ans[w1][w2]==(t=BEGIN1)||ans[w1][w2]==(t=BEGIN2))
+//     {
+//         cout<<cnt<<endl;
+//         PriOP(t.second);
+//         return;
+//     }
+//     Pri(ans[w1][w2].first.first,ans[w1][w2].first.second,cnt+1);
+//     PriOP(ans[w1][w2].second);
+// }
+// bool BFS(bool fl)
+// {
+//     queue<pp> q;
+//     memset(vis,0,sizeof vis);
+//     if(fl)
+//     {
+//         q.push(pp(p(a,0),1));
+//         vis[a][0]=1;
+//         ans[a][0]=BEGIN1;
+//     }
+//     else
+//     {
+//         q.push(pp(p(0,b),2));
+//         vis[0][b]=1;
+//         ans[0][b]=BEGIN2;
+//     }
+//     while(q.size())
+//     {
+//         if(fl) res1++;
+//         else res2++;
+//         pp te=q.front(); 
+//         q.pop();
+//         p pf=te.first;
+//         op=te.second;
+//         if(((t1=te.first.first)==c)||((t2=te.first.second)==c))
+//         {
+//             if(fl) END1=te;
+//             else END2=te;
+//             return 1;
+//         }
+//         if(op!=1&&!vis[a][t2]&&t1!=a) 
+//         {
+//             q.push(pp(p(a,t2),1));
+//             vis[a][t2]=1;
+//             ans[a][t2]=pp(pf,1);
+//         }
+//         if(op!=2&&!vis[t1][b]&&t2!=b) 
+//         {
+//             q.push(pp(p(t1,b),2));
+//             vis[t1][b]=1;
+//             ans[t1][b]=pp(pf,2);
+//         }
+//         if(op!=3&&!vis[0][t2]&&t1>0)
+//         {
+//             q.push(pp(p(0,t2),3));
+//             vis[0][t2]=1;
+//             ans[0][t2]=pp(pf,3);
+//         }
+//         if(op!=4&&!vis[t1][0]&&t2>0) 
+//         {
+//             q.push(pp(p(t1,0),4));
+//             vis[t1][0]=1;
+//             ans[t1][0]=pp(pf,4);
+            
+//         }
+//         if(op!=5&&t2!=b) 
+//         {
+//             if(t1>0)
+//             {
+//                 if(t1<b-t2&&!vis[0][t2+t1]) 
+//                 {
+//                     q.push(pp(p(0,t2+t1),5));
+//                     vis[0][t2+t1]=1;
+//                     ans[0][t2+t1]=pp(pf,5);
+//                 }
+//                 else if(t1>=b-t2&&!vis[t1+t2-b][b])
+//                 {
+//                     q.push(pp(p(t1+t2-b,b),5));
+//                     vis[t1+t2-b][b]=1;
+//                     ans[t1+t2-b][b]=pp(pf,5);
+//                 }
+
+//             }
+//         }
+//         if(op!=6&&t1!=a) 
+//         {
+//             if(t2>0)
+//             {
+//                 if(t2<a-t1&&!vis[t1+t2][0]) 
+//                 {
+//                     q.push(pp(p(t1+t2,0),6));
+//                     vis[t1+t2][0]=1;
+//                     ans[t1+t2][0]=pp(pf,6);
+//                 }
+//                 else if(t2>=a-t1&&!vis[a][t1+t2-a])
+//                 {
+//                     q.push(pp(p(a,t1+t2-a),6));
+//                     vis[a][t1+t2-a]=1;
+//                     ans[a][t1+t2-a]=pp(pf,6);
+//                 }
+//             }
+//         }
+//     }
+//     return 0;
+// }
+// int main()
+// {
+//     cin>>a>>b>>c;
+//     if(BFS(0)||BFS(1))
+//     {
+//         if(res1==0) Pri(END2.first.first,END2.first.second,1);
+//         else Pri(END1.first.first,END1.first.second,1);
+//     }
+//     else cout<<"impossible";
+//     return 0;
+// }
+
+
+
+
+// #include <cstdio>
+// #include <cstring>
+// #include <iostream>
+// #include <queue>
+// using namespace std;
+// typedef pair<int,int> p;
+// typedef pair<p,int> pp;
+// int a,b,c,t1,t2,op,vis[105][105];
+// pp t,ans1[105][105],ans2[105][105],END1,END2,BEGIN1=pp(p(a,0),1),BEGIN2=pp(p(0,b),2);
+// #define PriOP(t) {switch(t){\
+// case 1:case 2:printf("FILL(%d)\n",t);break;\
+// case 3:case 4:printf("DROP(%d)\n",t-2);break;\
+// case 5:printf("POUR(1,2)\n");break;\
+// case 6:printf("POUR(2,1)\n");break;}\
+// }
+// #define Oper(w1,w2,opt,pp1,fl) {q.push(pp(p(w1,w2),opt));vis[w1][w2]=1;if(fl){ans1[w1][w2]=pp1;}else{ans2[w1][w2]=pp1;}}
+// #define CHECK(w1,w2,opt) (op!=opt&&!vis[w1][w2])
+// #define RECORD(w1,w2,opt,pp1,fl) {if(CHECK(w1,w2,opt)){Oper(w1,w2,opt,pp1,fl);}}
+// void Pri(int w1,int w2,int cnt,pp BEGIN,int fl)
+// {
+//     pp m;
+//     if(fl)
+//     {
+//         if((m=ans1[w1][w2])==(t=BEGIN))
+//         {
+//             cout<<cnt<<endl;
+//             PriOP(t.second);
+//             return;
+//         }
+//     }
+//     else
+//     {
+//         if((m=ans2[w1][w2])==(t=BEGIN))
+//         {
+//             cout<<cnt<<endl;
+//             PriOP(t.second);
+//             return;
+//         }
+//     }
+//     Pri(m.first.first,m.first.second,cnt+1,t,fl);
+//     PriOP(m.second);
+// }
+// bool BFS(bool fl)
+// {
+//     queue<pp> q;
+//     memset(vis,0,sizeof vis);
+//     if(fl) {Oper(a,0,1,BEGIN1,fl);}
+//     else {Oper(0,b,2,BEGIN2,fl);}
+//     while(q.size())
+//     {
+//         pp te=q.front(); 
+//         p pf=te.first;
+//         op=te.second;
+//         q.pop();
+//         if(((t1=te.first.first)==c)||((t2=te.first.second)==c))
+//         {
+//             if(fl) END1=te;
+//             else END2=te;
+//             return 1;
+//         }
+//         if(t1!=a) RECORD(a,t2,1,pp(pf,1),fl);
+//         if(t2!=b) RECORD(t1,b,2,pp(pf,2),fl);
+//         if(t1>0) RECORD(0,t2,3,pp(pf,3),fl);
+//         if(t2>0) RECORD(t1,0,4,pp(pf,4),fl);
+//         if(op!=5&&t2!=b&&t1>0) 
+//         {
+//             if(t1<b-t2&&!vis[0][t2+t1]) {Oper(0,t2+t1,5,pp(pf,5),fl);}
+//             else if(t1>=b-t2&&!vis[t1+t2-b][b]) {Oper(t1+t2-b,b,5,pp(pf,5),fl);}
+//         }
+//         if(op!=6&&t1!=a&&t2>0) 
+//         {
+//             if(t2<a-t1&&!vis[t1+t2][0]) {Oper(t1+t2,0,6,pp(pf,6),fl);}
+//             else if(t2>=a-t1&&!vis[a][t1+t2-a]) {Oper(a,t1+t2-a,6,pp(pf,6),fl);}
+//         }
+//     }
+//     return 0;
+// }
+// int main()
+// {
+//     cin>>a>>b>>c;
+//     BFS(1);
+//     BFS(0);
+//     Pri(END1.first.first,END1.first.second,1,BEGIN1,1);
+//     Pri(END2.first.first,END2.first.second,1,BEGIN2,0);
+        
+//     // else cout<<"impossible";
+//     return 0;
+// }
+
+
+
+
+// #include <cstdio>
+// #include <cstring>
+// #include <iostream>
+// #include <queue>
+// using namespace std;
+// int a,b,c,t1,t2,op,ct,vis[105][105];
+// struct nd{
+//     int w1,w2,op,cnt;
+//     bool operator == (const nd &n){
+//         return (w1==n.w1&&w2==n.w2&&op==n.op&&cnt==n.cnt);
+//     }
+// }t,ans1[105][105],ans2[105][105],END1,END2,BEGIN1,BEGIN2;
+// string str[]={"","FILL(1)","FILL(2)","DROP(1)","DROP(2)","POUR(1,2)","POUR(2,1)"};
+// #define CHECK(last,next,opt) (last.op!=opt&&!vis[next.w1][next.w2])
+// void Pri(int w1,int w2,nd BEGIN,bool fl)
+// {
+//     nd m;
+//     if(fl)
+//     {
+//         if((m=ans1[w1][w2])==(t=BEGIN))
+//         {
+//             cout<<END1.cnt<<endl;
+//             cout<<str[t.op]<<endl;
+//             return;
+//         }
+//     }
+//     else
+//     {
+//         if((m=ans2[w1][w2])==(t=BEGIN))
+//         {
+//             cout<<END2.cnt<<endl;
+//             cout<<str[t.op]<<endl;
+//             return;
+//         }
+//     }
+//     Pri(m.w1,m.w2,t,fl);
+//     cout<<str[m.op]<<endl;
+// }
+// queue<nd> q;    
+// bool BFS(bool fl)
+// {
+//     while(q.size()) q.pop();
+//     memset(vis,0,sizeof vis);
+//     auto Oper = [](nd last,nd next,bool fl)
+//     {
+//         int w1=next.w1, w2=next.w2;
+//         q.push(next);
+//         vis[w1][w2]=1;
+//         last.op=next.op;
+//         if(fl) ans1[w1][w2]=last;
+//         else ans2[w1][w2]=last;
+//     };
+//     auto RECORD = [](nd last,nd next,bool fl,int opt,auto Oper)
+//     {
+//         if(CHECK(last,next,opt)) Oper(last,next,fl);
+//     };
+//     if(fl) {Oper(BEGIN1,BEGIN1,fl);}
+//     else {Oper(BEGIN2,BEGIN2,fl);}
+//     while(q.size())
+//     {
+//         nd te=q.front(); 
+//         op=te.op;
+//         ct=te.cnt;
+//         q.pop();
+//         if(((t1=te.w1)==c)||((t2=te.w2)==c))
+//         {
+//             if(fl) END1=te;
+//             else END2=te;
+//             return 1;
+//         }
+//         if(t1!=a) RECORD(te,nd{a,t2,1,ct+1},fl,1,Oper);
+//         if(t2!=b) RECORD(te,nd{t1,b,2,ct+1},fl,2,Oper);
+//         if(t1>0) RECORD(te,nd{0,t2,3,ct+1},fl,3,Oper);
+//         if(t2>0) RECORD(te,nd{t1,0,4,ct+1},fl,4,Oper);
+//         if(op!=5&&t2!=b&&t1>0) 
+//         {
+//             if(t1<b-t2&&!vis[0][t2+t1]) {Oper(te,nd{0,t2+t1,5,ct+1},fl);}
+//             else if(t1>=b-t2&&!vis[t1+t2-b][b]) {Oper(te,nd{t1+t2-b,b,5,ct+1},fl);}
+//         }
+//         if(op!=6&&t1!=a&&t2>0) 
+//         {
+//             if(t2<a-t1&&!vis[t1+t2][0]) {Oper(te,nd{t1+t2,0,6,ct+1},fl);}
+//             else if(t2>=a-t1&&!vis[a][t1+t2-a]) {Oper(te,nd{a,t1+t2-a,6,ct+1},fl);}
+//         }
+//     }
+//     return 0;
+// }
+// int main()
+// {
+//     cin>>a>>b>>c;
+//     BEGIN1={a,0,1,1};
+//     BEGIN2={0,b,2,1};
+//     BFS(1);
+//     BFS(0);
+//     if(END1.cnt!=0&&END1.cnt<END2.op)Pri(END1.w1,END1.w2,BEGIN1,1);
+//     else if(END2.cnt!=0) Pri(END2.w1,END2.w2,BEGIN2,0);
+//     else cout<<"impossible";
+//     return 0;
+// }
+
+//***妙解！
+#include <cstdio>
+#include <iostream>
+#include <queue>
+using namespace std;
+typedef pair<int,int> P;
+P root[101][101];//保存路径
+int vis[101][101],op[101][101],sign[101][101],a,b,c;
+void judge(int fl, int x){
+    if(fl==0) printf("FILL(%d)\n",x);
+    else if(fl==1) printf("DROP(%d)\n",x);
+    else printf("POUR(%d,%d)\n",x/10,x%10);    
+}
+void link(P p){
+    if(p == P()) return;//p为P(0,0)时即终止输出
+    link(root[p.first][p.second]);
+    judge(op[p.first][p.second], sign[p.first][p.second]);
+}
+void BFS(){
+    queue<P> que;
+    que.push(P(0,0));//直接从两个容器都为空开始，省去分两次求的麻烦
+    vis[0][0]=1;
+    while(que.size()){
+        P s=que.front(); que.pop();
+        int x=s.first, y=s.second;
+        if(x==c || y==c){
+            printf("%d\n",vis[x][y]-1);
+            link(P(x,y));//路径
+            return;
+        }
+        int k=min(a-x,y), k1=min(b-y,x);
+        int st[6][2] = {{a,y},{x,b},{0,y},{x,0},{x+k,y-k},{x-k1,y+k1}};//6种可能的操作
+        int oper[6] ={1,2,1,2,21,12};//容器i
+        for(int i=0;i<6;i++){//0,1,2,3,4,5
+            int dx = st[i][0], dy = st[i][1];
+            if(!vis[dx][dy]){
+                vis[dx][dy]=vis[x][y]+1;//存步数的同时相当于存了状态
+                root[dx][dy] = P(x,y); 
+                sign[dx][dy] = oper[i];
+                op[dx][dy] = i/2;//将6个步骤分成3部分
+                que.push(P(dx,dy));
+            }
+        }
+    }
+    printf("impossible");
+}
+int main(){
+    cin>>a>>b>>c;
+    BFS();
+    return 0;
+}
+
+
+
+
+// #include <cstdio>
+// #include <iostream>
+// #include <queue>
+// using namespace std;
+// typedef pair<int,int> P;
+// struct node{
+//     P now,last;
+//     int op;//6种操作
+//     int type;//3类操作
+//     int cnt;//步数兼状态
+//     bool operator ==(const node &n)const{
+//         return (now==n.now&&last==n.last&&op==n.op&&type==n.type&&cnt==n.cnt);
+//     }
+// }root[101][101],BEGIN{P(0,0),P(0,0),0,0,0};//保存路径
+// int a,b,c;
+// void judge(int fl, int x){
+//     if(fl==0) printf("FILL(%d)\n",x);
+//     else if(fl==1) printf("DROP(%d)\n",x);
+//     else printf("POUR(%d,%d)\n",x/10,x%10);    
+// }
+// void link(node n){
+//     if(n.now==P(0,0)&&n.last==P(0,0)&&n.op==0&&n.type==0&&n.cnt==0) return;;//p为P(0,0)时即终止输出
+//     link(root[n.last.first][n.last.second]);
+//     judge(root[n.now.first][n.now.second].type, root[n.now.first][n.now.second].op);
+// }
+// void BFS(){
+//     queue<node> que;
+//     que.push(BEGIN);//直接从两个容器都为空开始，省去分两次求的麻烦
+//     root[0][0]=BEGIN;
+//     while(que.size()){
+//         node s=que.front(); que.pop();
+//         int x=s.last.first, y=s.last.second;
+//         if(x==c || y==c){
+//             printf("%d\n",root[x][y].cnt-1);
+//             link(s);//路径
+//             return;
+//         }
+//         int k=min(a-x,y), k1=min(b-y,x);
+//         int st[6][2] = {{a,y},{x,b},{0,y},{x,0},{x+k,y-k},{x-k1,y+k1}};//6种可能的操作
+//         int oper[6] ={1,2,1,2,21,12};//容器i
+//         for(int i=0;i<6;i++){//0,1,2,3,4,5
+//             int dx=st[i][0], dy=st[i][1];
+//             if(!root[dx][dy].cnt){
+//                 root[dx][dy].now=P(x,y);
+//                 root[dx][dy].cnt=root[x][y].cnt+1;//存步数的同时相当于存了状态
+//                 root[dx][dy].last=P(dx,dy); 
+//                 root[dx][dy].op = oper[i];
+//                 root[dx][dy].type = i/2;//将6个步骤分成3部分
+//                 que.push(root[dx][dy]);
+//             }
+//         }
+//     }
+//     printf("impossible");
+// }
+// int main(){
+//     cin>>a>>b>>c;
+//     BFS();
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
