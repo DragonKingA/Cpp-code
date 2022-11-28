@@ -12,7 +12,7 @@ acba
 int a[10] = {0};
 int cmp(char a, char b)            //自定义函数,实现字母大写排在小写前面的功能
 {
-	a[0] = 1;
+	//a[0] = 1;
 	if (tolower(a) != tolower(b)) //tolower是将大写转化为小写,A-Z 65-90       a-z 97-122
 		return tolower(a) < tolower(b);
 	else
