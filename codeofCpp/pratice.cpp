@@ -724,7 +724,6 @@ list¾ÍÊÇÊı¾İ½á¹¹ÖĞµÄË«ÏòÁ´±í(¸ù¾İsgi stlÔ´´úÂë)£¬Òò´ËËüµÄÄÚ´æ¿Õ¼äÊÇ²»Á¬ĞøµÄ£¬Í¨¹
 ÓÃ¶ş½øÖÆÊıÀí½â:ÈçÇó¼¯ºÏ{a1, a2, a3}µÄ×Ó¼¯£¬ÎÒÃÇÖªµÀÔªËØ¸öÊıÎª n µÄ¼¯ºÏÆä×Ó¼¯¸öÊıÎª 2^n £¨°üÀ¨¿Õ¼¯£©
 ²»ÄÑ·¢ÏÖ n -> 2^n µÄ¹ØÏµÓë ¶ş½øÖÆÎ» -> ¶ş½øÖÆÊı´óĞ¡ Ïà·Â,¹ÊÓÃ3Î»¶ş½øÖÆ±íÊ¾¸Ã¼¯ºÏ£¬Ã¿Î»ÉÏÎª1ÔòÈ¡¸ÃÔªËØ£¬Îª0Ôò²»È¡¸ÃÔªËØ
 Èç a1 a2 a3 -> 1 1 1 ,  ¶ø  a2 a3 -> 0 1 1 ;  a1 -> 1 0 0 ¡£ÔòÓĞ´Ó 0 0 0(¿Õ¼¯) µ½ 1 1 1(Ô­¼¯ºÏ) ¹²8ÖÖÇé¿ö
-
 */
 // #include <iostream>
 // using namespace std;
@@ -760,12 +759,12 @@ list¾ÍÊÇÊı¾İ½á¹¹ÖĞµÄË«ÏòÁ´±í(¸ù¾İsgi stlÔ´´úÂë)£¬Òò´ËËüµÄÄÚ´æ¿Õ¼äÊÇ²»Á¬ĞøµÄ£¬Í¨¹
 
 
 
-
-
 //BFS£¨¹ã¶ÈÓÅÏÈËÑË÷£©
 //Ò»°ãÊÇ¶ÓÁĞÊµÏÖ£¬¹Ê BFS = ¶ÓÁĞ, ¸ÃËã·¨¾¡Á¿Ê¹ÓÃ¶ÓÁĞ½â¾ö¶ø²»ÊÇµİ¹é£¨¹Êº¯ÊıÖĞÒ»°ãÓĞwhile(Ìõ¼şÎª¶ÓÁĞ²»Îª¿Õ)Ñ­»·£©
 //¿ÉÒÔ½â¾ö×îÓÅÎÊÌâ£¨×î³¤/×î¶ÌÂ·¾¶£©
+
 // 1.ºìÓëºÚ(BFSÊµÏÖ)
+/*Code
 // #include <iostream>
 // #include <queue>
 // using namespace std;
@@ -814,14 +813,14 @@ list¾ÍÊÇÊı¾İ½á¹¹ÖĞµÄË«ÏòÁ´±í(¸ù¾İsgi stlÔ´´úÂë)£¬Òò´ËËüµÄÄÚ´æ¿Õ¼äÊÇ²»Á¬ĞøµÄ£¬Í¨¹
 //     }
 //     return 0;
 // }
+*/
 
 //2.Âí×ßÈÕ(×î¶ÌÂ·¾¶ÎÊÌâ)
-/*
-Ê×ÏÈd[N][N]³õÊ¼»¯Îª - 1£¬È»ºód[x][y]Èë¶Ó£¬½øĞĞbfsÑ­»·£¬ĞĞ×ß¹Ì¶¨Î»ÖÃ£»
-È»ºóÓÃd[N][N]À´´¢´æÄÜµ½×ß¡°³µ¡±µÄ×î¶Ì²½Êı
-×îºóÊä³ö×îĞ¡²½Êı£»
-https://blog.csdn.net/qq_64162685/article/details/124002779?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166930838716800184173076%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=166930838716800184173076&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~baidu_landing_v2~default-1-124002779-null-null.142^v66^control,201^v3^add_ask,213^v2^t3_control1&utm_term=c%2B%2B%E9%A9%AC%E8%B5%B0%E6%97%A5BFS&spm=1018.2226.3001.4187
-*/
+/*Code
+// Ê×ÏÈd[N][N]³õÊ¼»¯Îª - 1£¬È»ºód[x][y]Èë¶Ó£¬½øĞĞbfsÑ­»·£¬ĞĞ×ß¹Ì¶¨Î»ÖÃ£»
+// È»ºóÓÃd[N][N]À´´¢´æÄÜµ½×ß¡°³µ¡±µÄ×î¶Ì²½Êı
+// ×îºóÊä³ö×îĞ¡²½Êı£»
+// https://blog.csdn.net/qq_64162685/article/details/124002779?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166930838716800184173076%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=166930838716800184173076&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~baidu_landing_v2~default-1-124002779-null-null.142^v66^control,201^v3^add_ask,213^v2^t3_control1&utm_term=c%2B%2B%E9%A9%AC%E8%B5%B0%E6%97%A5BFS&spm=1018.2226.3001.4187
 // #include<bits/stdc++.h>
 // using namespace std;
 // typedef pair<int, int>PII;//¶¨Òå¶ÓÁĞ
@@ -867,9 +866,11 @@ https://blog.csdn.net/qq_64162685/article/details/124002779?ops_request_misc=%25
 //         cout << d[x][y] << endl;
 //     }
 // }
+*/
 
 //3.Find the multiple
-//ÒÔÏÂÁ½×é´úÂëÖ»ÄÜÓÃG++½»,µİ¹éÆµ·±µ÷ÓÃÊ±×îºÃÓÃG++½»
+//ÒÔÏÂÇ°Á½×é´úÂëÖ»ÄÜÓÃG++½»,µİ¹éÆµ·±µ÷ÓÃÊ±×îºÃÓÃG++½»
+/*¶ÓÁĞ·¨
 // #include <iostream>
 // #include <queue>
 // using namespace std;
@@ -896,7 +897,8 @@ https://blog.csdn.net/qq_64162685/article/details/124002779?ops_request_misc=%25
 //     while(cin>>n, n) BFS(n);
 //     return 0;
 // }
-//´ò±í·¨£º¿ÉÊäÈëÇ°»ñÈ¡È«²¿Çé¿ö½á¹û´æÔÚÊı×éÀï£¬±ÈÉÏÊö´úÂëºÄÊ±¶Ì£¬¶ø¿Õ¼äÀûÓÃÒ²²»»áÌ«¶à
+*/
+/*´ò±í·¨£º¿ÉÊäÈëÇ°»ñÈ¡È«²¿Çé¿ö½á¹û´æÔÚÊı×éÀï£¬±ÈÉÏÊö´úÂëºÄÊ±¶Ì£¬¶ø¿Õ¼äÀûÓÃÒ²²»»áÌ«¶à
 // #include <iostream>
 // #include <queue>
 // using namespace std;
@@ -924,7 +926,8 @@ https://blog.csdn.net/qq_64162685/article/details/124002779?ops_request_misc=%25
 //     while(cin>>n, n) cout<<res[n]<<endl;
 //     return 0;
 // }
-//*ÉèÖÃ×î´óµİ¹éÖÕÖ¹µã£ºÓÉÉÏÊö´òµÄ±íµÃÖªÒªµÃµ½½á¹û×î¶àÎ»ÊıÎª19Î»£¬¼´19´Îµİ¹é£¬¹Ê¿ÉÒÔµ½ÁËµÚ20´Î¾ÍÖÕÖ¹µİ¹éÏß³Ì
+*/
+/**ÉèÖÃ×î´óµİ¹éÖÕÖ¹µã£ºÓÉÉÏÊö´òµÄ±íµÃÖªÒªµÃµ½½á¹û×î¶àÎ»ÊıÎª19Î»£¬¼´19´Îµİ¹é£¬¹Ê¿ÉÒÔµ½ÁËµÚ20´Î¾ÍÖÕÖ¹µİ¹éÏß³Ì
 //¸Ã´úÂëC++ºÍG++¶¼²»»á³¬Ê±£¬ÇÒ×î¿ì
 // #include <iostream>
 // using namespace std;
@@ -948,8 +951,10 @@ https://blog.csdn.net/qq_64162685/article/details/124002779?ops_request_misc=%25
 //     }
 //     return 0;
 // }
+*/
 
 //4.Catch That Cow
+/*AC
 // #include <iostream>
 // #include <queue>
 // using namespace std;
@@ -993,8 +998,10 @@ https://blog.csdn.net/qq_64162685/article/details/124002779?ops_request_misc=%25
 //     BFS();
 //     return 0;
 // }
+*/
 
 //*5.Prime Path(¶ÓÁĞµÄÖØÒªÓÃ·¨)
+/*AC
 // #include <iostream>
 // #include <cstring>
 // #include <cmath>
@@ -1055,9 +1062,10 @@ https://blog.csdn.net/qq_64162685/article/details/124002779?ops_request_misc=%25
 // 	}
 // 	return 0;
 // }
+*/
 
 //*6.ÃÔ¹¬ÎÊÌâ£¨¹ØÓÚ¶ÔËÑË÷Ê÷Ò»Ìõ·ÖÖ§ĞÅÏ¢µÄ´æ´¢£¬±ãÓÚÊä³öÒ»Ìõ·ÖÖ§µÄ¹ı³Ì£©
-/*
+/*Â·¾¶´æ´¢·½·¨(ÖØµã)·ÖÎö
 ans[5][5]Êı×éÃ¿¸öµã¶ÔÓ¦ÃÔ¹¬ÉÏµÄµã£¬²¢ÇÒÖµÎª¸ÃµãµÄ¡°Ç°Ò»¸öµã¡±£¬ÀàËÆÓÚÁ´±íµÄÁ´½ÓĞÎÌ¬
 ¼´¶ÔÓÚÄ³ÃÔ¹¬£º
 0, 1, 0, 0, 0,		[0,0] (1,0) (2,0) (3,0) (4,0)
@@ -1085,6 +1093,7 @@ ans[5][5]³ÊÏÖ×î¶ÌÂ·¾¶Ê¾ÒâÍ¼(ans[y][x]):
   ¶ÔÓÚans[4][4] = (4,3) , ÒòÎªÂ·¾¶ÉÏÖÕµã(4,4)µÄÉÏÒ»¸öµãÊÇ(4,3)
 ÕâÑù¾ÍÄÜ½¨Á¢ÆğÒ»ÌõÂ·¾¶µãÓëµãÖ®¼äµÄ¹ØÏµ£¬·½±ã½«Â·¾¶ÉÏµÄËùÓĞµã´òÓ¡³öÀ´
 */
+/*AC
 // #include <cstdio>
 // #include <queue>
 // using namespace std;
@@ -1134,304 +1143,16 @@ ans[5][5]³ÊÏÖ×î¶ÌÂ·¾¶Ê¾ÒâÍ¼(ans[y][x]):
 // 	Pri(END);
 // 	return 0;
 // }
+*/
 
 //7.Find a way(¹ı³Ì½ÏÎª¸´ÔÓ£¬ÈİÒ×ÔÚ¸÷¸ö»·½Ú³ö´í£¡)
-//DFS²»ÄÜÊµÏÖ
-// void DFS(int x, int y, int time)
-// {	
-// 	if(fl) return;
-// 	if(store.find(p(x,y))!=store.end())
-// 	{
-// 		fl=1;
-// 		store[p(x,y)]+=time;
-// 		return;
-// 	}
-// 	vis[y][x]=1;
-// 	for(int i=0,nx,ny;i<4;i++)
-// 	{
-// 		nx=x+dir[i][0];
-// 		ny=y+dir[i][1];
-// 		if(CHECK(nx,ny)) DFS(nx,ny,time+11);
-// 	}
-// }
-//WA
-// #include <cstring>
-// #include <iostream>
-// #include <queue>
-// #include <map>
-// using namespace std;
-// typedef pair<int,int> p;
-// typedef pair<p,int> pp;
-// int fl=0,n,m,dir[4][2]={{-1,0},{0,1},{1,0},{0,-1}};
-// char road[205][205];
-// bool vis[205][205];
-// p pY,pM;
-// map<p, int> store;
-// #define CHECK(x,y) (x>=0&&x<m&&y>=0&&y<n&&road[y][x]!='#'&&!vis[y][x])
-// void BFS(int x, int y)
-// {	
-// 	queue<pp> q;
-// 	q.push(pp(p(x,y),0));
-// 	while(q.size())
-// 	{
-// 		pp temp=q.front();
-// 		q.pop();
-// 		int dx=temp.first.first, dy=temp.first.second;
-// 		if(store.find(temp.first) != store.end())
-// 			store[temp.first] += temp.second;
-// 		for(int i=0,nx,ny;i<4;i++)
-// 		{
-// 			nx = dx + dir[i][0];
-// 			ny = dy + dir[i][1];
-// 			if(CHECK(nx,ny))
-// 			{
-// 				vis[ny][nx]=1;
-// 				q.push(pp(p(nx,ny),temp.second+11));
-// 			}
-// 		}
-// 	}
-// }
-// int main()
-// {
-// 	while(!(cin>>n>>m).eof())
-// 	{
-// 		for(int i=0;i<n;i++)
-// 			for(int j=0;j<m;j++)
-// 			{
-// 				cin>>road[i][j];
-// 				switch(road[i][j])
-// 				{
-// 					case 'Y': pY={j,i};break;
-// 					case 'M': pM={j,i};break;
-// 					case '@': store[p(j,i)]=0;break;
-// 				}
-// 			}
-// 		memset(vis, 0, sizeof(vis));
-// 		BFS(pY.first,pY.second);
-// 		memset(vis, 0, sizeof(vis));
-// 		BFS(pM.first,pM.second);
-// 		int min = store.begin()->second;
-// 		for(auto x : store)
-// 		{
-// 			if(x.second!=0)
-// 				min = min < x.second ? min:x.second;
-// 		}
-// 		cout<<min<<endl;
-// 		store.clear();
-// 	}
-// 	return 0;
-// }
-//WA
-// #include <cstring>
-// #include <string>
-// #include <iostream>
-// #include <queue>
-// #include <map>
-// #include <vector>
-// using namespace std;
-// typedef pair<int,int> p;
-// typedef pair<p,int> pp;
-// int fl=0,n,m,dir[4][2]={{-1,0},{0,1},{1,0},{0,-1}};
-// char road[205][205];
-// bool vis[205][205];
-// p pY,pM;
-// #define STR(x,y) (to_string(x)+to_string(y))
-// map<string,int> store;
-// #define CHECK(x,y) (x>=0&&x<m&&y>=0&&y<n&&road[y][x]!='#'&&!vis[y][x])
-// void BFS(int x, int y)
-// {	
-// 	queue<pp> q;
-// 	q.push(pp(p(x,y),0));
-// 	while(q.size())
-// 	{
-// 		pp temp=q.front();
-// 		q.pop();
-// 		int dx=temp.first.first, dy=temp.first.second;
-// 		if(store.find(STR(dx,dy)) != store.end())
-// 			store[STR(dx,dy)] += temp.second;
-// 		for(int i=0,nx,ny;i<4;i++)
-// 		{
-// 			nx = dx + dir[i][0];
-// 			ny = dy + dir[i][1];
-// 			if(CHECK(nx,ny))
-// 			{
-// 				vis[ny][nx]=1;
-// 				q.push(pp(p(nx,ny),temp.second+11));
-// 			}
-// 		}
-// 	}
-// }
-// int main()
-// {
-// 	while(!(cin>>n>>m).eof())
-// 	{
-// 		for(int i=0;i<n;i++)
-// 			for(int j=0;j<m;j++)
-// 			{
-// 				cin>>road[i][j];
-// 				switch(road[i][j])
-// 				{
-// 					case 'Y': pY={j,i};break;
-// 					case 'M': pM={j,i};break;
-// 					case '@': store[STR(j,i)]=0;break;
-// 				}
-// 			}
-// 		memset(vis, 0, sizeof(vis));
-// 		BFS(pY.first,pY.second);
-// 		memset(vis, 0, sizeof(vis));
-// 		BFS(pM.first,pM.second);
-// 		int min = store.begin()->second;
-// 		for(auto x : store) 
-// 		{
-// 			if(x.second!=0)
-// 				min=min<x.second?min:x.second;
-// 		}
-// 		cout<<min<<endl;
-// 		store.clear();
-// 	}
-// 	return 0;
-// }
-//AC(78ms)
-// #include <cstdio>
-// #include <cstring>
-// #include <queue>
-// using namespace std;
-// typedef pair<int,int> p;
-// typedef pair<p,int> pp;
-// int RES=0,n,m,store[200][200],dir[4][2]={{-1,0},{0,1},{1,0},{0,-1}};
-// char road[205][205];
-// bool vis[205][205];
-// #define CHECK(x,y) (x>=0&&x<m&&y>=0&&y<n&&road[y][x]!='#'&&!vis[y][x])
-// void BFS(int x, int y)
-// {	
-// 	queue<pp> q;
-// 	q.push(pp(p(x,y),0));
-// 	while(q.size())
-// 	{
-// 		pp temp=q.front();
-// 		q.pop();
-// 		int dx=temp.first.first, dy=temp.first.second;
-// 		if(store[dy][dx]!=-1) 
-// 		{
-// 			store[dy][dx]+=temp.second;
-// 			RES=store[dy][dx];
-// 		}
-// 		for(int i=0,nx,ny;i<4;i++)
-// 		{
-// 			nx = dx + dir[i][0];
-// 			ny = dy + dir[i][1];
-// 			if(CHECK(nx,ny))
-// 			{
-// 				vis[ny][nx]=1;
-// 				q.push(pp(p(nx,ny),temp.second+11));
-// 			}
-// 		}
-// 	}
-// }
-// int main()
-// {
-// 	p pY,pM;
-// 	while(~scanf("%d%d",&n,&m))
-// 	{
-// 		memset(store, -1, sizeof(store));
-// 		for(int i=0;i<n;i++)
-// 		{
-// 			getchar();
-// 			for(int j=0;j<m;j++)
-// 			{
-// 				scanf("%c",&road[i][j]);
-// 				switch(road[i][j])
-// 				{
-// 					case 'Y': pY={j,i};break;
-// 					case 'M': pM={j,i};break;
-// 					case '@': store[i][j]=0;break;
-// 				}
-// 			}
-// 		}
-// 		memset(vis, 0, sizeof(vis));
-// 		BFS(pY.first,pY.second);
-// 		memset(vis, 0, sizeof(vis));
-// 		BFS(pM.first,pM.second);
-// 		for(int i=0;i<200;i++)
-// 			for(auto x : store[i]) 
-// 				if(x!=-1&&x!=0)
-// 					RES = RES < x ? RES:x;
-// 		printf("%d\n",RES);
-// 	}
-// 	return 0;
-// }
-//AC:±¾ÌâÓÃiostreamÒ²¿É£¬²»»á³¬Ê±(109ms)
-// #include <iostream>
-// #include <cstring>
-// #include <queue>
-// #define N 205
-// using namespace std;
-// typedef pair<int,int> p;
-// typedef pair<p,int> pp;
-// int RES=0,n,m,dx,dy,store[N][N],dir[4][2]={{-1,0},{0,1},{1,0},{0,-1}};
-// char road[N][N];
-// bool vis[N][N];
-// void BFS(int x, int y)
-// {	
-// 	queue<pp> q;
-// 	q.push(pp(p(x,y),0));
-// 	memset(vis, 0, sizeof(vis));
-// 	while(q.size())
-// 	{
-// 		pp temp=q.front(); q.pop();
-// 		dx=temp.first.first;
-// 		dy=temp.first.second;
-// 		if(store[dy][dx]!=-1) 
-// 		{
-// 			store[dy][dx]+=temp.second;
-// 			RES=store[dy][dx];
-// 		}
-// 		for(int i=0,nx,ny;i<4;i++)
-// 		{
-// 			nx=dx+dir[i][0];
-// 			ny=dy+dir[i][1];
-// 			if(nx>=0&&nx<m&&ny>=0&&ny<n&&road[ny][nx]!='#'&&!vis[ny][nx])
-// 			{
-// 				vis[ny][nx]=1;
-// 				q.push(pp(p(nx,ny),temp.second+11));
-// 			}
-// 		}
-// 	}
-// }
-// int main()
-// {
-// 	p pY,pM;
-// 	while(cin>>n>>m)
-// 	{
-// 		memset(store, -1, sizeof(store));
-// 		for(int i=0;i<n;i++)
-// 			for(int j=0;j<m;j++)
-// 			{
-// 				cin>>road[i][j];
-// 				switch(road[i][j])
-// 				{
-// 					case 'Y': pY={j,i};break;
-// 					case 'M': pM={j,i};break;
-// 					case '@': store[i][j]=0;break;
-// 				}
-// 			}
-// 		BFS(pY.first,pY.second);
-// 		BFS(pM.first,pM.second);
-// 		for(int i=0;i<N;i++)
-// 			for(auto x : store[i]) 
-// 				if(x!=-1&&x!=0)
-// 					RES = RES < x ? RES:x;
-// 		cout<<RES<<endl;
-// 	}
-// 	return 0;
-// }
-/*
+/*°¸Àı·ÖÎö:
 ..............................
 ..............................
 ..............................
 ..............................
 ..............................
-°¸Àı:
+
 4 7
 Y....#@
 M....##
@@ -1647,11 +1368,305 @@ M..........................#@#
 @............................@
 3927
 */
+/*WAs
+//DFS²»ÄÜÊµÏÖ
+// void DFS(int x, int y, int time)
+// {	
+// 	if(fl) return;
+// 	if(store.find(p(x,y))!=store.end())
+// 	{
+// 		fl=1;
+// 		store[p(x,y)]+=time;
+// 		return;
+// 	}
+// 	vis[y][x]=1;
+// 	for(int i=0,nx,ny;i<4;i++)
+// 	{
+// 		nx=x+dir[i][0];
+// 		ny=y+dir[i][1];
+// 		if(CHECK(nx,ny)) DFS(nx,ny,time+11);
+// 	}
+// }
+//WA
+// #include <cstring>
+// #include <iostream>
+// #include <queue>
+// #include <map>
+// using namespace std;
+// typedef pair<int,int> p;
+// typedef pair<p,int> pp;
+// int fl=0,n,m,dir[4][2]={{-1,0},{0,1},{1,0},{0,-1}};
+// char road[205][205];
+// bool vis[205][205];
+// p pY,pM;
+// map<p, int> store;
+// #define CHECK(x,y) (x>=0&&x<m&&y>=0&&y<n&&road[y][x]!='#'&&!vis[y][x])
+// void BFS(int x, int y)
+// {	
+// 	queue<pp> q;
+// 	q.push(pp(p(x,y),0));
+// 	while(q.size())
+// 	{
+// 		pp temp=q.front();
+// 		q.pop();
+// 		int dx=temp.first.first, dy=temp.first.second;
+// 		if(store.find(temp.first) != store.end())
+// 			store[temp.first] += temp.second;
+// 		for(int i=0,nx,ny;i<4;i++)
+// 		{
+// 			nx = dx + dir[i][0];
+// 			ny = dy + dir[i][1];
+// 			if(CHECK(nx,ny))
+// 			{
+// 				vis[ny][nx]=1;
+// 				q.push(pp(p(nx,ny),temp.second+11));
+// 			}
+// 		}
+// 	}
+// }
+// int main()
+// {
+// 	while(!(cin>>n>>m).eof())
+// 	{
+// 		for(int i=0;i<n;i++)
+// 			for(int j=0;j<m;j++)
+// 			{
+// 				cin>>road[i][j];
+// 				switch(road[i][j])
+// 				{
+// 					case 'Y': pY={j,i};break;
+// 					case 'M': pM={j,i};break;
+// 					case '@': store[p(j,i)]=0;break;
+// 				}
+// 			}
+// 		memset(vis, 0, sizeof(vis));
+// 		BFS(pY.first,pY.second);
+// 		memset(vis, 0, sizeof(vis));
+// 		BFS(pM.first,pM.second);
+// 		int min = store.begin()->second;
+// 		for(auto x : store)
+// 		{
+// 			if(x.second!=0)
+// 				min = min < x.second ? min:x.second;
+// 		}
+// 		cout<<min<<endl;
+// 		store.clear();
+// 	}
+// 	return 0;
+// }
+//WA
+// #include <cstring>
+// #include <string>
+// #include <iostream>
+// #include <queue>
+// #include <map>
+// #include <vector>
+// using namespace std;
+// typedef pair<int,int> p;
+// typedef pair<p,int> pp;
+// int fl=0,n,m,dir[4][2]={{-1,0},{0,1},{1,0},{0,-1}};
+// char road[205][205];
+// bool vis[205][205];
+// p pY,pM;
+// #define STR(x,y) (to_string(x)+to_string(y))
+// map<string,int> store;
+// #define CHECK(x,y) (x>=0&&x<m&&y>=0&&y<n&&road[y][x]!='#'&&!vis[y][x])
+// void BFS(int x, int y)
+// {	
+// 	queue<pp> q;
+// 	q.push(pp(p(x,y),0));
+// 	while(q.size())
+// 	{
+// 		pp temp=q.front();
+// 		q.pop();
+// 		int dx=temp.first.first, dy=temp.first.second;
+// 		if(store.find(STR(dx,dy)) != store.end())
+// 			store[STR(dx,dy)] += temp.second;
+// 		for(int i=0,nx,ny;i<4;i++)
+// 		{
+// 			nx = dx + dir[i][0];
+// 			ny = dy + dir[i][1];
+// 			if(CHECK(nx,ny))
+// 			{
+// 				vis[ny][nx]=1;
+// 				q.push(pp(p(nx,ny),temp.second+11));
+// 			}
+// 		}
+// 	}
+// }
+// int main()
+// {
+// 	while(!(cin>>n>>m).eof())
+// 	{
+// 		for(int i=0;i<n;i++)
+// 			for(int j=0;j<m;j++)
+// 			{
+// 				cin>>road[i][j];
+// 				switch(road[i][j])
+// 				{
+// 					case 'Y': pY={j,i};break;
+// 					case 'M': pM={j,i};break;
+// 					case '@': store[STR(j,i)]=0;break;
+// 				}
+// 			}
+// 		memset(vis, 0, sizeof(vis));
+// 		BFS(pY.first,pY.second);
+// 		memset(vis, 0, sizeof(vis));
+// 		BFS(pM.first,pM.second);
+// 		int min = store.begin()->second;
+// 		for(auto x : store) 
+// 		{
+// 			if(x.second!=0)
+// 				min=min<x.second?min:x.second;
+// 		}
+// 		cout<<min<<endl;
+// 		store.clear();
+// 	}
+// 	return 0;
+// }
+*/
+/*ACs
+//AC(78ms)
+// #include <cstdio>
+// #include <cstring>
+// #include <queue>
+// using namespace std;
+// typedef pair<int,int> p;
+// typedef pair<p,int> pp;
+// int RES=0,n,m,store[200][200],dir[4][2]={{-1,0},{0,1},{1,0},{0,-1}};
+// char road[205][205];
+// bool vis[205][205];
+// #define CHECK(x,y) (x>=0&&x<m&&y>=0&&y<n&&road[y][x]!='#'&&!vis[y][x])
+// void BFS(int x, int y)
+// {	
+// 	queue<pp> q;
+// 	q.push(pp(p(x,y),0));
+// 	while(q.size())
+// 	{
+// 		pp temp=q.front();
+// 		q.pop();
+// 		int dx=temp.first.first, dy=temp.first.second;
+// 		if(store[dy][dx]!=-1) 
+// 		{
+// 			store[dy][dx]+=temp.second;
+// 			RES=store[dy][dx];
+// 		}
+// 		for(int i=0,nx,ny;i<4;i++)
+// 		{
+// 			nx = dx + dir[i][0];
+// 			ny = dy + dir[i][1];
+// 			if(CHECK(nx,ny))
+// 			{
+// 				vis[ny][nx]=1;
+// 				q.push(pp(p(nx,ny),temp.second+11));
+// 			}
+// 		}
+// 	}
+// }
+// int main()
+// {
+// 	p pY,pM;
+// 	while(~scanf("%d%d",&n,&m))
+// 	{
+// 		memset(store, -1, sizeof(store));
+// 		for(int i=0;i<n;i++)
+// 		{
+// 			getchar();
+// 			for(int j=0;j<m;j++)
+// 			{
+// 				scanf("%c",&road[i][j]);
+// 				switch(road[i][j])
+// 				{
+// 					case 'Y': pY={j,i};break;
+// 					case 'M': pM={j,i};break;
+// 					case '@': store[i][j]=0;break;
+// 				}
+// 			}
+// 		}
+// 		memset(vis, 0, sizeof(vis));
+// 		BFS(pY.first,pY.second);
+// 		memset(vis, 0, sizeof(vis));
+// 		BFS(pM.first,pM.second);
+// 		for(int i=0;i<200;i++)
+// 			for(auto x : store[i]) 
+// 				if(x!=-1&&x!=0)
+// 					RES = RES < x ? RES:x;
+// 		printf("%d\n",RES);
+// 	}
+// 	return 0;
+// }
+//AC:±¾ÌâÓÃiostreamÒ²¿É£¬²»»á³¬Ê±(109ms)
+// #include <iostream>
+// #include <cstring>
+// #include <queue>
+// #define N 205
+// using namespace std;
+// typedef pair<int,int> p;
+// typedef pair<p,int> pp;
+// int RES=0,n,m,dx,dy,store[N][N],dir[4][2]={{-1,0},{0,1},{1,0},{0,-1}};
+// char road[N][N];
+// bool vis[N][N];
+// void BFS(int x, int y)
+// {	
+// 	queue<pp> q;
+// 	q.push(pp(p(x,y),0));
+// 	memset(vis, 0, sizeof(vis));
+// 	while(q.size())
+// 	{
+// 		pp temp=q.front(); q.pop();
+// 		dx=temp.first.first;
+// 		dy=temp.first.second;
+// 		if(store[dy][dx]!=-1) 
+// 		{
+// 			store[dy][dx]+=temp.second;
+// 			RES=store[dy][dx];
+// 		}
+// 		for(int i=0,nx,ny;i<4;i++)
+// 		{
+// 			nx=dx+dir[i][0];
+// 			ny=dy+dir[i][1];
+// 			if(nx>=0&&nx<m&&ny>=0&&ny<n&&road[ny][nx]!='#'&&!vis[ny][nx])
+// 			{
+// 				vis[ny][nx]=1;
+// 				q.push(pp(p(nx,ny),temp.second+11));
+// 			}
+// 		}
+// 	}
+// }
+// int main()
+// {
+// 	p pY,pM;
+// 	while(cin>>n>>m)
+// 	{
+// 		memset(store, -1, sizeof(store));
+// 		for(int i=0;i<n;i++)
+// 			for(int j=0;j<m;j++)
+// 			{
+// 				cin>>road[i][j];
+// 				switch(road[i][j])
+// 				{
+// 					case 'Y': pY={j,i};break;
+// 					case 'M': pM={j,i};break;
+// 					case '@': store[i][j]=0;break;
+// 				}
+// 			}
+// 		BFS(pY.first,pY.second);
+// 		BFS(pM.first,pM.second);
+// 		for(int i=0;i<N;i++)
+// 			for(auto x : store[i]) 
+// 				if(x!=-1&&x!=0)
+// 					RES = RES < x ? RES:x;
+// 		cout<<RES<<endl;
+// 	}
+// 	return 0;
+// }
+*/
 
 
 
-
-
+//***8.Pots
+/*²İ¸å
+//²İ¸å1
 // #include <cstring>
 // #include <iostream>
 // #include <queue>
@@ -1724,7 +1739,6 @@ M..........................#@#
 //                         q.push(pp(p(t1+t2-b,b),5));
 //                     }
 //                     ans[res][ind][5]=op;
-
 //                 }
 //             }
 //             if(op!=6&&t1!=a) 
@@ -1757,7 +1771,7 @@ M..........................#@#
 //     else cout<<"impossible";
 //     return 0;
 // }
-
+//²İ¸å2
 // #include <cstring>
 // #include <iostream>
 // #include <queue>
@@ -1821,7 +1835,6 @@ M..........................#@#
 //                     {
 //                         q.push(pp(p(t1+t2-b,b),p(5,ind+1)));
 //                     }
-
 //                 }
 //             }
 //             if(op!=6&&t1!=a) 
@@ -1852,33 +1865,7 @@ M..........................#@#
 //     else cout<<"impossible";
 //     return 0;
 // }
-
-
-/*
-3 5 4
-w1=0,w2=5;
-w1=3,w2=2;
-w1=0,w2=2;
-w1=2,w2=0;
-w1=2,w2=5;
-w1=3,w2=4;(w2Âú×ãÌõ¼ş)
-ÈÎÒâÒ»¸öw==c¼´¿É
-
-7  5
-w1=7,w2=1
-
-¹æ¶¨
-w1->a->1,w2->b->2
-0=NULL
-FILL(1)=1
-FILL(2)=2
-DROP(1)=3
-DROP(2)=4
-POUR(1,2)=5
-POUR(2,1)=6
-{{w1,w2}, op}
-*/
-
+//²İ¸å3
 // #include <cstdio>
 // #include <cstring>
 // #include <iostream>
@@ -1957,7 +1944,6 @@ POUR(2,1)=6
 //             q.push(pp(p(t1,0),4));
 //             vis[t1][0]=1;
 //             ans[t1][0]=pp(pf,4);
-            
 //         }
 //         if(op!=5&&t2!=b) 
 //         {
@@ -1975,7 +1961,6 @@ POUR(2,1)=6
 //                     vis[t1+t2-b][b]=1;
 //                     ans[t1+t2-b][b]=pp(pf,5);
 //                 }
-
 //             }
 //         }
 //         if(op!=6&&t1!=a) 
@@ -2010,10 +1995,32 @@ POUR(2,1)=6
 //     else cout<<"impossible";
 //     return 0;
 // }
+*/
+/*°¸Àı·ÖÎö£º
+3 5 4
+w1=0,w2=5;
+w1=3,w2=2;
+w1=0,w2=2;
+w1=2,w2=0;
+w1=2,w2=5;
+w1=3,w2=4;(w2Âú×ãÌõ¼ş)
+ÈÎÒâÒ»¸öw==c¼´¿É
 
+7  5
+w1=7,w2=1
 
-
-
+¹æ¶¨
+w1->a->1,w2->b->2
+0=NULL
+FILL(1)=1
+FILL(2)=2
+DROP(1)=3
+DROP(2)=4
+POUR(1,2)=5
+POUR(2,1)=6
+{{w1,w2}, op}
+*/
+/*CE
 // #include <cstdio>
 // #include <cstring>
 // #include <iostream>
@@ -2102,10 +2109,8 @@ POUR(2,1)=6
 //     // else cout<<"impossible";
 //     return 0;
 // }
-
-
-
-
+*/
+/*CE
 // #include <cstdio>
 // #include <cstring>
 // #include <iostream>
@@ -2205,62 +2210,60 @@ POUR(2,1)=6
 //     else cout<<"impossible";
 //     return 0;
 // }
-
-//***Ãî½â£¡
-#include <cstdio>
-#include <iostream>
-#include <queue>
-using namespace std;
-typedef pair<int,int> P;
-P root[101][101];//±£´æÂ·¾¶
-int vis[101][101],op[101][101],sign[101][101],a,b,c;
-void judge(int fl, int x){
-    if(fl==0) printf("FILL(%d)\n",x);
-    else if(fl==1) printf("DROP(%d)\n",x);
-    else printf("POUR(%d,%d)\n",x/10,x%10);    
-}
-void link(P p){
-    if(p == P()) return;//pÎªP(0,0)Ê±¼´ÖÕÖ¹Êä³ö
-    link(root[p.first][p.second]);
-    judge(op[p.first][p.second], sign[p.first][p.second]);
-}
-void BFS(){
-    queue<P> que;
-    que.push(P(0,0));//Ö±½Ó´ÓÁ½¸öÈİÆ÷¶¼Îª¿Õ¿ªÊ¼£¬Ê¡È¥·ÖÁ½´ÎÇóµÄÂé·³
-    vis[0][0]=1;
-    while(que.size()){
-        P s=que.front(); que.pop();
-        int x=s.first, y=s.second;
-        if(x==c || y==c){
-            printf("%d\n",vis[x][y]-1);
-            link(P(x,y));//Â·¾¶
-            return;
-        }
-        int k=min(a-x,y), k1=min(b-y,x);
-        int st[6][2] = {{a,y},{x,b},{0,y},{x,0},{x+k,y-k},{x-k1,y+k1}};//6ÖÖ¿ÉÄÜµÄ²Ù×÷
-        int oper[6] ={1,2,1,2,21,12};//ÈİÆ÷i
-        for(int i=0;i<6;i++){//0,1,2,3,4,5
-            int dx = st[i][0], dy = st[i][1];
-            if(!vis[dx][dy]){
-                vis[dx][dy]=vis[x][y]+1;//´æ²½ÊıµÄÍ¬Ê±Ïàµ±ÓÚ´æÁË×´Ì¬
-                root[dx][dy] = P(x,y); 
-                sign[dx][dy] = oper[i];
-                op[dx][dy] = i/2;//½«6¸ö²½Öè·Ö³É3²¿·Ö
-                que.push(P(dx,dy));
-            }
-        }
-    }
-    printf("impossible");
-}
-int main(){
-    cin>>a>>b>>c;
-    BFS();
-    return 0;
-}
-
-
-
-
+*/
+/*Ãî½â£¡£¡£¡£¡£¡£¡£¡
+// #include <cstdio>
+// #include <iostream>
+// #include <queue>
+// using namespace std;
+// typedef pair<int,int> P;
+// P root[101][101];//±£´æÂ·¾¶
+// int vis[101][101],op[101][101],sign[101][101],a,b,c;
+// void judge(int fl, int x){
+//     if(fl==0) printf("FILL(%d)\n",x);
+//     else if(fl==1) printf("DROP(%d)\n",x);
+//     else printf("POUR(%d,%d)\n",x/10,x%10);    
+// }
+// void link(P p){
+//     if(p == P()) return;//pÎªP(0,0)Ê±¼´ÖÕÖ¹Êä³ö
+//     link(root[p.first][p.second]);
+//     judge(op[p.first][p.second], sign[p.first][p.second]);
+// }
+// void BFS(){
+//     queue<P> que;
+//     que.push(P(0,0));//Ö±½Ó´ÓÁ½¸öÈİÆ÷¶¼Îª¿Õ¿ªÊ¼£¬Ê¡È¥·ÖÁ½´ÎÇóµÄÂé·³
+//     vis[0][0]=1;
+//     while(que.size()){
+//         P s=que.front(); que.pop();
+//         int x=s.first, y=s.second;
+//         if(x==c || y==c){
+//             printf("%d\n",vis[x][y]-1);
+//             link(P(x,y));//Â·¾¶
+//             return;
+//         }
+//         int k=min(a-x,y), k1=min(b-y,x);
+//         int st[6][2] = {{a,y},{x,b},{0,y},{x,0},{x+k,y-k},{x-k1,y+k1}};//6ÖÖ¿ÉÄÜµÄ²Ù×÷
+//         int oper[6] ={1,2,1,2,21,12};//ÈİÆ÷i
+//         for(int i=0;i<6;i++){//0,1,2,3,4,5
+//             int dx = st[i][0], dy = st[i][1];
+//             if(!vis[dx][dy]){
+//                 vis[dx][dy]=vis[x][y]+1;//´æ²½ÊıµÄÍ¬Ê±Ïàµ±ÓÚ´æÁË×´Ì¬
+//                 root[dx][dy] = P(x,y); 
+//                 sign[dx][dy] = oper[i];
+//                 op[dx][dy] = i/2;//½«6¸ö²½Öè·Ö³É3²¿·Ö
+//                 que.push(P(dx,dy));
+//             }
+//         }
+//     }
+//     printf("impossible");
+// }
+// int main(){
+//     cin>>a>>b>>c;
+//     BFS();
+//     return 0;
+// }
+*/
+/*ÊÔÍ¼ºÏ²¢³ÉÒ»¸ö¶àÔª½á¹¹ÌåÊı×é
 // #include <cstdio>
 // #include <iostream>
 // #include <queue>
@@ -2320,97 +2323,7 @@ int main(){
 //     BFS();
 //     return 0;
 // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/
 
 
 
@@ -2616,50 +2529,6 @@ int main(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //N»ÊºóÎÊÌâ(Î´ĞŞ¸Ä)
 // #include <iostream>
 // using namespace std;
@@ -2709,6 +2578,196 @@ int main(){
 
 
 
+/*Èı.Ç°×ººÍ Óë ²î·Ö*/
+/*¼òµ¥Àí½â:
+1.Ç°×ººÍÊÇÖ¸Ä³ĞòÁĞµÄÇ°nÏîºÍ£¬¿ÉÒÔ°ÑËüÀí½âÎªÊıÑ§ÉÏµÄÊıÁĞµÄÇ°nÏîºÍ;
+2.²î·Ö¿ÉÒÔ¿´³ÉÇ°×ººÍµÄÄæÔËËã¡£ºÏÀíµÄÊ¹ÓÃÇ°×ººÍÓë²î·Ö£¬¿ÉÒÔ½«Ä³Ğ©¸´ÔÓµÄÎÊÌâ¼òµ¥»¯¡£
+*/
+
+//Ç°×ººÍ
+/*ÖªÊ¶ÊáÀí
+//Ò»Î¬Ç°×ººÍ
+//¶ÔÓÚÏßĞÔÊıÁĞan£¬µ±¶ÔÄ³Çø¼ä·¶Î§ÄÚÊıÖµÇóºÍÊ±£¬ÈôÃ¿´Î¶¼ÒªÑ­»·±éÀú¸ÃÇø¼äÄÚËùÓĞÔªËØ²¢¼ÓºÍ£¬¿ÉÄÜ»áµ¼ÖÂÊ±¼ä¸´ÔÓ¶È O(n*m) ÔÚ n*m ºÜ´óÊ±¹ı¸ß
+//Òò´ËÎÒÃÇÓÃÒ»¸öÊı×éS[i]£¬ÒÀ´Î´æ´¢Ç°iÏîºÍ£¬¼´S[1] = a1 , S[2] = S2 = a1 + a2 ,  S[3] = S3 = a1 + a2 + a3  (S[0] ±»¶¨ÒåÎª 0)
+//ÄÇÃ´ÔÚÇóÊıÁĞµÄÄ³·¶Î§[n,m] (n<=m)ÄÚÊıºÍÊ±,Ö»ĞèÒªÊä³ö S[m] - S[n-1] (ÆäÖĞS[n-1]×ÔĞĞÀí½â,ÒòÎªÒªÇóµÚnµ½m¸öÊıºÍ²»ÄÜ¼õÈ¥º¬µÚnÏîµÄS[n]) 
+//´æ´¢¹«Ê½£ºsum[i] = sum[i-1] + arr[i]
+//¶ÁÈ¡¹«Ê½£ºres = sum[m] - sum[n-1]
+// #include <iostream>
+// using namespace std;
+// const int N = 1e8 + 1;
+// int arr[N], sum[N];
+// int main()
+// {       
+//     int n,m;//´ıÇóµÄ·¶Î§
+//     //³õÊ¼»¯ÊıÁĞ
+//     for(int i=1;i<=N-1;i++) arr[i]=i;
+//     //Ç°×ººÍ²Ù×÷(Êµ¼ÊÉÏ¿ÉÒÔ±ß¶ÁÈ¡arrÊıÁĞÊı£¬±ß½øĞĞÇóºÍ²Ù×÷)
+//     for(int i=1;i<=N-1;i++) 
+//     {
+//         sum[i] = sum[i-1] + arr[i];//sum[0]=0
+//     }   
+//     while(cin>>n>>m)
+//         cout<<sum[m]-sum[n-1]<<endl;
+//     return 0;
+// }
+
+//¶şÎ¬Ç°×ººÍ
+//´æ´¢¹«Ê½£ºsum[i][j] =  sum[i-1][j] + sum[i][j-1] - sum[i-1][j-1] + arr[i][j]
+// ¶ÁÈ¡¹«Ê½£ºres = sum[x2][y2] - sum[x2][y1-1] - sum[x1-1][y2] + sum[x1-1][y1-1]
+// #include <iostream>
+// using namespace std;
+// const int N = 1e4 + 1;
+// int arr[N][N];
+// int sum[N][N];
+// int main()
+// {       
+//     int x1,x2,y1,y2;//´ıÇóµÄ·¶Î§
+//     //³õÊ¼»¯ÊıÁĞ
+//     for(int i=1;i<=N-1;i++) 
+//         for(int j=1;j<=N-1;j++)
+//             arr[i][j]=i+j;
+//     //Ç°×ººÍ²Ù×÷(Êµ¼ÊÉÏ¿ÉÒÔ±ß¶ÁÈ¡arrÊıÁĞÊı£¬±ß½øĞĞÇóºÍ²Ù×÷)
+//     for(int i=1;i<=N-1;i++) 
+//         for(int j=1;j<=N-1;j++)
+//             sum[i][j] +=  sum[i-1][j] + sum[i][j-1] - sum[i-1][j-1] + arr[i][j];//sum[0][0]=0
+//     while(cin>>x1>>y1>>x2>>y2)
+//     {
+//         int res = sum[x2][y2] - sum[x2][y1-1] - sum[x1-1][y2] + sum[x1-1][y1-1]; 
+//         //sum[2][2] = sum[1][2] + sum[2][1] - sum[1][1] + arr[2][2] 
+//         cout<< res <<endl;
+//     }
+//     return 0;
+// }
+*/
+
+//P1115 ×î´ó×Ó¶ÎºÍ
+// //Ç°×ººÍ + ¶¯¹æDP\Ì°ĞÄ
+// // 7
+// // 2 -4 3 -1 2 -4 3
+// //sum[i] = 2 -2 3 2 4 0 3
+// #include <iostream>
+// using namespace std;
+// const int N=2*1e5+1;
+// int a[N],sum[N],n,res=-N,i;
+// int main()
+// {
+//     cin>>n;
+//     for(i=1;i<=n;i++) 
+//     {
+//         cin>>a[i];
+//         sum[i]=max(sum[i-1]+a[i],a[i]);
+//         //¶¯¹æÏÂµÄÇ°×ººÍ¾ßÓĞÑ¡ÔñĞÔ£¬ÈôÉÏÒ»´ÎÇ°×ººÍĞ¡ÓÚ¶ÁÈ¡µ½µÄÊı£¬ÄÇ¾Í´Ó¸ÃÊı¿ªÊ¼ÖØĞÂ¼ÆËãÇ°×ººÍ£¬ÕâÑùµÃµ½ÄÜ¸÷×î´ó×ÓĞòÁĞµÄÇ°×ººÍĞòÁĞ
+//         //´ËÊ±Ç°×ººÍË¼ÏëÊµ¼ÊÉÏ×÷ÓÃÔÚËùÓĞ×ÓĞòÁĞÖĞ£¬¶ø²»ÊÇ¶ÔÕûÌå¡£
+//         //¸Ã°¸Àı»á±»·Ö³ÉÁ½¸ö×î´ó×ÓĞòÁĞ£¬{2,-4} {3,-1,2,-4,3}
+//         //·Ö±ğµÃµ½Ç°×ººÍĞòÁĞ {2,-2} {3,2,4,0,3}
+//         //ÆäÖĞµÚ¶ş¸öÇ°×ººÍĞòÁĞÖĞµÄ×î´óÖµ 4 ¼´´ğ°¸
+//         res=max(res,sum[i]);//È¡¸÷Ç°×ººÍĞòÁĞÖĞ×î´óÖµ
+//     }
+//     cout<<res;
+//     return 0;
+// }
+
+
+
+// #include <iostream>
+// using namespace std;
+// const int N = 1000;
+// int arr[N][N],sum[N][N],m,n,res=0;
+// int main()
+// {       
+
+//     cin>>m>>n;
+//     for(int i=1;i<=m;i++) 
+//         for(int j=1;j<=n;j++)
+//         {
+//             cin>>arr[i][j];
+//             sum[i][j] = max(sum[i-1][j] + sum[i][j-1] - sum[i-1][j-1] + arr[i][j],arr[i][j]);
+//             res=max(res,sum[i][j]);
+//         }            
+//     cout<< res <<endl;
+//     return 0;
+// }
+
+//¸ÃÀàÖ»ĞèÕÒµ½Ò»¸ö·ûºÏÌõ¼ş½âµÄÌâÎŞĞè¹ËÂÇÖ±½ÓËÑË÷
+// #include <iostream>
+// using namespace std;
+// const int N=1e5+1;
+// int n,m,T,a[N],s[N];
+// int main()
+// {
+//     while(cin>>T)
+//     {
+//         while(T--)
+//         {
+//             int res=0;
+//             cin>>n>>m;
+//             for(int i=1;i<=n;i++)
+//             {
+//                 cin>>a[i];
+//                 s[i]=s[i-1]+a[i];
+//             }
+//             for(int i=1;i<=n;i++)
+//             {
+//                 for(int j=i;j<=n;j++)
+//                 {
+//                     if((s[j]-s[i-1])%m==0)
+//                     {
+//                         res=1;
+//                         goto Here;
+//                     }
+//                 }
+//             }
+//             Here:
+//             if(res) cout<<"YES\n";
+//             else cout<<"NO\n";
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+#include <cstdio>
+#include <cstring>
+using namespace std;
+const int N = 16;
+int s[N][N],base[N][N];
+int n,m,p,q,x1,x2,y1,y2;
+int t1,t2;
+int main()
+{       
+    for(int i=1;i<=N;i++)
+        for(int j=1;j<=N;j++)
+            base[i][j] = base[i-1][j] + base[i][j-1] - base[i-1][j-1] + 1;
+    while(~scanf("%d%d",&n,&m))
+    {
+        memset(s,0,sizeof s);
+        scanf("%d",&p);
+        while(p--)
+        {
+            scanf("%d%d%d%d",&x1,&y1,&x2,&y2);
+            for(int i=x1;i<=x2;i++)
+            {
+                for(int j=y1;j<=y2;j++)
+                {
+                    // s[i][j]=base[i][j] - base[x1][y1-1] - base[x1-1][y1] + base[x1-1][y1-1];
+                    s[i][j]= s[i][j-1] + s[i-1][j] - s[i-1][j-1] + 1;
+                }
+            }
+        }
+        scanf("%d",&q);
+        while(q--)
+        {
+            scanf("%d%d%d%d",&x1,&y1,&x2,&y2);
+            if((t1=base[x2][y2] - base[x2][y1-1] - base[x1-1][y2] + base[x1-1][y1-1])<= (t2=s[x2][y2] - s[x2][y1-1] - s[x1-1][y2] + s[x1-1][y1-1]))
+                printf("YES\n");
+            else 
+                printf("NO\n");
+            printf("t1=%d,t2=%d\n",t1,t2);
+        }
+    }
+    return 0;
+}
 
 
 
@@ -2718,6 +2777,47 @@ int main(){
 
 
 
+//²î·Ö
+// ²î·ÖÊı×é£º
+// Ê×ÏÈ¸ø¶¨Ò»¸öÔ­Êı×éa[]£ºa[1], a[2], a[3],,,,,, a[n];
+// È»ºóÎÒÃÇ¹¹ÔìÒ»¸öÊı×éb[] £º b[1], b[2], b[3],,,,,, b[i];
+// Ê¹µÃ a[i] = b[1] + b[2] + b[3] + ,,,,,, + b[i]
+// Ò²¾ÍÊÇËµ£¬aÊı×éÊÇbÊı×éµÄÇ°×ººÍÊı×é£¬·´¹ıÀ´ÎÒÃÇ°ÑbÊı×é½Ğ×öaÊı×éµÄ²î·ÖÊı×é¡£»»¾ä»°Ëµ£¬Ã¿Ò»¸öa[i]¶¼ÊÇbÊı×éÖĞ´ÓÍ·¿ªÊ¼µÄÒ»¶ÎÇø¼äºÍ¡£
+// ÓÃÍ¾£º
+// Èç¸ø¶¨Çø¼ä[l, r]£¬ÈÃÎÒÃÇ°ÑaÊı×éÖĞµÄ[l, r] Çø¼äÖĞµÄÃ¿Ò»¸öÊı¶¼¼ÓÉÏc,¼´ a[l] + c , a[l + 1] + c , a[l + 2] + c ,,,,,, a[r] + c;
+// ¼´ÄÜ¸ßĞ§µØ¶ÔÒ»¸ö·¶Î§ÄÚÊı½øĞĞ¸ü¸Ä\ÔËËã,¶ø²»ÊÇ±éÀúÕû¸öÇø¿é
+// Ëã·¨ÖØµã:
+// ¸øaÊı×éÖĞµÄ[l, r] Çø¼äÖĞµÄÃ¿Ò»¸öÊı¶¼¼ÓÉÏc,Ö»Ğè¶Ô²î·ÖÊı×éb[]×ö b[l] + = c, b[r+1] -= c 
+// ¶ø b[r+1] -= c ¿ÉÒÔÊ¹µÃ¸ÃÇø¼äºóµÄÊı²»»áÊÜÇ°ÃæĞŞ¸ÄµÄÓ°Ïì£¡×öµ½Ö»ĞŞ¸ÄÄ³Ò»Çø¼äµÄÖµ
+
+//Ò»¼¶²î·Ö
+// #include<iostream>
+// using namespace std;
+// const int N = 1e5 + 10;
+// int a[N],b[N]; 
+// int main()
+// {
+//     int n,m;
+//     scanf("%d%d", &n, &m);
+//     for(int i = 1;i <= n; i++) 
+//     {
+//         scanf("%d", &a[i]);
+//         b[i] = a[i] - a[i - 1];      //¹¹½¨²î·ÖÊı×é
+//     }
+//     int l, r, c;
+//     while(m--)
+//     {
+//         scanf("%d%d%d", &l, &r, &c);
+//         b[l] += c;     //±íÊ¾½«ĞòÁĞÖĞ[l, r]Ö®¼äµÄÃ¿¸öÊı¼ÓÉÏc
+//         b[r + 1] -= c;
+//     }
+//     for(int i = 1;i <= n; i++) 
+//     {
+//         b[i] += b[i - 1];  //ÇóÇ°×ººÍÔËËã
+//         printf("%d ",b[i]);
+//     }
+//     return 0;
+// }
 
 
 
@@ -2725,15 +2825,12 @@ int main(){
 
 
 
+//1 2 3 4 5 6 7 8 9 10
+
+//7
 
 
-
-
-
-
-
-
-
+//15
 
 
 
@@ -2819,15 +2916,25 @@ int main(){
 https://blog.csdn.net/qq_43762191/article/details/107280503?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166927609816800182199745%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=166927609816800182199745&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-107280503-null-null.142^v66^control,201^v3^add_ask,213^v2^t3_control1&utm_term=%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91&spm=1018.2226.3001.4187
 */
 
-
-
-
-
 //¹şÏ£Ëã·¨
 /*
 ¿ÉÓÃÓÚÈç¶ÔÊıĞòÁĞÖĞ¸÷Êı³öÏÖ´ÎÊı¼ÆÊı£¬ÒÔ¸ÃÊıÎªÏÂ±ê£¬Êı×éÔªËØÎª´ÎÊıÀ´¼ÇÂ¼£¬¿ÉÄÜ»á³öÏÖÊı×é´óĞ¡¶¨ÒåĞèÇó¹ı´ó£¬ÕâÊ±ºò¶ÔÊı½øĞĞ¹şÏ£Ó³Éä´¦Àí£¬Ö®ºóÒªÊä³öÔÙÄæÓ³ÉäµÃµ½Ô­Êı
 https://blog.csdn.net/qq_38609781/article/details/84836583?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166927649216782425154549%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=166927649216782425154549&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-2-84836583-null-null.142^v66^control,201^v3^add_ask,213^v2^t3_control1&utm_term=%E5%93%88%E5%B8%8C%E6%98%A0%E5%B0%84&spm=1018.2226.3001.4187
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //Ğ¡ÖªÊ¶
