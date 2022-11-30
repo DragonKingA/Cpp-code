@@ -2262,6 +2262,11 @@ POUR(2,1)=6
 //     BFS();
 //     return 0;
 // }
+
+//关于输出结果时可以替换Judge()函数
+//构建输出模板 char oplist[3][22] = {"FILL(%d)\n", "DROP(%d)\n", "POUR(%d,%d)\n"};
+//输出时按最大操作数写 printf(oplist[第二维度下标], 操作数1(应用到第一个%d) , 操作数2(应用到第二个%d) );
+
 */
 /*试图合并成一个多元结构体数组
 // #include <cstdio>
@@ -2324,8 +2329,84 @@ POUR(2,1)=6
 //     return 0;
 // }
 */
+/*郭教的结构体方法
+#include<cstdio>
+#include<cstring>
+#include<cstdlib>
+#include<queue>
+typedef std::pair<int, int> pii;
+const int maxn = 1e2 + 10;
+struct Node {
+    int pa, pb, op, opf, step;
+};
+Node vis[maxn][maxn];
+int cup[2], c, snow[2], snex[2]; 
+inline void InitNex() {memcpy(snex, snow, sizeof(snex));}
+void FILL(int cn) {
+    InitNex();
+    snex[cn] = cup[cn];
+}
+void DROP(int cn) {
+    InitNex();
+    snex[cn] = 0;
+}
+void POUR(int cn) {
+    InitNex();
+    int pn = std::min(cup[cn ^ 1] - snex[cn ^ 1], snex[cn]);
+    snex[cn ^ 1] += pn;
+    snex[cn] -= pn;
+}
+void InQ(int op, int opf, std::queue<pii> &q) {
+    Node &now = vis[snex[0]][snex[1]];
+    if(now.op != -1) return;
+    now.op = op;
+    now.opf = opf;
+    now.pa = snow[0];
+    now.pb = snow[1];
+    now.step = vis[snow[0]][snow[1]].step + 1;
+    q.push(pii(snex[0], snex[1]));
+}
+bool BFS() {
+    memset(vis, -1, sizeof(vis));
+    std::queue<pii> q;
+    q.push(pii(0, 0));
+    vis[0][0].op = -2; // 无特殊含义，只是标记该状态已访问
+    vis[0][0].step = 0;
+    while(!q.empty()) {
+        pii now = q.front();
+        q.pop();
+        snow[0] = now.first, snow[1] = now.second;
+        if(snow[0] == c || snow[1] == c) return true;
+        for(int i = 0; i <= 1; i ++) {
+            FILL(i); InQ(0, i, q);
+            DROP(i); InQ(1, i, q);
+            POUR(i); InQ(2, i, q);
+        }
+    }
+    return false;
+}
+char oplist[3][22] = {"FILL(%d)\n", "DROP(%d)\n", "POUR(%d,%d)\n"};
+void DFSPrint(int a, int b) {
+    if(a == -1) return;
+    DFSPrint(vis[a][b].pa, vis[a][b].pb);
+    printf(oplist[vis[a][b].op], vis[a][b].opf + 1, (vis[a][b].opf ^ 1) + 1);
+}
+int main() {
+    while(scanf("%d%d%d", &cup[0], &cup[1], &c) != EOF) {
+        if(BFS()) {
+            printf("%d\n", vis[snow[0]][snow[1]].step);
+            DFSPrint(snow[0], snow[1]);
+        }
+        else {
+            printf("impossible\n");
+        }
+    }
+    return 0;
+}
 
 
+
+*/
 
 
 
@@ -2640,7 +2721,7 @@ POUR(2,1)=6
 // }
 */
 
-//P1115 最大子段和
+//1. P1115 最大子段和
 // //前缀和 + 动规DP\贪心
 // // 7
 // // 2 -4 3 -1 2 -4 3
@@ -2666,16 +2747,13 @@ POUR(2,1)=6
 //     cout<<res;
 //     return 0;
 // }
-
-
-
+//
 // #include <iostream>
 // using namespace std;
 // const int N = 1000;
 // int arr[N][N],sum[N][N],m,n,res=0;
 // int main()
 // {       
-
 //     cin>>m>>n;
 //     for(int i=1;i<=m;i++) 
 //         for(int j=1;j<=n;j++)
@@ -2688,6 +2766,9 @@ POUR(2,1)=6
 //     return 0;
 // }
 
+
+
+//2.sum
 //该类只需找到一个符合条件解的题无需顾虑直接搜索
 // #include <iostream>
 // using namespace std;
@@ -2727,47 +2808,102 @@ POUR(2,1)=6
 
 
 
-#include <cstdio>
-#include <cstring>
-using namespace std;
-const int N = 16;
-int s[N][N],base[N][N];
-int n,m,p,q,x1,x2,y1,y2;
-int t1,t2;
-int main()
-{       
-    for(int i=1;i<=N;i++)
-        for(int j=1;j<=N;j++)
-            base[i][j] = base[i-1][j] + base[i][j-1] - base[i-1][j-1] + 1;
-    while(~scanf("%d%d",&n,&m))
-    {
-        memset(s,0,sizeof s);
-        scanf("%d",&p);
-        while(p--)
-        {
-            scanf("%d%d%d%d",&x1,&y1,&x2,&y2);
-            for(int i=x1;i<=x2;i++)
-            {
-                for(int j=y1;j<=y2;j++)
-                {
-                    // s[i][j]=base[i][j] - base[x1][y1-1] - base[x1-1][y1] + base[x1-1][y1-1];
-                    s[i][j]= s[i][j-1] + s[i-1][j] - s[i-1][j-1] + 1;
-                }
-            }
-        }
-        scanf("%d",&q);
-        while(q--)
-        {
-            scanf("%d%d%d%d",&x1,&y1,&x2,&y2);
-            if((t1=base[x2][y2] - base[x2][y1-1] - base[x1-1][y2] + base[x1-1][y1-1])<= (t2=s[x2][y2] - s[x2][y1-1] - s[x1-1][y2] + s[x1-1][y1-1]))
-                printf("YES\n");
-            else 
-                printf("NO\n");
-            printf("t1=%d,t2=%d\n",t1,t2);
-        }
-    }
-    return 0;
-}
+//3.Olympiad
+// #include <iostream>
+// #include <set>
+// using namespace std;
+// const int N=1e5+1;
+// int T,sum[N],x1,x2;
+// bool jud(int x)//判定是否为完美数
+// {
+//     set<int> s;
+//     while(x)
+//     {
+//         int i=x%10;
+//         if(!s.count(i)) s.insert(i);//没重复就先放进集合，方便下次判重
+//         else return 0;//已经有这个元素，说明重复
+//         x/=10;
+//     }
+//     return 1;
+// }
+// int main()
+// {
+//     //先打表
+//     for(int i=1;i<=N;i++)
+//     {
+//         sum[i]=jud(i);
+//         sum[i]+=sum[i-1];
+//     }
+//     cin>>T;
+//     while(T--)
+//     {
+//         cin>>x1>>x2;
+//         cout<<sum[x2]-sum[x1-1]<<endl;
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//!!!!!!!!!!!!!!!!!!!!!
+// #include <cstdio>
+// #include <cstring>
+// using namespace std;
+// const int N = 16;
+// int s[N][N],base[N][N];
+// int n,m,p,q,x1,x2,y1,y2;
+// int t1,t2;
+// int main()
+// {       
+//     for(int i=1;i<=N;i++)
+//         for(int j=1;j<=N;j++)
+//             base[i][j] = base[i-1][j] + base[i][j-1] - base[i-1][j-1] + 1;
+//     while(~scanf("%d%d",&n,&m))
+//     {
+//         memset(s,0,sizeof s);
+//         scanf("%d",&p);
+//         while(p--)
+//         {
+//             scanf("%d%d%d%d",&x1,&y1,&x2,&y2);
+//             for(int i=x1;i<=x2;i++)
+//             {
+//                 for(int j=y1;j<=y2;j++)
+//                 {
+//                     // s[i][j]=base[i][j] - base[x1][y1-1] - base[x1-1][y1] + base[x1-1][y1-1];
+//                     s[i][j]= s[i][j-1] + s[i-1][j] - s[i-1][j-1] + 1;
+//                 }
+//             }
+//         }
+//         scanf("%d",&q);
+//         while(q--)
+//         {
+//             scanf("%d%d%d%d",&x1,&y1,&x2,&y2);
+//             if((t1=base[x2][y2] - base[x2][y1-1] - base[x1-1][y2] + base[x1-1][y1-1])<= (t2=s[x2][y2] - s[x2][y1-1] - s[x1-1][y2] + s[x1-1][y1-1]))
+//                 printf("YES\n");
+//             else 
+//                 printf("NO\n");
+//             printf("t1=%d,t2=%d\n",t1,t2);
+//         }
+//     }
+//     return 0;
+// }
 
 
 
