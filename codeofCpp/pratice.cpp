@@ -2721,6 +2721,7 @@ int main() {
 // }
 */
 
+
 //1. P1115 最大子段和
 // //前缀和 + 动规DP\贪心
 // // 7
@@ -2769,141 +2770,167 @@ int main() {
 
 
 //2.sum
-//该类只需找到一个符合条件解的题无需顾虑直接搜索
+//该类只需找到一个符合条件解的题无需顾虑直接搜索,但是以下是尽量减少时间(鸽巢原理)和空间复杂度(使用vector)的写法
 // #include <iostream>
+// #include <vector>
 // using namespace std;
-// const int N=1e5+1;
-// int n,m,T,a[N],s[N];
+// int n,m,T;
+// bool jud(vector<int> &s)
+// {
+//     if(n>=m) return true;//鸽巢原理: n+1只鸽子飞回n个鸽笼至少有一个鸽笼含有不少于2只的鸽子
+//     for(int i=1;i<=n;i++)//排除n>=m情况再遍历n<m的情况，此时只有直接等于m才有可能符合，减少时间复杂度
+//         for(int j=0;j<i;j++)
+//             if(s[i]-s[j]==m) return true;
+//     return false;
+// }
 // int main()
 // {
-//     while(cin>>T)
+//     for(cin>>T;T--&&cin>>n>>m;)
 //     {
-//         while(T--)
-//         {
-//             int res=0;
-//             cin>>n>>m;
-//             for(int i=1;i<=n;i++)
-//             {
-//                 cin>>a[i];
-//                 s[i]=s[i-1]+a[i];
-//             }
-//             for(int i=1;i<=n;i++)
-//             {
-//                 for(int j=i;j<=n;j++)
-//                 {
-//                     if((s[j]-s[i-1])%m==0)
-//                     {
-//                         res=1;
-//                         goto Here;
-//                     }
-//                 }
-//             }
-//             Here:
-//             if(res) cout<<"YES\n";
-//             else cout<<"NO\n";
-//         }
+//         vector<int> s(n+5,0);
+//         for(int i=1;i<=n&&cin>>s[i];i++) s[i]+=s[i-1];
+//         cout<<(jud(s)?"YES\n":"NO\n");
 //     }
 //     return 0;
 // }
+//原来的写法:
+// for(int i=1;i<=n;i++)
+//     for(int j=i;j<=n;j++)
+//         if((s[j]-s[i-1])%m==0)
+//         {
+//             res=1;
+//             goto Here;
+//         }
+//     Here:
+//     cout<<(res?"YES\n":"NO\n");
+/*
+5
+2 4 9 22 31
+s= 2 6 15 37 68 
+r= 2 1 0 2 3
+举个例子：设m=7，且整数为 2,4,6,3,5,5,6 。
+计算上面的和得到 2,6,12,15,20,25,31，这些整数被7除时余数分别为 2,6,5,1,6,4,3。
+有两个等于6的余数，这意味着结论：6+3+5=14 可被7整除
 
-
+证明：
+考虑有m个和（Sn）,
+a1,a1+a2,a1+a2+a3,……,a1+a2+a3+...+am
+要证这其中至少有一个和可以被m整除
+1.若这些和其中一个Si可以被m整除即Si%m=0，则该段序列之和Si可以被m整除
+2.这些和中的每一个除以m都有一个非零余数，余数等于1,2，……，m-1 中的一个数。
+因为有m个和，而只有m-1个余数，所以必然有两个和除以m有相同的余数。(鸽巢原理)
+因此，存在整数 k和l，k<l，使得a1+a2+...+ak 和 a1+a2+...+al除以m有相同的余数r：
+a1+a2+...+ak=b*m+r，a1+a2+...+al=c*m+r
+两式相减得 ak + ak+1 + ak+2 + …… + al = (c-b)*m
+即该段连续子序列之和可以被m整除
+*/
 
 //3.Olympiad
 // #include <iostream>
 // #include <set>
 // using namespace std;
-// const int N=1e5+1;
-// int T,sum[N],x1,x2;
-// bool jud(int x)//判定是否为完美数
+// int T,sum[100005],x1,x2;
+// bool jud(int x,set<int> &s)//判定是否为完美数
 // {
-//     set<int> s;
-//     while(x)
-//     {
-//         int i=x%10;
-//         if(!s.count(i)) s.insert(i);//没重复就先放进集合，方便下次判重
-//         else return 0;//已经有这个元素，说明重复
-//         x/=10;
-//     }
-//     return 1;
+//     if(!x) return 1;
+//     if(!s.count(x%10)) s.insert(x%10), jud(x/10,s);//没重复就先放进集合，方便下次判重，并且递归继续深入判重
+//     else return 0;//已经有这个元素，说明重复
 // }
 // int main()
 // {
 //     //先打表
-//     for(int i=1;i<=N;i++)
+//     for(int i=1;i<=100000;i++)
 //     {
-//         sum[i]=jud(i);
+//         set<int> s;
+//         sum[i]=jud(i,s);
 //         sum[i]+=sum[i-1];
 //     }
+//     for(cin>>T;T--&&cin>>x1>>x2;) cout<<sum[x2]-sum[x1-1]<<endl;
+//     return 0;
+// }
+
+
+
+//4.Intense Heat
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// int n,m,s[5005];
+// double res=0;
+// int main()
+// {
+//     scanf("%d%d",&n,&m);
+//     for(int i=1;i<=n && scanf("%d",&s[i]);i++) s[i]+=s[i-1];
+//     for(int i=m;i<=n;i++)
+//         for(int j=i;j<=n;j++)
+//             res=max(res, 1.0*(s[j]-s[j-i])/i);
+//     printf("%.8f\n",res);
+//     return 0;
+// }
+
+
+
+//5.最大子矩阵(二级前缀和)
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// int T,n,m,x,y,a[1000][1000];
+// int main()
+// {
 //     cin>>T;
 //     while(T--)
 //     {
-//         cin>>x1>>x2;
-//         cout<<sum[x2]-sum[x1-1]<<endl;
-//     }
-//     return 0;
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//!!!!!!!!!!!!!!!!!!!!!
-// #include <cstdio>
-// #include <cstring>
-// using namespace std;
-// const int N = 16;
-// int s[N][N],base[N][N];
-// int n,m,p,q,x1,x2,y1,y2;
-// int t1,t2;
-// int main()
-// {       
-//     for(int i=1;i<=N;i++)
-//         for(int j=1;j<=N;j++)
-//             base[i][j] = base[i-1][j] + base[i][j-1] - base[i-1][j-1] + 1;
-//     while(~scanf("%d%d",&n,&m))
-//     {
-//         memset(s,0,sizeof s);
-//         scanf("%d",&p);
-//         while(p--)
-//         {
-//             scanf("%d%d%d%d",&x1,&y1,&x2,&y2);
-//             for(int i=x1;i<=x2;i++)
+//         int res=0;
+//         cin>>m>>n>>x>>y;
+//         for(int i=1;i<=m;i++)
+//             for(int j=1;j<=n;j++)
 //             {
-//                 for(int j=y1;j<=y2;j++)
-//                 {
-//                     // s[i][j]=base[i][j] - base[x1][y1-1] - base[x1-1][y1] + base[x1-1][y1-1];
-//                     s[i][j]= s[i][j-1] + s[i-1][j] - s[i-1][j-1] + 1;
-//                 }
+//                 cin>>a[i][j];
+//                 a[i][j]+=a[i-1][j]+a[i][j-1]-a[i-1][j-1];
+//                 if(i>=x&&j>=y) res=max(res,a[i][j]-a[i-x][j]-a[i][j-y]+a[i-x][j-y]);
 //             }
-//         }
-//         scanf("%d",&q);
-//         while(q--)
-//         {
-//             scanf("%d%d%d%d",&x1,&y1,&x2,&y2);
-//             if((t1=base[x2][y2] - base[x2][y1-1] - base[x1-1][y2] + base[x1-1][y1-1])<= (t2=s[x2][y2] - s[x2][y1-1] - s[x1-1][y2] + s[x1-1][y1-1]))
-//                 printf("YES\n");
-//             else 
-//                 printf("NO\n");
-//             printf("t1=%d,t2=%d\n",t1,t2);
-//         }
+//         cout<<res<<endl;
 //     }
 //     return 0;
 // }
+/*写法优化
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int T,n,m,x,y,res=0,a[1000][1000];
+int main()
+{
+    for(cin>>T;T--&&cin>>m>>n>>x>>y;res=0)
+    {
+        for(int i=1;i<=m;i++)
+            for(int j=1;j<=n;j++)
+            {
+                cin>>a[i][j];
+                a[i][j]+=a[i-1][j]+a[i][j-1]-a[i-1][j-1];
+                if(i>=x&&j>=y) res=max(res,a[i][j]-a[i-x][j]-a[i][j-y]+a[i-x][j-y]);
+            }
+        cout<<res<<endl;
+    }
+    return 0;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2955,20 +2982,171 @@ int main() {
 //     return 0;
 // }
 
+//二级差分
 
 
 
 
 
 
-//1 2 3 4 5 6 7 8 9 10
-
-//7
 
 
-//15
 
 
+//1.Color the ball
+//简单一级差分 及 其前缀和查询
+// #include <cstdio>
+// #include <cstring>
+// using namespace std;
+// const int N=1e5+5;
+// int b[N],n,x1,x2;
+// int main()
+// {
+//     while(~scanf("%d",&n),n)
+//     {
+//         memset(b,0,sizeof b);
+//         for(int i=0;i<n&&scanf("%d%d",&x1,&x2);i++) b[x1]+=1, b[x2+1]-=1;
+//         for(int i=1,t=b[1];i<=n;t+=b[++i]) printf(" %d"+!(i-1),t);
+//         printf("\n");
+//     }
+//     return 0;
+// }
+
+
+
+//2.Tallest Cow
+// #include <iostream>
+// #include <set>
+// using namespace std;
+// typedef pair<int,int> p;
+// int b[10000],N,I,H,R,A,B;
+// set<p> s;//可能会有重复区间，判重
+// int main()
+// {
+//     cin>>N>>I>>H>>R;
+//     b[0]=H;//每头牛基础高度定为最高高度
+//     while(R--)
+//     {
+//         cin>>A>>B;
+//         if(A>B) swap(A,B);
+//         if(!s.count(p(A,B))) 
+//         {
+//             s.insert(p(A,B));
+//             b[A+1]--,b[B]++;//处理牛之间高度的相对关系
+//         }
+//     }
+//     for(int i=1;i<=N;i++)
+//     {
+//         b[i]+=b[i-1];
+//         cout<<b[i]<<endl;
+//     }
+//     return 0;
+// }
+
+
+
+//3.Monitor(二级差分)
+//小知识: cmath头文件里面定义了y1,j0,j1,jn,y0,yn(均用于贝塞尔函数解)，所以这些变量尽量不用在全局变量中
+// #include <cstdio>
+// #include <vector>
+// using namespace std;
+// typedef vector<int> vi;
+// void bsum(int n,int m,bool op,vector<vi> &b)//1=前缀和,0=转bool
+// {
+//     for(int i=1;i<=n;i++)
+//         for(int j=1;j<=m;j++)
+//             if(op) b[i][j]+=b[i-1][j]+b[i][j-1]-b[i-1][j-1];
+//             else b[i][j]=bool(b[i][j]);//表示重复区域 >1 的仍为1, 为0的仍为0
+// }
+// int main()
+// {       
+//     int n,m,p,q,x1,x2,y1,y2;
+//     while(~scanf("%d%d",&n,&m))
+//     {
+//         vector<vi> b(n+5,vi(m+5,0));
+//         for(scanf("%d",&p);p-- && scanf("%d%d%d%d",&x1,&y1,&x2,&y2);)
+//             b[x1][y1]++,b[x2+1][y1]--,b[x1][y2+1]--,b[x2+1][y2+1]++;
+//         bsum(n,m,1,b);
+//         bsum(n,m,0,b);
+//         bsum(n,m,1,b);
+//         for(scanf("%d",&q);q-- && scanf("%d%d%d%d",&x1,&y1,&x2,&y2);)
+//         {
+//             int sum=b[x2][y2]-b[x1-1][y2]-b[x2][y1-1]+b[x1-1][y1-1];
+//             printf(sum>=(x2-x1+1)*(y2-y1+1) ? "YES\n":"NO\n");
+//         }
+//     }
+//     return 0;
+// }
+/*郭教代码（* 二维差分 转 二维前缀和 的写法）
+#include<cstdio>
+#include<algorithm>
+#include<set>
+int n, m, p, q;
+int main() {
+    int x1, y1, x2, y2; // 小课堂：y1不能做全局变量，新手的坑
+    while(scanf("%d%d", &n, &m) != EOF) {
+        std::vector<std::vector<int> > a(n + 10, std::vector<int>(m + 10, 0));
+        for(scanf("%d", &p); p --; ) {
+            scanf("%d%d%d%d", &x1, &y1, &x2, &y2);
+            a[x1][y1] ++;
+            a[x1][y2 + 1] --;
+            a[x2 + 1][y1] --;
+            a[x2 + 1][y2 + 1] ++;
+        }
+        //***重点理解以下代码
+        for(int i = 1; i <= n; i ++) {
+            for(int j = 1; j <= m; j ++) {
+                a[i][j] += a[i][j - 1];
+            }
+            for(int j = 1; j <= m; j ++) {
+                a[i][j] += a[i - 1][j];
+            }
+        }
+        //该写法先对横向求和，再纵向求和，这样对于二维差分转二维前缀和极其方便！！！！！
+        //如矩阵(由x=1,y=1起头,x=0或y=0处值均为0):
+        //1 1 1 1
+        //1 1 1 1
+        //1 1 1 1
+        //外层循环,当i=1时
+        //  内层第一循环先求和该行，得到:
+        //  1 2 3 4
+        //  1 1 1 1
+        //  1 1 1 1
+        //  内层第二循环给该行附上上一行的值，由于此时上一行为x=0，值均为0，循环后矩阵不变
+        //外层循环,i=2
+        //  内层第一循环先求和该行，得到：
+        //  1 2 3 4
+        //  1 2 3 4
+        //  1 1 1 1
+        //  内层第二循环给该行附上上一行的值，则：
+        //  1 2 3 4
+        //  2 4 6 8
+        //  1 1 1 1
+        //外层循环，i=3，同理：
+        //  第一循环得到：
+        //  1 2 3 4
+        //  2 4 6 8
+        //  1 2 3 4
+        //  第二循环得到：
+        //  1 2 3 4
+        //  2 4 6 8
+        //  3 6 9 12
+        //最后每个点代表着一个范围的求和，即二维前缀和
+        for(int i = 1; i <= n; i ++) {
+            for(int j = 1; j <= m; j ++) {
+                a[i][j] = (!!a[i][j]) + a[i][j - 1] + a[i - 1][j] - a[i - 1][j - 1];    // 按bool处理
+            }//!!a[i][j] 相当于 bool(a[i][j])
+        }
+        for(scanf("%d", &q); q --; ) {
+            scanf("%d%d%d%d", &x1, &y1, &x2, &y2);
+            int sum = a[x2][y2] - a[x1 - 1][y2] - a[x2][y1 - 1] + a[x1 - 1][y1 - 1];
+            if(sum == (x2 - x1 + 1) * (y2 - y1 + 1)) printf("YES\n");
+            else printf("NO\n");
+        }
+    }
+    return 0;
+}
+*/
 
 
 
