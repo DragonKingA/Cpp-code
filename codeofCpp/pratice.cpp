@@ -2826,32 +2826,60 @@ a1+a2+...+ak=b*m+r，a1+a2+...+al=c*m+r
 */
 
 //3.Olympiad
-// #include <iostream>
-// #include <set>
-// using namespace std;
-// int T,sum[100005],x1,x2;
-// bool jud(int x,set<int> &s)//判定是否为完美数
-// {
-//     if(!x) return 1;
-//     if(!s.count(x%10)) s.insert(x%10), jud(x/10,s);//没重复就先放进集合，方便下次判重，并且递归继续深入判重
-//     else return 0;//已经有这个元素，说明重复
-// }
-// int main()
-// {
-//     //先打表
-//     for(int i=1;i<=100000;i++)
-//     {
-//         set<int> s;
-//         sum[i]=jud(i,s);
-//         sum[i]+=sum[i-1];
-//     }
-//     for(cin>>T;T--&&cin>>x1>>x2;) cout<<sum[x2]-sum[x1-1]<<endl;
-//     return 0;
-// }
+/*AC
+#include <iostream>
+#include <set>
+using namespace std;
+int T,sum[100005],x1,x2;
+bool jud(int x,set<int> &s)//判定是否为完美数
+{
+    if(!x) return 1;
+    if(!s.count(x%10)) s.insert(x%10), jud(x/10,s);//没重复就先放进集合，方便下次判重，并且递归继续深入判重
+    else return 0;//已经有这个元素，说明重复
+}
+int main()
+{
+    //先打表
+    for(int i=1;i<=100000;i++)
+    {
+        set<int> s;
+        sum[i]=jud(i,s);
+        sum[i]+=sum[i-1];
+    }
+    for(cin>>T;T--&&cin>>x1>>x2;) cout<<sum[x2]-sum[x1-1]<<endl;
+    return 0;
+}
+*/
+/*郭教（对单个数各位数的判重 更佳写法——位运算）
+bool Judge(int x) {
+    int flag = 0;
+    for(; x; x /= 10) {
+        if(flag >> x % 10 & 1) return false;
+        flag |= 1 << x % 10;
+    }
+    return true;
+}
+flag用二进制视角理解初始为 00 0000 0000 (只需要判数0~9，即10个位置，低位对0判重)
+如一个数 343
+先对个位3操作
+    首次判断无效
+    1 << x % 10 即 1 << 3 --> 00 0000 1000
+    然后 flag（00 0000 0000） |= 00 0000 1000 即 00 0000 1000 （可以理解为标记插入一个1）
+再对十位的4操作
+    先判断:
+        flag >> x % 10 即 flag>>4 即产生  00 0000 0000（里面的1被抛出）
+        随即 00 0000 0000 & 1 发现没有重复(该数没有被标记过)
+    然后 flag（00 0000 1000） |= 00 0001 0000 （由1<<4产生），即标记得到 00 0001 1000
+最后对百位的3操作
+    判重：
+        flag >> 3 即 00 0000 0011
+        随机 00 0000 0011 & 1 （实际上是对低位求 按位与 1），发现低位也为1（即3已被标记），得到1,故判定其为重复数
+*/
 
 
 
 //4.Intense Heat
+/*AC
 // #include <cstdio>
 // #include <algorithm>
 // using namespace std;
@@ -2867,10 +2895,11 @@ a1+a2+...+ak=b*m+r，a1+a2+...+al=c*m+r
 //     printf("%.8f\n",res);
 //     return 0;
 // }
-
+*/
 
 
 //5.最大子矩阵(二级前缀和)
+/*AC
 // #include <iostream>
 // #include <algorithm>
 // using namespace std;
@@ -2893,6 +2922,7 @@ a1+a2+...+ak=b*m+r，a1+a2+...+al=c*m+r
 //     }
 //     return 0;
 // }
+*/
 /*写法优化
 #include <iostream>
 #include <algorithm>
@@ -2994,7 +3024,7 @@ int main()
 
 
 //1.Color the ball
-//简单一级差分 及 其前缀和查询
+/*AC 简单一级差分 及 其前缀和查询
 // #include <cstdio>
 // #include <cstring>
 // using namespace std;
@@ -3011,10 +3041,11 @@ int main()
 //     }
 //     return 0;
 // }
-
+*/
 
 
 //2.Tallest Cow
+/*AC
 // #include <iostream>
 // #include <set>
 // using namespace std;
@@ -3042,11 +3073,13 @@ int main()
 //     }
 //     return 0;
 // }
+*/
 
 
 
 //3.Monitor(二级差分)
 //小知识: cmath头文件里面定义了y1,j0,j1,jn,y0,yn(均用于贝塞尔函数解)，所以这些变量尽量不用在全局变量中
+/*AC
 // #include <cstdio>
 // #include <vector>
 // using namespace std;
@@ -3077,7 +3110,8 @@ int main()
 //     }
 //     return 0;
 // }
-/*郭教代码（* 二维差分 转 二维前缀和 的写法）
+*/
+/*郭教代码（二维差分 转 二维前缀和 的另类写法）
 #include<cstdio>
 #include<algorithm>
 #include<set>
@@ -3093,7 +3127,7 @@ int main() {
             a[x2 + 1][y1] --;
             a[x2 + 1][y2 + 1] ++;
         }
-        //***重点理解以下代码
+        //以下代码理解即可(加深对该算法的理解)
         for(int i = 1; i <= n; i ++) {
             for(int j = 1; j <= m; j ++) {
                 a[i][j] += a[i][j - 1];
@@ -3148,10 +3182,77 @@ int main() {
 }
 */
 
+// #include<iostream>
+// #include<algorithm>
+// using namespace std;
+// int main(){
+//     int x1,y1,x2,y2,n,m,p,q;
+//     while(cin>>n>>m){
+//         vector<vector<int> > a(n+1, vector<int>(m+1,0));
+//         for(cin>>p; p--&&cin>>x1>>y1>>x2>>y2;)
+//             a[x1][y1]++, a[x1][y2+1]--, a[x2+1][y1]--, a[x2+1][y2+1]++;
+//         for(int i=1; i<=n; i++)
+//             for(int j=1; j<=m; j++)
+//                 a[i][j]+=a[i][j-1]+a[i-1][j]-a[i-1][j-1];
+//         for(int i=1; i<=n; i++)
+//             for(int j=1; j<=m; j++)
+//                 a[i][j]=(!!a[i][j])+a[i][j-1]+a[i-1][j]-a[i-1][j-1];
+//         for(cin>>q; q--&&cin>>x1>>y1>>x2>>y2;){
+//             int sum=a[x2][y2]-a[x1-1][y2]-a[x2][y1-1]+a[x1-1][y1-1];
+//             cout<<(sum==(x2-x1+1)*(y2-y1+1)?"YES\n":"NO\n");
+//         }
+//     }
+//     return 0;
+// }
 
 
+#include<cstdio>
+using namespace std;
+struct node{
+    int x,y;
+    int step;
+    bool operator == (const node &n)const{
+        return x==n.x && y==n.y;
+    }
+    bool operator > (const node &n)const{
+        return x+y > n.x+n.y;
+    }
+    bool operator < (const node &n)const{
+        // return x+y < n.x+n.y;
+        if(x==n.x) return y<n.y;
+        else x<n.x;
+    }
+    friend bool operator <(const node &n1, const node &n2)
+    {
+        if(n1.x==n2.x) return n1.y<n2.y;
+        else n1.x<n2.x;
+    }
+    node operator - (node &n){
+        x-=n.x;
+        y-=n.y;
+        return node{x,y,step};
+    }
+    node operator = (node &n){
+        x=n.x;
+        y=n.y;
+        return node{x,y,step};
+    }
+};
 
-
+int main(){
+    int x1,y1,x2,y2,step=1;
+    while(scanf("%d%d%d%d",&x1,&y1,&x2,&y2)){
+        node t1={x1,y1,step++};
+        node t2={x2,y2,step++};
+        if(t1==t2) printf("==\n");
+        if(t1>t2) printf(">\n");
+        if(t1<t2) printf("<\n");
+        node t = t1 - t2;
+        printf("t1-t2=( %d , %d )\n",t.x,t.y);
+        printf("After minus t1.x = %d, t1.y = %d\n",t1.x,t2.y);
+    }
+    return 0;
+}
 
 
 
