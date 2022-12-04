@@ -226,7 +226,7 @@
 // #include <string>
 // #include <stack>
 // #include <vector>
-// #include <map>
+// #include <vis>
 // using namespace std;
 // struct node{
 //     int index;
@@ -234,7 +234,7 @@
 //     vector<bool> InOut;
 //     stack<char> sta;
 // };
-// multimap<string, node> mmp;
+// multivis<string, node> mmp;
 // int main()
 // {
 //     while(!cin.eof())
@@ -566,18 +566,18 @@
 
 
 
-//map
+//vis
 // 1.Let the Balloon Rise
 // #include <iostream>
 // #include <string>
-// #include <map>
+// #include <vis>
 // using namespace std;
 // int main()
 // {
 //     int T;
 //     while((cin >> T) && T)
 //     {
-//         map<string, int> mp;
+//         vis<string, int> mp;
 //         string str;
 //         int t=T;
 //         while(t--)
@@ -599,11 +599,11 @@
 //     return 0;
 // }
 
-//2.Ë®¹û(Ç¶Ì×map)
-//ÎÊ£ºmap¶ÔstringµÄÅÅĞòÊÇÒÔÊ××ÖÄ¸ÅÅÁĞ»¹ÊÇÕûÌåASCIIÂëÖµ
+//2.Ë®¹û(Ç¶Ì×vis)
+//ÎÊ£ºvis¶ÔstringµÄÅÅĞòÊÇÒÔÊ××ÖÄ¸ÅÅÁĞ»¹ÊÇÕûÌåASCIIÂëÖµ
 // #include <iostream>
 // #include <string>
-// #include <map>
+// #include <vis>
 // using namespace std;
 // int main()
 // {
@@ -611,7 +611,7 @@
 //     cin >> T;
 //     while(T--)
 //     {
-//         map<string, map<string, int> > mp;
+//         vis<string, vis<string, int> > mp;
 //         int t;
 //         cin >> t;
 //         while(t--)
@@ -820,7 +820,7 @@ list¾ÍÊÇÊı¾İ½á¹¹ÖĞµÄË«ÏòÁ´±í(¸ù¾İsgi stlÔ´´úÂë)£¬Òò´ËËüµÄÄÚ´æ¿Õ¼äÊÇ²»Á¬ĞøµÄ£¬Í¨¹
 // Ê×ÏÈd[N][N]³õÊ¼»¯Îª - 1£¬È»ºód[x][y]Èë¶Ó£¬½øĞĞbfsÑ­»·£¬ĞĞ×ß¹Ì¶¨Î»ÖÃ£»
 // È»ºóÓÃd[N][N]À´´¢´æÄÜµ½×ß¡°³µ¡±µÄ×î¶Ì²½Êı
 // ×îºóÊä³ö×îĞ¡²½Êı£»
-// https://blog.csdn.net/qq_64162685/article/details/124002779?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166930838716800184173076%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=166930838716800184173076&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~baidu_landing_v2~default-1-124002779-null-null.142^v66^control,201^v3^add_ask,213^v2^t3_control1&utm_term=c%2B%2B%E9%A9%AC%E8%B5%B0%E6%97%A5BFS&spm=1018.2226.3001.4187
+// https://blog.csdn.net/qq_64162685/article/details/124002779?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166930838716800184173076%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=166930838716800184173076&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~baidu_landing_v2~default-1-124002779-null-null.142^v66^control,201^v3^add_ask,213^v2^t3_controx1&utm_term=c%2B%2B%E9%A9%AC%E8%B5%B0%E6%97%A5BFS&spm=1018.2226.3001.4187
 // #include<bits/stdc++.h>
 // using namespace std;
 // typedef pair<int, int>PII;//¶¨Òå¶ÓÁĞ
@@ -1391,7 +1391,7 @@ M..........................#@#
 // #include <cstring>
 // #include <iostream>
 // #include <queue>
-// #include <map>
+// #include <vis>
 // using namespace std;
 // typedef pair<int,int> p;
 // typedef pair<p,int> pp;
@@ -1399,7 +1399,7 @@ M..........................#@#
 // char road[205][205];
 // bool vis[205][205];
 // p pY,pM;
-// map<p, int> store;
+// vis<p, int> store;
 // #define CHECK(x,y) (x>=0&&x<m&&y>=0&&y<n&&road[y][x]!='#'&&!vis[y][x])
 // void BFS(int x, int y)
 // {	
@@ -1459,7 +1459,7 @@ M..........................#@#
 // #include <string>
 // #include <iostream>
 // #include <queue>
-// #include <map>
+// #include <vis>
 // #include <vector>
 // using namespace std;
 // typedef pair<int,int> p;
@@ -1469,7 +1469,7 @@ M..........................#@#
 // bool vis[205][205];
 // p pY,pM;
 // #define STR(x,y) (to_string(x)+to_string(y))
-// map<string,int> store;
+// vis<string,int> store;
 // #define CHECK(x,y) (x>=0&&x<m&&y>=0&&y<n&&road[y][x]!='#'&&!vis[y][x])
 // void BFS(int x, int y)
 // {	
@@ -2946,10 +2946,70 @@ int main()
 */
 
 
-
-
-
-
+//6. P1719 ×î´ó¼ÓÈ¨¾ØĞÎ
+//AC O(n^4)
+// #include <cstdio>
+// #include <algorithm> 
+// int a[130][130];
+// int main()
+// {
+//     int n,res=-__INT32_MAX__;
+//     scanf("%d",&n);
+//     for(int i=1;i<=n;i++)
+//         for(int j=1;j<=n;j++)
+//         {
+//             scanf("%d",&a[i][j]);
+//             a[i][j]+=a[i-1][j]+a[i][j-1]-a[i-1][j-1];
+//         }
+//     for(int x1=1;x1<=n;x1++)
+//         for(int y1=1;y1<=n;y1++)
+//             for(int x2=x1;x2<=n;x2++)
+//                 for(int y2=y1;y2<=n;y2++)
+//                     res = std::max(res,a[x2][y2]-a[x2][y1-1]-a[x1-1][y2]+a[x1-1][y1-1]);
+//     printf("%d",res);
+//     return 0;
+// }
+//DP¶¯¹æ·½·¨£¡
+// #include<cstdio>
+// int b[125][125];
+// int main() {
+// 	int n,ans=-1828805;//¾­¹ı¼ÆËã£¬×îĞ¡²»»áĞ¡¹ıÕâ¸öÖµ 
+// 	scanf("%d",&n);
+// 	for(int i=1;i<=n;++i) {
+// 		for(int j=1;j<=n;++j) {
+// 			int a;
+// 			scanf("%d",&a);
+// 			b[i][j]=b[i-1][j]+a;//Ö»´æÊúÏòÃ¿Ò»ÁĞµÄÇ°×ººÍ
+// 		}
+// 	}
+// // 0 -2 -7 0
+// //  9 2 -6 2
+// // -4 1 -4  1
+// // -1 8  0 -2
+// //×ª»»ÎªÒÔÏÂÊúÏòÇ°×ººÍ
+// // 0 -2 -7 0 
+// // 9 0 -13 2
+// // 5 1 -17 3
+// // 4 9 -17 1
+//     for(int i=1;i<=n;++i,printf("\n")) {
+// 		for(int j=1;j<=n;++j) {
+// 			printf("%d ",b[i][j]);
+// 		}
+// 	}
+// 	for(int i=1;i<=n;++i) {
+// 		for(int j=0;j<i;++j) {//ÊúÏòË«²ãÑ­»·È«±éÀú
+// 			int sum=0;
+// 			for(int k=1;k<=n;++k) {
+// 				int tmp=b[i][k]-b[j][k];//È¡Ò»¶ÎÊúÏòµÄÇ°×ººÍ 
+// 				if(sum<0)	sum=0;//Ğ¡ÓÚ0µÄºÍÖØĞÂ¼ÆËã
+//                 sum+=tmp;
+// 				if(sum>ans)	ans=sum;
+// 			}
+// 		}
+// 	}
+// 	printf("%d",ans);
+// 	return 0;
+// }
 
 
 
@@ -3013,14 +3073,47 @@ int main()
 // }
 
 //¶ş¼¶²î·Ö
-
-
-
-
-
-
-
-
+// #include<iostream>
+// #include<cstdio>
+// using namespace std;
+// const int N = 1e3 + 10;
+// int a[N][N], b[N][N];
+// void insert(int x1, int y1, int x2, int y2, int c)
+// {
+//     b[x1][y1] += c;
+//     b[x2 + 1][y1] -= c;
+//     b[x1][y2 + 1] -= c;
+//     b[x2 + 1][y2 + 1] += c;
+// }
+// int main()
+// {
+//     int n, m, q;
+//     cin >> n >> m >> q;
+//     for (int i = 1; i <= n; i++)
+//         for (int j = 1; j <= m; j++)
+//             cin >> a[i][j];
+//     for (int i = 1; i <= n; i++)
+//         for (int j = 1; j <= m; j++)
+//             insert(i, j, i, j, a[i][j]);      //¹¹½¨²î·ÖÊı×é
+//     while (q--)
+//     {
+//         int x1, y1, x2, y2, c;
+//         cin >> x1 >> y1 >> x2 >> y2 >> c;
+//         insert(x1, y1, x2, y2, c);
+//     }
+//     for (int i = 1; i <= n; i++)
+//         for (int j = 1; j <= m; j++)
+//             b[i][j] += b[i - 1][j] + b[i][j - 1] - b[i - 1][j - 1];  //¶şÎ¬Ç°×ººÍ
+//     for (int i = 1; i <= n; i++)
+//     {
+//         for (int j = 1; j <= m; j++)
+//         {
+//             printf("%d ", b[i][j]);
+//         }
+//         printf("\n");
+//     }
+//     return 0;
+// }
 
 
 //1.Color the ball
@@ -3074,7 +3167,6 @@ int main()
 //     return 0;
 // }
 */
-
 
 
 //3.Monitor(¶ş¼¶²î·Ö)
@@ -3182,77 +3274,213 @@ int main() {
 }
 */
 
-// #include<iostream>
-// #include<algorithm>
+
+//4.P3397 µØÌº
+// #include <cstdio>
+// int b[1005][1005];//Êı×é¶¨ÒåÃ¿Ò»Î¬³¤¶ÈÒ»¶¨ÒªÖÁÉÙ¶à³ö5£¬²»È»ÈİÒ×Ô½½ç
+// int main()
+// {
+//     int n,m,x1,y1,x2,y2;
+//     for(scanf("%d%d",&n,&m);m--&&scanf("%d%d%d%d",&x1,&y1,&x2,&y2);)
+//         b[x1][y1]++, b[x2+1][y1]--, b[x1][y2+1]--, b[x2+1][y2+1]++;
+//     for(int i=1;i<=n;i++,printf("\n"))
+//         for(int j=1;j<=n;j++)
+//             printf(" %d"+!(j-1),b[i][j]+=b[i-1][j]+b[i][j-1]-b[i-1][j-1]);
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*ËÄ. ¸ß¾«¶ÈÎÊÌâ*/
+//1. A+B problem
+//WA
+// #include <iostream>
+// #include <string>
+// #include <algorithm>
 // using namespace std;
-// int main(){
-//     int x1,y1,x2,y2,n,m,p,q;
-//     while(cin>>n>>m){
-//         vector<vector<int> > a(n+1, vector<int>(m+1,0));
-//         for(cin>>p; p--&&cin>>x1>>y1>>x2>>y2;)
-//             a[x1][y1]++, a[x1][y2+1]--, a[x2+1][y1]--, a[x2+1][y2+1]++;
-//         for(int i=1; i<=n; i++)
-//             for(int j=1; j<=m; j++)
-//                 a[i][j]+=a[i][j-1]+a[i-1][j]-a[i-1][j-1];
-//         for(int i=1; i<=n; i++)
-//             for(int j=1; j<=m; j++)
-//                 a[i][j]=(!!a[i][j])+a[i][j-1]+a[i-1][j]-a[i-1][j-1];
-//         for(cin>>q; q--&&cin>>x1>>y1>>x2>>y2;){
-//             int sum=a[x2][y2]-a[x1-1][y2]-a[x2][y1-1]+a[x1-1][y1-1];
-//             cout<<(sum==(x2-x1+1)*(y2-y1+1)?"YES\n":"NO\n");
+// int a[600],b[600],res[600];
+// int main()
+// {
+//     ios::sync_with_stdio(false);
+//     cin.tie(0);
+//     cout.tie(0);
+//     string as,bs;
+//     cin>>as>>bs;
+//     if(as.size()<bs.size()) swap(as,bs);
+//     int len1=as.size(), len2=bs.size();
+//     for(int i=0;i<len1;i++) res[len1-i-1]=a[len1-i-1]=as[i]-'0';
+//     for(int i=0;i<len2;i++) b[len2-i-1]=bs[i]-'0';
+//     for(int i=0;i<len2;i++)
+//     {
+//         res[i]+=b[i];
+//         res[i+1]+=res[i]/10;
+//         res[i]%=10;
+//     }
+//     for(int i=len1;i>=0;i--)
+//     {
+//         if(i==len1&&!res[i]);
+//         else cout<<res[i];
+//     }
+//     return 0;
+// }
+
+/*
+ 1001
+90999
+*/
+
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+int res[800];
+int main()
+{
+    string a,b;
+    cin>>a>>b;
+    if(a.size()<b.size()) swap(a,b);
+    int len1=a.size(), len2=b.size();
+    for(int i=0;i<len1;i++) a[i]=a[i]-'0';
+    for(int i=0;i<len2;i++) b[i]=b[i]-'0';
+    reverse(a.begin(),a.end());
+    reverse(b.begin(),b.end());
+    for(int i=0;i<len2;i++)
+    {
+        res[i]=a[i]+b[i];
+        res[i+1]+=a[i]/10;
+        res[i]%=10;
+    }
+    // for(int i=0;i<=len1;i++)
+    // {
+    //     if(i<)
+    // }
+    // cout<<a;
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*ÊıÑ§Ô­ÀíÓ¦ÓÃ*/
+
+//Âü¹ş¶Ù¾àÀë(ÓÖÃû³ö×â³µ¾àÀë)
+//d(i,j)=|x1-x2|+|y1-y2|
+//´òÓ¡Ò»¸öÁâĞÎ
+/*
+µ±n=5Ê±£¬ÓĞ" * ¡°ºÅµÄµØ·½ÊÇ¾àÀëÖĞĞÄµãÂü¹ş¶Ù¾àÀëĞ¡ÓÚ2µÄµØ·½£»
+µ±n=7Ê±£¬ÓĞ¡± * " ºÅµÄµØ·½ÊÇ¾àÀëÖĞĞÄµãÂü¹ş¶Ù¾àÀëĞ¡ÓÚ3µÄµØ·½¡£
+ÕÒµ½ÖĞĞÄµãÓënµÄ¹ØÏµ£ºÖĞĞÄµãÓÃn±íÊ¾Îª£¨n/2£¬n/2£©£¬½«ÓëÖĞĞÄµã¾àÀëĞ¡ÓÚn/2µÄµãÓÃ" * "±íÊ¾£¬ÆäËûµØ·½ÓÃ¿Õ¸ñ±íÊ¾£¬
+Íê³ÉÒ»ĞĞ£¨Ò»ĞĞÖ¸iµÄÒ»´ÎÑ­»·£©ºó½øĞĞ»»ĞĞ¡£
+*/
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// int main()
+// {
+//     int n;
+//     cin >> n;//nÎªÆæÊı
+//     int cx = n/2, cy = n/2;//ÖĞĞÄµã(cx,cy)
+//     for(int i = 0; i < n; i++)
+//     {
+//         for(int j = 0; j < n; j++)
+//         {
+//             if(abs(i-cx) + abs(j-cy) <= n/2)
+//                  cout << '*' ;
+//             else
+//                cout << ' ';
 //         }
+//         cout << endl;
 //     }
 //     return 0;
 // }
 
 
-#include<cstdio>
-using namespace std;
-struct node{
-    int x,y;
-    int step;
-    bool operator == (const node &n)const{
-        return x==n.x && y==n.y;
-    }
-    bool operator > (const node &n)const{
-        return x+y > n.x+n.y;
-    }
-    bool operator < (const node &n)const{
-        // return x+y < n.x+n.y;
-        if(x==n.x) return y<n.y;
-        else x<n.x;
-    }
-    friend bool operator <(const node &n1, const node &n2)
-    {
-        if(n1.x==n2.x) return n1.y<n2.y;
-        else n1.x<n2.x;
-    }
-    node operator - (node &n){
-        x-=n.x;
-        y-=n.y;
-        return node{x,y,step};
-    }
-    node operator = (node &n){
-        x=n.x;
-        y=n.y;
-        return node{x,y,step};
-    }
-};
 
-int main(){
-    int x1,y1,x2,y2,step=1;
-    while(scanf("%d%d%d%d",&x1,&y1,&x2,&y2)){
-        node t1={x1,y1,step++};
-        node t2={x2,y2,step++};
-        if(t1==t2) printf("==\n");
-        if(t1>t2) printf(">\n");
-        if(t1<t2) printf("<\n");
-        node t = t1 - t2;
-        printf("t1-t2=( %d , %d )\n",t.x,t.y);
-        printf("After minus t1.x = %d, t1.y = %d\n",t1.x,t2.y);
-    }
-    return 0;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3282,8 +3510,53 @@ int main(){
 
 
 
-
-
+//½á¹¹Ìå²Ù×÷·ûÖØÔØ
+// #include<cstdio>
+// using namespace std;
+// struct node{
+//     int x,y;
+//     int step;
+//     bool operator == (const node &n)const{
+//         return x==n.x && y==n.y;
+//     }
+//     bool operator > (const node &n)const{
+//         return x+y > n.x+n.y;
+//     }
+//     bool operator < (const node &n)const{
+//         // return x+y < n.x+n.y;
+//         if(x==n.x) return y<n.y;
+//         else x<n.x;
+//     }
+//     friend bool operator <(const node &n1, const node &n2)
+//     {
+//         if(n1.x==n2.x) return n1.y<n2.y;
+//         else n1.x<n2.x;
+//     }
+//     node operator - (node &n){
+//         x-=n.x;
+//         y-=n.y;
+//         return node{x,y,step};
+//     }
+//     node operator = (node &n){
+//         x=n.x;
+//         y=n.y;
+//         return node{x,y,step};
+//     }
+// };
+// int main(){
+//     int x1,y1,x2,y2,step=1;
+//     while(scanf("%d%d%d%d",&x1,&y1,&x2,&y2)){
+//         node t1={x1,y1,step++};
+//         node t2={x2,y2,step++};
+//         if(t1==t2) printf("==\n");
+//         if(t1>t2) printf(">\n");
+//         if(t1<t2) printf("<\n");
+//         node t = t1 - t2;
+//         printf("t1-t2=( %d , %d )\n",t.x,t.y);
+//         printf("After minus t1.x = %d, t1.y = %d\n",t1.x,t2.y);
+//     }
+//     return 0;
+// }
 
 
 
@@ -3328,13 +3601,13 @@ int main(){
 
 //*Ê÷
 /*
-https://blog.csdn.net/qq_43762191/article/details/107280503?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166927609816800182199745%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=166927609816800182199745&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-107280503-null-null.142^v66^control,201^v3^add_ask,213^v2^t3_control1&utm_term=%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91&spm=1018.2226.3001.4187
+https://blog.csdn.net/qq_43762191/article/details/107280503?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166927609816800182199745%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=166927609816800182199745&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-107280503-null-null.142^v66^control,201^v3^add_ask,213^v2^t3_controx1&utm_term=%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91&spm=1018.2226.3001.4187
 */
 
 //¹şÏ£Ëã·¨
 /*
 ¿ÉÓÃÓÚÈç¶ÔÊıĞòÁĞÖĞ¸÷Êı³öÏÖ´ÎÊı¼ÆÊı£¬ÒÔ¸ÃÊıÎªÏÂ±ê£¬Êı×éÔªËØÎª´ÎÊıÀ´¼ÇÂ¼£¬¿ÉÄÜ»á³öÏÖÊı×é´óĞ¡¶¨ÒåĞèÇó¹ı´ó£¬ÕâÊ±ºò¶ÔÊı½øĞĞ¹şÏ£Ó³Éä´¦Àí£¬Ö®ºóÒªÊä³öÔÙÄæÓ³ÉäµÃµ½Ô­Êı
-https://blog.csdn.net/qq_38609781/article/details/84836583?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166927649216782425154549%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=166927649216782425154549&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-2-84836583-null-null.142^v66^control,201^v3^add_ask,213^v2^t3_control1&utm_term=%E5%93%88%E5%B8%8C%E6%98%A0%E5%B0%84&spm=1018.2226.3001.4187
+https://blog.csdn.net/qq_38609781/article/details/84836583?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166927649216782425154549%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=166927649216782425154549&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-2-84836583-null-null.142^v66^control,201^v3^add_ask,213^v2^t3_controx1&utm_term=%E5%93%88%E5%B8%8C%E6%98%A0%E5%B0%84&spm=1018.2226.3001.4187
 */
 
 
@@ -3366,3 +3639,428 @@ https://blog.csdn.net/qq_38609781/article/details/84836583?ops_request_misc=%257
 	ÔÚscanfÔªËØµÄÀàĞÍÎÒÃÇÒÑ¾­¸æÖªÁË£¬»úÆ÷²»ÓÃÔÙÈ¥²éÕÒÔªËØÀàĞÍ£¬scanfĞèÒª×Ô¼ºĞ´¸ñÊ½£¬ÊÇÒ»ÖÖ¸ñÊ½»¯ÊäÈë¡£
 	¶øÔÚcin ÔªËØÀàĞÍÓÉ»úÆ÷×Ô¼º²éÕÒ£¬cinÊÇ×Ö·ûÁ÷ÊäÈë£¬ĞèÒªÏÈ´æÈë»º³åÇøÔÙÊäÈë¡£
 */
+
+
+/* ios::sync_with_stdio(false)
+¸Ã¿ÉÒÔ½«cinºÍscanfµÄĞ§ÂÊÏàÆ¥µĞ¡£
+Ä¬ÈÏµÄÊ±ºò£¬cinÓëstdin×ÜÊÇ±£³ÖÍ¬²½µÄ£¬Ò²¾ÍÊÇËµÕâÁ½ÖÖ·½·¨¿ÉÒÔ»ìÓÃ£¬¶ø²»±Øµ£ĞÄÎÄ¼şÖ¸Õë»ìÂÒ£¬
+Í¬Ê±coutºÍstdoutÒ²Ò»Ñù£¬Á½Õß»ìÓÃ²»»áÊä³öË³Ğò´íÂÒ¡£
+ÕıÒòÎªÕâ¸ö¼æÈİĞÔµÄÌØĞÔ£¬µ¼ÖÂcinÓĞĞí¶à¶îÍâµÄ¿ªÏú£¬Ê¹ÓÃ¸Ã¾ä¿ÉÒÔ½ûÓÃÕâ¸öÌØĞÔ£¬È¡ÏûcinÓÚstdinµÄÍ¬²½¡£
+*/
+
+/* cin.tie(0) ºÍ cout.tie(0)
+tie()
+tieÊÇ½«Á½¸östream°ó¶¨µÄº¯Êı£¬¿Õ²ÎÊıµÄ»°·µ»Øµ±Ç°µÄÊä³öÁ÷Ö¸Õë¡£
+ÔÚÄ¬ÈÏµÄÇé¿öÏÂcin°ó¶¨µÄÊÇcout£¬Ã¿´ÎÖ´ĞĞ << ²Ù×÷·ûµÄÊ±ºò¶¼Òªµ÷ÓÃflush£¬ÕâÑù»áÔö¼ÓIO¸ºµ£¡£¿ÉÒÔÍ¨¹ıtie(0)£¨0±íÊ¾NULL£©À´½â³ıcinÓëcoutµÄ°ó¶¨£¬½øÒ»²½¼Ó¿ìÖ´ĞĞĞ§ÂÊ¡£
+ACMÓ¦ÓÃ
+ÔÚACMÀï£¬¾­³£³öÏÖÊı¾İ¼¯³¬´óÔì³É cin TLEµÄÇé¿ö¡£ÕâÊ±ºò´ó²¿·ÖÈËÈÏÎªÕâÊÇcinµÄĞ§ÂÊ²»¼°scanfµÄ´í£¬ÉõÖÁ»¹ÉÏÉıµ½CÓïÑÔºÍC++ÓïÑÔµÄÖ´ĞĞĞ§ÂÊ²ãÃæµÄÎŞÁÄÕùÂÛ¡£ÆäÊµÏñÉÏÎÄËùËµ£¬ÕâÖ»ÊÇC++ÎªÁË¼æÈİ¶ø²ÉÈ¡µÄ±£ÊØ´ëÊ©¡£ÎÒÃÇ¿ÉÒÔÔÚIOÖ®Ç°½«stdio½â³ı°ó¶¨£¬ÕâÑù×öÁËÖ®ºóÒª×¢Òâ²»ÒªÍ¬Ê±»ìÓÃcoutºÍprintfÖ®Àà¡£
+ÔÚÄ¬ÈÏµÄÇé¿öÏÂcin°ó¶¨µÄÊÇcout£¬Ã¿´ÎÖ´ĞĞ << ²Ù×÷·ûµÄÊ±ºò¶¼Òªµ÷ÓÃflush£¬ÕâÑù»áÔö¼ÓIO¸ºµ£¡£¿ÉÒÔÍ¨¹ıtie(0)£¨0±íÊ¾NULL£©À´½â³ıcinÓëcoutµÄ°ó¶¨£¬½øÒ»²½¼Ó¿ìÖ´ĞĞĞ§ÂÊ¡£
+Ô­À´¶øcin£¬coutÖ®ËùÒÔĞ§ÂÊµÍ£¬ÊÇÒòÎªÏÈ°ÑÒªÊä³öµÄ¶«Î÷´æÈë»º³åÇø£¬ÔÙÊä³ö£¬µ¼ÖÂĞ§ÂÊ½µµÍ£¬¶øÕâ¶Î´úÂë¿ÉÒÔÀ´´òÏûiostreamµÄÊäÈë Êä³ö»º´æ£¬¿ÉÒÔ½ÚÊ¡Ğí¶àÊ±¼ä£¬Ê¹Ğ§ÂÊÓëscanfÓëprintfÏà²îÎŞ¼¸.
+Ëµ°×ÁË£¬ÕâÁ½¾ä¼ÓÉÏ¾Í¿ÉÒÔÌá¸ßC++´úÂëÊäÈëÊä³öÖ´ĞĞĞ§ÂÊÊ¹µÃºÍCÏà²îÎŞ¼¸
+*/
+
+/*×ÛÉÏ£¬cin,coutÊ¹ÓÃÇ°µÄĞ¡¼¼ÇÉ£¬½â¾ö¶ÁÈ¡Êä³ö¶øµ¼ÖÂ¹ı³¤ºÄÊ±µÄÒÉÂÇ
+ios::sync_with_stdio(false);
+cin.tie(0);
+cout.tie(0);
+
+µÚ1£¬2¾ä¿ÉÒÔºÏ³ÉÎª£º
+cin.tie(0)->sync_with_stdio(false);
+*/
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ıÔÂÈü1¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı*/
+/*
+ÌâÄ¿Á´½Ó£ºhttps://soj.csgrandeur.cn/csgoj/contest/problem?cid=1035&pid=D
+Ìâ½âÁ´½Ó£ºhttps://soj.csgrandeur.cn/index/answer/detail?nid=1045
+*/
+
+//A. A + B
+// #include<bits/stdc++.h>
+// #define ull unsigned long long
+// using namespace std;
+// ull a, b;
+// int main()
+// {
+//     cin >> a >> b;
+//     cout << a + b << endl;
+// }
+
+
+
+//B. ÃÎÀïÊ²Ã´¶¼ÓĞ
+//WA Ã»°ì·¨´¦ÀíÓĞ¶à¸ös0µÄÇé¿ö
+// #include <iostream>
+// #include <string>
+// using namespace std;
+// int main()
+// {
+//     int n,m,start,pos=1;
+//     string s0,s1,t;
+//     cin>>n>>m;
+//     cin>>s0>>s1;
+//     t=s1;
+//     while(s1.find(s0,pos)!=s1.npos)
+//     {
+//         start=s1.find(s0,pos);
+//         pos=start+1;
+//         if(m < start+s0.size()) s1 = s1.substr(start + s0.size() - m);
+//         cout<<"s1="<<s1<<endl;
+//         start=s1.find(s0);
+//         for(int i=0;i<=start && s1.size()>=m;i++)
+//         {
+//             cout<<s1.substr(0,m)<<endl;
+//             s1=s1.substr(1);
+//         }
+//         s1=t;
+//     }
+//     return 0;
+// }
+//AC Ö±½Ó±éÀú²éÕÒ£¬º¬s0¾ÍÊä³ö£¬²»ÄÜÏë¸´ÔÓ
+// #include <iostream>
+// #include <string>
+// using namespace std;
+// int main()
+// {
+//     cin.tie(0)->sync_with_stdio(false);
+//     int n,m;
+//     string s0,s1,t;
+//     cin>>n>>m;
+//     cin>>s0>>s1;
+//     for(int i=0;i<=n-m;i++)
+//         if((t=s1.substr(i,m)).find(s0) != t.npos)
+//             cout<<t<<endl;
+//     return 0;
+// }
+
+
+
+//C. ¹ØÓÚÎÒ×ªÉú³ÉÎªÒ»Æ¥ÈüÂíÄïÕâµµÊÂ
+// ÒòÎªÖ»ÄÜÏòÓÒÏÂ·½ÒÆ¶¯¡£¿ÉÉè·½³Ì2x?+?y?=?dis1,?x?+?2y?=?dis2£¬ºÏ²¢·½³Ì¿ÉµÃ 3(x + y) = dis1 + dis2 = Á½µã¼äÂü¹ş¶Ù¾àÀë(ÊµÖÊÊÇÂ·³Ì)£¬
+// ÊµÖÊÀ´½²£¬ÂíÃ¿´ÎĞĞ¶¯¶¼»á×ß 3 ²½¸ñ×Ó(Â·³ÌÉÏ¿´)£¬Ëã³öÂü¹ş¶Ù¾àÀëµÈÓÚËã³ö²½Êı£¬ËùÒÔ²½Êı%3==0ËµÃ÷ÊÇÂí×ßµÃµ½µÄ£¬
+// ËùÒÔÖ»ÒªÖÕµãÓëÆğµãÖ®¼äÂü¹ş¶Ù¾àÀë¿ÉÒÔ±»3Õû³ı£¬¾Í¿ÉÒÔ´ïµ½¡£
+// #include <iostream>
+// using namespace std;
+// int main()
+// {
+//     int n,res=0;
+//     cin >> n;
+//     while(n--)
+//     {
+//         int x,y,Mdis;
+//         cin>>x>>y;
+//         Mdis = (x+y-1-1);//(x,y)Óëµã(1,1)µÄÂü¹ş¶Ù¾àÀë
+//         if(Mdis%3==0 && x>Mdis/3 && y>Mdis/3)//ÓÒ±ßÁ½¸öÌõ¼şÏŞÖÆÖ»ÄÜÊÇÍùÓÒÏÂ·½µÄÂü¹ş¶Ù¾àÀë
+//             res++;
+//     }
+//     cout<<res<<endl;
+//     return 0;
+// }
+
+
+
+//D. ·âĞ£Ö®ÎÒÏë³ÔÂóµ±ÀÍ
+//dp×´Ì¬£ºdp[n][m][2]£¬ËûµÄº¬ÒåÊÇÔÚÇ°iÌìÄÚ£¬³ÔÁËj´ÎÂóµ±ÀÍ£¬0/1±íÊ¾µÚiÌìÊÇ·ñ³ÔÁËÂóµ±ÀÍ¡£
+//ÔÚµÚiÌìµÄÊ±ºò£¬Èç¹ûÉÏÒ»Ìì³ÔÁË£¬½ñÌì¾Í²»ÄÜ³Ô£¬Èç¹ûÉÏÒ»ÌìÃ»ÓĞ³Ô£¬½ñÌì¾Í¿ÉÒÔ³Ô¡£(ÇÒÒ»Ìì×î¶àÖ»ÄÜ³ÔÒ»¶Ù)
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// int a[2005],f[2005][1005][2],n,m,res=0;
+// int main()
+// {
+//     cin>>n>>m;
+//     for(int i=1;i<=n;i++) cin>>a[i];//ÏÈ´æÏÂĞÒ¸£¶È
+//     for(int i=1;i<=n;i++)
+//         for(int j=1;j<=m;j++)
+//         {
+//             f[i][j][0] = max(f[i-1][j][0], f[i-1][j][1]);//±íÊ¾µÚiÌì²»³Ô£¬²¢ÀÛ¼ÆÖ®Ç°³Ô³öÀ´µÄĞÒ¸£¶È£¬¼´½ñÌì²»³Ôºó×Ü¹²µÄĞÒ¸£¶È
+//             f[i][j][1] = f[i-1][j-1][0] + a[i];//±íÊ¾µÚiÌì³Ô£¬ÀÛ¼Æ×òÌìÈô³ÔÁËÖ®ºóµÄĞÒ¸£¶È ¼ÓÉÏ ¸ÃÌì²úÉúµÄĞÒ¸£¶È£¬¼´½ñÌì³ÔÁËºó×Ü¹²µÄĞÒ¸£¶È
+//         }
+//     cout<<max(f[n][m][0], f[n][m][1])<<endl;//È¡Á½ÖÖĞĞÎª²úÉúµÄ½á¹ûµÄ×î´óÕß
+//     return 0;
+// }
+
+
+
+//E. Ãæ»ù´ó×÷Õ½
+//½á¹¹ÌåÅÅĞòÂãÌâ
+// #include <cstdio>
+// #include <iostream>
+// #include <vector>
+// #include <algorithm>
+// using namespace std;
+// struct per{
+//     char name[15];
+//     int sex,cf,at,fac,bod,id;
+// };
+// bool cmp(const per a, const per b)
+// {
+//     if(a.sex!=b.sex) return a.sex>b.sex;
+//     if(a.cf!=b.cf) return a.cf>b.cf;
+//     if(a.at!=b.at) return a.at>b.at;
+//     if(a.fac!=b.fac) return a.fac>b.fac;
+//     if(a.bod!=b.bod) return a.bod>b.bod;
+//     return a.id<b.id;
+// }
+// int main()
+// {
+//     ios::sync_with_stdio(false);
+//     cin.tie(0);
+//     cout.tie(0);
+//     //ÉÏÃæÈı¾äÊ¹µÃ 43ms -> 25ms£¬ÔÚÆäËûÌâÄ¿¿ÉÄÜÌåÏÖ¸üÃ÷ÏÔ
+//     int n;
+//     cin>>n;
+//     vector<per> v(n);
+//     for(int i=0;i<n;i++)
+//     {
+//         per t={.id=i};
+//         cin>>t.name>>t.sex>>t.cf>>t.at>>t.fac>>t.bod;
+//         v[i]=t;
+//     }
+//     sort(v.begin(),v.end(),cmp);
+//     for(int i=0;i<n;i++)
+//     {
+//         per t=v[i];
+//         printf("%s %d %d %d %d %d\n",t.name, t.sex, t.cf, t.at, t.fac, t.bod);
+//     }
+//     return 0;
+// }
+
+
+
+//F. É¾¿âÅÜÂ·
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// int a[30000],n;
+// int main()
+// {
+//     cin.tie(0)->sync_with_stdio(false);
+//     long long x,y,sum=0;
+//     cin>>n;
+//     for(int i=0;i<n;i++) cin>>a[i];
+//     cin>>x>>y;
+//     for(int i=0;i<n;i++) sum+=min(y, x*a[i]);
+//     cout<<sum<<endl;
+//     return 0;
+// }
+
+
+
+/*¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡üÔÂÈü1¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ıÔÂÈü2¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı¡ı*/
+/*
+ÌâÄ¿Á´½Ó£ºhttps://soj.csgrandeur.cn/csgoj/contest/problem?cid=1036&pid=A
+Ìâ½âÁ´½Ó£º
+*/
+
+//A.  È±Ê§µÄÊı×Ö
+// #include <iostream>
+// #include <string>
+// using namespace std;
+// int a[15];
+// int main()
+// {
+//     string n;
+//     cin>>n;
+//     for(int i=0;i<9;i++)
+//     {
+//         int num=n[i]-'0';
+//         a[num]=1;
+//     }
+//     for(int i=0;i<=9;i++)
+//     {
+//         if(!a[i]) cout<<i;
+//     }
+//     return 0;
+// }
+
+
+
+//B. ¡°±¾¡°
+// #include <iostream>
+// using namespace std;
+// int main()
+// {
+//     int n,a[]={2,4,5,7,9,0,1,6,8,3};
+//     cin>>n;
+//     n%=10;
+//     for(int i=0;i<10;i++)
+//     {
+//         if(n==a[i]){
+//             if(i<=4) cout<<"hon";
+//             else if(i<9) cout<<"pon";
+//             else cout<<"bon";
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+//C. È¡Êı
+// #include <iostream>
+// using namespace std;
+// int main()
+// {
+//     int n,m,sum;
+//     cin>>n>>m;
+//     sum=n*(n-1)/2+m*(m-1)/2;
+//     cout<<sum;
+//     return 0;
+// }
+
+
+
+//D. When?
+// #include <cstdio>
+// using namespace std;
+// int main()
+// {
+//     int sum,h,m;
+//     scanf("%d",&sum);
+//     h=sum/60;
+//     m=sum%60;
+//     if(22+h==24) printf("00:00");
+//     else printf("%02d:%02d",22+h,m);
+//     return 0;
+// }
+
+
+
+//E. 1! 5!
+// #include <iostream>
+// using namespace std;
+// int main()
+// {
+//     int n,x,t=-1,res=0;
+//     cin>>n;
+//     for(int i=1;i<=n;i++)
+//     {
+//         cin>>x;
+//         if(t==1&&x==5) res++;
+//         t=x;
+//     }
+//     cout<<res;
+//     return 0;
+// }
+
+
+
+//F. °ÚÄ¾¹÷(ÒÔÊı×éÏÂ±ê´æ³¤¶È£¬±¾Éí¾ÍÓĞĞò£¬ËùÒÔÔ½ÔÚÊı×éÇ°ÃæÔ½¶Ì£¬ÄÜÒ»´ÎĞÔÑ¡Íê4¸ù×îºÃ£¬²»ÄÜ¾ÍÍùºóÑ¡)
+// #include <cstdio>
+// using namespace std;
+// const int N = 5e4 + 5;
+// int arr[N];
+// int main()
+// {
+//     int n,t;
+//     scanf("%d",&n);
+//     for(int i=1;i<=n;i++)
+//     {
+//         scanf("%d",&t);
+//         arr[t]++;
+//     }
+//     int x1=0,x2=0;
+//     for(int i=1;i<N;i++)
+//     {
+//         while(arr[i]>=2)
+//         {
+//             arr[i]-=2;
+//             if(!x1)
+//             {
+//                 x1=i;
+//                 continue;
+//             }
+//             if(!x2)
+//             {
+//                 x2=i;
+//                 continue;
+//             }
+//             break;
+//         }
+//         if(x1&&x2) break;
+//     }
+//     if(x1&&x2) printf("%lld",1ll*x1*x2);
+//     else printf("-1");
+//     return 0;
+// }
+
+
+
+//G. ¿ªÅ¿£¨Ë¼Î¬ºÜÖØÒª£©
+// ÏëÏóÒ»ÊıÖá£¬ÈÎÒâÕÒÒ»¸öµã£¬Ëü×ó±ßÓĞ4¸öµã£¬ÓÒ±ßÓĞ2¸öµã£¬°Ñ¸ÃµãÍù×óÒÆ¶¯Ò»µãµã£¬²»ÒªÒÆ¶¯Ì«¶à£¬ÒÔÃâÅöµ½ÆäËûÊäÈëµã¡£
+//¼ÙÉèÒÆ¶¯ÁËdµ¥Î»¾àÀë£¬Ôò¸Ãµãµ½×ó±ß4¸öµãµÄ¾àÀë¸÷¼õÉÙd£¬¸Ãµã¶¼ÓÒ±ß2¸öµãµÄ¾àÀë¸÷Ôö¼Ód,µ«×ÜµÄÀ´Ëµ£¬¾àÀëÖ®ºÍ¼õÉÙÁË2d¡£
+//¼´¶ÔÓÚÁ½²àµÄµãÀ´Ëµ£¬ÓÉÓÚÒ»²àµÄµã¶àÓÚÁíÒ»²à£¬ÄÇÃ´Ëü´ÓÖĞ¼äµã¹ıÀ´µÄÊ±ºòÒ»¶¨Í½ÔöÁËºÜ¶à¾àÀë¡£
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// int a[100005];
+// int main()
+// {
+//     cin.tie(0)->sync_with_stdio(false);
+//     int n;
+//     long long ans=0;
+//     cin>>n;
+//     for(int i=1;i<=n;i++) cin>>a[i];
+//     sort(a+1,a+1+n);
+//     for(int l=1,r=n; l<r ;l++,r--)
+//     {
+//         ans+=a[r]-a[l];
+//     }
+//     cout<<ans;
+//     return 0;
+// }
+
+
+
+//H. ¸´ºÏº¯Êı
+// #include <iostream>
+// using namespace std;
+// int a[105];
+// long long func(int n, int k)
+// {
+//     if(k==1) return a[n];
+//     return func(a[n],k-1);
+// }
+// int main()
+// {
+//     cin.tie(0)->sync_with_stdio(false);
+//     cout.tie(0);
+//     int n,q;
+//     cin>>n;
+//     for(int i=1;i<=n;i++) cin>>a[i];
+//     cin>>q;
+//     while(q--)
+//     {
+//         int num,b;
+//         cin>>num>>b;
+//         cout<<func(num,b)<<endl;
+//     }
+//     return 0;
+// }   
+
+
+
+/*¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡üÔÂÈü2¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
