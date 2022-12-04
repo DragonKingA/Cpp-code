@@ -3338,50 +3338,65 @@ int main() {
 //     }
 //     return 0;
 // }
-
-/*
- 1001
-90999
-*/
-
-#include <iostream>
-#include <string>
-#include <algorithm>
-using namespace std;
-int res[800];
-int main()
-{
-    string a,b;
-    cin>>a>>b;
-    if(a.size()<b.size()) swap(a,b);
-    int len1=a.size(), len2=b.size();
-    for(int i=0;i<len1;i++) a[i]=a[i]-'0';
-    for(int i=0;i<len2;i++) b[i]=b[i]-'0';
-    reverse(a.begin(),a.end());
-    reverse(b.begin(),b.end());
-    for(int i=0;i<len2;i++)
-    {
-        res[i]=a[i]+b[i];
-        res[i+1]+=a[i]/10;
-        res[i]%=10;
-    }
-    // for(int i=0;i<=len1;i++)
-    // {
-    //     if(i<)
-    // }
-    // cout<<a;
-    return 0;
-}
+//AC (下标的艺术)
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// char a1[505],b1[505];
+// int a[505],b[505],res[505],len1,len2,len3;
+// int main()
+// {
+//     cin>>a1>>b1;
+//     len1=strlen(a1);
+//     len2=strlen(b1);
+//     len3=max(len1,len2);
+//     for(int i=0,j=len3-len1+1;i<len1&&j<=len3;i++,j++) a[j]=a1[i]-'0';
+//     for(int i=0,j=len3-len2+1;i<len2&&j<=len3;i++,j++) b[j]=b1[i]-'0';
+//     for(int i=len3;i>=1;i--)
+//     {
+//         res[i]+=a[i]+b[i];
+//         res[i-1]+=res[i]/10;
+//         res[i]%=10;
+//     }
+//     if(res[0]!=0) cout<<res[0];
+//     for(int i=1;i<=len3;i++) cout<<res[i];
+//     return 0;
+// }
 
 
-
-
-
-
-
-
-
-
+//2. A*B problem
+// #include <cstdio>
+// #include <cstring>
+// using namespace std;
+// char n1[2005],n2[2005];
+// int a[8000],b[8000],res[8000];
+// int main(){
+//     scanf("%s%s",&n1,&n2);
+//     if(n1[0]=='0'||n2[0]=='0')//一个为 0 则直接输出 0 并退出程序
+//     {
+//         printf("0");
+//         return 0;
+//     }
+//     int len1=strlen(n1), len2=strlen(n2);
+//     for(int i = 0; i < len1; i++) a[i] = n1[len1-1-i] - '0';
+//     for(int i = 0; i < len2; i++) b[i] = n2[len2-1-i] - '0';
+//     for(int i = 0; i < len1; i++)
+//     {
+//         for(int j = 0; j < len2; j++)
+//         {
+//             res[i+j] += a[i] * b[j];
+//             res[i+j+1] += res[i+j] / 10;//十位数进位至下一个索引位置
+//             res[i+j] %= 10;//在该位结果只保留个位数
+//         }
+//     }
+//     for(int i = len1+len2-1; i >= 0; i--)
+//     {
+//         if(i == len1+len2-1 && res[i] == 0) continue;//乘数可能太小，未产生进位，导致在结果的最高位产生前导零,如 100000000 * 3
+//         printf("%d", res[i]);
+//     }
+//     return 0;
+// }
 
 
 
