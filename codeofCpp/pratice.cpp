@@ -3402,11 +3402,67 @@ int main() {
 
 
 
+/*五. */
+//二分查找
+// mid = (right + left) / 2 的写法中 (right + left) 容易超限，为了避免两数相加过大超限，采用如下写法：
+// mid = left + (right - left) / 2
+// 该算法需要序列是有序的，故常与 sort() 函数搭配
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// int nums[100000];
+// int binary_search(int nums[], int size, int target)
+// {
+//     int left = 0, right = size - 1;
+//     while(left <= right)//注意这里区间为双闭区间 [left, right] 即left和right都能取到值,故left==right的情况也可以取到值
+//     {
+//         int mid = left + (right - left) / 2;
+//         if(nums[mid] < target) left = mid + 1;
+//         else if(nums[mid] > target) right = mid - 1;
+//         else 
+//             return mid;//找到就返回下标
+//     }
+//     return -1;//没找到的情况
+// }
+// int main()
+// {
+//     int tg;
+//     while(cin >> tg, tg!=-1)
+//     {
+//         int n,i=0;
+//         while(cin>>n,n!=-1) nums[i++] = n;
+//         sort(nums, nums + i);
+//         int res = binary_search(nums, i, tg);
+//         cout << res << endl;
+//     }
+//     return 0;
+// }
 
 
-
-
-
+//1. P2249 查找
+#include <iostream>
+using namespace std;
+int nums[1000005];
+int bin_search(int nums[], int size, int tg)
+{
+    
+}
+int main()
+{
+    cin.tie(0)->sync_with_stdio(false);
+    cout.tie(0);
+    int n,m;
+    cin >> n >> m;
+    for(int i=0;i<n;i++) cin>>nums[i];
+    while(m--)
+    {
+        int target, res;
+        cin >> target;
+        res = bin_search(nums, n, target);
+        cout << res << endl;
+    }
+    return 0;
+}
 
 
 
