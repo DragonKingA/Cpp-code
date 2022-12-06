@@ -3402,6 +3402,23 @@ int main() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*五. */
 //二分查找
 // mid = (right + left) / 2 的写法中 (right + left) 容易超限，为了避免两数相加过大超限，采用如下写法：
@@ -3440,29 +3457,273 @@ int main() {
 
 
 //1. P2249 查找
+//二分法(稍有变通) 0.3s 4.25mb
+// #include <iostream>
+// using namespace std;
+// int nums[1000005],n,m;
+// int bin_search(int tg)
+// {
+//     int lef = 1, rig = n + 1;//左闭右开区间
+//     while(lef < rig)
+//     {
+//         int mid = lef + (rig - lef) / 2;
+//         if(nums[mid] >= tg) rig = mid;//*当等于 tg 时也继续二分下去，直到 lef 指向最左侧的目标值
+//         else lef = mid + 1;
+//     }
+//     if(nums[lef] == tg) return lef;
+//     else return -1;
+// }
+// int main()
+// {
+//     cin.tie(0)->sync_with_stdio(false);
+//     cout.tie(0);
+//     cin >> n >> m;
+//     for(register int i = 1; i <= n; i++) cin >> nums[i];
+//     while(m--)
+//     {
+//         int target, res;
+//         cin >> target;
+//         res = bin_search(target);
+//         cout << res << ' ';
+//     }
+//     return 0;
+// }
+//set查找 与 无序映射 的应用(需要O2优化并且耗时超过 1s,空间超过67mb)
+// #include <iostream>
+// #include <set>
+// #include <unordered_map>
+// using namespace std;
+// int main()
+// {
+//     ios::sync_with_stdio(false);
+//     cin.tie(0);
+//     cout.tie(0);
+//     int n,m;
+//     multiset<int> ms;//multiset允许重复数据，即不会检测重复值，效率更快
+//     unordered_map<int,int> mp;//存入时无需排序功能故不用map，若用map会超时
+//     cin >> n >> m;
+//     for(register int i = 1; i <= n; i++) 
+//     //因为答案编号从1开始，存入数组也从下标1开始，省去一些麻烦 ； register int减少多次循环的耗时
+//     {
+//         int k;
+//         cin >> k;
+//         ms.insert(k);
+//         if(mp[k]==0) mp[k] = i;//存该数对应的编号
+//     }
+//     while(m--)
+//     {
+//         int target, res;
+//         cin >> target;
+//         res = *ms.lower_bound(target);//该函数返回 >= target 的元素的指针位置，可以解引用直接取到该值
+//         if(res != target) cout<<-1<<' ';
+//         else cout<< mp[res] << ' ';
+//     }
+//     return 0;
+// }
+
+
+//2. P1102 A-B 数对
+//映射法
+// #include <iostream>
+// #include <map>
+// using namespace std;
+// typedef long long ll;
+// ll a[200005];
+// map<ll, int> mp;
+// int main()
+// {
+//     ios::sync_with_stdio(false);
+//     cin.tie(0);
+//     cout.tie(0);
+//     ll N, C, ans=0;
+//     cin>>N>>C;
+//     for(register int i=0;i<N;i++)
+//     {
+//         cin>>a[i];//读入A
+//         mp[a[i]]++;
+//         a[i]-=C;//转成B
+//     }
+//     for(register int i=0;i<N;i++)
+//         ans += mp[a[i]];//A-B=C -> A-C=B,现在查B有多少个（次）即得到多少对A-B=C
+//     cout<<ans<<'\n';
+//     return 0;
+// }
+//双指针法
+//原理：符合条件的数可能是一个，也可能在一个连续区间里
+//  那么我们用rig1找到这个区间左索引，用rig2找到区间右索引（不包含于此）
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// typedef long long ll;
+// ll a[200005];
+// int main()
+// {
+//     ios::sync_with_stdio(false);
+//     cin.tie(0);
+//     cout.tie(0);
+//     ll N, C, ans=0;
+//     cin>>N>>C;
+//     for(register int i = 1;i <= N;i++) cin>>a[i];
+//     sort(a+1, a+1+N);
+//     int lef = 1, rig1 = 1, rig2 = 1;
+//     for(lef = 1; lef <= N; lef++)
+//     {
+//         while(rig1 <= N && a[rig1]-a[lef] < C) rig1++;//左闭 a[rig1]满足条件     
+//         while(rig2 <= N && a[rig2]-a[lef] <= C) rig2++;//右开！a[rig1<=i<rig2]满足条件       
+//         if(a[rig1] - a[lef] == C && a[rig2-1] - a[lef] == C && rig2 >= 2)//rig2 >= 2说明至少要有两个数
+//             ans += rig2 - rig1;
+//     }
+//     cout<<ans<<'\n';
+//     return 0;
+// }
+
+
+
+
+
+
+
+//三分查找
+//将待查元素x与n/3处的元素比较，然后将x与2n/3处的元素进行比较。比较的结果或者找到x,或者将搜索范围缩小到原来的n/3
+//每次由两个mid来滑动，m1 = (2/3)*left + (1/3)rig 在左侧；m2 = (1/3)left + (2/3)rig 在右侧
+//同样的，防止超限的写法：m1 = lef + (rig - lef) / 3 ；m2 = rig - (rig - lef) / 3;
+//lef=0            m1            m2         rig=n-1
+//若       x
+//lef=0      rig=m1-1  
+//若                                    x
+//                             lef=m2+1     rig=n-1
+//若                      x
+//                lef=m1+1   rig=m2(因为时直接用else,没有另外讨论nums[m2],故nums[m2]也可能为x，所以不减1)
+// #include <iostream>
+// using namespace std;
+// int nums[] = {1,2,3,4,5,6}, n=6;
+// int third_search(int lef, int rig, int x)
+// {
+//     if(lef <= rig)//双闭区间
+//     {
+//         int m1 = lef + (rig - lef) / 3;
+//         int m2 = rig - (rig - lef) / 3;
+//         if(x == nums[m1]) return m1;
+//         if(x == nums[m2]) return m2;
+//         if(x < nums[m1]) return third_search(lef, m1 - 1, x);
+//         if(x > nums[m2]) return third_search(m2+1, rig, x);
+//         else return third_search(m1+1,m2,x);
+//     }
+//     return -1;
+// }
+// int main()
+// {
+//     int res, x;
+//     while(cin>>x)
+//     {
+//         res = third_search(0, n-1, x); 
+//         cout<<res<<endl;
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// typedef long long ll;
+// #define MAXN 50005
+// ll dis[MAXN];
+// int main()
+// {
+//     int N,M;
+//     ll L,t=0;
+//     scanf("%lld%d%d",&L,&N,&M);
+//     for(register int i = 0; i < N; i++)
+//     {
+//         ll n;
+//         scanf("%lld",&n);
+//         dis[i] = n - t;
+//         t = n;
+//     }
+//     dis[N] = L - t;
+
+//     return 0;
+// }
+
+//0  2  11 14 17 21 25
+// 2   9  3  3  4  4 
+
+
 #include <iostream>
+#include <algorithm>
 using namespace std;
-int nums[1000005];
-int bin_search(int nums[], int size, int tg)
-{
-    
-}
+typedef long long ll;
 int main()
 {
     cin.tie(0)->sync_with_stdio(false);
-    cout.tie(0);
-    int n,m;
-    cin >> n >> m;
-    for(int i=0;i<n;i++) cin>>nums[i];
-    while(m--)
+    int N,k;
+    ll n,L=0,maxL=0;
+    cin>>N>>k;
+    while(N--);
     {
-        int target, res;
-        cin >> target;
-        res = bin_search(nums, n, target);
-        cout << res << endl;
+        cin>>n;
+        L += n;
+        maxL = max(maxL, n);
     }
+
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3739,7 +4000,16 @@ cout.tie(0);
 cin.tie(0)->sync_with_stdio(false);
 */
 
-
+/*register int
+其中的 register 表示其后是使用 cpu内部寄存器 的变量
+平时的int是把变量放在内存中，而这里存到寄存器中可以加快变量的读写速度
+举例：
+    循环1e8次，使用普通的int变量，耗时 0.5032s
+    而使用register int，耗时 0.1375s
+    提升极为明显
+用途：
+    用于较多次规定 i 范围的循环中，亦多用于多层循环中
+*/
 
 
 
