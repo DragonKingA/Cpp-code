@@ -4560,7 +4560,151 @@ cin.tie(0)->sync_with_stdio(false);
 
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓迎新赛↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+/*
+题目链接：https://soj.csgrandeur.cn/csgoj/problemset/problem?pid=1449
+题解链接：https://soj.csgrandeur.cn/index/answer/detail?nid=1046
+*/
+//A. 阶梯数
+// #include <cstdio>
+// using namespace std;
+// int a[510];
+// int main()
+// {
+//     int ind = 1;
+//     for(register int i = 123456789; i > 0 && ind <= 501; i--)
+//     {   
+//         int t = i, fl = 1, x;
+//         do{
+//             x = t % 10;
+//             t /= 10;
+//             if(t%10 >= x)
+//             {
+//                 fl = 0;
+//                 break;
+//             }
+//         }while(t);
+//         if(fl) a[ind++] = i;
+//     }
+//     int k;
+//     scanf("%d", &k);
+//     printf("%d", a[k]);
+//     return 0;
+// }
+
+
+
+//B. 宝石冒险
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// typedef long long ll;
+// ll b[100005];
+// int main()
+// {
+//     int n, k;
+//     ll sum = 0;
+//     scanf("%d%d", &n, &k);
+//     for(int i = 0; i < n; i++)
+//     {
+//         ll x, y;
+//         scanf("%lld%lld", &x, &y);
+//         b[i] = y - x;//若大于0，意味着拿y宝石更赚
+//         sum += x;
+//     }
+//     sort(b, b + n, greater<ll>() );
+//     for(int i = 0; i < k; i++)
+//         sum += b[i];
+//     printf("%lld", sum);
+//     return 0;
+// }
+
+
+
+//C. 
+
+
+//D.
+
+
+//E. Joshua想见甘雨！
+// #include <iostream>
+// #include <string>
+// using namespace std;
+// int main()
+// {
+//     int n, m, sum = 0;
+//     cin >> n >> m;
+//     while(n--)
+//     {
+//         string str;
+//         cin >> str;
+//         for(int i = 0; i < m; i++)
+//         {
+//             switch(str[i])
+//             {
+//                 case 'G': sum += 50; break;
+//                 case 'B': sum += 40; break;
+//                 case 'H': sum += 30; break;
+//             }
+//         }
+//     }
+//     cout << sum;
+//     return 0;
+// }
+
+
+
+//F. 烦人的屏蔽系统
+// #include <iostream>
+// #include <string>
+// using namespace std;
+// int main()
+// {
+//     cin.tie(0)->sync_with_stdio(false);
+//     cout.tie(0);
+//     string str, ch, wd;
+//     getline(cin, str);
+//     getline(cin, ch);
+//     getline(cin, wd);
+//     int ind = str.find(wd);
+//     while(ind != -1)
+//     {
+//         for(int i = 1; i < 2*wd.size() - 1; i += 2)
+//         {
+//             str.insert(ind + i, ch);
+//         }
+//         ind = str.find(wd);
+//     }
+//     cout << str;
+//     return 0;
+// }
+
+
+
+//G. “虚空”一下，你就知道
+// #include <iostream>
+// using namespace std;
+// int main()
+// {
+//     int x;
+//     cin >> x;
+//     x%=100;
+//     char ch = 'A' + x;
+//     cout << ch;
+//     return 0;
+// }
+
+
+
+//H. 我不想工作!
 
 
 
 
+
+
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑迎新赛↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
