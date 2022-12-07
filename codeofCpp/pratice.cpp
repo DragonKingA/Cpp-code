@@ -3626,80 +3626,239 @@ int main() {
 
 
 
-
+//1. 跳石头
+//二分寻找最大的最短距离，使得按该距离搬走石头，刚好搬走M个
+//可尝试用差分简化
 // #include <cstdio>
 // #include <algorithm>
 // using namespace std;
 // typedef long long ll;
-// #define MAXN 50005
-// ll dis[MAXN];
+// ll dis[50010], L;
+// int N, M;
+// bool judge(ll x)
+// {   
+//     int now = 0, cnt = 0;
+//     for(int i = 1 ; i <= N + 1 ; i++)
+//         if(dis[i] - dis[now] < x)//距离小于期望距离x（x是我们希望的可以跳过的两石头间距离）
+//             cnt++;
+//         else
+//             now = i;//这块石头不能搬走，或者说它因为大于等于x 所有我们可以跳，无需搬走，现在它变成了起点来算其后石头的距离
+//     return cnt <= M;
+// }
 // int main()
 // {
-//     int N,M;
-//     ll L,t=0;
 //     scanf("%lld%d%d",&L,&N,&M);
-//     for(register int i = 0; i < N; i++)
+//     for(int i = 1; i <= N; i++) scanf("%lld", &dis[i]);//一定要从1开始，因为dis[0]需要为0
+//     dis[N+1] = L;
+//     ll lef = 1, rig = L, ans = 0;
+//     while(lef <= rig)
 //     {
-//         ll n;
-//         scanf("%lld",&n);
-//         dis[i] = n - t;
-//         t = n;
+//         ll mid = lef + (rig - lef) / 2;
+//         if(judge(mid)) 
+//         {
+//             ans = mid;//最后的ans即是最优解
+//             lef = mid + 1;//mid左边的石头都判断过了,再查其右边有无更优
+//         }
+//         else
+//             rig = mid - 1;
 //     }
-//     dis[N] = L - t;
-
+//     printf("%lld", ans);
 //     return 0;
 // }
 
-//0  2  11 14 17 21 25
-// 2   9  3  3  4  4 
 
 
-#include <iostream>
-#include <algorithm>
-using namespace std;
-typedef long long ll;
-int main()
-{
-    cin.tie(0)->sync_with_stdio(false);
-    int N,k;
-    ll n,L=0,maxL=0;
-    cin>>N>>k;
-    while(N--);
-    {
-        cin>>n;
-        L += n;
-        maxL = max(maxL, n);
-    }
-
-    return 0;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//2. Cable master(二分 与 小数精度 问题)
+// #include <cstdio>
+// #include <algorithm>
+// #include <cmath>
+// #define MaxInt 2147483647
+// using namespace std;
+// double a[10005];
+// int N,k;
+// bool cal(double x)
+// {
+//     long long res = 0;
+//     for(int i = 0;i < N;i++)
+//         res += (int)(a[i] / x);
+//     return res >= k;
+// }
+// int main()
+// {
+//     double l=0, r=MaxInt, mid;
+//     scanf("%d%d", &N, &k);
+//     for(int i=0;i<N;i++) scanf("%lf", &a[i]);
+//     for(int i=0;i<100;i++)
+//     {
+//         mid = l + (r - l) / 2;
+//         if(cal(mid)) l = mid;
+//         else r = mid;
+//     }
+//     printf("%.2f", floor(l*100.0)/100.0);
+//     return 0;
+// }
+ /*
+问题案例：
+4 10
+0.01
+0.01
+0.02
+0.01
+若直接输出结果则会输出0.01 ,实际上这是0.005被四舍五入的结果，但应当输出0.00
+ */
 
 
 
+//3. P2440 木材加工
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// typedef long long ll;
+// ll a[100005];
+// int N,k;
+// bool cal(ll x)
+// {
+//     ll res = 0;
+//     for(register int i = 0;i < N;i++)
+//     {
+//         res += a[i] / x;
+//     }
+//     return res >= k;
+// }
+// int main()
+// {
+//     cin.tie(0)->sync_with_stdio(false);
+//     cout.tie(0);
+//     ll l=0, r=1e8 + 1, mid;
+//     cin>>N>>k;
+//     for(int i=0;i<N;i++) cin>>a[i];
+//     while(l+1 < r)
+//     {
+//         mid = l + (r - l) / 2;
+//         if(cal(mid)) l = mid;
+//         else r = mid;
+//     }
+//     cout << l << '\n';
+//     return 0;
+// }
 
 
 
+//4. Pie
+// #define _USE_MATH_DEFINES
+// #include <cstdio>
+// #include <algorithm>
+// #include <cmath>
+// using namespace std;
+// double a[10005];
+// int N,k;
+// bool cal(double x)
+// {
+//     long long res = 0;
+//     for(int i = 0;i < N;i++)
+//         res += (int)(a[i] / x);
+//     return res >= k;
+// }
+// int main()
+// {
+//     int T;
+//     scanf("%d",&T);
+//     while(T--)
+//     {
+//         double l=0, r=0, mid;
+//         scanf("%d%d", &N, &k);
+//         k++;
+//         for(int i=0;i<N;i++) 
+//         {
+//             scanf("%lf", &a[i]);
+//             a[i]*=M_PI*a[i];
+//             r=max(r,a[i]);
+//         }
+//         r+=1.0;
+//         for(int i=0;i<100;i++)
+//         {
+//             mid = l + (r - l) / 2;
+//             if(cal(mid)) l = mid;
+//             else r = mid;
+//         }
+//         printf("%.4lf\n", l);
+//     }
+//     return 0;
+// }
 
+
+
+//5. Freefall
+// #include <cstdio>
+// #include <cmath>
+// typedef double db;
+// using namespace std;
+// const db eps = 1e-8;
+// db A, B;
+// db f(db x)
+// {
+//     return A / sqrt(x + 1) + x * B;
+// }
+// int main()
+// {
+//     while(~scanf("%lf%lf", &A, &B))
+//     {
+//         db low = 0, high = A, m1, m2;
+//         for(int i=0 ; i<1000 ; i++)
+//         {
+//             m1 = low + (high - low) / 3;
+//             m2 = high - (high - low) / 3;
+//             if(f(m1) - f(m2) >= eps) low = m1;
+//             else high = m2;
+//         }
+//         printf("%.10f\n", f(ceil(low)));
+//     }
+//     return 0;
+// }
+
+
+
+//6. Monthly Expense (二分 + 贪心)
+// #include <cstdio>
+// #include <algorithm>
+// using namespace  std;
+// int n, m, a[100005];
+// bool judge(int x)
+// {
+//     int cnt = 0, sum = 0;
+//     for(int i = 1;i <= n;i++)
+//     {
+//         if(sum + a[i] <= x) sum += a[i];//能装多少就装多少
+//         else 
+//         {
+//             cnt++;
+//             sum = a[i];//直到装不下再重新算
+//         }
+//     }
+//     return cnt >= m;
+// }
+// int main()
+// {
+//     while(~scanf("%d%d",&n,&m))
+//     {
+//         int l = 0, r = 1e9, mid;
+//         for(int i = 1;i <= n;i++) 
+//         {
+//             scanf("%d",&a[i]);
+//             l = max(a[i], l);//排除特殊案例，最小开销至少为max(a[i]) （最大开销至少为所有和 这个倒没关系）
+//         }
+//         while(l <= r)
+//         {
+//             mid = l + (r - l) / 2;
+//             if(judge(mid)) 
+//                 l = mid + 1;
+//             else 
+//                 r = mid - 1;
+//         }
+//         printf("%d\n", l);
+//     }
+//     return 0;
+// }
 
 
 
