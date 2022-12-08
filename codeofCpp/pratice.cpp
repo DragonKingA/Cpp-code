@@ -4623,10 +4623,57 @@ cin.tie(0)->sync_with_stdio(false);
 
 
 
-//C. 
+//C. 快来玩2048！
 
 
-//D.
+//？？？D. 卡牌游戏 
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// int b[100010];
+// int main()
+// {
+//     int n, x, m, q, l, r, val, cnt1 = 0, cnt2 = 0;
+//     scanf("%d%d%d%d", &n, &x, &m, &q);
+//     while(m--)
+//     {
+//         scanf("%d%d%d", &l, &r, &val);
+//         b[l] += val, b[r + 1] -= val;
+//     }
+//     for(int i = 2; i <= n; i++)
+//     {
+//         if(b[i] >= 0) cnt1 += b[i]; 
+//         else cnt2 -= b[i];
+//     }
+//     int cnt = max(cnt1, cnt2);
+//     if(cnt <= q) printf("%d", cnt);
+//     else printf("-1");
+//     return 0;
+// }
+//找规律关系
+// 2 2 2 2
+// 1 1 2 2
+// 1 2 3 2
+// 2 3 4 2
+//2
+
+//3 3 3 3 3 3
+//2 2 2 2 3 3
+//2 2 1 1 2 2
+//3 3 2 1 2 2
+//3 2 1 1 2 2
+//0 -1 -1 0 1 0 
+//2
+
+//3 3 3 3 3 3
+//2 2 2 2 3 3
+//2 1 1 1 2 2
+//2 1 0 0 2 2
+//-1 -1 -1 0 2 0 
+//2
+//对于改变牌大小的操作，可以忽略b[1]操作
+//只选i = 2 ~ n的操作讨论，并顺着规律得到结果
+
 
 
 //E. Joshua想见甘雨！
@@ -4700,6 +4747,133 @@ cin.tie(0)->sync_with_stdio(false);
 
 
 //H. 我不想工作!
+//案例数为 36 种情况，草稿纸列情况，发现规律
+// #include <cstdio>
+// using namespace std;
+// int m, n;
+// bool jud()
+// {
+//     if(n == 2) return 0;
+//     if(2*m >= n) return 1;
+//     return 0;
+// }
+// int main()
+// {
+//     scanf("%d%d", &m, &n);
+//     printf(jud() ? "(^ v ^)" : "(; w ;)");
+//     return 0;
+// }
+
+
+
+//I. zwc怎么办？
+// #include <iostream>
+// #include <string>
+// #include <unordered_map>
+// using namespace std;
+// int main()
+// {
+//     int w, n, m, k, s1=20211016, s2=20221002;
+//     cin >> n >> m >> k; 
+//     unordered_map<string, int> strs;
+//     string s;
+//     for(int i=0;i<n;i++) cin>>s;
+//     for(int i=0;i<m;i++) cin>>s, strs[s]=2;
+//     for(int i=0;i<k;i++) cin>>s, strs[s]=1;
+//     cin >> w;
+//     while(w--)
+//     {
+//         cin>>s;
+//         int x = strs[s];
+//         if(x == 1) s1++, s2++;
+//         else if(x == 2) s1--, s2++;
+//     }
+//     cout << s1 << ' ' << s2;
+//     return 0;
+// }
+
+
+
+//J. 小A喜欢吃糖果
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// int a[10005];
+// int main()
+// {   
+//     int k, n, l, r;
+//     int sum = 0;
+//     scanf("%d%d%d%d", &k, &n , &l, &r);
+//     for(int i = 0; i < n; i++) scanf("%d", &a[i]);
+//     sort(a, a + n);
+//     for(int i = 0; i < n; i++)
+//         if(a[i] >= l && a[i] <= r)
+//         {
+//             if(k >= a[i])
+//             {
+//                 k-=a[i];
+//                 sum++;
+//             }
+//             else 
+//                 break;
+//         }
+//     printf("%d", sum);
+//     return 0;
+// }
+
+
+
+//K. 新年好
+
+
+
+
+
+
+
+//L. 要是不难，也挺简单的
+#include <iostream>
+#include <string>
+#include <set>
+#include <cmath>
+using namespace std;
+typedef long long ll;
+const ll base = 1e9 + 7;
+ll N, K, res = 0;
+ll F[15];
+void judge(string s)
+{   
+    set<char> st;
+    for(auto ch : s)
+        if(!st.count(ch)) st.insert(ch);
+    F[st.size()]++;
+}
+int main()
+{
+    string str = "";
+    cin.tie(0)->sync_with_stdio(false);
+    cout.tie(0);
+    cin>>N>>K;
+    for(register int i=0;i<N;i++) 
+    {
+        string s;
+        cin>>s;
+        str+=s;
+    }
+    for(register int j=1;j<=N;j++)
+        for(int i=0; i + j <= N; i++)
+            judge(str.substr(i, j));
+    // for(int i=1; i<=K; i++)
+    //     res += (F[i] * (ll)pow(131, i)) % base;
+    // cout << res;
+    for(int i=1; i<=10; i++)
+        cout << (pow(131, i) % base) << ", ";
+        //想办法存起这个 大数
+    return 0;
+}
+
+
+
 
 
 
