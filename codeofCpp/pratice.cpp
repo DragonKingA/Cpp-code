@@ -4623,7 +4623,161 @@ cin.tie(0)->sync_with_stdio(false);
 
 
 
-//C. 快来玩2048！
+//C. 快来玩2048！(双指针-滑动窗口)
+// #include <iostream>
+// using namespace std;
+// int arr[110][110];
+// int n;
+// void up()
+// {
+//     //从第一个(u=1)和第二个(d=2)开始看，可以合并就合并而且合并后才u++，合并不了时++u并置入t值，接着d也往后找非零块
+//     //可以竖向或横向的 0 4 2 2 0 串来理解四个操作
+//     for(int i=1;i<=n;i++)
+//     {
+//         int u = 1, d = 2;
+//         while(d <= n)
+//         {
+//             int t = arr[d][i];
+//             arr[d][i] = 0;
+//             d++;
+//             if(t==0) continue;
+//             if(!arr[u][i])
+//                 arr[u][i]=t;
+//             else if(arr[u][i]==t)
+//                 arr[u++][i]+=t;
+//             else
+//                 arr[++u][i]=t;
+//         }
+//     }
+// }
+// void down()
+// {
+//     for(int i=1;i<=n;i++)
+//     {
+//         int u = n - 1, d = n;
+//         while(u >= 1)
+//         {
+//             int t = arr[u][i];
+//             arr[u][i] = 0;
+//             u--;
+//             if(t==0) continue;
+//             if(!arr[d][i])
+//                 arr[d][i]=t;
+//             else if(arr[d][i]==t)
+//                 arr[d--][i]+=t;
+//             else
+//                 arr[--d][i]=t;
+//         }
+//     }
+// }
+// void left()
+// {
+//     for(int i=1;i<=n;i++)
+//     {
+//         int l = 1, r = 2;
+//         while(r <= n)
+//         {
+//             int t = arr[i][r];
+//             arr[i][r] = 0;
+//             r++;
+//             if(t==0) continue;
+//             if(!arr[i][l])
+//                 arr[i][l]=t;
+//             else if(arr[i][l]==t)
+//                 arr[i][l++]+=t;
+//             else
+//                 arr[i][++l]=t;
+//         }
+//     }
+// }
+// void right()
+// {
+//     for(int i=1;i<=n;i++)
+//     {
+//         int l = n - 1, r = n;
+//         while(l >= 1)
+//         {
+//             int t = arr[i][l];
+//             arr[i][l] = 0;
+//             l--;
+//             if(t==0) continue;
+//             if(!arr[i][r])
+//                 arr[i][r]=t;
+//             else if(arr[i][r]==t)
+//                 arr[i][r--]+=t;
+//             else
+//                 arr[i][--r]=t;
+//         }
+//     }
+// }
+// int main()
+// {
+//     int m;
+//     bool if2048 = 0;
+//     cin>>n>>m;
+//     for(int i = 1; i <= n; i++)
+//         for(int j = 1; j <= n; j++)
+//             cin>>arr[i][j];
+//     for(int k = 1; k <= m; k++)
+//     {
+//         char ch;
+//         int x, y;
+//         cin>>ch>>x>>y;
+//         switch(ch)
+//         {
+//             case 'U': 
+//                 up(); break;
+//             case 'D': 
+//                 down(); break;
+//             case 'L': 
+//                 left(); break;
+//             case 'R': 
+//                 right(); break;
+//         }
+//         if(!arr[x][y]) arr[x][y] = 2;
+//         for(int i = 1; i <= n; i++)
+//             for(int j = 1; j <= n; j++)
+//                 if(arr[i][j]==2048)
+//                     if2048 = 1, k = m + 1;
+//     }
+//     cout<<(if2048 ? "Yes\n":"No\n");
+//     for(int i = 1; i <= n; i++)
+//         {
+//             for(int j = 1; j <= n; j++)
+//             {
+//                 cout<<arr[i][j];
+//                 cout<<(j == n ? '\n':' ');
+//             }
+//         }
+//     return 0;
+// }
+/*
+竖向为x轴，横向为y轴
+4 3
+0 0 2 4
+4 4 8 4
+8 8 2 4
+2 2 2 2
+U 4 2
+D 1 1
+L 3 3
+
+4 4 2 8
+8 8 8 4
+2 2 4 2
+0 2 0 0
+
+2 0 0 0
+4 4 2 8
+8 8 8 4
+2 4 4 2
+
+2 0 0 0
+8 2 8 0
+16 8 4 0
+2 8 2 0
+*/
+
 
 
 //？？？D. 卡牌游戏 
@@ -4824,53 +4978,103 @@ cin.tie(0)->sync_with_stdio(false);
 
 
 //K. 新年好
+// #include <cstdio>
+// using namespace std;
+// typedef long long ll;
+// const int MAXN = 2e5 + 10;
+// ll a[MAXN];
+// int n, m;
+// bool check(ll x)
+// {
+//     //看能选出多少种花，若有 m 种以上说明该捆数某区间内可行，即可以有更多捆(>=x)，故舍去 l 的左区间，否则舍去 r 的右区间
+//     ll cnt = 0, sum = 0;
+//     if(!x) return 1;//0捆特判
+//     for(int i = 0; i < n; ++i)
+//     {
+//         if(a[i] >= x) cnt++;//如此，每捆花肯定都能选到这一种花
+//         else sum += a[i];
+//     }
+//     cnt += sum / x;//其余总和分给各捆花，加上每捆花所能分到的花种数，最终cnt即为一捆花的花种数量
+//     return cnt >= m;
+// }
+// int main()
+// {
+//     scanf("%d%d", &n, &m);
+//     for(int i = 0; i < n; i++)  scanf("%lld", &a[i]);
+//     ll l = 0, r = 0x7fffffffffffffff, ans = 0;
+//     while(l <= r)
+//     {
+//         ll mid = l + (r - l) / 2;//对捆数二分查找
+//         if(check(mid)) l = mid + 1, ans = mid;//最终答案是mid
+//         else r = mid - 1;
+//     }
+//     printf("%lld", ans);
+//     return 0;
+// }
+//竖向看,其和 >= m 即算一捆
+// 3 3
+// 3 2 1 
+// 1
+//1 1 1
+//1 1
+//1
+//仅第一列为三种，故1捆
 
+// 5 4
+// 4 3 2 2 1
+//1 1 1 1
+//1 1 1
+//1 1
+//1 1
+//1
+//第一、二列满足，2捆
 
-
-
+//2 2
+//3 3
+//1 1 1
+//1 1 1
+//三列均满足，3捆
 
 
 
 //L. 要是不难，也挺简单的
-#include <iostream>
-#include <string>
-#include <set>
-#include <cmath>
-using namespace std;
-typedef long long ll;
-const ll base = 1e9 + 7;
-ll N, K, res = 0;
-ll F[15];
-void judge(string s)
-{   
-    set<char> st;
-    for(auto ch : s)
-        if(!st.count(ch)) st.insert(ch);
-    F[st.size()]++;
-}
-int main()
-{
-    string str = "";
-    cin.tie(0)->sync_with_stdio(false);
-    cout.tie(0);
-    cin>>N>>K;
-    for(register int i=0;i<N;i++) 
-    {
-        string s;
-        cin>>s;
-        str+=s;
-    }
-    for(register int j=1;j<=N;j++)
-        for(int i=0; i + j <= N; i++)
-            judge(str.substr(i, j));
-    // for(int i=1; i<=K; i++)
-    //     res += (F[i] * (ll)pow(131, i)) % base;
-    // cout << res;
-    for(int i=1; i<=10; i++)
-        cout << (pow(131, i) % base) << ", ";
-        //想办法存起这个 大数
-    return 0;
-}
+//TLE (里面至少有双层循环，即时间复杂度至少为O(n*n),最大时为2000*2000*9=36e6,而实际不允许超过25e6,故超时)
+// #include <iostream>
+// #include <string>
+// #include <unordered_set>
+// #include <cmath>
+// using namespace std;
+// typedef long long ll;
+// const ll base = 1e9 + 7;//1000000007
+// ll F[15], N, K, res = 0;
+// ll num[11]={0, 131, 17161, 2248091, 294499921, 579489385, 913108910, 617266377, 861894826, 908221553, 977022617};
+// void judge(string s)
+// {   
+//     unordered_set<char> st;
+//     for(auto ch : s)
+//         if(!st.count(ch)) st.insert(ch);
+//     F[st.size()]++;
+// }
+// int main()
+// {
+//     cin.tie(0)->sync_with_stdio(false);
+//     cout.tie(0);
+//     string str = "";
+//     cin>>N>>K;
+//     for(register int i=0;i<N;i++) 
+//     {
+//         string s;
+//         cin>>s;
+//         str+=s;
+//     }
+//     for(register int i = 1;i <= N; i++)
+//         for(register int j = 0; i + j <= N; j++)
+//             judge(str.substr(j, i));
+//     for(int i=1; i<=K; i++)
+//         res += (F[i] * num[i]) % base;
+//     cout << (res % base);
+//     return 0;
+// }
 
 
 
