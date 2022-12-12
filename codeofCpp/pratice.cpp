@@ -5705,6 +5705,131 @@ S 4
 
 
 
+//6.钱钱的steam游戏
+// #include<cstdio>
+// #include<algorithm>
+// using namespace std;
+// struct node{
+//     int W, id;
+//     bool operator <(const node&y)const{
+//         if(W==y.W) return id<y.id;
+//         return W>y.W;
+//     }
+// }arr[40000];
+// int n, k, E[40000];
+// int main()
+// {
+//     scanf("%d%d",&n,&k);
+//     for(int i=1;i<=10;i++) scanf("%d",&E[i]);
+//     for(int i=1;i<=n;i++) 
+//     {
+//         node t{.id=i};
+//         scanf("%d",&t.W);
+//         arr[i]=t;
+//     }
+//     sort(arr+1,arr+1+n);
+//     for(int i=1;i<=n;i++) arr[i].W += E[(i - 1)%10 + 1];
+//     sort(arr+1,arr+1+n);
+//     for(int i=1;i<=k;i++) printf(" %d"+!(i-1), arr[i].id);
+//     return 0;
+// }
+
+
+
+//7.食堂调查
+// #include <iostream>
+// #include <string>
+// #include <map>
+// using namespace std;
+// int main()
+// {
+//     int n;
+//     double x, m = 0;
+//     string s;
+//     map<string, double> mp;
+//     for(cin>>n;n--;)
+//     {
+//         cin>>x>>s;
+//         if(mp.count(s)) mp[s] += x;
+//         else mp.insert({s,x});
+//         if(mp[s]>m) m = mp[s];
+//     }
+//     for(auto x : mp)
+//         if(x.second==m)
+//         {
+//             cout<<x.first;
+//             break;
+//         }
+//     return 0;
+// }
+
+
+
+//8.辉辉翻扑克牌
+// #include <iostream>
+// #include <string>
+// using namespace std;
+// int main()
+// {
+//     string b;
+//     int cnt = 0, t;
+//     cin >> b;
+//     for(int i = b.size() - 1; i >= 0; i--)
+//         if(b[t = i] == '0' && ++cnt)
+//             while(t >= 0) b[t--] = (b[t] == '1' ? '0':'1');
+//     cout << cnt;
+//     return 0;
+// }
+//11011010100 无论从左开始看还是从右开始看都是8次
+
+
+
+//9.万圣节大作战
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define N 100005
+struct nd{int id, n;}a[N],b[N];
+bool vis[N];
+int main()
+{
+    int n;
+    cin>>n;
+    for(int i=1;i<=n;i++) cin>>a[i].n, a[i].id=i;
+    for(int i=1;i<=n;i++) cin>>b[i].n, b[i].id=i;
+    return 0;
+}
+
+/*
+3
+8 7 6
+5 4 2
+
+2 1 3
+9 9 4
+
+11 10 7
+
+9 1 4 3 2
+3 8 10 4 9
+
+4  9 2 1 3
+10 3 9 8 4
+14 12 11 9 7
+
+
+4 2 3  9
+3 8    11
+2
+9 3  1
+10 9
+求和排序
+13 11 8
+*/
+
+
+
+
 
 
 
