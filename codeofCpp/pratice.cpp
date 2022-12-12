@@ -5158,6 +5158,7 @@ L 3 3
 
 
 //3.仲夏梦
+//未完成
 // #include <cstdio>
 // using namespace std;
 // int main()
@@ -5174,108 +5175,189 @@ L 3 3
 
 
 //4.象棋残局
-//其实可以从t=5处出发找
-#include <cstdio>
-#include <algorithm>
-using namespace std;
-int arr[15][15];
-int dir[8][2]={{1,-2},{-1,-2},{-2,-1},{-2,1},{-1,2},{1,2},{2,1},{2,-1}};
-int foot[4][2]={{0,-1},{-1,0},{0,1},{-1,0}};
-bool judge(int x, int y)
-{
-    for(int i=1;i<=10;i++)
-        for(int j=1;j<=9;j++)
-        {
-            int t = arr[i][j];
-            if(!t||t==5||t==6) continue;
-            if(t==1)
-            {
-                int ok = 1;
-                if(i==x)
-                {
-                    for(int m = min(j,y)+1;m<max(j,y);m++)
-                        if(arr[x][m]!=0)
-                        {
-                            ok = 0;
-                            break;
-                        } 
-                }
-                else if(j==y)
-                {
-                    for(int m = min(i,x)+1;m<max(i,x);m++)
-                        if(arr[m][y]!=0)
-                        {
-                            ok = 0;
-                            break;
-                        } 
-                }
-                if(ok&&(i==x||j==y)) return 1;
-            }
-            else if(t==4)
-            {
-                int cnt = 0;
-                if(i==x)
-                {
-                    for(int m = min(j,y)+1;m<max(j,y);m++)
-                        if(arr[x][m]!=0) cnt++;
-                }
-                else if(j==y)
-                {
-                    for(int m = min(i,x)+1;m<max(i,x);m++)
-                        if(arr[m][y]!=0) cnt++;
-                }
-                if(cnt==1) return 1;
-            }
-            else if(t==2 && (abs(i-x)==1 && j==y) || (abs(j-y)==1 && i==x))
-            {
-                return 1;
-            }
-            else if(t==3)
-            {
-                int dx, dy, fl = -1;
-                for(int m=0;m<8;m++)
-                {
-                    dx = i + dir[m][0];
-                    dy = j + dir[m][1];
-                    if(dx==x&&dy==y) 
-                    {
-                        fl=m;
-                        break;
-                    }
-                }
-                if(fl!=-1 && !arr[ i+foot[fl/2][0] ][ j+foot[fl/2][1] ]) 
-                    return 1;
-            }
+//WA
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// int arr[15][15];
+// int dir[8][2]={{1,-2},{-1,-2},{-2,-1},{-2,1},{-1,2},{1,2},{2,1},{2,-1}};
+// int foot[4][2]={{0,-1},{-1,0},{0,1},{-1,0}};
+// bool judge(int x, int y)
+// {
+//     for(int i=1;i<=10;i++)
+//         for(int j=1;j<=9;j++)
+//         {
+//             int t = arr[i][j];
+//             if(!t||t==5||t==6) continue;
+//             if(t==1)
+//             {
+//                 int ok = 1;
+//                 if(i==x)
+//                 {
+//                     for(int m = min(j,y)+1;m<max(j,y);m++)
+//                         if(arr[x][m]!=0)
+//                         {
+//                             ok = 0;
+//                             break;
+//                         } 
+//                 }
+//                 else if(j==y)
+//                 {
+//                     for(int m = min(i,x)+1;m<max(i,x);m++)
+//                         if(arr[m][y]!=0)
+//                         {
+//                             ok = 0;
+//                             break;
+//                         } 
+//                 }
+//                 if(ok&&(i==x||j==y)) return 1;
+//             }
+//             else if(t==4)
+//             {
+//                 int cnt = 0;
+//                 if(i==x)
+//                 {
+//                     for(int m = min(j,y)+1;m<max(j,y);m++)
+//                         if(arr[x][m]!=0) cnt++;
+//                 }
+//                 else if(j==y)
+//                 {
+//                     for(int m = min(i,x)+1;m<max(i,x);m++)
+//                         if(arr[m][y]!=0) cnt++;
+//                 }
+//                 if(cnt==1) return 1;
+//             }
+//             else if(t==2 && (abs(i-x)==1 && j==y) || (abs(j-y)==1 && i==x))
+//             {
+//                 return 1;
+//             }
+//             else if(t==3)
+//             {
+//                 int dx, dy, fl = -1;
+//                 for(int m=0;m<8;m++)
+//                 {
+//                     dx = i + dir[m][0];
+//                     dy = j + dir[m][1];
+//                     if(dx==x&&dy==y) 
+//                     {
+//                         fl=m;
+//                         break;
+//                     }
+//                 }
+//                 if(fl!=-1 && !arr[ i+foot[fl/2][0] ][ j+foot[fl/2][1] ]) 
+//                     return 1;
+//             }
             
-        }
-    return 0;
-}
-int main()
-{
-    int t;
-    scanf("%d", &t);
-    while(t--)
-    {
-        int x, y;
-        for(int i=1;i<=10;i++)
-        {
-            for(int j=1;j<=9;j++)
-            {
-                scanf("%d", &arr[i][j]);
-                if(arr[i][j]==5) x = i, y = j;
-            }
-        }
-        printf(judge(x,y) ? "Yes\n":"No\n");
-    }
-    return 0;
-}
+//         }
+//     return 0;
+// }
+// int main()
+// {
+//     int t;
+//     scanf("%d", &t);
+//     while(t--)
+//     {
+//         int x, y;
+//         for(int i=1;i<=10;i++)
+//         {
+//             for(int j=1;j<=9;j++)
+//             {
+//                 scanf("%d", &arr[i][j]);
+//                 if(arr[i][j]==5) x = i, y = j;
+//             }
+//         }
+//         printf(judge(x,y) ? "Yes\n":"No\n");
+//     }
+//     return 0;
+// }
+//WA
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// int arr[15][15];
+// int dir[8][2]={{-1,-2},{-2,-1},{-2,1},{-1,2},{1,2},{2,1},{2,-1},{1,-2}};
+// int foot[4][2]={{0,-1},{-1,0},{0,1},{-1,0}};
+// int base[4][2]={{-1,-1},{-1,1},{1,1},{1,-1}};
+// bool judge(int x, int y)
+// {
+//     for(int i=x-1;i>=1;i--)
+//     {
+//         if(arr[i][y]!=0) 
+//         {
+//             if(arr[i][y]==1) return 1;
+//             break;
+//         }
+//     }
+//     for(int i=x+1;i<=10;i++)
+//     {
+//         if(arr[i][y]!=0) 
+//         {
+//             if(arr[i][y]==1) return 1;
+//             break;
+//         }
+//     }
 
+//     for(int i=0;i<4;i++)
+//     {
+//         int dx=x+foot[i][0];
+//         int dy=y+foot[i][1];
+//         if(arr[dx][dy]==2) return 1;
+//     }
 
+//     for(int i=0;i<8;i++)
+//     {
+//         int dx = x + dir[i][0];
+//         int dy = y + dir[i][1];
+//         if(dx>=1&&dx<=10&&dy>=1&&dy<=10&&arr[dx][dy]==3&&!arr[ x+base[i/2][0] ][ y+base[i/2][1] ]) 
+//         {
+//             return 1;
+//         }
+//     }
 
+//     for(int i=1;i<=10;i++)
+//     {
+//         for(int j=1;j<=9;j++)
+//         {
+//             int t = arr[i][j], cnt = 0;
+//             if(t!=4) continue;
+//             if(i==x)
+//             {
+//                 for(int m = min(j,y)+1;m<max(j,y);m++)
+//                     if(arr[x][m]!=0) cnt++;
+//             }
+//             else if(j==y)
+//             {
+//                 for(int m = min(i,x)+1;m<max(i,x);m++)
+//                     if(arr[m][y]!=0) cnt++;
+//             }
+//             if(cnt==1) return 1;
+//         }
+//     }
+//     return 0;
+// }
+// int main()
+// {
+//     int t;
+//     scanf("%d", &t);
+//     while(t--)
+//     {
+//         int x, y;
+//         for(int i=1;i<=10;i++)
+//         {
+//             for(int j=1;j<=9;j++)
+//             {
+//                 scanf("%d", &arr[i][j]);
+//                 if(arr[i][j]==5) x = i, y = j;
+//             }
+//         }
+//         printf(judge(x,y) ? "Yes\n":"No\n");
+//     }
+//     return 0;
+// }
 /*
-0 0 0 0 0 0 0 4 0
+0 0 3 0 6 6 3 0 0
 0 0 0 0 5 0 0 0 0
-0 0 0 0 0 1 3 0 0 
+0 0 0 0 0 0 0 0 0 
 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0
@@ -5284,17 +5366,220 @@ int main()
 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0
 
-0 0 0 2 0 3 0 0 0
-0 0 0 0 5 0 0 0 0
-0 0 0 1 0 4 3 0 0 
+0 0 3 6 4 3 3 0 0
+0 0 3 4 5 4 1 0 4
+0 0 3 1 4 4 3 0 0 
 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0
+0 0 0 0 4 0 0 0 0
 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0
 */
+
+
+
+//5.徒手拆机甲的前提
+// #include <iostream>
+// #include <string>
+// #include <algorithm>
+// #include <unordered_map>
+// using namespace std;
+// unordered_map<string, int> mp;
+// string str[9]={"SSS","SS","S","A","B","C","D","E","F"};
+// struct node{
+//     string name, level;
+//     int m, id;
+//     bool operator < (const node &x)const{
+//         if(level!=x.level) return mp[level]<mp[x.level];
+//         if(m!=x.m) return m<x.m;
+//         return id<x.id;
+//     }
+// }arr[100005];
+// int main()
+// {
+//     cin.tie(0)->sync_with_stdio(false);
+//     cout.tie(0);
+//     for(int i=0;i<9;i++) mp[str[i]] = i;
+//     int n;
+//     cin>>n;
+//     for(int i=1;i<=n;i++)
+//     {
+//         node t = {.id=i};
+//         cin>>t.name>>t.level>>t.m;
+//         arr[i] = t;
+//     }
+//     sort(arr+1, arr+1+n);
+//     for(int i=1;i<=n;i++) cout<<arr[i].name<<' '<<arr[i].level<<' '<<arr[i].m<<'\n';
+//     return 0;
+// }
+
+
+
+//6.星空指挥官的素养
+//TLE
+// #include <iostream>
+// #include <vector>
+// #include <unordered_set>
+// using namespace std;
+// vector<unordered_set<int> > vs;
+// bool judge(int a, int b)
+// {
+//     for(auto &t : vs)
+//     {
+//         if(t.find(a)!=t.end() || t.find(b)!=t.end())
+//         {
+//             t.insert(a);
+//             t.insert(b);
+//             return 1;
+//         }
+//     }
+//     return 0;
+// }
+// int main()
+// {
+//     cin.tie(0)->sync_with_stdio(false);
+//     cout.tie(0);
+//     int n, m, t, ind = 0;
+//     cin>>n>>m>>t;
+//     for(int i=0;i<m;i++)
+//     {
+//         int a, b;
+//         cin>>a>>b;
+//         if(!vs.empty() && judge(a,b));
+//         else 
+//         {
+//             unordered_set<int> st{a,b};
+//             vs.push_back(st);
+//         }
+//     }
+
+//     //上述分组后，想办法优化搜索，以空间换时间
+
+//     while(t--)
+//     {
+//         char op;
+//         int a,b,ok=0;
+//         cin>>op;
+//         if(op=='C')
+//         {
+//             cin>>a>>b;
+//             for(auto t : vs)
+//             {
+//                 if(t.find(a)!=t.end() && t.find(b)!=t.end())
+//                 {
+//                     ok = 1;
+//                     break;
+//                 }
+//             }
+//             cout<<(ok ? "The data is normal.\n":"Warning! Please review the data!\n");
+//         }
+//         else if(op=='S')
+//         {
+//             cin>>a;
+//             for(auto t : vs)
+//             {
+//                 if(t.find(a)!=t.end())
+//                 {
+//                     cout<<t.size()<<'\n';
+//                     break;
+//                 }
+//             }
+//         }
+//     } 
+//     return 0;
+// }
+/*
+10 9 5
+1 2
+1 3
+1 4
+2 4
+3 4
+5 4
+6 7
+8 9
+10 8
+C 10 9
+C 5 1
+C 1 4
+S 1
+S 4
+*/
+
+
+
+//School Badge
+// #include <iostream>
+// using namespace std;
+// bool judge(string s)
+// {
+//     for(auto ch: s)
+//     {
+//         if(ch != 'B' && ch != 'W') return 1;
+//     }
+//     return 0;
+// }
+// int main()
+// {
+//     cin.tie(0)->sync_with_stdio(false);
+//     int T;
+//     cin>>T;
+//     while(T--)
+//     {
+//         int n, m, ok = 1, cnt1 = 0, cnt2 = 0;
+//         cin>>n>>m;
+//         while(n--)
+//         {
+//             string str;
+//             cin>>str;
+//             for(auto ch: str)
+//             {
+//                 if(ch != 'B' && ch != 'W') ok = 0;
+//                 cnt1 += ch == 'B';
+//                 cnt2 += ch == 'W';
+//             }
+//         }
+//         cout<<(ok&&cnt1>=1&&cnt2>=1 ? "Yes\n":"No\n");
+//     }
+//     return 0;
+// }
+
+
+
+//产品测试
+// #include <iostream>
+// using namespace std;
+// int a[105][105];
+// int main()
+// {
+//     int t;
+//     cin >> t;
+//     while(t--)
+//     {
+//         int n, m;
+//         cin>>n>>m;
+//         for(int i=1;i<=n;i++)
+//             for(int j=1;j<=m;j++)
+//                 cin>>a[i][j];
+//         for(int i=1;i<=n;i++)
+//             for(int j=1;j<=m;j++)
+
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -5310,3 +5595,127 @@ int main()
 
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑第二届程序设计竞赛↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓SZTU Monthly 2020 Oct↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+/*
+题目链接：https://soj.csgrandeur.cn/csgoj/problemset#search=SZTU%20Monthly%202020%20Oct.
+题解链接：https://soj.csgrandeur.cn/index/answer/detail?nid=1003
+*/
+//1.闰年
+// #include <cstdio>
+// int main()
+// {
+//     int N; scanf("%d",&N);
+//     printf((N%4==0&&N%100!=0)||N%400==0 ? "%d is a leap year." : "%d is not a leap year.", N);
+//     return 0;
+// }
+
+
+
+//2.zjb学长想要玩！
+// #include <cstdio>
+// int main()
+// {
+//     long double x, sum = 0;
+//     int n;
+//     scanf("%d",&n);
+//     while(n--) scanf("%Lf",&x), sum += x;
+//     printf("%.0Lf",sum);
+//     return 0;
+// }
+
+
+
+//3.火柴人
+//贪心 尽量摆1，最多把1换成7
+// #include <iostream>
+// using namespace std;
+// int main()
+// {
+//     int n,x;
+//     for(cin>>n;n--;)
+//     {
+//         cin>>x;
+//         if(x<2) cout<<"-1\n";
+//         else
+//         {
+//             string s(x/2 - x%2,'1');
+//             s = (x%2?"7":"") + s;
+//             cout<<s<<'\n';
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+//4.素（质）数
+// #include <cstdio>
+// bool judge(int x)
+// {
+//     for(int i = 2; i < x; i++)
+//         if(x % i == 0) return 0;
+//     return 1;
+// }
+// int main()
+// {
+//     int a, b, t = 0;
+//     for(scanf("%d%d", &a, &b); a <= b; a++)
+//         if(a != 1 && judge(a))
+//             printf(" %d" + !t, a), t = 1;
+//     if(!t) printf("-1");
+//     return 0;
+// }
+//打表
+// #include <cstdio>
+// int arr[]={0,2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,151,157,163,167,173,179,181,191,193,197,199,211,223,227,229,233,239,241,251,257,263,269,271,277,281,283,293,307,311,313,317,331,337,347,349,353,359,367,373,379,383,389,397,401,409,419,421,431,433,439,443,449,457,461,463,467,479,487,491,499,503,509,521,523,541,547,557,563,569,571,577,587,593,599,601,607,613,617,619,631,641,643,647,653,659,661,673,677,683,691,701,709,719,727,733,739,743,751,757,761,769,773,787,797,809,811,821,823,827,829,839,853,857,859,863,877,881,883,887,907,911,919,929,937,941,947,953,967,971,977,983,991,997};
+// int main()
+// {
+//     int a,b,ok=1,i=1;
+//     for(scanf("%d%d",&a,&b);arr[i]<=b;i++)
+//         if(arr[i]>=a) printf(" %d"+ok,arr[i]),ok=0;
+//     printf(ok?"-1":"");
+//     return 0;
+// }
+
+
+
+//5.总之就是不太可爱
+// #include <iostream>
+// #include <string>
+// using namespace std;
+// int main()
+// {
+//     string t,str;
+//     cin>>t;
+//     while(!(cin>>str).eof())
+//     {
+//         int ok=0,ind;
+//         for(auto ch : t) 
+//             while((ind=str.find(ch))!=str.npos)
+//                 str.erase(ind,1), ok=1;
+//         cout<<(ok?str:"That's so cute!")<<'\n';
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑SZTU Monthly 2020 Oct↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
