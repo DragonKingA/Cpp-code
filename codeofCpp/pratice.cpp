@@ -5785,54 +5785,58 @@ S 4
 
 
 //9.万圣节大作战
-#include <iostream>
-#include <algorithm>
-using namespace std;
-#define N 100005
-struct nd{int id, n;}a[N],b[N];
-bool vis[N];
-int main()
-{
-    int n;
-    cin>>n;
-    for(int i=1;i<=n;i++) cin>>a[i].n, a[i].id=i;
-    for(int i=1;i<=n;i++) cin>>b[i].n, b[i].id=i;
-    return 0;
-}
-
-/*
-3
-8 7 6
-5 4 2
-
-2 1 3
-9 9 4
-
-11 10 7
-
-9 1 4 3 2
-3 8 10 4 9
-
-4  9 2 1 3
-10 3 9 8 4
-14 12 11 9 7
-
-
-4 2 3  9
-3 8    11
-2
-9 3  1
-10 9
-求和排序
-13 11 8
-*/
+//排序标准为 总价值大者 先被选，即题意中的最优策略
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// struct nd{
+//     long long a, b;
+//     bool operator <(const nd&x)const{
+//         return (a+b)>(x.a+x.b);
+//     }
+// }monster[100010];
+// int main()
+// {
+//     cin.tie(0)->sync_with_stdio(false);
+//     int n;
+//     long long sum1=0,sum2=0;
+//     cin>>n;
+//     for(int i=1;i<=n;i++) cin>>monster[i].a;
+//     for(int i=1;i<=n;i++) cin>>monster[i].b;
+//     sort(monster+1, monster+1+n);
+//     for(int i=1;i<=n;i++)
+//     {
+//         if(i&1) sum1+=monster[i].a;
+//         else sum2+=monster[i].b;
+//     }
+//     cout<<abs(sum1-sum2);
+//     return 0;
+// }
 
 
 
+//10.在二叉树寻求邂逅是否搞错了什么
+//947ms，险过，可优化算法
+// #include <cstdio>
+// #include <cmath>
+// typedef long long ll;
+// const double eps = 1e-5;
+// int main()
+// {
+//     int n; 
+//     for(scanf("%d", &n);n--;)
+//     {
+//         ll x, i = 0;
+//         scanf("%lld",&x);
+//         while(!(x>pow(2,i)-eps && x<pow(2,i+1)-eps)) i++;
+//         printf("%lld\n",i+1);
+//     }
+//     return 0;
+// }
 
 
 
-
+//11.怪物入侵
 
 
 
