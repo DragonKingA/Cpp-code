@@ -3866,8 +3866,34 @@ int main() {
 
 
 
-
-
+/*六. 单调栈*/
+//单调栈是一种特殊的栈，特殊之处在于栈内的元素都保持一个单调性。出现不单调者时抛出
+//P5788 【模板】单调栈
+//输出每个数对应的其后面找到第一个大于该数的数的编号(从1开始看)
+//如序列 1 4 2 3 5, 1后面最先大于它的数为4，下标为2，则f(1)=2,同理f(4)=5
+//故答案 2 5 4 5 0
+//从最后一个作为 首个较高者 来看
+#include <stack>
+#include <iostream>
+using namespace std;
+int a[3000005],f[3000005];
+int main()
+{
+    cin.tie(0)->sync_with_stdio(false);
+    cout.tie(0);
+    int n;
+    cin>>n;
+    for(int i = 1; i <= n; i++) cin>>a[i];
+    stack<int> sta;
+    for(int i = n; i >= 1; i--)
+    {
+        while(!sta.empty() && a[sta.top()] <= a[i]) sta.pop();//抛出栈顶比当前数小的，切换较高者为当前数
+        f[i] = sta.empty()? 0:sta.top();
+        sta.push(i);//候选较高者,不符合则会被抛出
+    }
+    for(int i = 1; i <= n; i++) cout<<(" "+!(i-1))<<f[i];
+    return 0;
+}
 
 
 
@@ -5599,6 +5625,14 @@ S 4
 
 
 
+
+
+
+
+
+
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓SZTU Monthly 2020 Oct↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 /*
@@ -5650,7 +5684,22 @@ S 4
 //     }
 //     return 0;
 // }
-
+//题解写法（更简洁）
+// #include <iostream>
+// using namespace std;
+// int main() 
+// {
+//     int t,n;
+//     cin >> t;
+//     while(t--) {
+//         cin >> n;
+//         if(n<=1) printf("-1"),n=0;
+//         if(n & 1) printf("7"), n -= 3;
+//         while(n) printf("1"), n -= 2;
+//         printf("\n");
+//     }
+//     return 0;
+// }
 
 
 //4.素（质）数
@@ -5733,6 +5782,16 @@ S 4
 //     for(int i=1;i<=k;i++) printf(" %d"+!(i-1), arr[i].id);
 //     return 0;
 // }
+/*
+题解的struct定义 ?
+struct node
+{
+    ll val;
+    int id;
+    node(){}
+    node(ll _val, int _id){val = _val; id = _id;}
+}num[maxn];
+*/
 
 
 
@@ -5781,6 +5840,21 @@ S 4
 //     return 0;
 // }
 //11011010100 无论从左开始看还是从右开始看都是8次
+//题解：其实只用看当前状态是否和之前相同就好了
+// #include<iostream>
+// #include<cstring>
+// using namespace std;
+// int main()
+// {
+//     string s;
+//     cin >> s;
+//     int m = s.size(), k = m - 1;//s.size测量字符串s的长度
+//     for(int i = 1;i < m; ++i)
+//         if(s[i] == s[i - 1]) k--;
+//     if(s[m - 1] == '0') k++; //判断最后一位
+//     cout << k;
+//     return 0;
+// }
 
 
 
@@ -5833,10 +5907,94 @@ S 4
 //     }
 //     return 0;
 // }
+//题解: 位运算
+//在完全二叉树上，对于每个子节点来说，将其编号除以 2 就可以得到其父节点的编号
+// #include <cstdio>
+// int main()
+// {
+//     int n, num;
+//     scanf("%d",&n);
+//     for(int i=1; i<=n; i++)
+//     {
+//         int ans = 1;
+//         scanf("%d", &num);
+//         while(num >>= 1) ans++;
+//         printf("%d\n", ans);
+//     }
+//     return 0;
+// }
 
 
 
 //11.怪物入侵
+// #include <cstdio>
+// #include <algorithm>
+// #include <cmath>
+// int arr[200010], n, a, b, k, sum = 0, x;
+// using namespace std;
+// int main()
+// {
+//     scanf("%d%d%d%d", &n, &a, &b, &k);
+//     for(int i=1;i<=n;i++) 
+//     {
+//         scanf("%d", &x);
+//         x %= a + b;
+//         if(x > 0 && x <= a) sum++;
+//         else if(x == 0) arr[i] = a >= b ? 1 : ceil(1.0 * b / a);
+//         else arr[i] = ceil(1.0 * (x - a) / a);//x>a
+//     }
+//     sort(arr + 1, arr + 1 + n);
+//     for(int i = 1; i <= n; i++) 
+//     {
+//         if(!arr[i]) continue;//跳过0
+//         if(k - arr[i] < 0) break;
+//         else k -= arr[i], sum++;
+//     }
+//     printf("%d", sum);
+//     return 0;
+// }
+//7 10 50 12 1 8
+//a+b=5
+//2 0 0 2 1 3
+//0 0 1 2 2 3
+//x = hp%(a+b)
+//0 < x <= a 可
+//以下两者排序出所需k较小者
+//x == 0
+//x > a
+
+
+
+//*12.我的青春爬山物语果然有问题(单调栈)
+//TLE
+// #include <cstdio>
+// int h[80005];
+// int main()
+// {
+//     int n, sum = 0;
+//     scanf("%d",&n);
+//     for(register int i = 1; i <= n; i++) scanf("%d",&h[i]);
+//     int l = 1, r = 2;
+//     while(l<n)
+//     {
+//         while(h[r]>=h[l]) l++,r++;
+//         while(r<=n && h[l]>h[r]) r++;
+//         sum += r - l - 1;
+//         r = (++l) + 1;
+//     }
+//     printf("%d", sum);
+//     return 0;
+// }
+//
+
+
+
+
+
+
+
+
+
 
 
 
