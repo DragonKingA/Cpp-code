@@ -3866,45 +3866,147 @@ int main() {
 
 
 
-/*六. 单调栈*/
+/*六. 单调栈 与 单调队列*/
 //单调栈是一种特殊的栈，特殊之处在于栈内的元素都保持一个单调性。出现不单调者时抛出
-//P5788 【模板】单调栈
+//释义场景：高个子同学可以看到身高比自己矮的同学，但是目光一旦遇到高于或等于自己的同学后，便无法继续向前看。
+//         现先给出所有同学的身高，求所有同学能看到的同学数量之和。
+//如需要输出某个值的下标或编号等，则需要先将输入的值都存入数组，若还是个递增栈需要子结果，还得再开个存储答案的数组
+//模板:
+//1.只要求每个子结果之和，则正向遍历(首个元素为终止点，且所获结果一般为 0 )
+// #include <iostream>
+// #include <stack>
+// using namespace std;
+// // int ans[1000000];
+// int main()
+// {
+//     int n, sum = 0; cin >> n;
+//     stack<int> sta;
+//     for(int i = 1; i <= n; i++)
+//     {
+//         int t; cin >> t;
+//         while(!sta.empty() && t >= sta.top()) sta.pop();
+//         // ans[i] = sta.size();
+//         sum += sta.size();
+//         sta.push(t);
+//     }
+//     //for(int i = 1; i <= n; i++) cout<<ans[i]<<' ';
+//     cout<<sum; 
+//     return 0;
+// }
+//2.对每个子结果有存储需求，需逆向遍历(最后一个元素为终止点，一般对应所存结果为 0)
+// P5788 【模板】单调栈
 //输出每个数对应的其后面找到第一个大于该数的数的编号(从1开始看)
 //如序列 1 4 2 3 5, 1后面最先大于它的数为4，下标为2，则f(1)=2,同理f(4)=5
 //故答案 2 5 4 5 0
 //从最后一个作为 首个较高者 来看
-#include <stack>
-#include <iostream>
-using namespace std;
-int a[3000005],f[3000005];
-int main()
-{
-    cin.tie(0)->sync_with_stdio(false);
-    cout.tie(0);
-    int n;
-    cin>>n;
-    for(int i = 1; i <= n; i++) cin>>a[i];
-    stack<int> sta;
-    for(int i = n; i >= 1; i--)
-    {
-        while(!sta.empty() && a[sta.top()] <= a[i]) sta.pop();//抛出栈顶比当前数小的，切换较高者为当前数
-        f[i] = sta.empty()? 0:sta.top();
-        sta.push(i);//候选较高者,不符合则会被抛出
-    }
-    for(int i = 1; i <= n; i++) cout<<(" "+!(i-1))<<f[i];
-    return 0;
-}
+// #include <stack>
+// #include <iostream>
+// using namespace std;
+// int a[3000005],f[3000005];
+// int main()
+// {
+//     cin.tie(0)->sync_with_stdio(false);
+//     cout.tie(0);
+//     int n;
+//     cin>>n;
+//     for(int i = 1; i <= n; i++) cin>>a[i];
+//     stack<int> sta;
+//     for(int i = n; i >= 1; i--)
+//     {
+//         while(!sta.empty() && a[sta.top()] <= a[i]) sta.pop();//抛出栈顶比当前数小的，切换较高者为当前数
+//         f[i] = sta.empty() ? 0 : sta.top();//空栈说明i==n时高者前面没人
+//         sta.push(i);//候选较高者,不符合则会被抛出
+//     }
+//     for(int i = 1; i <= n; i++) cout<<(" "+!(i-1))<<f[i];
+//     return 0;
+// }
 
 
 
+//POJ2559 直方图中的最大矩形
+//数组模拟单调栈(若直接使用 栈stack 会TLE)
+//满足单调栈使用前提：若矩形高度从左向右单调递增，则以每个矩形的高度乘以其到右边界的宽度得到一个面积，取这些面积中的最大值。
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// typedef long long ll;
+// const int MAXN = 1e5 + 10;
+// struct nd{
+//     ll h, x;//记录矩形的 高度 和 横坐标
+//     nd(){h = 0, x = 0;}//初始化各参数值为 0
+// }a[MAXN];//模拟单调栈
+// int main()
+// {
+//     int n;
+//     while(~scanf("%d", &n), n)
+//     {
+//         ll ans = 0, H;
+//         int top = 0;//单指针 模拟指向栈顶
+//         for(int i = 1; i <= n; i++)
+//         {
+//             scanf("%lld", &H);
+//             if(H >= a[top].h) a[++top].h = H, a[top].x = i;//递增区间（实际上是单调不减）均入栈
+//             else
+//             {
+//                 //以 高为 H 的矩形 为右界，对栈顶矩形计算面积，直到不能再作为右界（即栈中重新满足单调不减）
+//                 while(H < a[top].h)
+//                 {
+//                     ans = max(ans, a[top].h * (i - a[top - 1].x - 1));//严格递增区间上，top矩形的左界必然为(top-1)矩形
+//                     top--;
+//                 }
+//                 //右界矩形本身具有意义，自然入栈
+//                 a[++top].h = H, a[top].x = i;
+//             } 
+//         }
+//         //以 i = n + 1 的高度为 0 的矩形 为右界，计算剩余矩形面积
+//         //此时宽度计算为 L = a[top - 1].x ，R = n + 1，故 width = (R - L - 1) = (n - a[top - 1].x) 
+//         while(top) ans = max(ans, a[top].h * (n - a[top - 1].x)), top--;
+//         printf("%lld\n", ans);
+//     }    
+//     return 0;
+// }
+/*
+假设案例
+     9
+     3 4 2 1 2 3 5 2 3
+i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
+解析见博客
+*/
+//简洁版
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// typedef long long ll;
+// const int MAXN = 1e5 + 10;
+// struct nd{
+//     ll h, x;
+//     nd(){h = 0, x = 0;}
+// }a[MAXN];
+// int main()
+// {
+//     int n;
+//     while(~scanf("%d", &n), n)
+//     {
+//         ll ans = 0, top = 0, H;
+//         for(int i = 1; i <= n; i++)
+//         {
+//             scanf("%lld", &H);
+//             while(H < a[top].h) ans = max(ans, a[top].h * (i - a[top - 1].x - 1)), top--;
+//             a[++top].h = H, a[top].x = i;
+//         }
+//         while(top) ans = max(ans, a[top].h * (n - a[top - 1].x)), top--;
+//         printf("%lld\n", ans);
+//     }
+//     return 0;
+// }
 
 
-
-
-
-
-
-
+//单调队列 是 队列中元素之间的关系具有单调性，而且，队首和队尾都可以进行出队操作，只有队尾可以进行入队操作，本质是由双端队列deque实现的。
+//对于单调队列，允许两端弹出，只允许一端(队尾)插入 。【单调队列方法】实际上是【优先级队列方法】的一种优化
+//队头 ----> 队尾
+//递减队列，维护递减性，遇破坏递减性元素X，则弹出队头所有小于 x 的元素
+//递增队列，维护递增性，遇破坏递增性元素X，则弹出队头所有大于 x 的元素
+//这里递增递减是由 队头 往 队尾 看
 
 
 
@@ -5985,9 +6087,24 @@ struct node
 //     printf("%d", sum);
 //     return 0;
 // }
-//
-
-
+//AC 递减栈
+// #include <cstdio>
+// #include <stack>
+// using namespace std;
+// int main()
+// {
+//     long long n, h, sum = 0; 
+//     stack<int> sta;
+//     for(scanf("%lld", &n); n--;)
+//     {
+//         scanf("%lld", &h);
+//         while(!sta.empty() && h >= sta.top()) sta.pop();
+//         sum += sta.empty() ? 0 : sta.size();
+//         sta.push(h);
+//     }
+//     printf("%lld", sum);
+//     return 0;
+// }
 
 
 
