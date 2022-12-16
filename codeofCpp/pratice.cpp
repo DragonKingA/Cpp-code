@@ -3582,7 +3582,6 @@ int main() {
 
 
 
-
 //三分查找
 //将待查元素x与n/3处的元素比较，然后将x与2n/3处的元素进行比较。比较的结果或者找到x,或者将搜索范围缩小到原来的n/3
 //每次由两个mid来滑动，m1 = (2/3)*left + (1/3)rig 在左侧；m2 = (1/3)left + (2/3)rig 在右侧
@@ -3811,11 +3810,15 @@ int main() {
 //             if(f(m1) - f(m2) >= eps) low = m1;
 //             else high = m2;
 //         }
-//         printf("%.10f\n", f(ceil(low)));
+//         printf("%.10f\n", min(f(ceil(low)), f(floor(low))));
 //     }
 //     return 0;
 // }
-
+/*
+四舍五入就：x + 0.5 转 整型
+向下取整就是：转int
+向上取整就是：x - eps + 1 转 整型
+*/
 
 
 //6. Monthly Expense (二分 + 贪心)
@@ -3859,6 +3862,246 @@ int main() {
 //     }
 //     return 0;
 // }
+
+
+
+//7. Last Rook
+//未完成
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// int main()
+// {
+//     int N;
+//     scanf("%d", &N);
+//     int x1, x2, y1, y2, cnt, ifnot = 1;
+//     x1 = y1 = 1, x2 = (1 + N) / 2, y2 = N;
+//     printf("? %d %d %d %d\n", x1, x2, y1, y2);
+//     for(int i = 2; i <= 20;i++)
+//     {
+//         scanf("%d", &cnt);
+//         int xmid = (x1 + x2) / 2, ymid = (y1 + y2) / 2;
+//         //2 2
+
+
+
+//         printf("? %d %d %d %d\n", x1, x2, y1, y2);
+//         if(min(x2-x1+1, y2-y1+1) > N) 
+//         {
+//             printf("-1");
+//             break;
+//         }
+//         fflush(stdout);
+
+//     }
+//     if(ifnot) printf("-1");
+//     return 0;
+// }
+
+//(1, 1) (2, 3)
+//(2, 1) (3, 1)
+//(1, 3) (3, 3)
+
+
+
+//8. Yukari's Birthday
+//未完成
+// #include <cstdio>
+// #include <cmath>
+// using namespace std;
+// typedef long long ll;
+// ll cal(ll k, ll r)
+// {
+//     ll res = k;
+//     for(int i = 2; i <= r; i++)
+//         res += (ll)pow(k, i);
+//     return res;
+// }
+// int main()
+// {
+//     ll n;
+//     while(~scanf("%lld", &n))
+//     {
+//         ll r1 = 1, r2 = 40;
+//         pair<ll, ll> ans{40, n};
+//         for(int r = 1; r <= 40; r++)
+//         {
+//             ll k1 = 2, k2 = n, res;
+//             for(int i=0;i<100;i++)
+//             {
+//                 ll mid = k1 + ((k2 - k1) >> 1);
+//                 if(cal(mid, r) + 1 <= n) k1 = mid;
+//                 else k2 = mid;
+//             }
+//             res = k1;
+//             if(r*res < ans.first*ans.second || (r*res == ans.first*ans.second && r < ans.first)) 
+//                 ans = pair<ll, ll>{r, res};
+//         }
+//         printf("%lld %lld\n", ans.first, ans.second);
+//     }
+//     return 0;
+// }
+
+
+
+//9. A-B 数对
+//正常写要两次二分，直接用函数
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// int a[200005];
+// int main()
+// {
+//     int n, c;
+//     long long cnt = 0;
+//     scanf("%d%d", &n, &c);
+//     for(int i = 1; i <= n; i++) scanf("%d", &a[i]);
+//     sort(a+1, a+1+n);
+//     for(int i = 1; i <= n; i++)
+//     {
+//         cnt += (upper_bound(a+1, a+1+n, a[i]-c) - a) - (lower_bound(a+1, a+1+n, a[i]-c) - a);
+//         //两个指针相减的结果是他们之间的距离
+//     }
+//     printf("%lld", cnt);
+//     return 0;
+// }
+
+
+
+//10. 三分法
+//完全三分
+// #include <cstdio>
+// #include <cmath>
+// int n;
+// double l, r, base[15], eps = 1e-8;
+// double cal(double x)
+// {
+//     double res = 0;
+//     for(int i = 0; i <= n; i++) res += base[i] * pow(x, n - i);
+//     return res;
+// }
+// int main()
+// {
+//     scanf("%d%lf%lf", &n, &l, &r);
+//     for(int i = 0; i <= n; i++) scanf("%lf", &base[i]);
+//     for(int i = 0; i < 100; i++)
+//     {
+//         double k = (r - l) / 3.0;
+//         double m1 = l + k, m2 = r - k;
+//         if(cal(m1) <= cal(m2)) l = m1;
+//         else r = m2;
+//     }
+//     printf("%.5f", l);
+//     return 0;
+// }
+//近似三分
+// #include <cstdio>
+// #include <cmath>
+// int n;
+// double l, r, base[15], eps = 1e-8;
+// double cal(double x)
+// {
+//     double res = 0;
+//     for(int i = 0; i <= n; i++) res += base[i] * pow(x, n - i);
+//     return res;
+// }
+// int main()
+// {
+//     scanf("%d%lf%lf", &n, &l, &r);
+//     for(int i = 0; i <= n; i++) scanf("%lf", &base[i]);
+//     for(int i = 0; i < 100; i++)
+//     {
+//         double mid = (l + r) / 2;
+//         if(cal(mid+eps) >= cal(mid-eps)) l = mid;
+//         else r = mid;
+//     }
+//     printf("%.5f", l);
+//     return 0;
+// }
+
+
+
+//11. 查找
+// #include <cstdio>
+// int a[1000005];
+// int main()
+// {
+//     int n, m;
+//     scanf("%d%d", &n, &m);
+//     for(int i = 1; i <= n; i++) scanf("%d", &a[i]);
+//     while(m--)
+//     {
+//         int x;
+//         scanf("%d", &x);
+//         int l = 1, r = n + 1, mid;
+//         for(int i = 0; i < 100; i++)
+//         {
+//             mid = l + ((r - l)>>1);
+//             if(a[mid] < x) l = mid + 1;
+//             else r = mid;
+//         }
+//         if(a[l] == x) printf("%d ", l);
+//         else printf("-1 ");
+//     }
+//     return 0;
+// }
+//二分函数
+// #include <cstdio>
+// #include <algorithm>
+// int a[1000005];
+// int main()
+// {
+//     int n, m;
+//     scanf("%d%d", &n, &m);
+//     for(int i = 1; i <= n; i++) scanf("%d", &a[i]);
+//     while(m--)
+//     {
+//         int x, ind;
+//         scanf("%d", &x);
+//         ind = std::lower_bound(a+1, a+1+n, x) - a;
+//         if(a[ind] == x) printf("%d ", ind);
+//         else printf("-1 ");
+//     }
+//     return 0;
+// }
+
+
+
+//12. 分巧克力
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// typedef long long ll;
+// typedef pair<ll,ll> pll;
+// pll s[100005];
+// int n, k;
+// bool judge(ll x)
+// {
+//     ll res = 0;
+//     for(int i = 1; i <= n; i++) res += (s[i].first / x) * (s[i].second / x);//重点
+//     return res >= k;
+// }
+// int main()
+// {   
+//     scanf("%d%d", &n, &k);
+//     for(int i = 1; i <= n; i++) scanf("%lld%lld", &s[i].first, &s[i].second);
+//     ll lef = 1, rig = 1e5, mid;
+//     while(lef <= rig)
+//     {
+//         mid = lef + ((rig - lef) >> 1);
+//         if(judge(mid)) lef = mid + 1;
+//         else rig = mid - 1;
+//     }
+//     printf("%lld", lef - 1);
+//     return 0;
+// }
+
+
+
+
+
+
+
 
 
 
@@ -4001,22 +4244,164 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 // }
 
 
-//单调队列 是 队列中元素之间的关系具有单调性，而且，队首和队尾都可以进行出队操作，只有队尾可以进行入队操作，本质是由双端队列deque实现的。
-//对于单调队列，允许两端弹出，只允许一端(队尾)插入 。【单调队列方法】实际上是【优先级队列方法】的一种优化
-//队头 ----> 队尾
-//递减队列，维护递减性，遇破坏递减性元素X，则弹出队头所有小于 x 的元素
-//递增队列，维护递增性，遇破坏递增性元素X，则弹出队头所有大于 x 的元素
-//这里递增递减是由 队头 往 队尾 看
+
+// 单调队列 是 队列中元素之间的关系具有单调性，而且，队首和队尾都可以进行出队操作，只有队尾可以进行入队操作，本质是由双端队列deque实现的。
+// 对于单调队列，允许两端弹出，只允许一端插入 。【单调队列方法】实际上是【优先级队列方法】的一种优化
+// 队头 ----> 队尾
+// 递减队列，维护递减性，遇破坏递减性元素X，则弹出队头所有小于 x 的元素
+// 递增队列，维护递增性，遇破坏递增性元素X，则弹出队头所有大于 x 的元素
+// 这里递增递减是由 队头 往 队尾 看
+
+//1.Sliding Window(滑动窗口)
+// #include <cstdio>
+// #include <queue>
+// using namespace std;
+// const int MAXN = 1e6 + 10;
+// int arr[MAXN];
+// int ans1[MAXN], ans2[MAXN];//存储每个窗口的最值
+// deque<int> dq1, dq2;
+// //dq1递减队列，获取窗口最大值；dq2递增队列，获取窗口最小值
+// int main()
+// {
+//     int n, k, index1 = 0, index2 = 0;
+    // scanf("%d%d", &n, &k);
+//     for(register int i = 0; i < n; i++) scanf("%d", &arr[i]);
+//     //使用第一个窗口去初始化单调队列
+//     for(register int i = 0; i < k; i++)
+//     {
+//         while(!dq1.empty() && arr[i] >= arr[dq1.back()]) dq1.pop_back();
+//         while(!dq2.empty() && arr[i] <= arr[dq2.front()]) dq2.pop_front();//对称操作即可
+//         dq1.push_back(i);
+//         dq2.push_front(i);
+//     }
+//     ans1[index1++] = arr[dq1.front()];
+//     ans2[index2++] = arr[dq2.back()];
+//     for(register int i = k; i < n; i++)
+//     {
+//         while(!dq1.empty() && arr[i] >= arr[dq1.back()]) dq1.pop_back();
+//         while(!dq2.empty() && arr[i] <= arr[dq2.front()]) dq2.pop_front();
+//         dq1.push_back(i);
+//         dq2.push_front(i);
+//         //判定最值是否仍包含于窗口中，若已不在则出队
+//         if(dq1.front() + k <= i) dq1.pop_front();
+//         if(dq2.back() + k <= i) dq2.pop_back();
+//         ans1[index1++] = arr[dq1.front()];
+//         ans2[index2++] = arr[dq2.back()];
+//     }
+//     for(register int i = 0; i < index2; i++) printf(" %d" + !i, ans2[i]);//各窗口最小值
+//     printf("\n");
+//     for(register int i = 0; i < index1; i++) printf(" %d" + !i, ans1[i]);//各窗口最大值
+//     return 0;
+// }
+//数组模拟
+// #include <cstdio>
+// int a[1000000], q[1000000];
+// int main()
+// {
+//     int n, k;
+//     scanf("%d%d", &n, &k);
+//     for (int i = 0; i < n; i++) scanf("%d", &a[i]);
+//     int hh = 0, tt = -1;
+//     for (int i = 0; i < n; i++){
+//         if(hh <= tt && q[hh] + k <= i) hh++;
+//         while (hh <= tt && a[q[tt]] >= a[i]) tt--;
+//         q[++tt] = i;
+//         if(i + 1 >= k) printf("%d ", a[q[hh]]);//每个窗口完成操作后就能输出一次最值
+//     }
+//     puts("");//puts自动换行
+//     hh = 0, tt = -1;
+//     for (int i = 0; i < n; i++)
+//     {
+//         if (hh <= tt && q[hh] + k <= i) hh++;
+//         while (hh <= tt && a[q[tt]] <= a[i]) tt--;
+//         q[++tt] = i;
+//         if (i + 1 >= k) printf("%d ", a[q[hh]]);
+//     }
+//     return 0;
+// }
 
 
 
-
-
-
-
-
-
-
+//2.Sum of Consecutive Prime Numbers
+//单调队列
+// #include <cstdio>
+// #include <deque>
+// using namespace std;
+// int prime[10000] = {2};
+// bool check(int x)
+// {
+//     for(register int i = 2; i < x; i++)
+//         if(!(x % i)) return 0;
+//     return 1;
+// }
+// int main()
+// {
+//     int index = 0, n;
+//     for(register int i = 3; i < 10000; i++)
+//         if((i & 1) && check(i)) prime[++index] = i;
+//     while(~scanf("%d", &n), n)
+//     {
+//         int sum = 0, ans = 0, ind = -1;
+//         deque<int> dq;
+//         for(register int i = 0; i < 10000; i++) 
+//             if(prime[i] >= n) 
+//             {
+//                 ind = i;
+//                 break;
+//             }
+//         if(ind == -1) ind = index;
+//         //从第一个不小于n的质数开始，若没有则从10000内的最大质数开始
+//         for(register int i = ind; i >= 0; i--)
+//         {
+//             if(!dq.empty() && sum >= n) sum -= dq.front(), dq.pop_front();
+//             dq.push_back(prime[i]);
+//             sum += prime[i];
+//             if(sum == n) ans++;
+//         }
+//         printf("%d\n", ans);
+//     }
+//     return 0;
+// }
+//也可用双指针(尺取法)
+// 17
+// 2 3 5 7 11 13 17 19
+// 2 3 5 7
+//   3 5 7
+//   3 5 7 11
+//     5 7 11
+//       7 11
+//         11
+//         11 13
+//            13 17
+//               17
+// #include <cstdio>
+// #include <deque>
+// using namespace std;
+// int prime[10000] = {2};
+// bool check(int x)
+// {
+//     for(register int i = 2; i < x; i++)
+//         if(!(x % i)) return 0;
+//     return 1;
+// }
+// int main()
+// {
+//     int index = 0, n;
+//     for(register int i = 3; i < 10000; i++)
+//         if((i & 1) && check(i)) prime[++index] = i;
+//     while(~scanf("%d", &n), n)
+//     {
+//         int sum = 2, ans = 0, l = 0, r = 0;
+//         while(prime[l] <= n)
+//         {
+//             while(sum < n) sum += prime[++r];
+//             ans += (sum == n);
+//             sum -= prime[l++];
+//         }
+//         printf("%d\n", ans);
+//     }
+//     return 0;
+// }
 
 
 
@@ -4084,12 +4469,188 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 
 
 
+/*七. 双指针(尺取法)*/
+//1.Palindromes _easy version 
+// #include <iostream>
+// #include <string>
+// using namespace std;
+// int main()
+// {
+//     cin.tie(0)->sync_with_stdio(false);
+//     cout.tie(0);
+//     string str;
+//     int n;
+//     cin >> n;
+//     while(n--)
+//     {
+//         cin >> str;
+//         int l = 0, r = str.size() - 1, ifyes = 1;
+//         while(l < r)
+//         {
+//             if(str[l] != str[r])
+//             {
+//                 ifyes = 0;
+//                 break;
+//             }
+//             l++, r--;
+//         }
+//         if(ifyes) cout << "yes\n";
+//         else cout << "no\n";
+//     }
+//     return 0;
+// }
 
 
 
+//2.Subsequence 
+// #include <cstdio>
+// #include <algorithm>
+// int a[100005];
+// int main()
+// {
+//     int T;
+//     scanf("%d", &T);
+//     while(T--)
+//     {
+//         int n, s, Max = 0;
+//         scanf("%d%d", &n, &s);
+//         for(int i = 1; i <= n; i++) 
+//         {
+//             scanf("%d",&a[i]);
+//             Max += a[i];
+//         }
+//         if(s > Max) 
+//         {
+//             printf("0\n");
+//             continue;
+//         }
+//         int l = 1, r = 1, sum = a[1], len = n;
+//         while(l <= r)
+//         {
+//             while(r < n && sum < s) sum += a[++r];
+//             if(sum >= s) len = std::min(len, r - l + 1);
+//             sum -= a[l++];
+//         }
+//         printf("%d\n", len);
+//     }
+//     return 0;
+// }
 
 
 
+//3.Unique Snowflakes 
+//双指针(最佳)
+// #include <cstdio>
+// #include <algorithm>
+// #include <unordered_map>
+// using namespace std;
+// int a[1000005];
+// int main()
+// {
+//     int T;
+//     scanf("%d", &T);
+//     while(T--)
+//     {
+//         int n, len = 1, l = 1, r = 1;
+//         scanf("%d", &n);
+//         for(int i = 1; i <= n; i++) scanf("%d", &a[i]);
+//         unordered_map<int, bool> mp{make_pair(a[1], 0)};
+//         while(1)
+//         {
+//             while(r <= n && !mp[a[r]]) mp[a[r++]] = 1;
+//             len = max(len, r - l);
+//             if(l > n) break;
+//             mp[a[l++]] = 0;
+//         }
+//         printf("%d\n", len);
+//     }
+//     return 0;
+// }
+//双指针 区间收束，但没法1好
+// #include <cstdio>
+// #include <algorithm>
+// #include <unordered_map>
+// using namespace std;
+// int a[1000005];
+// int main()
+// {
+//     int T;
+//     scanf("%d", &T);
+//     while(T--)
+//     {
+//         int n, len = 1, l = 1, r = 1;
+//         scanf("%d", &n);
+//         for(int i = 1; i <= n; i++) scanf("%d", &a[i]);
+//         while(1)
+//         {
+//             unordered_map<int, int> mp{make_pair(a[l], l)};
+//             while(r < n && !mp.count(a[r + 1])) mp[a[++r]] = r;
+//             len = max(len, r - l + 1);
+//             if(r == n) break;
+//             r = l = mp[a[r + 1]] + 1;
+//         }
+//         printf("%d\n", len);
+//     }
+//     return 0;
+// }
+//非双指针 超 1s
+// #include <cstdio>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// int main()
+// {
+//     int T;
+//     scanf("%d", &T);
+//     while(T--)
+//     {
+//         int n, len = 1;
+//         vector<int> v;
+//         scanf("%d", &n);
+//         for(int i = 1; i <= n + 1; i++)
+//         {
+//             int x;
+//             if(i <= n) scanf("%d", &x);
+//             vector<int>::iterator ind;
+//             if(!v.empty() && (ind = find(v.begin(), v.end(), x)) != v.end()) 
+//             {
+//                 len = max(len, (int)v.size());
+//                 v.erase(v.begin(), ind + 1);
+//             }
+//             v.push_back(x);
+//         }
+//         printf("%d\n", len);
+//     }
+//     return 0;
+// }
+
+
+
+//4.A-B 数对 
+//A - C = B
+//双指针
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// int a[200005];
+// int main()
+// {
+//     int n, c, x;
+//     long long cnt = 0;
+//     scanf("%d%d", &n, &c);
+//     for(int i = 0; i < n; i++) scanf("%d", &a[i]);
+//     sort(a, a + n);
+//     int l = 0, r = 0;
+//     for(int i = 0; i < n; i++)
+//     {
+//         while(l < n && a[l] - a[i] < c) l++;
+//         while(r < n && a[r] - a[i] <= c) r++;
+//         if(r > 1 && a[l] - a[i] == c && a[r - 1] - a[i] == c) cnt += r - l;//1 2 3 时要进行后两个条件的判定
+//     }
+//     printf("%lld", cnt);
+//     return 0;
+// }
+//其他方法见上文
 
 
 
