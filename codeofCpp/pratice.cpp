@@ -3905,39 +3905,52 @@ int main() {
 
 
 //8. Yukari's Birthday
-//未完成
+//枚举 + 二分
+//本题重点，数据乘积容易溢出，学会如何判溢出
 // #include <cstdio>
 // #include <cmath>
+// #include <iostream>
 // using namespace std;
 // typedef long long ll;
+// #define R first
+// #define K second
+// ll n;
 // ll cal(ll k, ll r)
 // {
-//     ll res = k;
-//     for(int i = 2; i <= r; i++)
-//         res += (ll)pow(k, i);
+//     ll res = 0, base = 1;
+//     //base需要是 __int128_t 或者 提前判断溢出，否则当 n = 1e12, k = 1e11时溢出
+//     //合法范围 base * k <= max ,  max = n
+//     //换成除法形式判溢出
+//     for(int i = 1; i <= r; i++)
+//     {
+//         if(n / base < k) return n + 1; //当base过大时，所得k就会过小
+//         res += (base *= k);
+//         if(res > n) return n + 1;
+//     }
 //     return res;
 // }
 // int main()
 // {
-//     ll n;
 //     while(~scanf("%lld", &n))
 //     {
-//         ll r1 = 1, r2 = 40;
-//         pair<ll, ll> ans{40, n};
-//         for(int r = 1; r <= 40; r++)
+//         pair<ll, ll> ans(1, n - 1);//初始化为可能性较大的 (r, k)对
+//         for(int r = 2; r <= 40; r++)
 //         {
-//             ll k1 = 2, k2 = n, res;
-//             for(int i=0;i<100;i++)
+//             ll k1 = 2, k2 = n - 1;// 2 <= k <= n - 1
+//             while(k1 <= k2)
 //             {
 //                 ll mid = k1 + ((k2 - k1) >> 1);
-//                 if(cal(mid, r) + 1 <= n) k1 = mid;
-//                 else k2 = mid;
+//                 ll res = cal(mid, r);
+//                 if(res == n || res == n - 1) 
+//                 {
+//                     if(r * mid < ans.R * ans.K || (r * res == ans.R * ans.K && r < ans.R)) 
+//                         ans = pair<ll, ll>(r, mid);
+//                 }   
+//                 if(res < n - 1) k1 = mid + 1;//注意二分界
+//                 else k2 = mid - 1;
 //             }
-//             res = k1;
-//             if(r*res < ans.first*ans.second || (r*res == ans.first*ans.second && r < ans.first)) 
-//                 ans = pair<ll, ll>{r, res};
 //         }
-//         printf("%lld %lld\n", ans.first, ans.second);
+//         printf("%lld %lld\n", ans.R, ans.K);
 //     }
 //     return 0;
 // }
@@ -4095,9 +4108,6 @@ int main() {
 //     printf("%lld", lef - 1);
 //     return 0;
 // }
-
-
-
 
 
 
@@ -4434,6 +4444,10 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 
 
 
+
+
+
+
 /*数学原理应用*/
 
 //曼哈顿距离(又名出租车距离)
@@ -4651,6 +4665,113 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 //     return 0;
 // }
 //其他方法见上文
+
+
+
+//***5.Bound Found (Hard)
+// #include <cstdio>
+// #include <algorithm>
+// typedef long long ll;
+// using namespace std;
+// struct nd{
+//     ll sum;
+//     int id;
+//     nd(){sum = 0; id = 0;}
+//     bool operator <(const nd &x)const{
+//         return sum < x.sum;
+//     }
+// }s[100005];
+// ll LLabs(ll x)
+// {
+//     return x > 0 ? x : -x;
+// }
+// int main()
+// {
+//     int n, k, tar;
+//     while(~scanf("%d%d", &n, &k), n)
+//     {
+//         s[0].sum = s[0].id = 0;//每次都得初始化！！！
+//         for(int i = 1; i <= n; i++)
+//         {
+//             scanf("%lld", &s[i].sum);
+//             s[i].sum += s[i - 1].sum;
+//             s[i].id = i;
+//         }
+//         sort(s, s + 1 + n);
+//         while(k--)
+//         {
+//             int l = 0, r = 1, ml = 0, mr = 0;
+//             ll res = 0x7FFFFFFFFFFFFFFF, ans = 0;
+//             scanf("%d", &tar);
+//             while(r <= n)
+//             {
+//                 ll tep = s[r].sum - s[l].sum;
+//                 if(LLabs(s[r].sum - s[l].sum - tar) < LLabs(res - tar))
+//                 {
+//                     res = s[r].sum - s[l].sum;
+//                     ml = s[l].id, mr = s[r].id;
+//                     ans = tep;
+//                 }
+//                 if(tep == tar) break;
+//                 if(tep < tar) r++;
+//                 else l++;
+//                 if(l == r) r++;
+//             }
+//             if(ml > mr) swap(ml, mr);
+//             printf("%lld %d %d\n", ans, ml + 1, mr);
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+//6.First One 
+//未完成
+// #include <cstdio>
+// #include <cmath>
+// typedef long long ll;
+// ll s[100005];
+// int main()
+// {
+//     int T;
+//     scanf("%d", &T);
+//     while(T--)
+//     {
+//         int n;
+//         ll ans = 0;
+//         scanf("%d", &n);
+//         for(int i = 1; i <= n; i++)
+//         {
+//             scanf("%lld", &s[i]);
+//             s[i] += s[i - 1];
+//         }
+//         for(register int i = 1; i <= n; i++)
+//         {
+//             for(register int j = i; j <= n; j++)
+//             {
+//                 ll sum = s[j] - s[i - 1], res = (ll)(sum == 0 ? 0 : log2l(sum));
+//                 ans += (res + 1) * (i + j);
+//             }
+//         }
+//         printf("%lld\n", ans);
+//     }
+//     return 0;
+// }
+
+
+
+//7.Takahashi's Solitaire 
+// #include <cstdio>
+// typedef long long ll;
+// int main()
+// {
+//     int n, m;
+
+//     return 0;
+// }
+
+
 
 
 
