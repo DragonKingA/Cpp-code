@@ -4218,13 +4218,6 @@ int main() {
 //     }    
 //     return 0;
 // }
-/*
-假设案例
-     9
-     3 4 2 1 2 3 5 2 3
-i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
-解析见博客
-*/
 //简洁版
 // #include <cstdio>
 // #include <algorithm>
@@ -4252,6 +4245,14 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 //     }
 //     return 0;
 // }
+/*
+假设案例
+     9
+     3 4 2 1 2 3 5 2 3
+i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
+解析见博客
+*/
+
 
 
 
@@ -4474,7 +4475,7 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 //             if(abs(i-cx) + abs(j-cy) <= n/2)
 //                  cout << '*' ;
 //             else
-//                cout << ' ';
+//                  cout << ' ';
 //         }
 //         cout << endl;
 //     }
@@ -4763,22 +4764,56 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 
 //7.Takahashi's Solitaire 
 // #include <cstdio>
-// typedef long long ll;
+// #include <algorithm>
+// using namespace std;
+// int a[200005], n, m;
 // int main()
 // {
-//     int n, m;
+//     scanf("%d%d", &n, &m);
+//     for(int i = 1; i <= n; i++) scanf("%d", &a[i]);
+//     sort(a + 1, a + 1 + n);
+//     int l = 1, r = 1;
+//     long long ans = 0;
+//     while(r <= n)
+//     {
+        
+//     }
 
 //     return 0;
 // }
 
+//0 0 2 3 3 3 5 5 6
+
+//18 16 15 9 8 8 17 1 3 17 11 9 12 11 7 3 2 14 3 12
+// 1 2 3 3 3 7 8 8 9 9 11 11 12 12 14 15 16 17 17 18
 
 
 
+//8.Good Subarrays (Easy Version) 
+#include <cstdio>
+int a[200010];
+int main()
+{
+    int t;
+    scanf("%d", &t);
+    while(t--)
+    {
+        int n;
+        scanf("%d", &n);
+        for(int i = 1; i <= n; i++) scanf("%d", &a[i]);
+        int l = 1, r = 2, ans = (a[1] >= 1);
+        while(r <= n)
+        {//id = r - l + 1
+            if(a[r] >= r - l + 1) 
+            {
+                ans++;
+                r++;
+            }
 
-
-
-
-
+        }
+    }
+    return 0;
+}
 
 
 
