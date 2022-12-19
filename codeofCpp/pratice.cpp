@@ -4763,57 +4763,63 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 
 
 //7.Takahashi's Solitaire 
+//本题存在序列尾部可以接头部形成闭环的情况，所以当满足闭环条件时用 tep 存序列头部满足题意的和，s += tep 就算完成接环
 // #include <cstdio>
 // #include <algorithm>
 // using namespace std;
-// int a[200005], n, m;
+// typedef long long ll;
+// ll a[200005], n, m, ans, asum = 0, tep = -1;
 // int main()
 // {
-//     scanf("%d%d", &n, &m);
-//     for(int i = 1; i <= n; i++) scanf("%d", &a[i]);
+//     scanf("%lld%lld", &n, &m);
+//     for(int i = 1; i <= n; i++) scanf("%lld", &a[i]), asum += a[i];
+//     ans = asum;
 //     sort(a + 1, a + 1 + n);
 //     int l = 1, r = 1;
-//     long long ans = 0;
 //     while(r <= n)
 //     {
-        
+//         ll s = a[l];
+//         while(r < n && (a[r + 1] == a[r] || a[r + 1] == (a[r] + 1) % m)) s += a[++r];
+//         if(a[1] == 0) tep = s;
+//         if(l > 1 && r == n && tep != -1 && a[n] == m - 1) s += tep;
+//         ans = min(ans, asum - s);
+//         l = ++r;
 //     }
-
+//     printf("%lld", ans);
 //     return 0;
 // }
-
-//0 0 2 3 3 3 5 5 6
-
-//18 16 15 9 8 8 17 1 3 17 11 9 12 11 7 3 2 14 3 12
-// 1 2 3 3 3 7 8 8 9 9 11 11 12 12 14 15 16 17 17 18
 
 
 
 //8.Good Subarrays (Easy Version) 
-#include <cstdio>
-int a[200010];
-int main()
-{
-    int t;
-    scanf("%d", &t);
-    while(t--)
-    {
-        int n;
-        scanf("%d", &n);
-        for(int i = 1; i <= n; i++) scanf("%d", &a[i]);
-        int l = 1, r = 2, ans = (a[1] >= 1);
-        while(r <= n)
-        {//id = r - l + 1
-            if(a[r] >= r - l + 1) 
-            {
-                ans++;
-                r++;
-            }
+// #include <cstdio>
+// int a[200010];
+// int main()
+// {
+//     int t;
+//     scanf("%d", &t);
+//     while(t--)
+//     {
+//         int n;
+//         scanf("%d", &n);
+//         for(int i = 1; i <= n; i++) scanf("%d", &a[i]);
+//         int l = 1, r = 1;
+//         long long ans = 0;//极限情况下 int 必会超限
+//         while(l <= n)
+//         {
+//             while(r <= n && a[r] >= r - l + 1) r++;
+//             ans += r - l;
+//             l++;
+//         }
+//         printf("%lld\n", ans);
+//     }
+//     return 0;
+// }
 
-        }
-    }
-    return 0;
-}
+
+
+//
+
 
 
 
@@ -6840,3 +6846,306 @@ struct node
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑SZTU Monthly 2020 Oct↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓寒期集训赛1↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+/*
+题目链接：https://vjudge.net/contest/534933
+
+*/
+
+
+//Count Distinct Integers 
+// unique函数可以删除有序数组中的重复元素。
+// 注意：
+//  这里的删除不是真的delete，而是将重复的元素放到容器末尾
+//  unique函数的返回值是去重之后的尾地址
+//  一定要先对数组进行排序才可以使用unique函数
+// 写法：顺便计算新长度 int len = unique(arr, arr+10) - arr;
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// int a[2000];
+// int main()
+// {
+//     int n; cin >> n;
+//     for(int i = 0; i < n; i++) cin >> a[i];
+//     sort(a, a + n);
+//     cout << (unique(a, a + n) - a);
+//     return 0;
+// }
+//原判重写法
+// #include <iostream>
+// #include <cstdio>
+// #include <string>
+// #include <cctype>
+// #include <cstring>
+// #include <algorithm>
+// #include <cstdlib>
+// #include <cmath>
+// #include <unordered_set>
+// using namespace std;
+// int main()
+// {
+//     unordered_set<int> st;
+//     int n;
+//     scanf("%d", &n);
+//     while(n--)
+//     {
+//         int x;
+//         scanf("%d", &x);
+//         st.insert(x);
+//     }
+//     int num = st.size();
+//     printf("%d", num);
+//     return 0;
+// }
+
+
+
+//Better Students Are Needed! 
+//挺臭的，但手速题无需精简
+// #include <iostream>
+// #include <cstdio>
+// #include <string>
+// #include <cctype>
+// #include <cstring>
+// #include <algorithm>
+// #include <cstdlib>
+// #include <cmath>
+// #include <vector>
+// using namespace std;
+// struct nd{
+//     int a, b, id;
+// }arr[1500];
+// bool cp1(const nd &x, const nd &y)
+// {
+//     if(x.a == y.a) return x.id < y.id;
+//     return x.a > y.a;
+// }
+// bool cp2(const nd &x, const nd &y)
+// {
+//     if(x.b == y.b) return x.id < y.id;
+//     return x.b > y.b;
+// }
+// bool cp3(const nd &x, const nd &y)
+// {
+//     if((x.a + x.b) == (y.a +y.b)) return x.id < y.id;
+//     return (x.a + x.b) > (y.a +y.b);
+// }
+// vector<int> ans;
+// int main()
+// {
+//     int n,x,y,z;
+//     scanf("%d%d%d%d",&n,&x,&y,&z);
+//     for(int i =1;i<=n;i++) scanf("%d",&arr[i].a), arr[i].id = i;
+//     for(int i =1;i<=n;i++) scanf("%d",&arr[i].b), arr[i].id = i;
+//     sort(arr+1, arr+n+1, cp1);
+//     for(int i =1;i<=n&&x;i++)
+//         if(arr[i].a != -1)
+//         {
+//             arr[i].a = -1;
+//             ans.push_back(arr[i].id);
+//             x--;
+//         }
+//     sort(arr+1, arr+n+1, cp2);
+//     for(int i =1;i<=n&&y;i++)
+//         if(arr[i].a != -1)
+//         {
+//             arr[i].a = -1;
+//             ans.push_back(arr[i].id);
+//             y--;
+//         }
+//     sort(arr+1, arr+n+1, cp3);
+//     for(int i =1;i<=n&&z;i++)
+//         if(arr[i].a != -1)
+//         {
+//             arr[i].a = -1;
+//             ans.push_back(arr[i].id);
+//             z--;
+//         }
+//     sort(ans.begin(), ans.end());
+//     for(auto i : ans) printf("%d\n",i);  
+//     return 0;
+// }
+
+
+
+//±1 Operation 2 (二分 + 前缀和)
+//简洁版
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// typedef long long ll;
+// ll a[200010],s[200010];
+// int main()
+// {
+//     ll n, q, x;
+//     scanf("%lld%lld", &n, &q);
+//     for(int i = 1; i <= n; i++) scanf("%lld", &a[i]);
+//     sort(a + 1, a + 1 + n);
+//     for(int i = 1; i <= n; i++) s[i] = s[i-1] + a[i];
+//     while(q--)
+//     {
+//         scanf("%lld", &x);
+//         int m2 = upper_bound(a + 1, a + 1 + n, x) - (a + 1);
+//         printf("%lld\n", (2 * m2 - n) * x - 2 * s[m2] + s[n]);
+//     }
+//     return 0;
+// }
+//理解版
+// #include <iostream>
+// #include <cstdio>
+// #include <string>
+// #include <cctype>
+// #include <cstring>
+// #include <algorithm>
+// #include <cstdlib>
+// #include <cmath>
+// #include <vector>
+// using namespace std;
+// typedef long long ll;
+// ll a[200010],s[200010];
+// int main()
+// {
+//     ll n,q;
+//     scanf("%lld%lld",&n,&q);
+//     for(int i = 1; i <= n;i++) scanf("%lld", &a[i]);
+//     sort(a+1,a+1+n);
+//     for(int i = 1; i <= n;i++)
+//         s[i] = s[i-1] + a[i];
+//     while(q--)
+//     {
+//         ll x;
+//         scanf("%lld", &x);
+//         if(x >= a[n]) printf("%lld\n", n*x - s[n]);
+//         else if(x <= a[1]) printf("%lld\n", s[n] - n*x);
+//         else{
+//             ll ans = 0;
+//             int m1 = lower_bound(a+1,a+1+n,x) - a;
+//             int m2 = upper_bound(a+1,a+1+n,x) - a;
+//             m1--;
+//             // ans = m1*x - s[m1] + s[n] - s[m2 - 1] - (n - m2 + 1)*x;
+//             ans = (m1 - n + m2 - 1)*x - s[m1] - s[m2 - 1] + s[n];
+//             printf("%lld\n",ans);
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+//Submask 
+// WA
+// #include <iostream>
+// #include <cstdio>
+// #include <string>
+// #include <cctype>
+// #include <cstring>
+// #include <algorithm>
+// #include <cstdlib>
+// #include <cmath>
+// #include <vector>
+// using namespace std;
+// int main()
+// {
+//     long long n, t, base = 2;
+//     vector<long long> v;
+//     scanf("%lld", &n);
+//     long long cnt = 0, time;
+//     t = n;
+//     while(t)
+//     {
+//         if(t & 1)
+//         {
+//             v.push_back(pow(base,cnt));
+//         }
+//         cnt++;
+//         t >>= 1;
+//     }
+//     time = v.size();
+//     for(int i = 1; i < time; i++)
+//     {
+//         for(int j = 0; j < i; j++)
+//         {
+//             v.push_back(v[i]+v[j]);
+//         }
+//     }
+//     sort(v.begin(), v.end());
+//     printf("0\n");
+//     for(auto x : v) printf("%lld\n", x);
+//     if(n != 0) printf("%lld\n", n);
+//     return 0;
+// }
+
+
+
+//Equal Candies 
+// #include <iostream>
+// #include <cstdio>
+// #include <string>
+// #include <cctype>
+// #include <cstring>
+// #include <algorithm>
+// #include <cstdlib>
+// #include <cmath>
+// using namespace std;
+// int a[100];
+// int main()
+// {
+//     int t;
+//     scanf("%d", &t);
+//     while(t--)
+//     {
+//         int n;
+//         scanf("%d", &n);
+//         for(int i = 0; i < n; i++) scanf("%d", &a[i]);
+//         sort(a, a + n);
+//         long long ans = 0;
+//         for(int i = 1; i < n; i++) ans += a[i] - a[0];
+//         printf("%lld\n", ans);
+//     }
+//     return 0;
+// }
+
+
+
+//Spell Check 
+//刘学长的解法 :)
+// #include <iostream>
+// #include <string>
+// #include <algorithm>
+// using namespace std;
+// int main()
+// {
+//     int t;
+//     cin >> t;
+//     while(t--)
+//     {
+//         int n;
+//         cin >> n;
+//         string s;
+//         cin >> s;
+//         sort(s.begin(), s.end());//将字符串序列统一按字典序排序，用字典序升序的序列判断即可
+//         if(s == "Timru") cout << "YES\n";
+//         else cout << "NO\n";
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑寒期集训赛1↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
