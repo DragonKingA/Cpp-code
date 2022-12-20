@@ -4829,6 +4829,176 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 
 
 
+
+
+
+
+
+
+
+
+
+
+/*八. 数论分块*/
+//
+//1.除法向下取整求和
+// #include <cstdio>
+// int main()
+// {
+//     int t = 1000;
+//     while(t--)
+//     {
+//         long long ans = 0;
+//         int n, r;
+//         scanf("%d", &n);
+//         for(int l = 1; l <= n; l = r + 1)
+//         {
+//             r = n / (n / l);
+//             ans += 1ll * (n / l) * (r - l + 1);
+//         }
+//         printf("%lld\n", ans);
+//     }
+//     return 0;
+// }
+
+
+
+//2.两个除法向下取整求和
+// #include <cstdio>
+// #include <algorithm>
+// int main()
+// {
+//     int t = 1000;
+//     while(t--)
+//     {
+//         long long ans = 0;
+//         int n, m, r;
+//         scanf("%d%d", &n, &m);
+//         for(int l = 1; l <= std::min(n, m); l = r + 1)
+//         {
+//             r = std::min(m / (m / l), n / (n / l));
+//             ans += 1ll * (n / l) * (m / l) * (r - l + 1);
+//         }
+//         printf("%lld\n", ans);
+//     }
+//     return 0;
+// }
+
+
+
+//3.等差数列与除法向下取整之积求和
+// #include <cstdio>
+// int main()
+// {
+//     int t = 1000;
+//     while(t--)
+//     {
+//         long long ans = 0;
+//         int n, r;
+//         scanf("%d", &n);
+//         for(int l = 1; l <= n; l = r + 1)
+//         {
+//             r = n / (n / l);
+//             ans += 1ll * (n / l) * (r - l + 1) * (l + r) >> 1;
+//         }// Sn = n * (a1 + an) / 2,  n = len;
+//         printf("%lld\n", ans);
+//     }
+//     return 0;
+// }
+
+
+
+//4.数论分块之小小的变通
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// int main()
+// {
+//     int t = 100;
+//     while(t--)
+//     {
+//         int n, k, r;
+//         scanf("%d%d", &n, &k);
+//         long long ans = 1ll * n * k;
+//         //i > k时各项值恒为 k，此时 (k / i) = 0 ，故 l 循环到 min(n, k) 即可
+//         for(int l = 1; l <= min(n, k); l = r + 1)
+//         {
+//             r = min(n, k / (k / l));//当 n < k 时，如 2 3，当 l == n 时，可能会导致 r >= k，但应当限制在 r <= n 上
+//             ans -= 1ll * (k / l) * (l + r) * (r - l + 1) >> 1;
+//         }
+//         printf("%lld\n", ans);
+//     }
+//     return 0;
+// }
+// f(n, k)
+// f(10, 7)
+//i      1 2 3 4 5 6 7 8 9 10
+//k % i  0 1 1 3 2 1 0 7 7 7
+
+
+
+//5.稍显复杂的数论分块
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// typedef long long ll;
+// const ll base = 1e9 + 7, N = 1e6 + 5;
+// ll fib[N + 5] = {1, 1}, n[105];//1 1 2 3 5 8
+// int main()
+// {
+//     int m;
+//     for(int i = 2; i <= N; i++) fib[i] = (fib[i - 1] + fib[i - 2]) % base;
+//     for(int i = 1; i <= N; i++) fib[i] = (fib[i] + fib[i - 1]) % base;
+//     while(~scanf("%d", &m))
+//     {
+//         ll nmin = N, ans = 0;
+//         for(int i = 1; i <= m; i++) scanf("%lld", &n[i]), nmin = min(nmin, n[i]);
+//         for(int l = 1, r; l <= nmin; l = r + 1)
+//         {
+//             ll res = 1;
+//             r = n[1] / (n[1] / l);
+//             for(int i = 1; i <= m; i++)//向右找第一个右端点
+//             {
+//                 r = min(1ll * r, n[i] / (n[i] / l));
+//                 res = 1ll * (n[i] / l) * res % base;//存储式子右侧累乘的结果
+//             }
+//             ans = (ans + (fib[r] - fib[l - 1]) * res % base) % base;//fib从 L 到 R 项求和 与 连乘的乘积 的分块，说明该区块下连乘结果为定值
+//         }
+//         printf("%lld\n", (ans + base) % base);
+//         //存在减法取 序列和，前缀和 被取余后 计算得到的一段 序列和 的值很可能会为 负
+//         //而且由于编程语言对 负数 取模仍会得到 负值 ，所以先对其先 增加余数 再 取余，结果才是数学结果
+//         // 4
+//         // 44444 
+//         // 55555
+//         // 66666
+//         // 77777
+//         //该案例若不进行如上处理，会出现负数
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑算法↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -7039,49 +7209,50 @@ struct node
 
 
 
-//Submask 
-// WA
+//*Submask 
 // #include <iostream>
-// #include <cstdio>
-// #include <string>
-// #include <cctype>
-// #include <cstring>
 // #include <algorithm>
-// #include <cstdlib>
-// #include <cmath>
 // #include <vector>
 // using namespace std;
+// typedef long long ll;
+// vector<ll> ans;
 // int main()
 // {
-//     long long n, t, base = 2;
-//     vector<long long> v;
-//     scanf("%lld", &n);
-//     long long cnt = 0, time;
-//     t = n;
-//     while(t)
+//     ll N;
+//     cin >> N;
+//     //题意中最大N的二进制有15个1，即 2^60 - 1
+//     //用 i 枚举出所有 N 的二进制子集
+//     for(ll i = (1ll << 60) - 1; i >= 0; i--)//0 也是答案
 //     {
-//         if(t & 1)
-//         {
-//             v.push_back(pow(base,cnt));
-//         }
-//         cnt++;
-//         t >>= 1;
+//         i &= N;//取子集
+//         ans.push_back(i);
 //     }
-//     time = v.size();
-//     for(int i = 1; i < time; i++)
-//     {
-//         for(int j = 0; j < i; j++)
-//         {
-//             v.push_back(v[i]+v[j]);
-//         }
-//     }
-//     sort(v.begin(), v.end());
-//     printf("0\n");
-//     for(auto x : v) printf("%lld\n", x);
-//     if(n != 0) printf("%lld\n", n);
+//     reverse(ans.begin(), ans.end());//由于是逆序枚举存入的子集，翻转后输出
+//     for(auto x : ans) cout << x << '\n';
 //     return 0;
 // }
-
+/*
+题解思路：
+用 & 取 T 和 U 的交集：
+T = {A,B,C}: 0111
+U = {B,D}:   1010
+T ∩ U = {B}: 0111 & 1010 = 0010 
+枚举所有包含于 T 的 U
+设 N = 11 ，二进制表示为 1011
+imax = 0111 1111 1111 1111
+显然此时 i 与 N 交集即为 N (i ∩ N = N) 
+缩减 i 的同时(i--)，重复进行取子集步骤
+序号    i    i & N  
+1     imax   1011  （步骤：遍历往下进行i--，取子集，存子集）
+2     1010   1010
+3     1001   1001
+4     1000   1000
+5     0111   0011
+6     0010   0010
+7     0001   0001
+8     0000   0000
+END
+*/
 
 
 //Equal Candies 
