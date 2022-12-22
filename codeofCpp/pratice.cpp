@@ -3865,42 +3865,43 @@ int main() {
 
 
 
-//7. Last Rook
-//未完成
+//*7. Last Rook(交互式二分)
+//问题转换为两个子问题
+// ·哪一列不包含 Rook？
+// ·哪一行不包含 Rook？
+//分别查找二分答案即可，最后将共同指向一个坐标
 // #include <cstdio>
-// #include <algorithm>
-// using namespace std;
+// int IO(int a, int b, int c, int d)
+// {
+//     int rec;
+//     printf("? %d %d %d %d\n", a, b, c, d);
+//     fflush(stdout);
+//     scanf("%d", &rec);
+//     return rec;
+// }
 // int main()
 // {
 //     int N;
 //     scanf("%d", &N);
-//     int x1, x2, y1, y2, cnt, ifnot = 1;
-//     x1 = y1 = 1, x2 = (1 + N) / 2, y2 = N;
-//     printf("? %d %d %d %d\n", x1, x2, y1, y2);
-//     for(int i = 2; i <= 20;i++)
+//     int x1 = 1, x2 = N + 1, y1 = 1, y2 = N + 1;
+//     //二分行
+//     while(x1 + 1 < x2)
 //     {
-//         scanf("%d", &cnt);
-//         int xmid = (x1 + x2) / 2, ymid = (y1 + y2) / 2;
-//         //2 2
-
-
-
-//         printf("? %d %d %d %d\n", x1, x2, y1, y2);
-//         if(min(x2-x1+1, y2-y1+1) > N) 
-//         {
-//             printf("-1");
-//             break;
-//         }
-//         fflush(stdout);
-
+//         int mid = (x1 + x2) >> 1;
+//         if(IO(x1, mid - 1, 1, N) == mid - x1) x1 = mid;//个数若与间距相仿，则缩小左界范围
+//         else x2 = mid;
 //     }
-//     if(ifnot) printf("-1");
+//     //二分列
+//     while(y1 + 1 < y2)
+//     {
+//         int mid = (y1 + y2) >> 1;
+//         if(IO(1, N, y1, mid - 1) == mid - y1) y1 = mid;
+//         else y2 = mid;
+//     }
+//     printf("! %d %d\n", x1, y1);
+//     fflush(stdout);
 //     return 0;
 // }
-
-//(1, 1) (2, 3)
-//(2, 1) (3, 1)
-//(1, 3) (3, 3)
 
 
 
@@ -4430,60 +4431,6 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*数学原理应用*/
-
-//曼哈顿距离(又名出租车距离)
-//d(i,j)=|x1-x2|+|y1-y2|
-//打印一个菱形
-/*
-当n=5时，有" * “号的地方是距离中心点曼哈顿距离小于2的地方；
-当n=7时，有” * " 号的地方是距离中心点曼哈顿距离小于3的地方。
-找到中心点与n的关系：中心点用n表示为（n/2，n/2），将与中心点距离小于n/2的点用" * "表示，其他地方用空格表示，
-完成一行（一行指i的一次循环）后进行换行。
-*/
-// #include <iostream>
-// #include <algorithm>
-// using namespace std;
-// int main()
-// {
-//     int n;
-//     cin >> n;//n为奇数
-//     int cx = n/2, cy = n/2;//中心点(cx,cy)
-//     for(int i = 0; i < n; i++)
-//     {
-//         for(int j = 0; j < n; j++)
-//         {
-//             if(abs(i-cx) + abs(j-cy) <= n/2)
-//                  cout << '*' ;
-//             else
-//                  cout << ' ';
-//         }
-//         cout << endl;
-//     }
-//     return 0;
-// }
-
-
-
 /*七. 双指针(尺取法)*/
 //1.Palindromes _easy version 
 // #include <iostream>
@@ -4818,7 +4765,170 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 
 
 
-//
+//*9.binary string
+//(尺取 + 贪心) || 二分
+//以下只展示前者
+// #include <iostream>
+// #include <string>
+// #include <unordered_map>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// int main()
+// {
+//     untie();
+//     int T; 
+//     cin >> T;
+//     while(T--)
+//     {
+//         unordered_map<char, int> mp{{'0', 0}, {'1', 0}};
+//         string s; 
+//         cin >> s;
+//         for(auto ch : s) mp[ch]++;
+//         int len = s.size(), ans = mp['0'], tep = mp['1'], l = 0, r = 0;
+//         mp['0'] = mp['1'] = 0;
+//         while(l < len)//由于 删除区间 是连续的，则可尺取 剩余区间，这样遍历复杂度为O(n)
+//         {
+//             //贪心：剩余区间中'0'的个数(即含有'0'的代价) 与 删除区间中'1'的个数(即减去'1'的代价) 相等时为 最优解
+//             while(r < len && mp['0'] != (tep - mp['1'])) mp[s[r++]]++;
+//             ans = min(ans, max(mp['0'], tep - mp['1']));
+//             mp[s[l++]]--;
+//         }
+//         cout << ans << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+//10.±1 Operation 2 
+//(离线 && 尺取) || (二分 && 前缀和)
+// pair<type1, type2> 默认对 first 升序，当 first 相同时才对 second 升序；
+// #include <cstdio>
+// #include <algorithm>
+// using namespace std;
+// typedef long long ll;
+// #define x first
+// #define id second
+// ll a[200010], ans[200010], sum = 0, tep = 0;
+// pair<ll, int> q[200010];
+// int main()
+// {
+//     int n, Q;
+//     scanf("%d%d", &n, &Q);
+//     for(int i = 1; i <= n; i++) scanf("%lld", &a[i]), sum += a[i];
+//     for(int i = 1; i <= Q; i++) scanf("%lld", &q[i].x), q[i].id = i;
+//     sort(a + 1, a + 1 + n);
+//     sort(q + 1, q + 1 + Q);
+//     //思路：存起问题 X 并升序排序，先解决 X 小的问题，之后的问题只需要补差值即可
+//     int l = 1, r = 1;
+//     for(int i = 1; i <= Q; i++)
+//     {
+//         while(r <= n && a[r] <= q[i].x) r++;//寻找 x 与 ai 差值的正负转折点，划出转折区间
+//         for(int j = l; j < r; j++)//特别地，转折区间内补差
+//         {
+//             sum -= a[j] - tep;//减去 前者 的获利
+//             sum += q[i].x - a[j];//取 当前者 的获利
+//         }
+//         sum += (q[i].x - tep) * (l - 1);//补 转折区间左侧 的差值
+//         sum -= (q[i].x - tep) * (n - r + 1);//补 转折区间右侧 的差值
+//         tep = q[i].x;
+//         ans[q[i].id] = sum;
+//         l = r;
+//     }
+//     for(int i = 1; i <= Q; i++) printf("%lld\n", ans[i]);
+//     return 0;
+// }
+//二分方法见 集训赛1
+
+
+
+//11.Prefix Equality 
+//WA
+// #include <iostream>
+// #include <set>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// #define x first
+// #define y second
+// const int MAXN = 2e2 + 10;//////////////////////////////////
+// struct nd{
+//     pair<int, int> que;
+//     int id;
+//     bool operator <(const nd &t)const{
+//         return que < t.que;
+//     }
+// }q[MAXN];
+// int a[MAXN], b[MAXN];
+// bool ans[MAXN];
+// int main()
+// {
+//     untie();
+//     int n, Q; 
+//     cin >> n;
+//     set<int> sa, sb;
+
+//     for(int i = 1; i <= n; i++) cin >> a[i];
+//     for(int i = 1; i <= n; i++) cin >> b[i];
+//     cin >> Q;
+//     for(int i = 1; i <= Q; i++) cin >> q[i].que.x, cin >> q[i].que.y, q[i].id = i;
+//     sort(q + 1, q + 1 + Q);
+//     int ra = 0, rb = 0;
+//     for(int i = 1; i <= Q; i++)
+//     {
+//         while(ra < q[i].que.x) sa.insert(a[++ra]);
+//         while(rb < q[i].que.y) sb.insert(b[++rb]);
+//         ans[q[i].id] = (sa == sb);
+        
+//     }
+//     for(int i = 1; i <= Q; i++) cout << (ans[i] ? "Yes\n":"No\n");
+//     return 0;
+// }
+
+/*
+问题在于：离线排序后没有单调性
+5
+2 1 3 4 5
+1 2 3 4 5
+6
+1 2
+2 2
+3 3
+4 4
+5 5
+1 4
+
+1 2
+1 4
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4983,6 +5093,155 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 
 
 
+/*九. 分治*/
+/*
+快速幂
+郭的板子：
+int PowMod(int a, int n, int mod)
+{
+    int ret = 1;
+    for(; n; n >>= 1, a = 1LL * a * a % mod)
+    if(n & 1) ret = 1LL * ret * a % mod;
+    return ret;
+}
+*/
+
+//1.快速幂
+// #include <cstdio>
+// typedef long long ll;
+// ll a, b, mod;
+// ll quick_pow(ll base, ll index)
+// {
+//     ll ans = 1;
+//     for(; index; index >>= 1)
+//     {
+//         if(index & 1) ans = ans * base % mod;
+//         base = base * base % mod;
+//     }
+//     return ans;
+// }
+// int main()
+// {
+//     scanf("%lld%lld%lld", &a, &b, &mod);
+//     printf("%lld^%lld mod %lld=%lld", a, b, mod, quick_pow(a, b));
+//     return 0;
+// }
+
+
+
+//2.最大子段和
+// #include <iostream>
+// using namespace std;
+// const int N = 2*1e5 + 1;
+// int a[N], sum[N], n, res = -100 * N;
+// int main()
+// {
+//     cin >> n;
+//     for(int i = 1; i <= n; i++) 
+//     {
+//         cin>>a[i];
+//         sum[i]=max(sum[i-1]+a[i],a[i]);//贪心，当前数大于该段前缀和时，说明该前缀和非最优解，故弃之取当前数，并重新计算前缀和
+//         res=max(res,sum[i]);//取各前缀和序列中最大值
+//     }
+//     cout << res;
+//     return 0;
+// }
+
+
+
+//3.汉诺塔问题
+// #include <cstdio>
+// void move(int n, char init, char temp, char dest)
+// {
+//     if(n == 1) printf("1:%c->%c\n", init, dest);
+//     else
+//     {
+//         move(n - 1, init, dest, temp);
+//         printf("%d:%c->%c\n", n, init, dest);
+//         move(n - 1, temp, init, dest);
+//     }
+// }
+// int main()
+// {
+//     int n;
+//     char a, b, c;
+//     scanf("%d %c %c %c", &n, &a, &b, &c);
+//     move(n, a, b, c);
+//     return 0;
+// }
+
+
+
+//*4.快速排序
+// #include <cstdio>
+// #include <algorithm>
+// int arr[100000], n;
+// //1.以下方便理解(慢)
+// // int partition(int low, int high)
+// // {
+// //     int x = arr[low];//取第一个为基准元素，并提出来，故low处此时为空位
+// //     while(low < high)
+// //     {
+// //         while(low < high && arr[high] >= x) high--;//high指针找到第一个小于x的元素，并置于x原位置上
+// //         arr[low] = arr[high];//此时high指针所在位置为空位
+// //         while(low < high && arr[low] <= x) low++;//low指针找到第一个小于x的元素，并置于high位置上
+// //         arr[high] = arr[low];
+// //     }
+// //     arr[low] = x;//最后将基准元素置于两指针重合的空位
+// //     return low;//返回重合位
+// // }
+// // int quick_sort(int low, int high)
+// // {
+// //     if(low < high)
+// //     {
+// //         int xpos = partition(low, high);//取基准元素
+// //         quick_sort(low, xpos - 1);//对分割后左右两个序列分别 再分割再排序
+// //         quick_sort(xpos + 1, high);
+// //     }
+// // }
+// //2.较慢
+// // void quick_sort(int left,int right){
+// // 	if(left >= right)return;
+// // 	int i = left, j = right, base = arr[left];
+// // 	while(i<j){
+// // 		while(arr[j]>=base && i<j)j--;
+// // 		while(arr[i]<=base && i<j)i++;
+// // 		if(i<j) std::swap(arr[i], arr[j]);
+// // 	}
+// // 	arr[left] = arr[i];
+// // 	arr[i] = base;
+// // 	quick_sort(left, i - 1);
+// // 	quick_sort(i + 1, right);
+// // }
+// //3.结合二分(极快)
+// void quick_sort(int l,int r)//应用二分思想
+// {
+//     int mid = arr[((l + r) >> 1)];//中间数
+//     int i = l, j = r;
+//     do{
+//         while(arr[i] < mid) i++;//查找左半部分比中间数大的数
+//         while(arr[j] > mid) j--;//查找右半部分比中间数小的数
+//         if(i <= j)//如果有一组不满足排序条件（左小右大）的数
+//         {
+//             std::swap(arr[i], arr[j]);//交换
+//             i++, j--;
+//         }
+//     }while(i <= j);//这里注意要有=
+//     if(l < j) quick_sort(l, j);//递归搜索左半部分
+//     if(i < r) quick_sort(i, r);//递归搜索右半部分
+// }
+// int main()
+// {
+//     scanf("%d", &n);
+//     for(int i = 0; i < n; i++) scanf("%d", &arr[i]);
+//     quick_sort(0, n - 1);
+//     for(int i = 0; i < n; i++) printf(" %d" + !i, arr[i]);
+//     return 0;
+// }
+
+
+
+//5.归并排序
 
 
 
@@ -4994,6 +5253,108 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*数学原理应用*/
+
+//曼哈顿距离(又名出租车距离)
+//d(i,j)=|x1-x2|+|y1-y2|
+//打印一个菱形
+/*
+当n=5时，有" * “号的地方是距离中心点曼哈顿距离小于2的地方；
+当n=7时，有” * " 号的地方是距离中心点曼哈顿距离小于3的地方。
+找到中心点与n的关系：中心点用n表示为（n/2，n/2），将与中心点距离小于n/2的点用" * "表示，其他地方用空格表示，
+完成一行（一行指i的一次循环）后进行换行。
+*/
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// int main()
+// {
+//     int n;
+//     cin >> n;//n为奇数
+//     int cx = n/2, cy = n/2;//中心点(cx,cy)
+//     for(int i = 0; i < n; i++)
+//     {
+//         for(int j = 0; j < n; j++)
+//         {
+//             if(abs(i-cx) + abs(j-cy) <= n/2)
+//                  cout << '*' ;
+//             else
+//                  cout << ' ';
+//         }
+//         cout << endl;
+//     }
+//     return 0;
+// }
 
 
 
@@ -7319,4 +7680,274 @@ END
 
 
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑寒期集训赛1↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓寒期集训赛2↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+/*
+题目链接：https://vjudge.csgrandeur.cn/contest/535123
+
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <set>
+#include <map>
+#include <unordered_map>
+#include <unordered_set>
+#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+
+using namespace std;
+
+
+
+int main()
+{
+    
+
+
+
+
+
+    return 0;
+}
+*/
+
+
+
+//"atcoder".substr() 
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// using namespace std;
+// int main()
+// {
+//     string s = "atcoder";
+//     int l ,r;
+//     cin >> l >> r;
+//     cout << s.substr(l - 1 ,r - l + 1);
+//     return 0;
+// }
+
+
+
+//NewFolder(1) 
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// using namespace std;
+// int main()
+// {
+//     untie();
+//     map<string, int> mp;
+//     int n;
+//     cin >> n;
+//     while(n--)
+//     {
+//         string s;
+//         cin >> s;
+//         mp[s]++;
+//         if(mp[s]==1) cout << s << '\n';
+//         else cout << s << "(" << (mp[s]-1) <<")\n";
+//     }
+//     return 0;
+// }
+
+
+
+//Counting Arrays 
+//此题方法甚多
+//1. (map || set) && vector
+//2. (map || set) && list
+//3. (map || set) && string (要一整句连着空格)
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// #include <list>
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// using namespace std;
+// map<list<int>, bool> mp;
+// int main()
+// {
+//     untie();
+//     int n, L;
+//     cin >> n;
+//     while(n--)
+//     {
+//         cin >> L;
+//         list<int> li;
+//         while(L--) 
+//         {
+//             int x;
+//             cin >> x;
+//             li.push_back(x);
+//         }
+//         mp[li] = 1;
+//     }
+//     cout<<mp.size();
+//     return 0;
+// }
+
+
+
+//激光炸弹 
+// #include <iostream>
+// #include <cstdio>
+// using namespace std;
+// const int N = 5e3 + 1;
+// int arr[N+5][N+5];
+// int main()
+// {       
+//     int n,m,a,b,val;
+//     scanf("%d%d",&n,&m);
+//     for(int i = 1; i <= n;i++)
+//     {
+//         scanf("%d%d%d",&a,&b,&val);
+//         arr[a+1][b+1] += val;//从(1,1)开始
+//     }
+//     for(int i=1;i<=N;i++) 
+//         for(int j=1;j<=N;j++)
+//             arr[i][j] = arr[i - 1][j] + arr[i][j-1] - arr[i-1][j-1] + arr[i][j];
+//     int ans = 0;
+//     for (int x = m; x <= N; x++)
+// 		for (int y = m; y <= N; y++)
+//         {
+//             int res = arr[x][y] - arr[x-m][y] - arr[x][y-m] + arr[x-m][y-m]; 
+//             ans = max(ans, res);
+//         } 
+//     printf("%d\n",ans);
+//     return 0;
+// }
+
+
+
+//Buy an Integer 
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// typedef long long ll;
+// using namespace std;
+// int count(ll x)
+// {
+//     ll t = x;
+//     int res = 0;
+//     while(t)
+//     {
+//         res++;
+//         t/=10;
+//     }
+//     return res;
+// }
+// int main()
+// {
+//     untie();
+//     ll a, b ,x;
+//     cin >> a >> b>> x;
+//     ll L = 0, R = 1e9, m1;
+//     for(int i = 0 ;i<100;i++)
+//     {
+//         m1 = L + ((R - L)>>1);
+//         if(a*m1 + b*count(m1) <= x) L = m1 + 1;
+//         else R = m1 - 1;
+//     }
+//     L--;
+//     if(a*L + b*count(L) <= x) cout << L;
+//     else cout << '0';
+//     return 0;
+// }
+
+
+
+//Full House 
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// using namespace std;
+// int main()
+// {
+//     int a;
+//     map<int,int> mp;
+//     for(int i = 0;i<5;i++) 
+//     {
+//         scanf("%d",&a);
+//         mp[a]++;
+//     }
+//     int ifno = 1,b,c;
+//     for(auto x : mp)
+//     {
+//         if(ifno) b = x.second, ifno =  0;
+//         else c = x.second;
+//     }
+//     if(mp.size() == 2 && (b==2&&c==3) || (b==3&&c==2)) printf("Yes\n");
+//     else printf("No\n");
+//     return 0;
+// }
+
+
+
+
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑寒期集训赛2↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
