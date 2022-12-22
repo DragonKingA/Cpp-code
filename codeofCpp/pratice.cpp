@@ -5101,12 +5101,37 @@ int PowMod(int a, int n, int mod)
 {
     int ret = 1;
     for(; n; n >>= 1, a = 1LL * a * a % mod)
-    if(n & 1) ret = 1LL * ret * a % mod;
+        if(n & 1) ret = 1LL * ret * a % mod;
     return ret;
 }
+
+我的板子：
+//base 底数；index 指数
+//线性整数快速幂：
+typedef long long ll;
+ll mod = ;
+ll quick_pow(ll base, ll index)
+{
+    ll ans = 1;
+    for(; index; index >>= 1)
+    {
+        if(index & 1) ans = ans * base % mod;
+        base = base * base % mod;
+    }
+    return ans;
+}
+//矩阵快速幂：
+
+
+
+
+
+
+
 */
 
 //1.快速幂
+//线性快速幂
 // #include <cstdio>
 // typedef long long ll;
 // ll a, b, mod;
@@ -5126,10 +5151,59 @@ int PowMod(int a, int n, int mod)
 //     printf("%lld^%lld mod %lld=%lld", a, b, mod, quick_pow(a, b));
 //     return 0;
 // }
+//矩阵(matrix)快速幂
+//把矩阵看作数即可，对于快速幂运算，只需重载乘法运算符即可转化为线性表达
+// #include <cstdio>
+// typedef long long ll;
+// const ll mod = 1e9 + 7, N = 110;
+// ll n, k;
+// struct matrix{
+//     ll mat[N][N];
+//     matrix operator *(matrix &t){
+//         matrix ret;
+//         for(int i = 0; i < n; i++)
+//             for(int j = 0; j < n; j++)
+//             {
+//                 ll sum = 0;
+//                 for(int k = 0; k < n; k++) 
+//                     sum += mat[i][k] * t.mat[k][j] % mod;
+//                 ret.mat[i][j] = sum % mod;
+//             }
+//         return ret;
+//     }
+// }orimat, a;
+// matrix mat_quick_pow(matrix base, ll index)
+// {
+//     matrix ans = orimat;
+//     for(; index; index >>= 1)
+//     {
+//         if(index & 1) ans = ans * base;
+//         base = base * base;
+//     }
+//     return ans;
+// }
+// int main()
+// {
+//     //写入单位矩阵 A0 ，其与任何矩阵 X 相乘得到 X 本身(A0 的斜向右下对角线位上均为1，其余为0)
+//     for(int i = 0; i < N; i++) orimat.mat[i][i] = 1;
+//     scanf("%lld%lld", &n, &k);
+//     for(int i = 0; i < n; i++)
+//         for(int j = 0; j < n; j++)
+//             scanf("%lld", &a.mat[i][j]);
+//     a = mat_quick_pow(a, k);
+//     for(int i = 0; i < n; i++)
+//     {
+//         for(int j = 0; j < n; j++)
+//             printf(" %lld" + !j, a.mat[i][j]);
+//         puts("");
+//     }
+//     return 0;
+// }
 
 
 
 //2.最大子段和
+//贪心\dp：
 // #include <iostream>
 // using namespace std;
 // const int N = 2*1e5 + 1;
@@ -5146,8 +5220,57 @@ int PowMod(int a, int n, int mod)
 //     cout << res;
 //     return 0;
 // }
+//分治法：
+//采用分治法的思想，将该序列一分为二，分别求取这两个序列的最大子段和。
+//当然最大字段和也可能跨越在这两段中，即为我们要探讨的第三种情况
+// #include <iostream>
+// using namespace std;
+// const int MINA = -2e7 - 10;
+// int n, arr[200005];
+// inline int tmax(int a, int b, int c){ return (a >= b && a >= c)  ?  a  :  ((b >= a && b >= c) ? b : c);}
+// int subsum(int l, int r)
+// {
+//     int sum = MINA, lsum = 0, rsum = 0, msum = 0;
+//     if(l == r) sum = arr[l];
+//     else
+//     {
+//         int mid = (l + r) >> 1, sl = MINA, sr = MINA, sl_tmp = 0, sr_tmp = 0;
+//         //以下返回左右段
+//         lsum = subsum(l, mid);//中间元素划入左区间
+//         rsum = subsum(mid + 1, r);
 
-
+//         //以下计算中间段
+//         for(int i = mid; i >= l; i--)//左序列求最大和,由于中间段连续所有要从 mid 往 l 走
+//         {
+//             sl_tmp += arr[i];
+//             if(sl_tmp > sl) sl = sl_tmp;
+//         }
+//         for(int i = mid + 1; i <= r; i++)//右序列求最大和,由于中间段连续所有要从 mid + 1 往 r 走
+//         {
+//             sr_tmp += arr[i];
+//             if(sr_tmp > sr) sr = sr_tmp;
+//         }
+//         msum = sl + sr;//两者之和得到中间段和
+        
+//         //三种情况下的和的比较，取最大者
+//         sum = tmax(lsum, rsum, msum);
+//     }
+//     return sum;
+// }
+// int main()
+// {
+//     cin >> n;
+//     for(int i = 0; i < n; i++) cin >> arr[i];
+//     cout << subsum(0, n - 1);
+//     return 0;
+// }
+/*
+分治算法时间复杂度分析：
+1.首先把一个递归的函数当做一个结点，这道题的话就非叶子结点（l==r时为叶子节点）都会产生两个子节点 -> log2n
+2.结点里面可以对其L，R进行分析。实际上轴上的位置，每一个最多被访问logn次（这个logn就是树的高度）
+3.在树的同一层里，数轴上的一个位置仅会被一个节点访问 -> n
+O(log2n * n) = O(nlogn)
+*/
 
 //3.汉诺塔问题
 // #include <cstdio>
@@ -5241,24 +5364,115 @@ int PowMod(int a, int n, int mod)
 
 
 
-//5.归并排序
+//*5.逆序对(归并排序)
+// #include <cstdio>
+// const int N = 5e5 + 5;
+// int n, arr[N], tmp[N];
+// long long cnt = 0;
+// void merge(int l, int r)
+// {
+//     if(l >= r) return;
+//     int mid = ((l + r) >> 1);
+//     int posl = l, pos_tmp = l, posr = mid + 1;//posr指向右侧区间第一个元素
+//     merge(l, mid);//排序左侧区间(中间元素归入左侧)
+//     merge(mid + 1, r);//排序右侧区间
+//     while(posl <= mid && posr <= r)
+//     {
+//         if(arr[posl] <= arr[posr]) tmp[pos_tmp++] = arr[posl++];//置入小者
+//         else tmp[pos_tmp++] = arr[posr++], cnt += mid - posl + 1;
+//     }
+//     //左右区间剩余元素都分别存入tmp中（因为最终会留下一些较大者没进数组）
+//     while(posl <= mid) tmp[pos_tmp++] = arr[posl++];
+//     while(posr <= r) tmp[pos_tmp++] = arr[posr++];
+//     //将排序后数组存入原数组中
+//     for(int i = l; i <= r; i++) arr[i] = tmp[i];
+// }
+// int main()
+// {
+//     scanf("%d", &n);
+//     for(int i = 1; i <= n; i++) scanf("%d", &arr[i]);
+//     merge(1, n);
+//     printf("%lld", cnt);
+//     return 0;
+// }
+/*
+如序列 8 3 2 6 7 1 5 4
+递归二分划分区间最终变成两两一对
+[8 3]  [2 6]  [7 1]  [5 4]
+分别排序(升序)
+[3 8]  [2 6]  [1 7]  [4 5]
+两两合并：用两个指针，比如 [3 8]  [2 6]，用指针 l1 指向 3 ， l2 指向 2 ，小的一方即 l2 存入数组 并 l2++ ，得到[2]；
+                          此时3 < 6，得到[2 3]；此时6 < 8得到[2 3 6]，然后后面循环补入 8 得到 [2 3 6 8]
+即[2 3 6 8]  [1 4 5 7]
+同理类推得到最终序列 [1 2 3 4 5 6 7 8]
+*/
 
 
 
+//6.Fractal
+// #include <cstdio>
+// #include <cstring>
+// #include <cmath>
+// char map[1024][1024];//以左上角为基点，分形5个区块
+// void setpic(int x, int y, int n)
+// {
+//     if(n == 1) 
+//     {
+//         map[x][y] = 'X';
+//         return;
+//     }
+//     int k = (int)pow(3.0, n - 2);//基于上一个degree的图形长度
+//     setpic(x, y, n - 1);            //左上角
+//     setpic(x + 2*k, y, n - 1);      //右上角
+//     setpic(x + k, y + k, n - 1);    //中间
+//     setpic(x, y + 2*k, n - 1);      //左下角
+//     setpic(x + 2*k, y + 2*k, n - 1);//右下角
+// }
+// int main()
+// {
+//     int n;
+//     while(~scanf("%d", &n), n + 1)
+//     {
+//         int size = (int)pow(3.0, n - 1);
+//         memset(map, 32, sizeof(map));
+//         setpic(0, 0, n);
+//         for(int i = 0; i < size; i++)
+//         {
+//             for(int j = 0; j < size; j++)
+//                 printf("%c", map[i][j]);
+//             puts("");
+//         }
+//         printf("-\n");
+//     }
+//     return 0;
+// }
 
 
 
+//7.很大的数组的第k小
+//实际上有函数nth_element(a,a+k,a+len)  -> O(n)
+//函数意义为将第 k 小元素放在a[k]上
+#include <cstdio>
+typedef long long ll;
+const ll mod = 1e9 + 7, maxn = 5e7 + 5;
+int n, m, k;
+ll arr[maxn];
+int quick_search(int l, int r)
+{
+    if(l >= r) return arr[l];
 
-
-
-
-
-
-
-
-
-
-
+}
+int main()
+{
+    while(~scanf("%d%d%d", &n, &m, &k))//由于取模后面单调性被破坏故需要搜索
+    {
+        arr[0] = m;
+        for(int i = 1; i < n; i++) arr[i] = arr[i] * arr[i- 1] % mod;
+        printf("%d\n", quick_search(0, n - 1));
+        
+    }
+    return 0;
+}
 
 
 
