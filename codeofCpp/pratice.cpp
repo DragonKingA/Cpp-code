@@ -5105,14 +5105,14 @@ int PowMod(int a, int n, int mod)
     return ret;
 }
 
-我的板子：
+*我的板子：
 //base 底数；index 指数
 //线性整数快速幂：
-typedef long long ll;
-ll mod = ;
-ll quick_pow(ll base, ll index)
+typedef long long ntype;
+ntype mod = ;
+ntype quick_pow(ll base, ntype index)
 {
-    ll ans = 1;
+    ntype ans = 1;
     for(; index; index >>= 1)
     {
         if(index & 1) ans = ans * base % mod;
@@ -5121,14 +5121,40 @@ ll quick_pow(ll base, ll index)
     return ans;
 }
 //矩阵快速幂：
-
-
-
-
-
-
+#include <cstdio>
+typedef long long ntype;
+const ntype mod = , N = ;//这里 N 指最大矩形边长，n 指实际矩形边长
+ntype n, k;
+struct matrix{
+    ntype mat[N][N];
+    matrix operator *(matrix &t){
+        matrix ret;
+        for(int i = 0; i < n; i++)
+            for(int j = 0; j < n; j++)
+            {
+                ntype sum = 0;
+                for(int k = 0; k < n; k++) 
+                    sum += mat[i][k] * t.mat[k][j] % mod;
+                ret.mat[i][j] = sum % mod;
+            }
+        return ret;
+    }
+}orimat;
+matrix mat_quick_pow(matrix base, ntype index)
+{
+    matrix ans = orimat;
+    for(; index; index >>= 1)
+    {
+        if(index & 1) ans = ans * base;
+        base = base * base;
+    }
+    return ans;
+}
+void init(){ for(int i = 0; i < N; i++) orimat.mat[i][i] = 1;}
 
 */
+
+
 
 //1.快速幂
 //线性快速幂
@@ -5296,13 +5322,14 @@ O(log2n * n) = O(nlogn)
 
 
 //*4.快速排序
+//https://blog.csdn.net/weixin_44915226/article/details/119535259?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522167176851016800222868521%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=167176851016800222868521&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-5-119535259-null-null.142^v68^control,201^v4^add_ask,213^v2^t3_control1&utm_term=c%2B%2B%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F&spm=1018.2226.3001.4187
 // #include <cstdio>
 // #include <algorithm>
 // int arr[100000], n;
-// //1.以下方便理解(慢)
+// //1.以下方便理解(慢) -- 两个函数可以合起来
 // // int partition(int low, int high)
 // // {
-// //     int x = arr[low];//取第一个为基准元素，并提出来，故low处此时为空位
+// //     int x = arr[low];//取第一个为基准元素，并提出来，故low处此时为空位，这也使得后续low指针是空位
 // //     while(low < high)
 // //     {
 // //         while(low < high && arr[high] >= x) high--;//high指针找到第一个小于x的元素，并置于x原位置上
@@ -5310,8 +5337,8 @@ O(log2n * n) = O(nlogn)
 // //         while(low < high && arr[low] <= x) low++;//low指针找到第一个小于x的元素，并置于high位置上
 // //         arr[high] = arr[low];
 // //     }
-// //     arr[low] = x;//最后将基准元素置于两指针重合的空位
-// //     return low;//返回重合位
+// //     arr[low] = x;//最后将基准元素置于low上的空位
+// //     return low;//返回最终基准位
 // // }
 // // int quick_sort(int low, int high)
 // // {
@@ -5322,14 +5349,14 @@ O(log2n * n) = O(nlogn)
 // //         quick_sort(xpos + 1, high);
 // //     }
 // // }
-// //2.较慢
-// // void quick_sort(int left,int right){
-// // 	if(left >= right)return;
+// //2.较慢(交换方式与法1不同) -> 遇到不满足升序的两个元素就直接交换,最终基准元素置于两指针重合位
+// // void quick_sort(int left, int right){
+// // 	if(left >= right) return;
 // // 	int i = left, j = right, base = arr[left];
-// // 	while(i<j){
-// // 		while(arr[j]>=base && i<j)j--;
-// // 		while(arr[i]<=base && i<j)i++;
-// // 		if(i<j) std::swap(arr[i], arr[j]);
+// // 	while(i < j){
+// // 		while(arr[j] >= base && i < j) j--;
+// // 		while(arr[i] <= base && i < j) i++;
+// // 		if(i < j) std::swap(arr[i], arr[j]);
 // // 	}
 // // 	arr[left] = arr[i];
 // // 	arr[i] = base;
@@ -5381,7 +5408,7 @@ O(log2n * n) = O(nlogn)
 //         if(arr[posl] <= arr[posr]) tmp[pos_tmp++] = arr[posl++];//置入小者
 //         else tmp[pos_tmp++] = arr[posr++], cnt += mid - posl + 1;
 //     }
-//     //左右区间剩余元素都分别存入tmp中（因为最终会留下一些较大者没进数组）
+//     //左右区间剩余元素都分别存入tmp中（因为最终会有一侧留下一些较大者没进数组）
 //     while(posl <= mid) tmp[pos_tmp++] = arr[posl++];
 //     while(posr <= r) tmp[pos_tmp++] = arr[posr++];
 //     //将排序后数组存入原数组中
@@ -5449,41 +5476,113 @@ O(log2n * n) = O(nlogn)
 
 
 
-//7.很大的数组的第k小
-//实际上有函数nth_element(a,a+k,a+len)  -> O(n)
-//函数意义为将第 k 小元素放在a[k]上
-#include <cstdio>
-typedef long long ll;
-const ll mod = 1e9 + 7, maxn = 5e7 + 5;
-int n, m, k;
-ll arr[maxn];
-int quick_search(int l, int r)
-{
-    if(l >= r) return arr[l];
+//*7.很大的数组的第k小
+//实际上有函数nth_element(a,a+k,a+len)  -> O(n)，函数意义为将第 k 小元素放在a[k]上，但不知道为什么会WA
+// maxn 数量级为 1e7，对于O(nlogn)的排序算法(sort)会超时(该复杂度下 1s 只能操作数量级 <= 1e6的数据)，故寻求下一级复杂度O(n) ( <= 1e7)
+//快排最差情况为 O(n^2)，但此时 n 并不大（序列未达到取模点），所以平均情况几乎可以认为是 O(n)
+// #include <cstdio>
+// const int mod = 1e9 + 7, maxn = 5e7 + 5;
+// int n, m, k, arr[maxn];
+// int quick_search(int l, int r, int k)
+// {
+//     if(l >= r) return arr[l];
+//     int low = l, high = r, x = arr[l];
+//     while(low < high)
+//     {
+//         while(low < high && arr[high] >= x) high--;//这样就能找到取模点后比arr[0]还小的元素
+//         arr[low] = arr[high];
+//         while(low < high && arr[low] <= x) low++;
+//         arr[high] = arr[low];
+//     }
+//     arr[low] = x;//最终low左侧元素均 <= x，如果low指针正好指向第(k - 1)位置元素即为ans,此时low - l == k - 1
+//     if(low - l == k - 1) return arr[low];
+//     //若low - l < k - 1说明左侧区间较小元素不够，留下排好的low的左侧区间并计入已寻得的项数，继续往low右侧寻找小元素
+//     //若low - l > k - 1说明low左侧区间条件充分，抛弃右侧区间即可，从 (l, low] 找剩余第k项  
+//     if(low - l < k - 1) return quick_search(low + 1, r, k - 1 - (low - l));
+//     else return quick_search(l, low, k);//当 k > 取模点时用到
+// }
+// int main()
+// {
+//     while(~scanf("%d%d%d", &n, &m, &k))
+//     {
+//         arr[0] = m;
+//         for(int i = 1; i < n; i++) arr[i] = 1LL * m * arr[i- 1] % mod;
+//         printf("%d\n", quick_search(0, n - 1, k));
+//     }
+//     return 0;
+// }
+//nth_element法
+// #include <cstdio>
+// #include <algorithm>
+// const int mod = 1e9 + 7, maxn = 5e7 + 5;
+// int n, m, k, arr[maxn];
+// int main()
+// {
+//     while(~scanf("%d%d%d", &n, &m, &k))
+//     {
+//         arr[0] = m;
+//         for(int i = 1; i < n; i++) arr[i] = 1LL * m * arr[i- 1] % mod;
+//         std::nth_element(arr, arr + k - 1, arr + n);
+//         printf("%d\n", arr[k - 1]);
+//     }
+//     return 0;
+// }
 
-}
+
+
+//8.Fibonacci( 矩阵公式 -> O(logn) )
+//1s，本题 maxn = 1e9，而O(n) -> 1e7 ~ 1e8 故必须降级到 O(logn) 求解，题意已给出方法
+// #include <cstdio>
+// typedef int ntype;
+// const ntype mod = 1e4, N = 2;
+// ntype n, k;
+// struct matrix{
+//     ntype mat[N][N];
+//     matrix operator *(matrix &t){
+//         matrix ret;
+//         for(int i = 0; i < N; i++)
+//             for(int j = 0; j < N; j++)
+//             {
+//                 ntype sum = 0;
+//                 for(int k = 0; k < N; k++) 
+//                     sum += 1LL * mat[i][k] * t.mat[k][j] % mod;
+//                 ret.mat[i][j] = sum % mod;
+//             }
+//         return ret;
+//     }
+// }orimat;
+// matrix mat_quick_pow(matrix base, ntype index)
+// {
+//     matrix ans = orimat;
+//     for(; index; index >>= 1)
+//     {
+//         if(index & 1) ans = ans * base;
+//         base = base * base;
+//     }
+//     return ans;
+// }
+// void init(){ for(int i = 0; i < N; i++) orimat.mat[i][i] = 1;}
+// int main()
+// {
+//     init();
+//     while(~scanf("%d", &n), n + 1)
+//     {
+//         matrix fib1 = {{{1, 1}, {1, 0}}};
+//         printf("%d\n", mat_quick_pow(fib1, n).mat[0][1]);
+//     }
+//     return 0;
+// }
+
+
+
+//9.地毯填补问题
+#include <cstdio>
 int main()
 {
-    while(~scanf("%d%d%d", &n, &m, &k))//由于取模后面单调性被破坏故需要搜索
-    {
-        arr[0] = m;
-        for(int i = 1; i < n; i++) arr[i] = arr[i] * arr[i- 1] % mod;
-        printf("%d\n", quick_search(0, n - 1));
-        
-    }
+
+
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -8165,3 +8264,333 @@ int main()
 
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑寒期集训赛2↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓寒期集训赛3↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+/*
+题目链接：https://vjudge.csgrandeur.cn/contest/535422
+
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <set>
+#include <map>
+#include <unordered_map>
+#include <unordered_set>
+#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+
+using namespace std;
+
+
+
+int main()
+{
+    
+
+
+
+
+
+    return 0;
+}
+
+*/
+
+
+
+//语文成绩
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// int arr[5000005], b[5000005];
+// int main()
+// {
+//     int n, p;
+//     scanf("%d%d", &n, &p);
+//     for(int i = 1; i <= n ; i++) scanf("%d", &arr[i]), b[i] = arr[i] - arr[i - 1];
+//     while(p--)
+//     {
+//         int l, r, x;
+//         scanf("%d%d%d", &l, &r, &x);
+//         b[l] += x;
+//         b[r + 1] -= x;
+//     }
+//     int mmin = 300;
+//     for(int i = 1; i <= n; i++)
+//     {
+//         b[i] += b[i - 1];
+//         mmin = min(mmin, b[i]);
+//     }
+//     printf("%d\n", mmin);
+//     return 0;
+// }
+
+
+
+//Do use hexagon grid 
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// using namespace std;
+// bool mp[2100][2100], vis[2100][2100];
+// int dir[6][2] = {{-1, -1}, {0, -1}, {-1, 0}, {1, 0}, {0, 1}, {1, 1}};
+// int n, m, cnt = 0;
+// void dfs(int i, int j)
+// {
+//     vis[i][j] = 1;
+//     for(int k = 0; k < 6; k++)
+//     {
+//         int ni = i + dir[k][0];
+//         int nj = j + dir[k][1];
+//         if(ni >= 0 && nj >= 0 && ni <= 2000 && nj <= 2000 && !vis[ni][nj] && mp[ni][nj])
+//             dfs(ni, nj);
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 0; i < n; i++)
+//     {
+//         int x, y;
+//         cin>> x >> y;
+//         x += 1000, y += 1000;
+//         mp[x][y] = 1;
+//     }
+//     for(int i = 0; i <= 2000; i++)
+//         for(int j = 0; j <= 2000; j++)
+//         {
+//             if(mp[i][j] && !vis[i][j])
+//             {
+//                 cnt ++;
+//                 dfs(i, j);
+//             }
+//         }
+//     cout << cnt << '\n';
+//     return 0;
+// }
+
+
+
+//Minimum Varied Number 
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// int main()
+// {
+//     untie();
+//     int t;
+//     cin >> t;
+//     while(t--)
+//     {
+//         int n, cnt = 9, ans = 0;
+//         cin >> n;
+//         vector<int> v;
+//         //20  9 8 3
+//         //8 8 
+//         //10 9 1
+//         //45 
+//         //45 9 8 7 6 5 4 3 2 1
+//         while(n || cnt)
+//         {
+//             if(n >= cnt)
+//             {
+//                 v.push_back(cnt);
+//                 n -= cnt;
+//                 cnt--;
+//             }
+//             else
+//             {
+//                 v.push_back(n);
+//                 break;
+//             }
+//         }
+//         int len = v.size() - 1;
+//         while(len >= 0) ans = ans * 10 + v[len--];
+//         cout << ans << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+//EKO / 砍树 
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// typedef long long ll;
+// ll arr[1000005], n, m;
+// bool judge(ll mid)
+// {
+//     ll sum = 0;
+//     for(int i = 1; i <= n; i++)
+//         if(arr[i] > mid) sum += arr[i] - mid;
+//     return sum >= m;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     ll mmax = 0;
+//     for(int i = 1;i <= n; i++) cin >> arr[i], mmax = max(mmax, arr[i]);
+//     ll l = 1, r = mmax;
+//     while(l <= r)
+//     {
+//         ll mid = l + ((r - l) >> 1);
+//         if(judge(mid)) l = mid + 1;
+//         else r = mid - 1;
+//     }
+//     cout << (l - 1) << '\n';
+//     return 0;
+// }
+
+
+
+//Atilla's Favorite Problem 
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// using namespace std;
+// int arr[10000];
+// int main()
+// {
+//     untie();
+//     int t;
+//     cin >> t;
+//     for(int i = 'a'; i <= 'z'; i++) arr[i] = i - 'a' + 1;
+//     while(t--)
+//     {
+//         int n;
+//         cin >> n;
+//         string s;
+//         cin >> s;
+//         sort(s.begin(), s.end());
+//         cout << arr[s.back()] << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+//Belt Conveyor 
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// using namespace std;
+// char mp[555][555];
+// bool vis[555][555];
+// int ansi = 0, ansj = 0, n, m, ifnot = 0;
+// void dfs(int i, int j)
+// {
+//     int ni = i, nj = j;
+//     switch(mp[i][j])
+//     {
+//         case 'U': ni--;break;
+//         case 'D': ni++;break;
+//         case 'L': nj--;break;
+//         case 'R': nj++;break;
+//     }
+//     if(ni >= 0 && ni < n && nj >= 0 && nj < m)
+//     {
+//         if(vis[ni][nj]) 
+//         {
+//             ifnot = 1;
+//             return;
+//         }
+//         vis[ni][nj] = 1;
+//         ansi = ni;
+//         ansj = nj;
+//         dfs(ni, nj);
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     for(int i = 0; i < n; i++) cin >> mp[i];
+//     dfs(0, 0);
+//     if(ifnot) cout << "-1\n";
+//     else
+//         cout << (ansi + 1) << " " << (ansj + 1) << '\n';
+//     return 0;
+// }
+
+
+
+
+
+
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑寒期集训赛3↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
