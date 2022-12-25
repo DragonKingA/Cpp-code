@@ -5977,29 +5977,30 @@ O(log2n * n) = O(nlogn)
 
 
 //9.序列合并
-#include <cstdio>
-#include <queue>
-#include <vector>
-#include <functional>
-using namespace std;
-typedef long long ll;
-int a[100005];
-priority_queue<ll, vector<ll>, greater<ll> > q;
-int main()
-{
-    int n;
-    scanf("%d", &n);
-    for(int i = 0; i < n; i++) scanf("%d", &a[i]);
-    for(int i = 0; i < n; i++)
-    {
-        ll t;
-        scanf("%lld", &t);
-        for(int j = 0; j < n; j++) q.push(1LL * a[j] + t);
-    }
-    for(int i = 0; i < n; i++)
-        printf(" %d" + !i, q.top()), q.pop();
-    return 0;
-}
+//未完成
+// #include <cstdio>
+// #include <queue>
+// #include <vector>
+// #include <functional>
+// using namespace std;
+// typedef long long ll;
+// int a[100005];
+// priority_queue<ll, vector<ll>, greater<ll> > q;
+// int main()
+// {
+//     int n;
+//     scanf("%d", &n);
+//     for(int i = 0; i < n; i++) scanf("%d", &a[i]);
+//     for(int i = 0; i < n; i++)
+//     {
+//         ll t;
+//         scanf("%lld", &t);
+//         for(int j = 0; j < n; j++) q.push(1LL * a[j] + t);
+//     }
+//     for(int i = 0; i < n; i++)
+//         printf(" %d" + !i, q.top()), q.pop();
+//     return 0;
+// }
 
 
 
@@ -8997,3 +8998,527 @@ int main()
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑寒期集训赛3↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓寒期集训赛4↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+/*
+题目链接：https://vjudge.csgrandeur.cn/contest/535668
+
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <set>
+#include <map>
+#include <unordered_map>
+#include <unordered_set>
+
+
+
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+
+
+
+
+
+int main()
+{
+    
+
+
+
+
+
+    return 0;
+}
+
+*/
+
+
+//Misjudge the Time 
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// int cnth = 0, cntm = 0, i = -1;
+// bool check(int h, int m)
+// {
+//     int th = h / 10 * 10 + m / 10;
+//     int tm = h % 10 * 10 + m % 10;
+//     if(th <= 23 && tm <= 59)
+//     {
+//         cout << h << " " << m;
+//         return 1;
+//     }
+//     return 0;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> cnth >> cntm;
+//     while(1)
+//     {
+//         if(check(cnth, cntm)) break;
+//         cntm ++;
+//         if(cnth == 24) cnth = 0;
+//         if(cntm == 60) cntm = 0, cnth++;
+//         if(cnth == 24) cnth = 0;
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// int cntB = 0, cntR = 0;
+// char mp[10][10];
+// bool vis[10][10];
+// int dir[4][2] = {{-1,0},{0,-1},{1, 0}, {0,1}};
+// void dfsb(int x, int y)
+// {
+//     vis[x][y] = 1;
+//     for(int i = 0; i < 4; i++)
+//     {
+//         x += dir[i][0];
+//         y += dir[i][1];
+//         if(x >= 1 && x <= 8 && y >=1 && y <= 8 && mp[x][y]!='B' && !vis[x][y])
+//         {
+//             dfsr(x, y);
+//         }  
+//     }
+// }
+// void dfsr(int x, int y)
+// {
+//     vis[x][y] = 1;
+//     for(int i = 0; i < 4; i++)
+//     {
+//         x += dir[i][0];
+//         y += dir[i][1];
+//         if(x >= 1 && x <= 8 && y >=1 && y <= 8 && mp[x][y]!='R' && !vis[x][y])
+//         {
+//             dfsr(x, y);
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     int t;
+//     cin >> t;
+//     while(t--)
+//     {
+//         cntB = cntR = 0;
+//         memset(vis, 0, sizeof(vis));
+//         for(int i = 1; i <= 8; i++)
+//             cin >> mp[i];
+//         for(int i = 1; i <= 8; i++)
+//             for(int j = 1; j <= 8; j++)
+//             {
+//                 if(mp[i][j]!='.' && !vis[i][j])
+//                 {
+//                     if(mp[i][j]=='R')
+//                         dfsr(i, j);
+//                     else
+//                         dfsb(i,j);
+//                 }
+//             }
+//     }
+//     return 0;
+// }
+
+
+
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <queue>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// int cntB = 0, cntR = 0;
+// char mp[10][10];
+// bool vis[10][10];
+// int dir[4][2] = {{-1,0},{1,0},{0,-1},{0,1}};
+// struct nd{
+//     int x, y, t;
+// };
+// void bfs(int x, int y, char ch)
+// {
+//     queue<nd> q;
+//     q.push(nd{x, y, 1});
+//     vis[x][y] = 1;
+//     while(q.size())
+//     {
+//         nd tmp = q.front();
+//         q.pop();
+//         if(tmp.t == 8)
+//         {
+//             if(ch == 'R') cntR++;
+//             else cntB++;
+//         }
+//         int m = 0;
+//         if(ch == 'R') m = 2;
+//         for(int i = m ; i < 2 + m; i++)
+//         {
+//             int nx = tmp.x + dir[i][0];
+//             int ny = tmp.y + dir[i][1];
+//             if(nx >= 0 && nx <= 7 && ny >= 0 && ny <= 7 && mp[nx][ny] == ch && !vis[nx][ny])
+//             {
+//                 vis[nx][ny] = 1;
+//                 q.push(nd{nx,ny,tmp.t+1});
+//             }
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     int t;
+//     cin >> t;
+//     while(t--)
+//     {
+//         cntB = cntR = 0;
+//         memset(vis, 0, sizeof(vis));
+//         for(int i = 0; i <= 7; i++)
+//             cin >> mp[i];
+//         for(int i = 0; i <= 7; i++)
+//             for(int j = 0; j <= 7; j++)
+//             {
+//                 if(mp[i][j]!='.'&& !vis[i][j])
+//                 {
+//                     bfs(i, j, mp[i][j]);
+//                 }
+//             }
+//         if(cntR > cntB) cout << "R\n";
+//         else cout << "B\n";
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// int arr[200];
+// int main()
+// {
+//     untie();
+//     int T, n;
+//     cin >> T;
+//     while(T--)
+//     {
+//         cin >> n;
+//         for(int i = 1; i<=n;i++) cin >> arr[i];
+//         for(int i = 1; i<=n;i++)
+//         {
+//             int x;
+//             cin >> x;
+//             for(int j = 1; j <= x; j++)
+//             {
+//                 char op;
+//                 cin >> op;
+//                 switch(op)
+//                 {
+//                     case 'D': 
+//                         arr[i]++;
+//                         if(arr[i] == 10) arr[i] = 0;
+//                         break;
+//                     case 'U': 
+//                         arr[i]--;
+//                         if(arr[i] == -1) arr[i] = 9;
+//                         break;
+//                 }
+//             }
+//         }
+//         for(int i = 1; i<=n;i++)
+//         {
+//             printf(" %d" + !(i -1), arr[i]);
+//         }
+//         puts("");
+//     }
+//     return 0;
+// }
+
+
+
+
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <set>
+#include <map>
+#include <unordered_map>
+#include <unordered_set>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+int a[100005];
+int main()
+{
+    untie();
+    int cnt = 0, n;
+    cin >> n;
+    for(int i = 1; i <=n;i++) cin >> a[i];
+    for(int i = 1; i <=n;i++) 
+        if(a[i]>a[i-1])
+        cnt += a[i] - a[i-1];
+    cout << cnt;
+
+//大坑附近的小坑肯定会在填大坑的时候填完，所以无需顾虑
+//我们可以这样看  小坑夹着大坑 即  小坑 - 大坑 - 小坑 如 1 3 2，实际上就是 3 天才能填完这些坑
+//故只需要看大坑即可
+//0 4 3 2 5 3 5 0  第一个大坑邻域 0 4 3 (0 是方便理解加入的）  4
+//0 0 0 2 5 3 5 0 第二个为 2 5 3                                3
+//0 0 0 0 0 0 3 0 第三个仅剩0 3                                 3
+//ans = 4 + 3 + 3
+//0 2 1 0 3 1 3
+//0 1 0 0 3 1 3
+//0 0 0 0 3 1 3
+//0 0 0 0 2 0 2
+//0 0 0 0 0 0 2
+//0 0 0 0 0 0 0
+
+//1 2 3 4 3 2 1
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// #include <queue>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// int times, a, b, net, res;
+// bool prime[10000], vis[10000];
+// queue<int> q;
+// #define PUSH(x) {if(!vis[x] && prime[x]) {q.push(x); vis[x] = 1;}}
+// bool BFS()
+// {
+// 	q.push(a);
+// 	res = -1;
+// 	vis[a] = 1;
+//     int sz;
+// 	while(sz = q.size())
+// 	{
+// 		res++;
+// 		while(sz--)
+// 		{
+// 			int t = q.front(); q.pop();
+// 			if(t == b) return 1;
+// 			for(int i = 0; i <= 9; i++)
+// 			{
+
+// 				if(i!=0)
+// 				{
+
+// 					net = i*1000 + t%1000;
+// 					PUSH(net);
+
+// 				}
+// 				net = i*100 + t%100 + t/1000*1000;
+// 				PUSH(net);
+
+// 				net = i*10 + t%10 + t/100*100;
+// 				PUSH(net);
+
+
+// 				net = i + t/10*10;
+// 				PUSH(net);
+// 			}
+// 		}
+
+// 	}
+
+
+
+
+
+// 	return 0;
+// }
+// void init()
+// {
+//     for(int n=1000;n<=9999;n++)
+// 	{
+// 		prime[n]=1;
+// 		for(int i=2;i*i<=n;i++)
+// 			if(n%i==0) {prime[n]=0; break;}
+// 	}
+// }
+// int main()
+// {
+//     untie();
+// 	init();
+// 	cin >> times;
+// 	while(times--)
+// 	{
+// 		memset(vis, 0, sizeof(vis));
+// 		while(q.size()) q.pop();
+// 		cin >> a >> b;
+// 		if(BFS()) cout << res << '\n';
+// 		else cout<<"Impossible\n";
+// 	}
+// 	return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑寒期集训赛4↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
