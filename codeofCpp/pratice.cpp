@@ -515,6 +515,8 @@
 //     return 0;
 // }
 
+
+
 //3.Stones
 // #include <iostream>
 // #include <queue>
@@ -565,7 +567,6 @@
 
 
 
-
 //vis
 // 1.Let the Balloon Rise
 // #include <iostream>
@@ -598,6 +599,8 @@
 //     }
 //     return 0;
 // }
+
+
 
 //2.水果(嵌套vis)
 //问：vis对string的排序是以首字母排列还是整体ASCII码值
@@ -5576,27 +5579,427 @@ O(log2n * n) = O(nlogn)
 
 
 //9.地毯填补问题
+// #include <cstdio>
+// int main()
+// {
+
+
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*十. 并查集 优先队列*/
+//理解模板：
+// #include <cstdio>
+// #include <iostream>
+// using namespace std;
+// const int N = 1e4;
+// int ds[N];
+// void init_ds(int n)
+// { 
+//     for(int i = 1; i <= n; i++)
+//         ds[i] = i;
+// }
+// int find_ds(int x)
+// { 
+//     return x == ds[x] ? x : find_ds(ds[x]);
+// }
+// void merge_ds(int x, int y)
+// {
+//     if((x = find_ds(x)) != (y = find_ds(y)))
+//         ds[x] = ds[y];
+// }
+// int main()
+// {
+//     int n; cin >> n;
+//     init_ds(n);
+//     int x = 2, y = 3;
+//     find_ds(x);
+//     merge_ds(x, y);
+//     return 0;
+// }
+
+//非权值优化模板：
+// #include <cstdio>
+// #include <iostream>
+// using namespace std;
+// const int N = 1e4;
+// int ds[N];
+// void init_set(int n){ for(int i = 1; i <= n; ds[i] = i, i++);}
+// int find_set(int x){ return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+// void merge_set(int x, int y){ if((x = find_set(x)) != (y = find_set(y))) ds[x] = ds[y];}
+
+//权值优化模板：
+// #include <cstdio>
+// #include <iostream>
+// using namespace std;
+// const int N = 1e4;
+// int ds[N], d[N];
+// void init_set(int n)
+// { 
+//     for(int i = 1; i <= n; i++)
+//         ds[i] = i, d[i] = 0;
+// }
+// int find_set(int x)
+// {
+//     if(x != ds[x])
+//     {
+//         int t = ds[x];
+//         ds[x] = find_set(ds[x]);
+//         d[x] += d[t];//权值计算需符合题意要求，此处以加和权值为例
+//     }
+//     return ds[x];
+// }
+// void merge_set(int x, int y)//合并操作需符合题意要求
+// {
+//     int rootx = find_set(x), rooty = find_set(y);
+//     if(rootx == rooty)
+//     {
+
+//     }
+//     else
+//     {
+
+//     }
+// }
+
+
+
+//1.并查集 模板题
+// #include <cstdio>
+// const int N = 2e5 + 10;
+// int ds[N];
+// void init_set(int n)
+// {
+//     for(int i = 1; i <= n; i++)
+//         ds[i] = i;
+// }
+// int find_set(int x)
+// {
+//     return x == ds[x] ? x : (ds[x] = find_set(ds[x]));
+// }
+// void merge_set(int x, int y)
+// {
+//     if((x = find_set(x)) != (y = find_set(y)))  ds[x] = ds[y];
+// }
+// int main()
+// {
+//     init_set(N - 10);
+//     int n, m;
+//     scanf("%d%d", &n, &m);
+//     while(m--)
+//     {
+//         int op, x, y;
+//         scanf("%d%d%d", &op, &x, &y);
+//         if(op - 1) printf("%c\n", find_set(x) == find_set(y) ? 'Y':'N');
+//         else merge_set(x, y);
+//     }
+//     return 0;
+// }
+ 
+
+
+//2.修复公路
+//虽然sort慢，但毕竟数据量不大，故可以先离线排序
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// using namespace std;
+// const int N = 1e5 + 10;
+// struct nd{
+//     int x, y, t;
+//     bool operator <(const nd &k)const{
+//         return t < k.t;
+//     }
+// }q[N];
+// int ds[N], n, m;
+// int find_set(int x)
+// {
+//     return x == ds[x] ? x : (ds[x] = find_set(ds[x]));
+// }
+// int main()
+// {
+//     scanf("%d%d", &n, &m);
+//     for(int i = 1; i <= m; i++) scanf("%d%d%d", &q[i].x, &q[i].y, &q[i].t), ds[i] = i;
+//     sort(q + 1, q + 1 + m);
+//     for(int i = 1; i <= m; i++)//n 个村庄只需 n - 1 次连通即可
+//     {
+//         int rx = find_set(q[i].x), ry = find_set(q[i].y);
+//         if(rx != ry) ds[rx] = ds[ry], n--;
+//         if(n == 1)
+//         {
+//             printf("%d\n", q[i].t);
+//             return 0;
+//         }
+//     }
+//     printf("-1\n");
+//     return 0;
+// }
+
+
+
+//3.亲戚(板子题)
+// #include <cstdio>
+// const int N = 5e3 + 10;
+// int n, m, p, ds[N];
+// void init_set(int n)
+// {
+//     for(int i = 1; i <= n; i++) ds[i] = i;
+// }
+// int find_set(int x)
+// {
+//     return x == ds[x] ? x : (ds[x] = find_set(ds[x]));
+// }
+// void merge_set(int x, int y)
+// {
+//     if((x = find_set(x)) != (y = find_set(y)))
+//         ds[x] = ds[y];
+// }
+// int main()
+// {
+//     scanf("%d%d%d", &n, &m, &p);
+//     init_set(n);
+//     for(int i = 1; i <= m; i++)
+//     {
+//         int x, y;
+//         scanf("%d%d", &x, &y);
+//         merge_set(x, y);
+//     }
+//     while(p--)
+//     {
+//         int x, y;
+//         scanf("%d%d", &x, &y);
+//         if(find_set(x) == find_set(y)) printf("Yes\n");
+//         else printf("No\n");
+//     }
+//     return 0;
+// }
+
+
+
+//4.一中校运会之百米跑(集合元素不是数值时，而是字符串)
+// #include <iostream>
+// #include <string>
+// #include <unordered_map>//数据量为2e4，理应不会被卡常，用无序map查找最快
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 2e4 + 10;
+// int n, m, k;
+// unordered_map<string, string> ds;
+// string find_strset(string x)
+// {
+//     return x == ds[x] ? x : (ds[x] = find_strset(ds[x]));
+// }
+// void merge_strset(string x, string y)
+// {
+//     string rx = find_strset(x), ry = find_strset(y);
+//     if(rx != ry) ds[rx] = ds[ry];
+// }
+// int main()
+// {
+//     untie();
+//     string str, x, y;
+//     cin >> n >> m;
+//     for(int i = 0; i < n; i++) cin >> str, ds[str] = str;
+//     while(m--)
+//     {
+//         cin >> x >> y;
+//         merge_strset(x, y);
+//     }
+//     cin >> k;
+//     while(k--)
+//     {
+//         cin >> x >> y;
+//         if(find_strset(x) == find_strset(y)) cout << "Yes.\n";
+//         else cout << "No.\n";
+//     }
+//     return 0;
+// }
+
+
+
+//5.朋友
+// #include <cstdio>
+// const int N = 2e4 + 100;
+// int n, m, p, q, ds[N], base = 1e4;//9999 10001
+// int find_set(int x)
+// {
+//     return x == ds[x] ? x : (ds[x] = find_set(ds[x]));
+// }
+// void merge_set(int x, int y)
+// {
+//     if((x = find_set(x)) != (y = find_set(y)))
+//         ds[x] = ds[y];
+// }
+// int main()
+// {
+//     int p1 = base - 1, p2 = base + 1, cnt1 = 0, cnt2 = 0;
+//     scanf("%d%d%d%d", &n, &m, &p, &q);
+//     for(int i = 0; i < N; i++) ds[i] = i;
+//     q += p;
+//     while(q--)
+//     {
+//         int x, y;
+//         scanf("%d%d", &x, &y);
+//         merge_set(x + base, y + base);
+//     }
+//     p1 = find_set(p1), p2 = find_set(p2);//初始p1,p2很可能不作为根节点，故先找含p1\p2的根节点
+//     for(int i = 0; i < N; i++)
+//     {
+//         int rt = find_set(i);
+//         if(rt == p1) cnt1++;
+//         else if(rt == p2) cnt2++;
+//     }
+//     printf("%d\n", cnt1 > cnt2 ? cnt2 : cnt1);
+//     return 0;
+// }
+
+
+
+//6.家谱
+// #include <iostream>
+// #include <string>
+// #include <unordered_map>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// unordered_map<string, string> ds;
+// string find_strset(string x)
+// {
+//     return x == ds[x] ? x : (ds[x] = find_strset(ds[x]));
+// }
+// void merge_strset(string x, string y)
+// {
+//     if((x = find_strset(x)) != (y = find_strset(y)))
+//         ds[x] = ds[y];
+// }
+// int main()
+// {
+//     untie();
+//     char op;
+//     string str, anc;
+//     while(!(cin >> str).eof(), str != "$")
+//     {
+//         op = str[0], str = str.substr(1);
+//         if(!ds.count(str)) ds[str] = str;
+//         switch(op)
+//         {
+//             case '#': 
+//                 anc = str;//存祖先
+//                 break;
+//             case '+':
+//                 merge_strset(str, anc);
+//                 break;
+//             case '?':
+//                 cout << str << " " << find_strset(str) << '\n';
+//                 // cout << str << " " << ds[str] << '\n'; //*误区：这里不能直接用 ds[str] 得到根节点
+//                 // 因为 高度为 2 的树 与 其他树根节点 合并时，其自身已经压缩好了，但是合并过去后高度变成3，
+//                 // 对于另一棵树来说，其自身也已经压缩好了，但是合并后并没有进行压缩，所以这类情况还是需要查询才可得到根节点
+//                 // 因此合并时的压缩除非是 高度为1 的根节点 与其他根节点相连得到高度为2的压缩树，否则都是高度为3的未压缩树
+//                 break;
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+//以下均为优先队列
+//7.合并果子 / [USACO06NOV] Fence Repair G
+// #include <cstdio>
+// #include <queue>
+// #include <vector>
+// #include <functional>
+// using namespace std;
+// priority_queue<int, vector<int>, greater<int>> q;
+// int main()
+// {
+//     int n, x, sum = 0;
+//     scanf("%d", &n);
+//     for(int i = 0; i < n; i++) 
+//     {
+//         scanf("%d", &x);
+//         q.push(x);
+//     }
+//     while(q.size() > 1)//每次取两个最小堆合并即可
+//     {
+//         int s = q.top(); q.pop();
+//         s += q.top(); q.pop();
+//         sum += s;
+//         q.push(s);
+//     }
+//     printf("%d\n", sum);
+//     return 0;
+// }
+
+
+
+//8.世界杯
+// #include <cstdio>
+// #include <queue>
+// using namespace std;
+// priority_queue<int> q1, q2, q3, q4;
+// int main()
+// {
+//     int k, d, m, f, q, tmp;
+//     scanf("%d%d%d%d", &k, &d, &m, &f);
+//     while(k--) scanf("%d", &tmp), q1.push(tmp);
+//     while(d--) scanf("%d", &tmp), q2.push(tmp);
+//     while(m--) scanf("%d", &tmp), q3.push(tmp);
+//     while(f--) scanf("%d", &tmp), q4.push(tmp);//q2 - q3 - q4
+//     scanf("%d", &q);
+//     while(q--)
+//     {
+//         int a, b, c;
+//         double sum = q1.top();
+//         q1.pop();
+//         scanf("%d%d%d", &a, &b, &c);
+//         while(a--) sum += q2.top(), q2.pop();
+//         while(b--) sum += q3.top(), q3.pop();
+//         while(c--) sum += q4.top(), q4.pop();
+//         sum /= 11.0;
+//         printf("%.2lf\n", (long long)(sum * 100 + 0.5) / 100.0);
+//     }
+//     return 0;
+// }
+
+
+
+//9.序列合并
 #include <cstdio>
+#include <queue>
+#include <vector>
+#include <functional>
+using namespace std;
+typedef long long ll;
+int a[100005];
+priority_queue<ll, vector<ll>, greater<ll> > q;
 int main()
 {
-
-
+    int n;
+    scanf("%d", &n);
+    for(int i = 0; i < n; i++) scanf("%d", &a[i]);
+    for(int i = 0; i < n; i++)
+    {
+        ll t;
+        scanf("%lld", &t);
+        for(int j = 0; j < n; j++) q.push(1LL * a[j] + t);
+    }
+    for(int i = 0; i < n; i++)
+        printf(" %d" + !i, q.top()), q.pop();
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
