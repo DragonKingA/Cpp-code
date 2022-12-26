@@ -4159,20 +4159,20 @@ int main() {
 // #include <stack>
 // #include <iostream>
 // using namespace std;
-// int a[3000005],f[3000005];
+// int a[3000005], f[3000005];
 // int main()
 // {
 //     cin.tie(0)->sync_with_stdio(false);
 //     cout.tie(0);
 //     int n;
-//     cin>>n;
-//     for(int i = 1; i <= n; i++) cin>>a[i];
+//     cin >> n;
+//     for(int i = 1; i <= n; i++) cin >> a[i];
 //     stack<int> sta;
 //     for(int i = n; i >= 1; i--)
 //     {
 //         while(!sta.empty() && a[sta.top()] <= a[i]) sta.pop();//抛出栈顶比当前数小的，切换较高者为当前数
-//         f[i] = sta.empty() ? 0 : sta.top();//空栈说明i==n时高者前面没人
-//         sta.push(i);//候选较高者,不符合则会被抛出
+//         f[i] = sta.empty() ? 0 : sta.top();//空栈说明前面没有较高者,即该部分序列单调不增
+//         sta.push(i);//候选较高者的下标,不符合则会被抛出
 //     }
 //     for(int i = 1; i <= n; i++) cout<<(" "+!(i-1))<<f[i];
 //     return 0;
@@ -4180,7 +4180,7 @@ int main() {
 
 
 
-//POJ2559 直方图中的最大矩形
+//1.POJ2559 直方图中的最大矩形
 //数组模拟单调栈(若直接使用 栈stack 会TLE)
 //满足单调栈使用前提：若矩形高度从左向右单调递增，则以每个矩形的高度乘以其到右边界的宽度得到一个面积，取这些面积中的最大值。
 // #include <cstdio>
@@ -4259,6 +4259,114 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 
 
 
+//2.发射站
+//感受不同的存法带来的空间复杂度差异
+//存结构体(15.9 MB)
+// #include <iostream>
+// #include <stack>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// struct nd{
+//     int h, v, id;
+// }q[1000005];
+// stack<nd> sta;
+// int ans[1000005];
+// int main()
+// {
+//     untie();
+//     int n, height, val, mval = 0;
+//     cin >> n;
+//     for(int i = 1; i <= n; i++)
+//     {
+//         cin >> height >> val;
+//         q[i] = nd{height, val, i};
+//     }
+//     for(int i = 1; i <= n; i++)
+//     {
+//         while(!sta.empty() && q[i].h > sta.top().h) ans[i] += q[sta.top().id].v, sta.pop();
+//         if(!sta.empty() && q[i].h < sta.top().h) ans[sta.top().id] += q[i].v;
+//         sta.push(q[i]);
+//     }
+//     for(int i = 1; i <= n; i++) mval = max(mval, ans[i]);
+//     cout << mval;
+//     return 0;
+// }
+//stack 存 id 比较好(11.5 MB)
+// #include <iostream>
+// #include <stack>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// struct nd{
+//     int h, v;
+// }q[1000005];
+// stack<int> sta;
+// int ans[1000005];
+// int main()
+// {
+//     untie();
+//     int n, height, val, mval = 0;
+//     cin >> n;
+//     for(int i = 1; i <= n; i++)
+//     {
+//         cin >> height >> val;
+//         q[i] = nd{height, val};
+//     }
+//     for(int i = 1; i <= n; i++)
+//     {
+//         while(!sta.empty() && q[i].h > q[sta.top()].h) ans[i] += q[sta.top()].v, sta.pop();
+//         if(!sta.empty() && q[i].h < q[sta.top()].h) ans[sta.top()] += q[i].v;
+//         sta.push(i);
+//     }
+//     for(int i = 1; i <= n; i++) mval = max(mval, ans[i]);
+//     cout << mval;
+//     return 0;
+// }
+//均存人数组(11.7 MB)
+// #include <iostream>
+// #include <stack>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e6 + 5;
+// stack<int> sta;
+// int ans[N], h[N], v[N];
+// int main()
+// {
+//     untie();
+//     int n, height, val, mval = 0;
+//     cin >> n;
+//     for(int i = 1; i <= n; i++) cin >> h[i] >> v[i];
+//     for(int i = 1; i <= n; i++)
+//     {
+//         while(!sta.empty() && h[i] > h[sta.top()]) ans[i] += v[sta.top()], sta.pop();
+//         if(!sta.empty() && h[i] < h[sta.top()]) ans[sta.top()] += v[i];
+//         sta.push(i);
+//     }
+//     for(int i = 1; i <= n; i++) mval = max(mval, ans[i]);
+//     cout << mval;
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // 单调队列 是 队列中元素之间的关系具有单调性，而且，队首和队尾都可以进行出队操作，只有队尾可以进行入队操作，本质是由双端队列deque实现的。
 // 对于单调队列，允许两端弹出，只允许一端插入 。【单调队列方法】实际上是【优先级队列方法】的一种优化
@@ -4279,10 +4387,10 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 // int main()
 // {
 //     int n, k, index1 = 0, index2 = 0;
-    // scanf("%d%d", &n, &k);
-//     for(register int i = 0; i < n; i++) scanf("%d", &arr[i]);
+//     scanf("%d%d", &n, &k);
+//     for( int i = 0; i < n; i++) scanf("%d", &arr[i]);
 //     //使用第一个窗口去初始化单调队列
-//     for(register int i = 0; i < k; i++)
+//     for( int i = 0; i < k; i++)
 //     {
 //         while(!dq1.empty() && arr[i] >= arr[dq1.back()]) dq1.pop_back();
 //         while(!dq2.empty() && arr[i] <= arr[dq2.front()]) dq2.pop_front();//对称操作即可
@@ -4291,7 +4399,7 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 //     }
 //     ans1[index1++] = arr[dq1.front()];
 //     ans2[index2++] = arr[dq2.back()];
-//     for(register int i = k; i < n; i++)
+//     for( int i = k; i < n; i++)
 //     {
 //         while(!dq1.empty() && arr[i] >= arr[dq1.back()]) dq1.pop_back();
 //         while(!dq2.empty() && arr[i] <= arr[dq2.front()]) dq2.pop_front();
@@ -4303,9 +4411,9 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 //         ans1[index1++] = arr[dq1.front()];
 //         ans2[index2++] = arr[dq2.back()];
 //     }
-//     for(register int i = 0; i < index2; i++) printf(" %d" + !i, ans2[i]);//各窗口最小值
+//     for( int i = 0; i < index2; i++) printf(" %d" + !i, ans2[i]);//各窗口最小值
 //     printf("\n");
-//     for(register int i = 0; i < index1; i++) printf(" %d" + !i, ans1[i]);//各窗口最大值
+//     for( int i = 0; i < index1; i++) printf(" %d" + !i, ans1[i]);//各窗口最大值
 //     return 0;
 // }
 //数组模拟
@@ -5579,13 +5687,75 @@ O(log2n * n) = O(nlogn)
 
 
 //9.地毯填补问题
+//大问题分为四个区域，最小问题为 2 X 2 问题，其中最小问题需要探讨是否有 公主点(特殊点)，来确定地毯形状
+//唯一公主点 只会在其中一个区域，我们以 唯一公主点 确认中心地毯(x, y)的对角方位，
+//得到(x, y)后，其所占用的点就是其他三个区域的特殊点(视为公主点)，可以通过 2X2 -> 4X4 -> n*n 递推得到
+//对4x4方格，给每个2×2的格子都增加一个特殊点，正中间旁边的3个白色格子都填上同一种颜色，然后再分别处理三个2×2的格子就行了
+//注意，最中间留空处区域的方向就是公主点所在区域
 // #include <cstdio>
+// int k, n = 1;
+// #define pf(a, b, id) {printf("%d %d %d\n", a, b, id);}
+// void dfs(int x1, int y1, int x2, int y2, int X, int Y)
+// {
+//     if(x2 - x1 + 1 == 2 && y2 - y1 + 1 == 2)//此时为最小问题 2x2 问题，依据特殊点位置即可输出对应方案
+//     {
+//         if(X == x1 && Y == y1) pf(x2, y2, 1);//特殊点位置在左上角，对角使用地毯方案 1
+//         if(X == x1 && Y == y2) pf(x2, y1, 2);//右上角
+//         if(X == x2 && Y == y1) pf(x1, y2, 3);//左下角
+//         if(X == x2 && Y == y2) pf(x1, y1, 4);//右下角
+//         return;
+//     }
+//     int x = ((x2 - x1 + 1) >> 1) + (x1 - 1);//取中点(x, y)分治
+//     int y = ((y2 - y1 + 1) >> 1) + (y1 - 1);
+//     //据公主点方位分治
+//     if(X <= x && Y <= y)//公主位于左上区域
+//     {
+//         pf(x + 1, y + 1, 1);
+//         dfs(x1, y1, x, y, X, Y);//左上区域，亦是公主点区域
+//         //以(x+1, y+1)点的地毯方案，其上三个点分别视作特殊点，继续分治其他三个区域，每个区域都用左上角点与右下角点框选
+//         dfs(x + 1, y1, x2, y, x + 1, y);//左下区域
+//         dfs(x + 1, y + 1, x2, y2, x + 1, y + 1);//右下区域
+//         dfs(x1, y + 1, x, y2, x, y + 1);//右上区域
+//     }
+//     if(X <= x && Y > y)//右上
+//     {
+//         pf(x + 1, y, 2);
+//         dfs(x1, y + 1, x, y2, X, Y);//右上区域，公主点区域
+//         dfs(x1, y1, x, y, x, y);//左上区域
+//         dfs(x + 1, y1, x2, y, x + 1, y);//左下区域
+//         dfs(x + 1, y + 1, x2, y2, x + 1, y + 1);//右下区域
+//     }
+//     if(X > x && Y <= y)//左下
+//     {
+//         pf(x, y + 1, 3);
+//         dfs(x + 1, y1, x2, y, X, Y);//左下，公主点
+//         dfs(x1, y1, x, y, x, y);//左上区域
+//         dfs(x1, y + 1, x, y2, x, y + 1);//右上区域
+//         dfs(x + 1, y + 1, x2, y2, x + 1, y + 1);//右下区域
+//     }
+//     if(X > x && Y > y)//右下
+//     {
+//         pf(x, y, 4);
+//         dfs(x + 1, y + 1, x2, y2, X, Y);//右下，公主点        
+//         dfs(x1, y1, x, y, x, y);//左上区域
+//         dfs(x1, y + 1, x, y2, x, y + 1);//右上区域
+//         dfs(x + 1, y1, x2, y, x + 1, y);//左下区域
+//     }
+// }
 // int main()
 // {
-
-
+//     int X, Y;
+//     scanf("%d%d%d", &k, &X, &Y);
+//     n <<= k;
+//     dfs(1, 1, n, n, X, Y);
 //     return 0;
 // }
+
+
+
+
+
+
 
 
 
@@ -5977,36 +6147,61 @@ O(log2n * n) = O(nlogn)
 
 
 //9.序列合并
-//未完成
+//数学方法
+// i * j >= n 就不可能是前 n 小的答案(设i，j都从0开始)
 // #include <cstdio>
 // #include <queue>
 // #include <vector>
 // #include <functional>
 // using namespace std;
 // typedef long long ll;
-// int a[100005];
+// int a[100005], b[100005];
 // priority_queue<ll, vector<ll>, greater<ll> > q;
 // int main()
 // {
 //     int n;
 //     scanf("%d", &n);
 //     for(int i = 0; i < n; i++) scanf("%d", &a[i]);
+//     for(int i = 0; i < n; i++) scanf("%d", &b[i]);
 //     for(int i = 0; i < n; i++)
-//     {
-//         ll t;
-//         scanf("%lld", &t);
-//         for(int j = 0; j < n; j++) q.push(1LL * a[j] + t);
-//     }
+//         for(int j = 0; i * j < n && j < n; j++) 
+//             q.push(1LL * a[i] + 1LL * b[j]);
 //     for(int i = 0; i < n; i++)
-//         printf(" %d" + !i, q.top()), q.pop();
+//         printf(" %lld" + !i, q.top()), q.pop();
 //     return 0;
 // }
+//优先队列方法
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//10.Cow Dance Show S
+// #include <cstdio>
+
+// int main()
+// {
+//     int n, t, k;
+//     scanf("%d%d", &n, &t);
+//     k = n;
+
+//     return 0;
+// }
 
 
 
@@ -9094,11 +9289,7 @@ int main()
 
 
 
-
-
-
-
-
+//* 铺设道路 
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
@@ -9113,64 +9304,216 @@ int main()
 // #include <unordered_set>
 // using namespace std;
 // #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
-// int cntB = 0, cntR = 0;
-// char mp[10][10];
-// bool vis[10][10];
-// int dir[4][2] = {{-1,0},{0,-1},{1, 0}, {0,1}};
-// void dfsb(int x, int y)
-// {
-//     vis[x][y] = 1;
-//     for(int i = 0; i < 4; i++)
-//     {
-//         x += dir[i][0];
-//         y += dir[i][1];
-//         if(x >= 1 && x <= 8 && y >=1 && y <= 8 && mp[x][y]!='B' && !vis[x][y])
-//         {
-//             dfsr(x, y);
-//         }  
-//     }
-// }
-// void dfsr(int x, int y)
-// {
-//     vis[x][y] = 1;
-//     for(int i = 0; i < 4; i++)
-//     {
-//         x += dir[i][0];
-//         y += dir[i][1];
-//         if(x >= 1 && x <= 8 && y >=1 && y <= 8 && mp[x][y]!='R' && !vis[x][y])
-//         {
-//             dfsr(x, y);
-//         }
-//     }
-// }
+// int a[100005];
 // int main()
 // {
 //     untie();
-//     int t;
-//     cin >> t;
-//     while(t--)
+//     int cnt = 0, n;
+//     cin >> n;
+//     for(int i = 1; i <=n;i++) cin >> a[i];
+//     for(int i = 1; i <=n;i++) 
+//         if(a[i]>a[i-1])
+//         cnt += a[i] - a[i-1];
+//     cout << cnt;
+// //大坑附近的小坑肯定会在填大坑的时候填完，所以无需顾虑
+// //0 4 3 2 5 3 5 0 （两侧的 0 方便理解）
+// //最小天数为第一个坑，即 4，(可推)
+// //4 后面的小坑会在填大坑时顺便填完，
+// //而 5 也会跟着前面的小坑一起被填，5 - 2 = 3，
+// //所以 5 这个大坑只需要多 3 天就可填完
+// //5 后面的 3 自然也是顺便被填
+// //3 后面的 5 也会跟着 3 被填平而被填，所以最后只需要多 5 - 3 = 2 天来填最后一个大坑 5
+// //总和为 4 + 3 + 2 = 9 天
+//     return 0;
+// }
+
+
+
+//Cypher 
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// int arr[200];
+// int main()
+// {
+//     untie();
+//     int T, n;
+//     cin >> T;
+//     while(T--)
 //     {
-//         cntB = cntR = 0;
-//         memset(vis, 0, sizeof(vis));
-//         for(int i = 1; i <= 8; i++)
-//             cin >> mp[i];
-//         for(int i = 1; i <= 8; i++)
-//             for(int j = 1; j <= 8; j++)
+//         cin >> n;
+//         for(int i = 1; i<=n;i++) cin >> arr[i];
+//         for(int i = 1; i<=n;i++)
+//         {
+//             int x;
+//             cin >> x;
+//             for(int j = 1; j <= x; j++)
 //             {
-//                 if(mp[i][j]!='.' && !vis[i][j])
+//                 char op;
+//                 cin >> op;
+//                 switch(op)
 //                 {
-//                     if(mp[i][j]=='R')
-//                         dfsr(i, j);
-//                     else
-//                         dfsb(i,j);
+//                     case 'D': 
+//                         arr[i]++;
+//                         if(arr[i] == 10) arr[i] = 0;
+//                         break;
+//                     case 'U': 
+//                         arr[i]--;
+//                         if(arr[i] == -1) arr[i] = 9;
+//                         break;
 //                 }
 //             }
+//         }
+//         for(int i = 1; i<=n;i++)
+//         {
+//             printf(" %d" + !(i -1), arr[i]);
+//         }
+//         puts("");
 //     }
 //     return 0;
 // }
 
 
 
+//Prime Path 
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+// #include <queue>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// int times, a, b, net, res;
+// bool prime[10000], vis[10000];
+// queue<int> q;
+// #define PUSH(x) {if(!vis[x] && prime[x]) {q.push(x); vis[x] = 1;}}
+// bool BFS()
+// {
+// 	q.push(a);
+// 	res = -1;
+// 	vis[a] = 1;
+//     int sz;
+// 	while(sz = q.size())
+// 	{
+// 		res++;
+// 		while(sz--)
+// 		{
+// 			int t = q.front(); q.pop();
+// 			if(t == b) return 1;
+// 			for(int i = 0; i <= 9; i++)
+// 			{
+// 				if(i!=0)
+// 				{
+// 					net = i*1000 + t%1000;
+// 					PUSH(net);
+// 				}
+// 				net = i*100 + t%100 + t/1000*1000;
+// 				PUSH(net);
+// 				net = i*10 + t%10 + t/100*100;
+// 				PUSH(net);
+// 				net = i + t/10*10;
+// 				PUSH(net);
+// 			}
+// 		}
+// 	}
+// 	return 0;
+// }
+// void init()
+// {
+//     for(int n=1000;n<=9999;n++)
+// 	{
+// 		prime[n]=1;
+// 		for(int i=2;i*i<=n;i++)
+// 			if(n%i==0) {prime[n]=0; break;}
+// 	}
+// }
+// int main()
+// {
+//     untie();
+// 	init();
+// 	cin >> times;
+// 	while(times--)
+// 	{
+// 		memset(vis, 0, sizeof(vis));
+// 		while(q.size()) q.pop();
+// 		cin >> a >> b;
+// 		if(BFS()) cout << res << '\n';
+// 		else cout<<"Impossible\n";
+// 	}
+// 	return 0;
+// }
+
+
+
+//*Ladder Takahashi （图论基础）
+//要学习图论，先学邻接矩阵建图，对其会搜索
+//建图(重点) 与 搜索
+// #include <iostream>
+// #include <map>
+// #include <vector>
+// #include <queue>
+// #include <set>
+// using namespace std;
+// int n, a, b;
+// map<int, vector<int> > gra;//可一对多，构建出所有路径
+// set<int> ans;
+// //1.利用集合不重复性，防止无意义的原路返回 和 路径重复
+// //2.利用有序性，存储各路径能到达的高度，最后取容器尾部的最大者即可
+// void bfs()
+// {
+//     queue<int> q;
+//     q.push(1);
+//     while(q.size())
+//     {
+//         int ori = q.front(); q.pop();//取一个起点
+//         for(int next : gra[ori])//遍历该起点后所有路径
+//         {
+//             if(!ans.count(next))
+//             {
+//                 ans.insert(next);
+//                 q.push(next);
+//             }
+//         }
+//     }
+// }
+// int main()
+// {
+//     cin >> n;
+//     for(int i = 0; i < n; i++)
+//     {
+//         cin >> a >> b;
+//         gra[a].push_back(b);
+//         gra[b].push_back(a);//梯子是双向可行的
+//     }
+//     ans.insert(1);//至少能到达 1
+//     bfs();
+//     cout << *ans.rbegin();//输出最大者
+//     return 0;
+// }
+
+
+
+//Stripes 
+//BFS解法，巨麻烦
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
@@ -9243,255 +9586,64 @@ int main()
 //     }
 //     return 0;
 // }
-
-
-
-
-
-
-
-
-// #include <cstdio>
+//可双向遍历
 // #include <iostream>
-// #include <algorithm>
-// #include <cctype>
-// #include <cmath>
 // #include <string>
-// #include <cstring>
-// #include <vector>
-// #include <set>
-// #include <map>
-// #include <unordered_map>
-// #include <unordered_set>
 // using namespace std;
-// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
-// int arr[200];
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// string baseR = "RRRRRRRR", baseB = "BBBBBBBB";
 // int main()
 // {
 //     untie();
-//     int T, n;
-//     cin >> T;
+//     int T; cin >> T;
 //     while(T--)
 //     {
-//         cin >> n;
-//         for(int i = 1; i<=n;i++) cin >> arr[i];
-//         for(int i = 1; i<=n;i++)
-//         {
-//             int x;
-//             cin >> x;
-//             for(int j = 1; j <= x; j++)
+//         int cntr = 0, cntb = 0;
+//         string r[10], b[10];
+//         for(int i = 0; i < 8; i++)
+//             for(int j = 0; j < 8; j++)
 //             {
-//                 char op;
-//                 cin >> op;
-//                 switch(op)
-//                 {
-//                     case 'D': 
-//                         arr[i]++;
-//                         if(arr[i] == 10) arr[i] = 0;
-//                         break;
-//                     case 'U': 
-//                         arr[i]--;
-//                         if(arr[i] == -1) arr[i] = 9;
-//                         break;
-//                 }
+//                 char ch;
+//                 cin >> ch;
+//                 r[i].push_back(ch);
+//                 b[j].push_back(ch);
 //             }
-//         }
-//         for(int i = 1; i<=n;i++)
+//         for(int i = 0; i < 8; i++)
 //         {
-//             printf(" %d" + !(i -1), arr[i]);
+//             if(r[i] == baseR) cntr++;
+//             if(b[i] == baseB) cntb++;
 //         }
-//         puts("");
+//         if(cntr > cntb) cout << "R\n";
+//         else cout << "B\n";
 //     }
 //     return 0;
 // }
-
-
-
-
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-#include <cctype>
-#include <cmath>
-#include <string>
-#include <cstring>
-#include <vector>
-#include <set>
-#include <map>
-#include <unordered_map>
-#include <unordered_set>
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
-int a[100005];
-int main()
-{
-    untie();
-    int cnt = 0, n;
-    cin >> n;
-    for(int i = 1; i <=n;i++) cin >> a[i];
-    for(int i = 1; i <=n;i++) 
-        if(a[i]>a[i-1])
-        cnt += a[i] - a[i-1];
-    cout << cnt;
-
-//大坑附近的小坑肯定会在填大坑的时候填完，所以无需顾虑
-//我们可以这样看  小坑夹着大坑 即  小坑 - 大坑 - 小坑 如 1 3 2，实际上就是 3 天才能填完这些坑
-//故只需要看大坑即可
-//0 4 3 2 5 3 5 0  第一个大坑邻域 0 4 3 (0 是方便理解加入的）  4
-//0 0 0 2 5 3 5 0 第二个为 2 5 3                                3
-//0 0 0 0 0 0 3 0 第三个仅剩0 3                                 3
-//ans = 4 + 3 + 3
-//0 2 1 0 3 1 3
-//0 1 0 0 3 1 3
-//0 0 0 0 3 1 3
-//0 0 0 0 2 0 2
-//0 0 0 0 0 0 2
-//0 0 0 0 0 0 0
-
-//1 2 3 4 3 2 1
-    return 0;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-// #include <cstdio>
+//更简单的，只需要判断 R 有没有成条即可，R 成条说明 B 不成条， R 不成条说明 B 成条
 // #include <iostream>
-// #include <algorithm>
-// #include <cctype>
-// #include <cmath>
 // #include <string>
-// #include <cstring>
-// #include <vector>
-// #include <set>
-// #include <map>
-// #include <unordered_map>
-// #include <unordered_set>
-// #include <queue>
-
 // using namespace std;
-// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
-// int times, a, b, net, res;
-// bool prime[10000], vis[10000];
-// queue<int> q;
-// #define PUSH(x) {if(!vis[x] && prime[x]) {q.push(x); vis[x] = 1;}}
-// bool BFS()
-// {
-// 	q.push(a);
-// 	res = -1;
-// 	vis[a] = 1;
-//     int sz;
-// 	while(sz = q.size())
-// 	{
-// 		res++;
-// 		while(sz--)
-// 		{
-// 			int t = q.front(); q.pop();
-// 			if(t == b) return 1;
-// 			for(int i = 0; i <= 9; i++)
-// 			{
-
-// 				if(i!=0)
-// 				{
-
-// 					net = i*1000 + t%1000;
-// 					PUSH(net);
-
-// 				}
-// 				net = i*100 + t%100 + t/1000*1000;
-// 				PUSH(net);
-
-// 				net = i*10 + t%10 + t/100*100;
-// 				PUSH(net);
-
-
-// 				net = i + t/10*10;
-// 				PUSH(net);
-// 			}
-// 		}
-
-// 	}
-
-
-
-
-
-// 	return 0;
-// }
-// void init()
-// {
-//     for(int n=1000;n<=9999;n++)
-// 	{
-// 		prime[n]=1;
-// 		for(int i=2;i*i<=n;i++)
-// 			if(n%i==0) {prime[n]=0; break;}
-// 	}
-// }
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
 // int main()
 // {
 //     untie();
-// 	init();
-// 	cin >> times;
-// 	while(times--)
-// 	{
-// 		memset(vis, 0, sizeof(vis));
-// 		while(q.size()) q.pop();
-// 		cin >> a >> b;
-// 		if(BFS()) cout << res << '\n';
-// 		else cout<<"Impossible\n";
-// 	}
-// 	return 0;
+//     int t;
+//     cin >> t;
+//     while(t--)
+//     {
+//         int f = 0;
+//         for(int i = 0; i < 8; i++)
+//         {
+//             string s;
+//             cin >> s;
+//             int cnt = 0;
+//             for(int j = 0; j < 8; j++) cnt += (s[j] == 'R');
+//             if(cnt == 8) f = 1;
+//         }
+//         if(f == 0) cout << "B\n";
+//         else cout << "R\n";
+//     }
+//     return 0;
 // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
