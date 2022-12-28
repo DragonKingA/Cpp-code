@@ -4351,14 +4351,74 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 
 
 
+//3.Po
+//答案即是划分出的区间个数
+//例如 1 2 3 2 1 3
+//区间操作有 [1, 6] +1 ，[2, 4] +1 ，[3, 3] + 1，[6, 6] + 2
+//共4次
+//对山形 1 2 4 1，层数共3层(递增区间长度为3)，则操作次数为 3，故只要获得 递增次数 即可，显然维护一个单调栈即可解决问题
+// #include <iostream>
+// #include <stack>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// stack<int> sta;
+// int main()
+// {
+//     untie();
+//     int n, x, cnt = 0;
+//     cin >> n;
+//     while(n--)
+//     {
+//         cin >> x;
+//         while(!sta.empty() && sta.top() > x) sta.pop();
+//         if(!sta.empty() && sta.top() == x) continue;
+//         if(x) cnt++, sta.push(x);
+//     }
+//     cout << cnt;
+//     return 0;
+// }
 
 
 
-
-
-
-
-
+//4.Patrik 音乐会的等待
+//对等高者特殊记录，好好理解题意
+// #include <iostream>
+// #include <stack>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// struct nd{
+//     int h, s;//s为该人之前与他等高的人的人数(包括他自己)
+// };
+// stack<nd> sta;
+// int main()
+// {
+//     untie();
+//     int n, x;
+//     long long ans = 0;
+//     cin >> n;
+//     while(n--)
+//     {
+//         cin >> x;
+//         int cnt = 1;
+//         while(!sta.empty() && x >= sta.top().h) 
+//         {
+//             ans += sta.top().s;
+//             if(sta.top().h == x) cnt += sta.top().s;
+//             sta.pop();
+//         }
+//         if(!sta.empty()) ans++;//栈中若还有元素，说明前面与 x 相邻的人比他高，可配对
+//         sta.push(nd{x, cnt});
+//     }
+//     cout << ans;
+//     return 0;
+// }
+//4 3 2 1 5 6
+//2 4 1 2 2 5 1
+//10
+//3 2 2 2
+//3 + 2 + 1 =6
+//3 2 1
+//2
 
 
 
@@ -4525,6 +4585,53 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 //     }
 //     return 0;
 // }
+
+
+
+//3.切蛋糕
+#include <iostream>
+#include <queue>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+
+int main()
+{
+    
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6171,37 +6278,94 @@ O(log2n * n) = O(nlogn)
 //     return 0;
 // }
 //优先队列方法
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//把 N^2 个和看成 N 个升序队列
+// a[1] + b[1] -> a[1] + b[2] -> ... -> a[1] + b[N]
+// a[2] + b[1] -> a[2] + b[2] -> ... -> a[2] + b[N]
+// ...
+// a[N] + b[1] -> a[N] + b[2] -> ... -> a[N] + b[N]
+//维护一个堆，堆中初始含有N个队列的第一个元素
+//经 小值优先排序 后，每次取出堆中的最小值，若这个最小值来自于第k个队列，那么，就将第k个队列的下一个元素放入堆中
+//这样就能保证每次取得的最小值确实是当前所得最小值
+// #include <cstdio>
+// #include <queue>
+// #include <vector>
+// #include <functional>
+// using namespace std;
+// typedef pair<int, int> pii;
+// #define v first
+// #define id second
+// const int maxn = 1e5 + 5;
+// int a[maxn], b[maxn], vis[maxn];
+// priority_queue<pii, vector<pii>, greater<pii> > q;//两数相和不会超int，此时优先队列中存的是 N 个队列中各自的最小值
+// int main()
+// {
+//     int n;
+//     scanf("%d", &n);
+//     for(int i = 0; i < n; i++) scanf("%d", &b[i]);
+//     for(int i = 0; i < n; i++) scanf("%d", &a[i]), q.push(pii(a[i] + b[0], i));
+//     for(int i = 0; i < n; i++)
+//     {
+//         int pos = q.top().id;
+//         printf(" %d" + !i, q.top().v), q.pop();
+//         q.push(pii(a[pos] + b[++vis[pos]], pos));
+//     }
+//     return 0;
+// }
 
 
 
 //10.Cow Dance Show S
 // #include <cstdio>
-
+// #include <vector>
+// #include <queue>
+// #include <functional>
+// using namespace std;
+// typedef pair<int, int> pii;
+// int n, t, arr[10005];
+// priority_queue<int, vector<int>, greater<int> > q;
+// //维护一个存储 牛表演结束时间点 的栈，时间点越早，越近栈顶，越早出队
+// //在到达栈顶牛时间点才能进队，所以此时进队说明其结束时间点是 （栈顶牛表演耗时 + 自身表演耗时）即 top + arr[i]
+// //那么最终栈底最晚结束表演的牛，其时间点即为答案
+// bool check(int k)
+// {
+//     int ans = 0, tmp;
+//     for(int i = 0; i < k; i++) q.push(arr[i]);
+//     for(int i = k; i < n; i++)
+//     {
+//         tmp = q.top(); q.pop();
+//         q.push(tmp + arr[i]);
+//     }
+//     for(; q.size(); q.pop()) ans = q.top();
+//     return ans <= t;
+// }
 // int main()
 // {
-//     int n, t, k;
 //     scanf("%d%d", &n, &t);
-//     k = n;
-
+//     for(int i = 0; i < n; i++) scanf("%d", &arr[i]);
+//     int l = 1, r = n, ans = 0;
+//     while(l <= r)
+//     {
+//         int mid = (l + r) >> 1;
+//         if(check(mid)) r = mid - 1, ans = mid;
+//         else l = mid + 1;
+//     }
+//     printf("%d\n", ans);
 //     return 0;
 // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
