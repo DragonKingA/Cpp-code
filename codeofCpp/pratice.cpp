@@ -4589,18 +4589,34 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 
 
 //3.切蛋糕
-#include <iostream>
-#include <queue>
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-
-int main()
-{
-    
-
-    return 0;
-}
-
+// #include <iostream>
+// #include <queue>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// deque<int> dq;//维护前缀和递增的双端队列，长度超过 m 就pop队头(存下标方便获取前缀和)
+// //max(ans) = max(sum[i] - min(sum[i - m]))，所以 dq.front() 需要是当前最小的前缀和
+// int sum[500005], ans = -25e7;
+// int main()
+// {
+//     untie();
+//     int n, m;
+//     cin >> n >> m;
+//     for(int i = 1; i <= n; i++) cin >> sum[i], sum[i] += sum[i - 1];
+//     dq.push_front(0);//作为sum[0]存在
+//     for(int i = 1; i <= n; i++)
+//     {
+//         while(!dq.empty() && i - dq.front() > m) dq.pop_front();
+//         ans = max(ans, sum[i] - sum[dq.front()]);
+//         while(!dq.empty() && sum[i] <= sum[dq.back()]) dq.pop_back();
+//         dq.push_back(i);
+//     }
+//     cout << ans;
+//     return 0;
+// }
+// 0 1 3 6 10 15
+//  1 -2 3 -4 5 -6
+//0 1 -1 2 -2 3 -3
 
 
 
@@ -5123,13 +5139,43 @@ int main()
 
 
 
+//12.Graveyard Design
+// #include <iostream>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// typedef long long ll;
+// typedef pair<int, int> pii;
+// vector<pii> v;
+// int main()
+// {
+//     untie();
+//     ll n, sum = 1;
+//     cin >> n;
+//     ll l = 0, r = 1;
+//     while(l * l <= n)
+//     {
+//         while(l <= r && sum < n) ++r, sum += r * r;
+//         if(sum == n) v.push_back(pii(r, r - l));
+//         l++;
+//         sum -= l * l;
+//         if(l == r) break;
+//     }
+//     int len = v.size();
+//     cout << len << '\n';
+//     for(int i = 0; i < len; i++)
+//     {
+//         cout << v[i].second;
+//         for(int j = v[i].second - 1; j >= 0; j--)
+//             cout << " " << v[i].first - j;
+//         cout << '\n';
+//     }
+//     return 0;
+// }
 
 
 
-
-
-
-
+//13.pairs
 
 
 
