@@ -9884,3 +9884,388 @@ int main()
 
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑寒期集训赛4↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓寒期集训赛5↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+/*
+题目链接：https://vjudge.csgrandeur.cn/contest/536144
+
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <set>
+#include <map>
+
+
+
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+
+
+
+
+
+int main()
+{
+    
+
+
+
+
+
+    return 0;
+}
+
+*/
+
+
+
+
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_map>
+// #include <unordered_set>
+
+
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+
+
+// int f[100][100][100];
+// int w(int a, int b, int c)
+// {
+//     if(a <= 0 || b <= 0 || c <= 0) return 1;
+//     if(a > 20 || b > 20 || c > 20) 
+//     {
+//         if(f[20][20][20]!=0) return f[20][20][20];
+//         return w(20, 20, 20);
+//     }
+//     if(f[a][b][c] != 0) return f[a][b][c];
+//     if(a < b && b < c) return (f[a][b][c-1]=w(a, b, c-1)) + (f[a][b-1][c-1]=w(a, b-1, c-1)) - (f[a][b-1][c]=w(a, b-1, c));
+//     return (f[a-1][b][c]=w(a-1, b, c)) + (f[a-1][b-1][c]=w(a-1, b-1, c)) + (f[a-1][b][c-1]=w(a-1, b, c-1)) - (f[a-1][b-1][c-1]=w(a-1, b-1, c-1));
+// }   
+// int main()
+// {
+//     untie();
+//     int a, b, c;
+//     while(cin>>a>>b>>c, a!=-1 || b!=-1 || c!=-1)
+//     {
+//         printf("w(%d, %d, %d) = %d\n",a,b,c,w(a,b,c));
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <unordered_set>
+
+
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+
+// #define pf() {printf("\
+//                 ********\n\
+//                ************\n\
+//                ####....#.\n\
+//              #..###.....##....\n\
+//              ###.......######              ###            ###\n\
+//                 ...........               #...#          #...#\n\
+//                ##*#######                 #.#.#          #.#.#\n\
+//             ####*******######             #.#.#          #.#.#\n\
+//            ...#***.****.*###....          #...#          #...#\n\
+//            ....**********##.....           ###            ###\n\
+//            ....****    *****....\n\
+//              ####        ####\n\
+//            ######        ######\n\
+// ##############################################################\n\
+// #...#......#.##...#......#.##...#......#.##------------------#\n\
+// ###########################################------------------#\n\
+// #..#....#....##..#....#....##..#....#....#####################\n\
+// ##########################################    #----------#\n\
+// #.....#......##.....#......##.....#......#    #----------#\n\
+// ##########################################    #----------#\n\
+// #.#..#....#..##.#..#....#..##.#..#....#..#    #----------#\n\
+// ##########################################    ############\n\
+// ");}
+
+
+
+// int main()
+// {
+    
+//     pf();
+
+
+
+
+//     return 0;
+// }
+
+
+
+
+
+
+
+// #include <iostream>
+// #include <map>
+// #include <vector>
+// #include <queue>
+// #include <set>
+// using namespace std;
+// int n, m, a, b;
+
+// map<int, vector<int> > gra;
+// set<int> ans;
+// void bfs()
+// {
+//     queue<int> q;
+//     ans.insert(a);
+//     q.push(a);
+//     while(q.size())
+//     {
+//         int ori = q.front(); q.pop();
+//         for(int next : gra[ori])
+//         {
+//             if(!ans.count(next))
+//             {
+//                 ans.insert(next);
+//                 q.push(next);
+//             }
+//         }
+//     }
+// }
+// int main()
+// {
+//     while(cin >> n, n)
+//     {
+//         cin >> m;
+//         for(int i = 0; i < m; i++)
+//         {
+//             cin >> a >> b;
+//             gra[a].push_back(b);
+//             gra[b].push_back(a);
+//         }
+//         if(m) bfs();
+//         if(m) cout << (n - ans.size()) << '\n';
+//         else cout << (n - 1) << '\n';
+//         if(!ans.empty()) ans.clear();
+//         gra.clear();
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+
+
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+
+
+
+// int n;
+
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     while(n--)
+//     {
+//         int m;
+//         cin >> m;
+//         if(m % 2 == 0) cout << "pb wins\n";
+//         else cout << "zs wins\n";
+//     }
+
+
+
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+// #include <cstdio>
+// const int N = 1500;
+// int ds[N];
+// void init_set(int n)
+// {
+//     for(int i = 1; i <= n; i++)
+//         ds[i] = i;
+// }
+// int find_set(int x)
+// {
+//     return x == ds[x] ? x : (ds[x] = find_set(ds[x]));
+// }
+// void merge_set(int x, int y)
+// {
+//     if((x = find_set(x)) != (y = find_set(y)))  ds[x] = ds[y];
+// }
+// int main()
+// {
+    
+//     int n, m, a, b;
+    
+//     while(~scanf("%d", &n), n)
+//     {
+//         int res = -1;
+//         scanf("%d%", &m);
+//         init_set(n + 1);
+//         for(int i = 1 ; i <= m ; i++)
+//             scanf("%d%d", &a, &b), merge_set(a, b);
+//         for(int i = 1 ; i <= n ; i++)
+//             if(find_set(i) == i) res++;//自身为祖表示未联系，且减去必有的一个祖先
+//         printf("%d\n", res);
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <set>
+#include <map>
+#include <queue>
+
+
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+const int N = 1e5 + 10;
+
+
+int n, mp[N];
+bool vis[N];
+int ans = 0;
+
+void dfs(int i)
+{
+    
+}
+int main()
+{
+    untie();
+    int T;
+    cin >> T;
+    while(T--)
+    {
+        cin >> n;
+        ans = 0;
+        for(int i = 1; i <= n; i++) cin >> mp[i], vis[i] = 0;
+        for(int i = 1; i <= n; i++)
+        {
+            if(vis[i] == 0)
+            {
+                
+                
+            }
+        }
+        cout << ans << '\n';
+    }
+
+
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑寒期集训赛5↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
