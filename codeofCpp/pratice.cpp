@@ -4617,7 +4617,7 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 // 0 1 3 6 10 15
 //  1 -2 3 -4 5 -6
 //0 1 -1 2 -2 3 -3
-//
+
 
 
 
@@ -5176,17 +5176,107 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 
 
 //13.pairs
+// #include <cstdio>
+// #include <algorithm>
+// int arr[100005];
+// int main()
+// {
+//     int t, n, k;
+//     scanf("%d", &t);
+//     while(t--)
+//     {
+//         long long cnt = 0;
+//         scanf("%d%d", &n, &k);
+//         for(int i = 0; i < n; i++) scanf("%d", &arr[i]);
+//         std::sort(arr, arr + n);
+//         int l = 0, r = 0;
+//         while(r < n)
+//         {
+//             if(arr[r] - arr[l] <= k)
+//             {
+//                 cnt += 1LL * (r - l);
+//                 r++;
+//             }
+//             else
+//                 l++;
+//         }
+//         printf("%lld\n", cnt);
+//     }
+//     return 0;
+// }
 
 
 
+//14.String 
+// #include <iostream>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// char str[1000005];
+// #define id(x) (str[x] - 'a')
+// int main()
+// {
+//     untie();
+//     int T, k;
+//     cin >> T;
+//     while(T--)
+//     {
+//         long long ans = 0;
+//         int vis[30];
+//         memset(vis, 0, sizeof(vis));
+//         cin >> str >> k;
+//         int l = 0, r = 0, cnt = 0, len = strlen(str);
+//         for(; l < len; l++)//选出[l, r]区间符合含 k 个不同字母，那么任意 x 属于[r, len - 1]可使得任一[l, x]满足题意,故该次答案更新加的是 r 及 r后面 的字母长度
+//         {
+//             while(r < len && cnt < k)
+//             {
+//                 vis[id(r)]++;
+//                 if(vis[id(r)] == 1) cnt++;
+//                 r++;
+//             }
+//             if(cnt == k) ans += len - r + 1;
+//             vis[id(l)]--;
+//             cnt -= !vis[id(l)];
+//         }
+//         cout << ans << '\n';
+//     }
+//     return 0;
+// }
 
 
 
-
-
-
-
-
+//15.单词背诵
+// #include <iostream>
+// #include <algorithm>
+// #include <string>
+// #include <map>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// map<string, int> mp, cnt;
+// string str[100005], s;
+// int main()
+// {
+//     untie();
+//     int n, m, ans1 = 0, ans2 = 0;
+//     cin >> n;
+//     while(n--) cin >> s, mp[s] = 1;
+//     cin >> m;
+//     for(int i = 0; i < m; i++) cin >> str[i];
+//     for(int r = 0, l = 0; r < m; r++)
+//     {
+//         if(mp[str[r]]) cnt[str[r]]++;
+//         if(cnt[str[r]] == 1) ans1++, ans2 = r - l + 1;//出现新单词，长度更新，ans2直接更新(因为背诵长度优先级更高)
+//         while(l <= r)//排除不用背的 和 重复的，尽量缩短长度
+//         {
+//             if(!mp[str[l]]) l++;
+//             else if(cnt[str[l]] > 1) cnt[str[l]]--, l++;
+//             else break;//遇到确实要背的，且存在性唯一
+//         }
+//         ans2 = min(ans2, r - l + 1);
+//     }
+//     cout << ans1 << '\n' << ans2;
+//     return 0;
+// }
 
 
 
@@ -10184,57 +10274,57 @@ int main()
 
 
 
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-#include <cctype>
-#include <cmath>
-#include <string>
-#include <cstring>
-#include <vector>
-#include <set>
-#include <map>
-#include <queue>
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// #include <map>
+// #include <queue>
 
 
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
-const int N = 1e5 + 10;
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e5 + 10;
 
 
-int n, mp[N];
-bool vis[N];
-int ans = 0;
+// int n, mp[N];
+// bool vis[N];
+// int ans = 0;
 
-void dfs(int i)
-{
+// void dfs(int i)
+// {
     
-}
-int main()
-{
-    untie();
-    int T;
-    cin >> T;
-    while(T--)
-    {
-        cin >> n;
-        ans = 0;
-        for(int i = 1; i <= n; i++) cin >> mp[i], vis[i] = 0;
-        for(int i = 1; i <= n; i++)
-        {
-            if(vis[i] == 0)
-            {
+// }
+// int main()
+// {
+//     untie();
+//     int T;
+//     cin >> T;
+//     while(T--)
+//     {
+//         cin >> n;
+//         ans = 0;
+//         for(int i = 1; i <= n; i++) cin >> mp[i], vis[i] = 0;
+//         for(int i = 1; i <= n; i++)
+//         {
+//             if(vis[i] == 0)
+//             {
                 
                 
-            }
-        }
-        cout << ans << '\n';
-    }
+//             }
+//         }
+//         cout << ans << '\n';
+//     }
 
 
 
-    return 0;
-}
+//     return 0;
+// }
 
 
 
