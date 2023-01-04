@@ -760,7 +760,7 @@ list¾ÍÊÇÊý¾Ý½á¹¹ÖÐµÄË«ÏòÁ´±í(¸ù¾Ýsgi stlÔ´´úÂë)£¬Òò´ËËüµÄÄÚ´æ¿Õ¼äÊÇ²»Á¬ÐøµÄ£¬Í¨¹
 // }
 
 
-
+//¼òµ¥ËÑË÷
 
 //BFS£¨¹ã¶ÈÓÅÏÈËÑË÷£©
 //Ò»°ãÊÇ¶ÓÁÐÊµÏÖ£¬¹Ê BFS = ¶ÓÁÐ, ¸ÃËã·¨¾¡Á¿Ê¹ÓÃ¶ÓÁÐ½â¾ö¶ø²»ÊÇµÝ¹é£¨¹Êº¯ÊýÖÐÒ»°ãÓÐwhile(Ìõ¼þÎª¶ÓÁÐ²»Îª¿Õ)Ñ­»·£©
@@ -2597,6 +2597,259 @@ int main() {
 // }
 
 
+//½ø½×ËÑË÷
+//ËÑË÷¼ôÖ¦¡¢¼ÇÒä»¯ËÑË÷
+
+//1.Ñ¡Êý
+// #include <cstdio>
+// int n, k, ans = 0, a[30];
+// bool isprime(int x)
+// {
+//     for(int i = 2; i * i <= x; i++)
+//         if(x % i == 0) return 0;
+//     return x != 1;
+// }
+// //×ñÑ­²»½µÔ­Ôò£¬ÉýÐòµØÑ¡Êý£¬±ÜÃâÖØ¸´
+// void dfs(int cnt, int sum, int st)//stÎª×î½üÒ»´ÎÑ¡ÊýµÄÏÂ±ê
+// {
+//     if(cnt == k)
+//     {
+//         if(isprime(sum)) ans++;
+//         return ;
+//     }
+//     for(int i = st; i < n; i++)
+//         dfs(cnt + 1, sum + a[i], i + 1);
+//     return;
+// }
+// int main()
+// {
+//     scanf("%d%d", &n, &k);
+//     for(int i = 0; i < n; i++) scanf("%d", &a[i]);
+//     dfs(0,0,0);
+//     printf("%d\n", ans);
+//     return 0;
+// }
+
+
+
+//2.·Ç³£¿ÉÀÖ
+//4 1 3 -- 4 0 0
+//s -> m -- 1 0 3
+//m -> n -- 1 1 2
+//n -> s -- 2 0 2
+//×îºóÆ½·Öºó¶¼»á·ÅÔÚ×î´óµÄÁ½¸ö±­×ÓÀï(ËãÉÏ¿ÉÀÖÆ¿Ò»¹²Èý¸ö±­×Ó)£¬ÇÒÁ½ÕßÏàµÈ£¬µÚÈýÕßÎª 0
+//Éè s, n ÎªÁ½¸ö×î´ó±­×Ó
+// #include <iostream>
+// #include <algorithm>
+// #include <queue>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// struct nd{
+//     int s, n, m, step;
+// };
+// int S, N, M, ans;
+// bool vis[105][105][105];
+// bool bfs()
+// {
+//     queue<nd> q;
+//     memset(vis, 0, sizeof(vis));
+//     q.push(nd{S, 0, 0, 0});
+//     vis[S][0][0] = 1;
+//     while(q.size())
+//     {
+//         nd nx, t = q.front(); q.pop();
+//         if(t.s == t.n && !t.m)
+//         {
+//             ans = t.step;
+//             return 1;
+//         }
+//         for(int i = 1; i <= 6; i++)//1->2, 1->3, 2->1, 2->3, 3->1, 3->2
+//         {
+//             if(i == 1) nx = t.s + t.n <= N ? nd{0, t.s + t.n, t.m} : nd{t.s + t.n - N, N, t.m};
+//             if(i == 2) nx = t.s + t.m <= M ? nd{0, t.n, t.s + t.m} : nd{t.s + t.m - M, t.n, M};
+//             if(i == 3) nx = t.s + t.n <= S ? nd{t.s + t.n, 0, t.m} : nd{S, t.s + t.n - S, t.m};
+//             if(i == 4) nx = t.m + t.n <= M ? nd{t.s, 0, t.m + t.n} : nd{t.s, t.m + t.n - M, M};
+//             if(i == 5) nx = t.s + t.m <= S ? nd{t.s + t.m, t.n, 0} : nd{S, t.n, t.s + t.m - S};
+//             if(i == 6) nx = t.m + t.n <= N ? nd{t.s, t.m + t.n, 0} : nd{t.s, N, t.m + t.n - N};
+//             if(!vis[nx.s][nx.n][nx.m]) nx.step = t.step + 1, vis[nx.s][nx.n][nx.m] = 1, q.push(nx);
+//         }
+//     }
+//     return 0;
+// }
+// int main()
+// {
+//     untie();
+//     while(!(cin >> S >> N >> M).eof(), S)
+//     {
+//         if(S & 1)
+//         {
+//             cout << "NO\n";
+//             continue;
+//         }
+//         if(N < M) swap(N, M);
+//         if(bfs()) cout << ans << '\n';
+//         else cout << "NO\n";
+//     }
+//     return 0;
+// }
+
+
+
+//3.°ËÊýÂëÄÑÌâ
+// #include <iostream>
+// #include <algorithm>
+// #include <string>
+// #include <queue>
+// #include <vector>
+// #include <map>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// typedef vector<vector<int> > vvi;
+// string STA, END = "123804765";
+// map<string, bool> vis;//¹² 9! ÖÖ×´Ì¬
+// vvi dir = vvi(8) = {{1, 3}, {-1, 1, 3}, {-1, 3}, {-3, 1, 3}, {-3, -1, 1, 3}, {-3, -1, 3}, {-3, 1}, {-3, -1, 1}, {-3, -1}};
+// struct nd{
+//     string mp;
+//     int step;
+// };
+// void bfs()
+// {
+//     queue<nd> q;
+//     q.push(nd{STA, 0});
+//     vis[STA] = 1;
+//     while(q.size())
+//     {
+//         nd now = q.front(); q.pop();
+//         string str = now.mp;
+//         int x = str.find('0'), cnt = now.step;
+//         if(str == END)
+//         {
+//             cout << cnt << '\n';
+//             return;
+//         }
+//         for(auto dx : dir[x])
+//         {
+//             string t = str;
+//             swap(t[x], t[x + dx]);
+//             if(!vis[t]) vis[t] = 1, q.push(nd{t, cnt + 1});
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> STA;
+//     bfs();
+//     return 0;
+// }
+
+
+
+//4.Network Saboteur
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// int n, mp[25][25];
+
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 0; i < n; i++)
+//         for(int j = 0; j < n; j++)
+//             cin >> mp[i][j];
+    
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2654,6 +2907,47 @@ int main() {
     
 //     return 0;
 // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6488,6 +6782,80 @@ O(log2n * n) = O(nlogn)
 //     printf("%d\n", ans);
 //     return 0;
 // }
+
+
+
+
+
+
+
+
+
+
+
+
+/*Ê®Ò». ÏßÐÔDP*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
