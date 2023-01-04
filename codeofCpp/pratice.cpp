@@ -6794,19 +6794,162 @@ O(log2n * n) = O(nlogn)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*十一. 线性DP*/
 
+//1.Bone Collector(0/1 背包问题)
+//dp[i][j] 表示 容量为 j 的背包装前 i 个物品的最大价值
+//只有两种操作：装与不装第 i 个物品
+//dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - vol[i]] + val[i])
+//递推版：
+// #include <iostream>
+// #include <cstring>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1024;
+// int T, n, v, dp[N][N], val[N], vol[N];
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         memset(dp, 0, sizeof(dp));
+//         cin >> n >> v;
+//         for(int i = 1; i <= n; i++) cin >> val[i];
+//         for(int i = 1; i <= n; i++) cin >> vol[i];
+//         for(int i = 1; i <= n; i++)
+//             for(int j = 0; j <= v; j++)//j = 0 表示空背包
+//             {
+//                 if(vol[i] > j) dp[i][j] = dp[i - 1][j];//第 i 个物品装不下，只能延续上一个状态
+//                 else dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - vol[i]] + val[i]);//能装就取两种情况的最佳者
+//             }
+//         cout << dp[n][v] << '\n';
+//     }
+//     return 0;
+// }
+//记忆化版：
+// #include <iostream>
+// #include <cstring>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1024;
+// int T, n, v, dp[N][N], val[N], vol[N];
+// int solve(int i, int j)
+// {
+//     if(!i) return 0;
+//     if(dp[i][j]) return dp[i][j];
+//     int res;
+//     if(vol[i] > j) res = solve(i - 1,j);
+//     else res = max(solve(i - 1,j), solve(i - 1,j- vol[i]) + val[i]);
+//     return dp[i][j] = res;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         memset(dp, 0, sizeof(dp));
+//         cin >> n >> v;
+//         for(int i = 1; i <= n; i++) cin >> val[i];
+//         for(int i = 1; i <= n; i++) cin >> vol[i];
+//         cout << solve(n, v) << '\n';
+//     }
+//     return 0;
+// }
+//以下为压缩空间的技巧：
+//*滚动数组(覆盖中间转移状态，只输出结果，但不能输出转移方案)
+//1.交替滚动
+// #include <iostream>
+// #include <cstring>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1024;
+// int T, n, v, dp[2][N], val[N], vol[N];
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         memset(dp, 0, sizeof(dp));
+//         cin >> n >> v;
+//         for(int i = 1; i <= n; i++) cin >> val[i];
+//         for(int i = 1; i <= n; i++) cin >> vol[i];
+//         for(int i = 1; i <= n; i++)
+//             for(int j = 0; j <= v; j++)//dp[i][] 只与 dp[i - 1][] 有关，故只需要两行数组复用即可
+//             {
+//                 //这里也可以逆序遍历至 vol[i]，省去判断
+//                 if(vol[i] > j) dp[i & 1][j] = dp[(i & 1) ^ 1][j];//(i & 1) ^ 1 即 i & 1 与 1 异或, i & 1 表示新状态，(i & 1) ^ 1 表示旧状态
+//                 else dp[i & 1][j] = max(dp[(i & 1) ^ 1][j], dp[(i & 1) ^ 1][j - vol[i]] + val[i]);
+//             }
+//         cout << dp[n & 1][v] << '\n';
+//     }
+//     return 0;
+// }
+//*2.自我滚动(重点是最后一维的逆向遍历，防止覆盖有用的旧状态)
+// #include <iostream>
+// #include <cstring>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1024;
+// int T, n, v, dp[N], val[N], vol[N];
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         memset(dp, 0, sizeof(dp));
+//         cin >> n >> v;
+//         for(int i = 1; i <= n; i++) cin >> val[i];
+//         for(int i = 1; i <= n; i++) cin >> vol[i];
+//         for(int i = 1; i <= n; i++)
+//             for(int j = v; j >= vol[i]; j--)// vol[i] > j 时旧状态无需覆盖，保留即可
+//                 dp[j] = max(dp[j], dp[j - vol[i]] + val[i]);
+//         cout << dp[v] << '\n';
+//     }
+//     return 0;
+// }
 
 
 
+//2.Common Subsequence
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+
+int main()
+{
+    untie();
+    string a, b;
+    while(!(cin >> a >> b).eof())
+    {
 
 
 
-
-
-
-
-
+    }
+    return 0;
+}
 
 
 
@@ -10727,3 +10870,39 @@ int main()
 
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑寒期集训赛5↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
