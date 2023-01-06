@@ -30,7 +30,6 @@ int main()
 // #include <queue>
 // #include <cctype>
 // #include <cmath>
-
 // using namespace std;
 // #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
 // const int N = 2e5 + 10;
@@ -60,7 +59,39 @@ int main()
 //     }
 //     return 0;
 // }
-
+//题解简洁写法:
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// map<int, set<int> > gra;//每个人编号 对应与其具有秘密关系的集合
+// int main()
+// {
+//     untie();
+//     int n, x, a, b;
+//     cin >> n;
+//     while(n--)
+//     {
+//         cin >> a >> b;
+//         gra[a].insert(b);//双向地
+//         gra[b].insert(a);
+//     }
+//     cin >> n;
+//     while(n--)
+//     {
+//         int ans = 0;
+//         cin >> x;
+//         if(gra.count(x)) ans = gra[x].size();
+//         cout << ans << '\n';
+//     }
+//     return 0;
+// }
 
 
 
@@ -113,6 +144,170 @@ int main()
 
 
 
+
+//C
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// struct nd{
+//     int t, sc;
+// }arr[200];
+// int dp[10005];
+// int main()
+// {
+//     int t, m;
+//     untie();
+//     cin >> t >> m;
+//     for(int i = 1; i <= m; i++)
+//     {
+//         int a, b, c;
+//         cin >> a >> b >> c;
+//         arr[i] = nd{a - c, b};
+//     }
+//     for(int i = 1; i <= m; i++)
+//         for(int j = t; j >= arr[i].t; j--)
+//             dp[j] = max(dp[j], dp[j - arr[i].t] + arr[i].sc);
+//     cout << dp[t];
+//     return 0;
+// }
+
+
+
+//D
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e6 + 10;
+// int n, m, cnt = 0;
+// bool st[N];
+// set<int> sum;
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     while(m--)
+//     {
+//         int x, y;
+//         cin >> x >> y;
+//         if(!st[x] && !st[y])
+//             cnt++;
+//         if(!st[x] || !st[y])
+//             sum.insert(x), sum.insert(y);
+//         st[x] = st[y] = 1;    
+//     }
+//     cout << (cnt + (n - sum.size())) << '\n';
+//     return 0;
+// }  
+//并查集写法：
+// #include <iostream>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e6 + 5;
+// bool vis[N];
+// int ds[N], n, m, res = 0;
+// void init() { for(int i = 1; i <= n; i++) ds[i] = i, vis[i] = 0;}
+// int find_set(int x){ return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     init();
+//     while(m--)
+//     {
+//         int x, y, fx, fy;
+//         cin >> x >> y;
+//         fx = find_set(x), fy = find_set(y);
+//         if(vis[fx] && vis[fy]) continue;
+//         if(fx == x) ds[x] = fy, vis[fy] = 1;
+//         else if(fy = y) ds[y] = fx, vis[fx] = 1;
+//     }
+//     for(int i = 1; i <= n; i++)
+//         res += find_set(i) == i;
+//     cout << res << '\n';
+//     return 0;
+// }
+
+
+
+
+
+//E
+//简单bfs
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <queue>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1024;
+// int n, m, k, stx, sty, etx, ety, res = -1;
+// bool mp[N][N];
+// int b[N][N], dir[4][2] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+// struct nd{
+//     int x, y, times;
+//     nd(int a, int b, int c) {x = a, y = b, times = c;}
+// };
+// void bfs()
+// {
+//     queue<nd> q;
+//     q.push(nd(stx, sty, 0));
+//     mp[stx][sty] = 1;
+//     while(q.size())
+//     {
+//         nd tp = q.front(); q.pop();
+//         int x = tp.x, y = tp.y, time = tp.times;
+//         if(x == etx && y == ety) 
+//         {
+//             res = time;
+//             return;
+//         }
+//         for(int i = 0; i < 4; i++)
+//         {
+//             int nx = x + dir[i][0];
+//             int ny = y + dir[i][1];
+//             if(nx >= 1 && nx <= n && ny >= 1 && ny <= m && !mp[nx][ny] && time < b[nx][ny])
+//             {
+//                 q.push(nd(nx, ny, time + 1));
+//                 mp[nx][ny] = 1;
+//             }
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m >> k;
+//     memset(b, 0x3F, sizeof b);//memset是一个字节一个字节地填充，对于4个字节的每个元素会变成0x3F3F3F3F = 1061109567;
+//     while(k--)
+//     {
+//         int tm, x, y;
+//         cin >> tm >> x >> y;
+//         b[x][y] = min(b[x][y], tm);
+//     }
+//     cin >> stx >> sty >> etx >> ety;
+//     bfs();    
+//     cout << res;
+//     return 0;
+// }
+
+
+
+
+//F
 // #include <iostream>
 // #include <cstdio>
 // #include <algorithm>
@@ -158,6 +353,40 @@ int main()
 
 
 
+
+///G
+//ceil(n / i) == floor((n - 1) / i) + 1;
+//那么 sum(ceil(n / i)) == sum(floor((n - 1) / i) + 1) == sum(floor((n - 1) / i)) + n
+//与求 sum(floor(n / i)) 同理来求 sum(floor((n - 1) / i))
+// #include <iostream>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// long long n;
+// int main()
+// {
+//     untie();
+//     while(!(cin >> n).eof())
+//     {
+//         int L, R;
+//         long long ans = n--;
+//         for(L = 1; L <= n; L = R + 1)
+//         {
+//             R = n / (n / L);
+//             ans += 1LL * (R - L + 1) * (n / L);
+//         }
+//         cout << ans << "\n";
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+//H
 // #include <iostream>
 // #include <cstdio>
 // #include <algorithm>
@@ -190,263 +419,6 @@ int main()
 //     }
 //     return 0;
 // }
-
-
-///G
-//ceil(n / i) == floor((n - 1) / i) + 1;
-#include <iostream>
-#include <cstdio>
-#include <algorithm>
-#include <set>
-#include <map>
-#include <queue>
-#include <cctype>
-#include <cmath>
-
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-typedef long long ll;
-ll getO(double x)
-{
-    // cout << "TX: " << (ll)(x + 0.5) << endl;
-    return (ll)(x + 0.5);
-}
-int main()
-{
-    // untie();
-    ll n;
-    while(!(cin >> n).eof())
-    {
-        ll L, R, ans = 0;
-        for(L = 1; L <= n; L = R + 1)
-        {
-            R = n / (n / L);
-            ans += (R - L + 1) * getO(1.0 * n / L);
-        }
-        //ceil
-        cout << ans << '\n';
-    }
-    return 0;
-}
-
-
-
-//C
-// #include <iostream>
-// #include <cstdio>
-// #include <algorithm>
-// #include <set>
-// #include <map>
-// #include <queue>
-// #include <cctype>
-// #include <cmath>
-
-// using namespace std;
-// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-// struct nd{
-//     int t, sc;
-// }arr[200];
-// int dp[10005];
-// int main()
-// {
-//     int t, m;
-//     untie();
-//     cin >> t >> m;
-//     for(int i = 1; i <= m; i ++)
-//     {
-//         int a,b,c;
-//         cin >> a>> b >> c;
-//         arr[i] = nd{a - c, b};
-//     }
-//     for(int i = 1; i <= m; i ++)
-//     {
-//         for(int j = t; j >= arr[i].t; j--)
-//         {
-//             dp[j] = max(dp[j], dp[j - arr[i].t] + arr[i].sc);
-//         }
-//     }
-//     cout << dp[t];
-//     return 0;
-// }
-
-
-//D
-// #include <iostream>
-// #include <cstdio>
-// #include <algorithm>
-// #include <set>
-// #include <map>
-// #include <queue>
-// #include <cctype>
-// #include <cmath>
-
-// using namespace std;
-// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-// const int N = 1e6 + 10;
-// int n, m, cnt = 0;
-// bool st[N];
-// set<int> sum;
-// int main()
-// {
-//     untie();
-//     cin >> n >> m;
-//     while(m--)
-//     {
-//         int x, y;
-//         cin >> x >> y;
-//         if(!st[x] && !st[y])
-//             cnt++;
-//         if(!st[x] || !st[y])
-//             sum.insert(x), sum.insert(y);
-//         st[x] = st[y] = 1;    
-//     }
-//     cout << (cnt + (n - sum.size())) << '\n';
-//     return 0;
-// }
-
-
-
-//E
-//需要剪枝
-// #include <iostream>
-// #include <cstdio>
-// #include <algorithm>
-// #include <set>
-// #include <map>
-// #include <queue>
-// #include <cctype>
-// #include <cmath>
-
-// using namespace std;
-// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-// int n, m, k, sx, sy, ex, ey, ans = -1;
-// bool mp[1024][1024];//0表示未走，1表示走过
-// int b[1024][1024], dir[4][2] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
-// void dfs(int x, int y, int tm)
-// {
-//     if(x == ex && y == ey)
-//     {
-//         if(ans == -1) ans = tm;
-//         else ans = min(ans, tm);
-//         return;
-//     }
-//     if(ans != -1 && ans == min(abs(ex - x) + 1, abs(ey - y) + 1)) 
-//         return;
-//     for(int i = 0; i < 4; i++)
-//     {
-//         int nx = x + dir[i][0];
-//         int ny = y + dir[i][1];
-//         if(nx >= 1 && nx <= n && ny >= 1 && ny <= m && !mp[nx][ny])
-//         {
-//             if(!b[nx][ny] || tm + 1 < b[nx][ny])
-//             {
-//                 mp[x][y] = 1;
-//                 dfs(nx, ny, tm + 1);
-//                 mp[x][y] = 0;
-//             }
-//         }
-//     }
-// }
-// int main()
-// {
-//     untie();
-//     cin >> n >> m >> k;
-//     while(k--)
-//     {
-//         int t, x, y;
-//         cin >> t >> x >> y;
-//         mp[x][y] = 2;
-//         if(!b[x][y]) b[x][y] = t;
-//         else b[x][y] = min(b[x][y], t);
-//     }
-//     cin >> sx >> sy >> ex >> ey;
-//     mp[sx][sy] = 1;
-//     dfs(sx, sy, 0);
-//     cout << ans;
-//     return 0;
-// }
-
-/*
-xx*.
-....
-...x
-....
-*/
-
-//wa
-// #include <iostream>
-// #include <cstdio>
-// #include <algorithm>
-// #include <set>
-// #include <map>
-// #include <queue>
-// #include <cctype>
-// #include <cmath>
-
-// using namespace std;
-// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-// int n, m, k, sx, sy, ex, ey, ans = -1;
-// typedef pair<int, int> p;
-// typedef pair<int, p> pii;
-// bool mp[1024][1024];//0表示未走，1表示走过
-// int b[1024][1024], dir[4][2] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
-// void bfs()
-// {
-//     queue<pii> q;
-//     q.push(pii(0, p(sx, sy)));
-//     mp[sx][sy] = 1;
-//     while(q.size())
-//     {
-//         pii tp = q.front(); q.pop();
-//         int x = tp.second.first, y = tp.second.second, time = tp.first;
-//         if(x == ex && y == ey)
-//         {
-//             ans = time;
-//             return;
-//         }
-//         for(int i = 0; i < 4; i++)
-//         {
-//             int nx = x + dir[i][0];
-//             int ny = y + dir[i][1];
-//             if(nx >= 1 && nx <= n && ny >= 1 && ny <= m && !mp[nx][ny])
-//             {
-//                 if(!b[nx][ny] || time + 1 < b[nx][ny])
-//                 {
-//                     mp[nx][ny] = 1;
-//                     q.push(pii(time + 1, p(nx, ny)));
-//                 }
-//             }
-//         }
-//     }
-// }
-// int main()
-// {
-//     untie();
-//     cin >> n >> m >> k;
-//     while(k--)
-//     {
-//         int t, x, y;
-//         cin >> t >> x >> y;
-//         mp[x][y] = 2;
-//         if(!b[x][y]) b[x][y] = t;
-//         else b[x][y] = min(b[x][y], t);
-//     }
-//     cin >> sx >> sy >> ex >> ey;
-//     bfs();    
-//     cout << ans;
-//     return 0;
-// }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
