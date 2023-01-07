@@ -2638,7 +2638,7 @@ int main() {
 //m -> n -- 1 1 2
 //n -> s -- 2 0 2
 //最后平分后都会放在最大的两个杯子里(算上可乐瓶一共三个杯子)，且两者相等，第三者为 0
-//设 s, n 为两个最大杯子
+//已知 s 为两个最大杯子之一，那么再设 n 为第二大杯子，即最终结果平方在 s, n 上
 // #include <iostream>
 // #include <algorithm>
 // #include <queue>
@@ -3340,7 +3340,7 @@ int main()
 // 给a数组中的[l, r] 区间中的每一个数都加上c,只需对差分数组b[]做 b[l] + = c, b[r+1] -= c 
 // 而 b[r+1] -= c 可以使得该区间后的数不会受前面修改的影响！做到只修改某一区间的值
 
-//一级差分
+//一维差分
 // #include<iostream>
 // using namespace std;
 // const int N = 1e5 + 10;
@@ -3369,7 +3369,7 @@ int main()
 //     return 0;
 // }
 
-//二级差分
+//二维差分
 // #include<iostream>
 // #include<cstdio>
 // using namespace std;
@@ -6922,7 +6922,7 @@ O(log2n * n) = O(nlogn)
 //         for(int i = 1; i <= n; i++) cin >> val[i];
 //         for(int i = 1; i <= n; i++) cin >> vol[i];
 //         for(int i = 1; i <= n; i++)
-//             for(int j = v; j >= vol[i]; j--)// vol[i] > j 时旧状态无需覆盖，保留即可
+//             for(int j = v; j >= vol[i]; j--)// vol[i] > j 时旧状态不能被覆盖，保留即可
 //                 dp[j] = max(dp[j], dp[j - vol[i]] + val[i]);
 //         cout << dp[v] << '\n';
 //     }
@@ -6932,34 +6932,78 @@ O(log2n * n) = O(nlogn)
 
 
 //2.Common Subsequence
+//三种情况：01 10 11
+//dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1] + 1
+// #include <iostream>
+// #include <string>
+// #include <cstring>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e3 + 10;
+// int dp[N][N];
+// int main()
+// {
+//     untie();
+//     string a, b;
+//     while(cin >> a >> b)//*这里cin会自动判断是否到达EOF，所以不能用 !(cin >> a >> b).eof() 来判断是否到达EOF，会WA的
+//     {
+//         memset(dp, 0, sizeof dp);
+//         a = '*' + a, b = '*' + b;
+//         int alen = a.size(), blen = b.size();
+//         for(int i = 1; i < alen; i++)
+//             for(int j = 1; j < blen; j++)
+//             {
+//                 dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+//                 if(a[i] == b[j]) dp[i][j] = max(dp[i][j], dp[i - 1][j - 1] + 1);
+//             }
+//         cout << dp[alen - 1][blen - 1] << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+//3.Longest Ordered Subsequence
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e3 + 10;
+// int n, res = 0, arr[N], dp[N];
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 1; i <= n; i++) cin >> arr[i];
+//     for(int i = 1; i <= n; i++)//第 i 个作为最大子序列的最后一个元素
+//     {
+//         dp[i] = 1;
+//         for(int j = 1; j < i; j++)
+//             if(arr[i] > arr[j]) dp[i] = max(dp[i], dp[j] + 1);//dp[j] + 1 即取前 j 个最长子序列加上第 i 个元素
+//         res = max(res, dp[i]);
+//     }
+//     cout << res;
+//     return 0;
+// }
+
+
+
+//4.最少拦截系统
 #include <iostream>
-#include <string>
 #include <algorithm>
 using namespace std;
 #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-
+const int N = 1e5 + 10;
+int n, res = 0, arr[N], dp[N];
 int main()
 {
     untie();
-    string a, b;
-    while(!(cin >> a >> b).eof())
-    {
-
-
-
-    }
+    cin >> n;
+    for(int i = 1; i <= n; i++) cin >> arr[i];
+    
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
 
 
 

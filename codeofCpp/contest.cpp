@@ -387,196 +387,37 @@ int main()
 
 
 //H
+//多层差分
 // #include <iostream>
-// #include <cstdio>
-// #include <algorithm>
-// #include <set>
-// #include <map>
-// #include <queue>
-// #include <cctype>
-// #include <cmath>
-
+// #include <vector>
 // using namespace std;
 // #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
 // const int N = 1e5 + 10;
-// int n, m, b1[N], b2[N], q[N];
+// typedef pair<int, int> p;//<颜色c, 数量k>
+// vector<p> b[N];
+// int n, m, q[N];
+// long long sum[N];
 // int main()
 // {
 //     untie();
 //     cin >> n >> m;
-//     int x;
-//     for(int i = 0; i < n; i++) 
-//     {
-//         int x;
-//         cin >> x;
-//         q[i] = x;
-//     }
+//     for(int i = 1, x; i <= n; i++) 
+//         cin >> x, q[i] = x;
 //     while(m--)
 //     {
 //         int l, r, k, c;
 //         cin >> l >> r >> k >> c;
-        
+//         b[l].push_back(p(c, k));
+//         b[r + 1].push_back(p(c, ~k + 1));
 //     }
-//     return 0;
-// }
-
-
-
-
-
-
-
-
-
-
-
-//K
-// #include <iostream>
-// #include <cstdio>
-// #include <algorithm>
-// #include <set>
-// #include <map>
-// #include <queue>
-// #include <cctype>
-// #include <cmath>
-
-// using namespace std;
-
-// int main()
-// {
-//     int n;
-//     scanf("%d", &n);
-//     double sum = 0;
 //     for(int i = 1; i <= n; i++)
 //     {
-//         sum += 1.0 * n / i;
+//         for(auto x : b[i])
+//             sum[x.first] += x.second;
+//         cout << sum[q[i]] << ' ';
 //     }
-//     printf("%.6lf\n", sum);
 //     return 0;
 // }
-
-
-
-
-
-
-
-
-//L
-// #include <iostream>
-// #include <cstdio>
-// #include <algorithm>
-// #include <set>
-// #include <map>
-// #include <queue>
-// #include <cctype>
-// #include <cmath>
-// using namespace std;
-// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-// int flr[100005];
-// set<int> vis;
-// int main()
-// {
-//     untie();
-//     int n;
-//     cin >> n;
-//     for(int i = 1; i <= n; i++) cin >> flr[i];
-//     int l = 1, r = 1, ans = 1;
-//     while(l <= n)
-//     {
-//         while(r <= n && (vis.empty() || !vis.count(flr[r])))
-//         {
-//             vis.insert(flr[r++]);
-//         }
-//         ans = max(ans, r - l);
-//         while(l <= n && flr[l] != flr[r])
-//         {
-//             vis.erase(flr[l++]);
-//         }
-//         if(l <= n && r <= n && flr[l] == flr[r])
-//             vis.erase(flr[l++]);
-//     }
-//     cout << ans;
-//     return 0;
-// }
-
-
-
-
-
-//J
-// #include <iostream>
-// #include <cstdio>
-// #include <algorithm>
-// #include <set>
-// #include <map>
-// #include <queue>
-// #include <cctype>
-// #include <cmath>
-// #include <vector>
-// using namespace std;
-// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-// typedef long long ll;
-// const int N = 1e5 + 2;
-// const ll INF = 0x3f3f3f3f3f3f3f3fLL;
-// int n, m, s;
-// struct edge{
-//     int from, to;
-//     ll w;
-// };
-// struct nd{
-//     int id;
-//     ll ndis;
-//     bool operator < (const nd &a)const{
-//         return ndis > a.ndis;
-//     }
-// };
-// vector<edge> e[N];
-// ll dis[N];
-// bool done[N];
-// void dij()
-// {
-//     priority_queue<nd> que;
-//     for(int i = 1; i <= n; i++) dis[i] = INF;
-//     dis[s] = 0;
-//     que.push(nd{s, dis[s]});
-//     while(que.size())
-//     {
-//         nd u = que.top();
-//         que.pop();
-//         if(done[u.id]) continue;
-//         done[u.id] = 1;
-//         for(int i = 0; i < e[u.id].size(); i++)
-//         {
-//             edge y = e[u.id][i];
-//             if(done[y.to]) continue;
-//             if(dis[y.to] > y.w + u.ndis)
-//             {
-//                 dis[y.to] = y.w + u.ndis;
-//                 que.push(nd{y.to, dis[y.to]});
-//             }
-//         }
-//     }
-// }
-// int main()
-// {
-//     untie();
-//     cin >> n >> m >> s;
-//     while(m--)
-//     {
-//         int u, v;
-//         ll w;
-//         cin >> u >> v >> w;
-//         e[u].push_back(edge{u, v, w});
-//         e[v].push_back(edge{v, u, w});
-//     }
-//     dij();
-//     for(int i = 1; i <= n; i++)
-//         printf(" %lld" + !(i - 1), dis[i]);
-//     return 0;
-// }
-
-
 
 
 
@@ -585,6 +426,7 @@ int main()
 
 
 //I
+//线段树
 // #include <iostream>
 // #include <cstdio>
 // #include <algorithm>
@@ -668,7 +510,119 @@ int main()
 
 
 
+//J
+//Dijistra模板
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// typedef long long ll;
+// const int N = 1e5 + 2;
+// const ll INF = 0x3f3f3f3f3f3f3f3fLL;
+// int n, m, s;
+// struct edge{
+//     int from, to;
+//     ll w;
+// };
+// struct nd{
+//     int id;
+//     ll ndis;
+//     bool operator < (const nd &a)const{
+//         return ndis > a.ndis;
+//     }
+// };
+// vector<edge> e[N];
+// ll dis[N];
+// bool done[N];
+// void dij()
+// {
+//     priority_queue<nd> que;
+//     for(int i = 1; i <= n; i++) dis[i] = INF;
+//     dis[s] = 0;
+//     que.push(nd{s, dis[s]});
+//     while(que.size())
+//     {
+//         nd u = que.top();
+//         que.pop();
+//         if(done[u.id]) continue;
+//         done[u.id] = 1;
+//         for(int i = 0; i < e[u.id].size(); i++)
+//         {
+//             edge y = e[u.id][i];
+//             if(done[y.to]) continue;
+//             if(dis[y.to] > y.w + u.ndis)
+//             {
+//                 dis[y.to] = y.w + u.ndis;
+//                 que.push(nd{y.to, dis[y.to]});
+//             }
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m >> s;
+//     while(m--)
+//     {
+//         int u, v;
+//         ll w;
+//         cin >> u >> v >> w;
+//         e[u].push_back(edge{u, v, w});
+//         e[v].push_back(edge{v, u, w});
+//     }
+//     dij();
+//     for(int i = 1; i <= n; i++)
+//         printf(" %lld" + !(i - 1), dis[i]);
+//     return 0;
+// }
 
+
+
+//K
+// #include <cstdio>
+// int main()
+// {
+//     int n;
+//     scanf("%d", &n);
+//     double sum = 0;
+//     for(int i = 1; i <= n; i++)
+//         sum += 1.0 * n / i;
+//     printf("%.6lf\n", sum);
+//     return 0;
+// }
+
+
+
+//L
+// #include <iostream>
+// #include <set>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int flr[100005];
+// set<int> vis;
+// int main()
+// {
+//     untie();
+//     int n;
+//     cin >> n;
+//     for(int i = 1; i <= n; i++) cin >> flr[i];
+//     int l = 1, r = 1, ans = 0;
+//     while(r <= n)
+//     {
+//         if(!vis.count(flr[r])) vis.insert(flr[r++]);
+//         else vis.erase(flr[l++]);
+//         ans = max(ans, r - l);
+//     }
+//     cout << ans;
+//     return 0;
+// }
 
 
 
