@@ -6990,52 +6990,187 @@ O(log2n * n) = O(nlogn)
 
 
 //4.最少拦截系统
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e5 + 10;
+// int n, arr[N];
+// int main()
+// {
+//     untie();
+//     while(cin >> n)
+//     {
+//         int res = 0;
+//         vector<int> dp(n + 5, 0);
+//         for(int i = 1; i <= n; i++) cin >> arr[i];
+//         for(int i = 1; i <= n; i++)
+//         {
+//             dp[i] = 1;
+//             for(int j = 1; j < i; j++)
+//                 if(arr[i] > arr[j]) dp[i] = max(dp[i], dp[j] + 1);
+//             res = max(res, dp[i]);
+//         }
+//         cout << res << "\n";
+//     }
+//     return 0;
+// }
+
+
+
+//5.编辑距离
+//dp[i][j]定义为字符串A 1~i子串转换为 B 1~j子串的最少操作数
+//将A转换至B，现对A操作
+//状态转移对象是 A 串的第 i 个字符 ca 和 B串的第 j 个字符 cb
+//删除ca dp[i - 1][j] + 1 ; 
+//插入cb使得两个子串尾部相同，此时相当于删除cb，延续 j - 1 状态即可 dp[i][j - 1] + 1
+//若ca!=cb, 替换 ca 为 cb，相当于同时删除 ca 和 cb dp[i - 1][j - 1] + 1
+//若ca==cb, dp[i - 1][j - 1]
+/*更好的解答：
+字符串A("xyzab")和字符串B("axyzc")，问至少经过多少步操作可以把A变成B。
+
+我们还是从两个字符串的最后一个字符来考察即'b'和'c'。显然二者不相同，那么我们有以下三种处理办法：
+(1)增加：在A末尾增加一个'c'，那么A变成了"xyzabc"，B仍然是"axyzc"，由于此时末尾字符相同了，那么就变成了比较"xyzab"和"axyz"的距离，即d(xyzab,axyzc) = d(xyzab,axyz) + 1。可以写成d(i,j) = d(i,j - 1) + 1。表示下次比较的字符串B的长度减少了1，而加1表示当前进行了一次字符的操作。
+
+(2)删除：删除A末尾的字符'b'，考察A剩下的部分与B的距离。即d(xyzab,axyzc) = d(xyza,axyzc) + 1。可以写成d(i,j) = d(i - 1,j) + 1。表示下次比较的字符串A的长度减少了1。
+
+(3)替换：把A末尾的字符替换成'c'，这样就与B的末尾字符一样了，那么接下来就
+*/
+// #include <iostream>
+// #include <algorithm>
+// #include <string>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// string a, b;
+// int main()
+// {
+//     untie();
+//     cin >> a >> b;
+//     a = '*' + a, b = '*' + b;
+//     int alen = a.size(), blen = b.size();
+//     vector<vector<int> > dp(alen + 5, vector<int>(blen + 5, 0));
+//     for(int i = 1; i < alen; i++) dp[i][0] = i;//初始化空串状态
+//     for(int i = 1; i < blen; i++) dp[0][i] = i;
+//     for(int i = 1; i < alen; i++)
+//         for(int j = 1; j < blen; j++)
+//             dp[i][j] = min(min(dp[i - 1][j] + 1, dp[i][j - 1] + 1), dp[i - 1][j - 1] + (a[i] != b[j]));
+//     cout << dp[alen - 1][blen - 1];
+//     return 0;
+// }
+
+
+
+//6.滑雪
+//实际上可以记忆化搜索，此处与 dp 差异不大
+//但是本题使用dp的话，重点在于创造无后效性，即将各点依据高度排序，由低到高依次求解，使得高点直接使用低点的求解结果
+//dp[i][j] 定义为 从 i 处到 j 处最长严格递增长度
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// #include <queue>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 105;
+// struct nd{
+//     int r, c, h;
+//     nd(int R, int C, int H) {r = R, c = C, h = H;}
+//     bool operator <(const nd &n)const{
+//         return h > n.h;
+//     }
+// };
+// priority_queue<nd> h;
+// int n, m, res = 0, arr[N][N], dp[N][N], dir[4][2] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     for(int i = 1; i <= n; i++)
+//         for(int j = 1; j <= m; j++)
+//         {
+//             cin >> arr[i][j];
+//             dp[i][j] = 1;
+//             h.push(nd(i, j, arr[i][j]));
+//         }
+//     while(h.size())
+//     {
+//         nd now = h.top(); h.pop();
+//         int i = now.r, j = now.c, h = now.h;
+//         for(int k = 0; k < 4; k++)
+//         {
+//             int di = i + dir[k][0], dj = j + dir[k][1];
+//             if(di >= 1 && di <= n && dj >= 1 && dj <= m && arr[di][dj] < h) dp[i][j] = max(dp[i][j], dp[di][dj] + 1);
+//         }
+//         res = max(dp[i][j], res);
+//     }
+//     cout << res;
+//     return 0;
+// }
+
+
+
+//7.饥饿的奶牛
+
+
+
+
+
+
+
+
+
+
+
+
+
+//9.The Triangle
+// #include <iostream>
+// #include <algorithm>
+// #include <string>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 110;
+// int arr[N][N], dp[N][N], n, res = 0;
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 1; i <= n; i++)
+//         for(int j = 1; j <= i; j++)
+//             cin >> arr[i][j];
+//     for(int i = 1; i <= n; i++)
+//         for(int j = 1; j <= i; j++)
+//             dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - 1]) + arr[i][j];
+//     for(int i = 1; i <= n; i++) res = max(res, dp[n][i]);
+//     cout << res;
+//     return 0;
+// }
+
+
+
+//10.合唱队形
 #include <iostream>
 #include <algorithm>
+#include <string>
+#include <vector>
 using namespace std;
 #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-const int N = 1e5 + 10;
-int n, res = 0, arr[N], dp[N];
+const int N = 110;
+int arr[N], dp[N][N], n, res = 0;
 int main()
 {
     untie();
     cin >> n;
     for(int i = 1; i <= n; i++) cin >> arr[i];
-    
+    for(int i = 1; i <= n; i++)
+        for(int j = 1; j <= n; j++)
+        {
+            
+        }
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
