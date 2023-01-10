@@ -6809,6 +6809,7 @@ O(log2n * n) = O(nlogn)
 
 /*十一. 线性DP*/
 
+//更多题目与题解:https://github.com/CSGrandeur/s-1problem1day1ac/discussions/552
 //1.Bone Collector(0/1 背包问题)
 //dp[i][j] 表示 容量为 j 的背包装前 i 个物品的最大价值
 //只有两种操作：装与不装第 i 个物品
@@ -7111,16 +7112,101 @@ O(log2n * n) = O(nlogn)
 
 
 //7.饥饿的奶牛
+//91分，TLE一个点
+// #include <iostream>
+// #include <algorithm>
+// #include <string>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 15e4 + 5;
+// struct nd{
+//     int l, r, len;
+//     bool operator <(const nd &n)const{
+//         return r == n.r ? l < n.l : r < n.r;
+//     }
+// }arr[N];
+// int n, res = 0, dp[N];
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 1; i <= n; i++)
+//     {
+//         int a, b;
+//         cin >> a >> b;
+//         arr[i] = nd{a, b, b - a + 1};
+//     }
+//     sort(arr + 1, arr + 1 + n);
+//     for(int i = 1; i <= n; i++)
+//     {
+//         dp[i] = arr[i].len;
+//         for(int j = 1; j < i; j++)
+//             if(arr[j].r < arr[i].l) dp[i] = max(dp[i], dp[j] + arr[i].len);
+//         res = max(res, dp[i]);
+//     }
+//     cout << res;
+//     return 0;
+// }
+//AC
+//dp[i] 定义为从起点到 i 处时可获得最多的总牧草量
+//排序左端点 x，每次取一个[x, y]段作为最终段，累积 y - x + 1 长度，并加上 1 ~ (x - 1) 段的最长段长度(last)，即为当前最大状态dp[y]
+//状态存储在dp[y]使得只有当 x 大于该处 y 时才能使用这个值dp[y]，此时这个 y 在 x 的左侧作为旧状态
+//last存储前面的牧草量最大值
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define x first
+// #define y second
+// const int N = 15e4 + 5, M = 3e6 + 5;
+// pair<int, int> arr[N];
+// int n, last = 0, dp[M];
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 1; i <= n; i++) cin >> arr[i].x >> arr[i].y;
+//     sort(arr + 1, arr + 1 + n);
+//     for(int i = 0, j = 1; i < M; i++)
+//     {
+//         while(j <= n && arr[j].x == i)
+//         {
+//             dp[arr[j].y] = max(dp[arr[j].y], arr[j].y - arr[j].x + 1 + last);
+//             j++;
+//         }
+//         last = max(last, dp[i]);
+//     }
+//     cout << *max_element(dp, dp + M);
+//     return 0;
+// }
 
 
 
-
-
-
-
-
-
-
+//8.Cut Ribbon
+//完全背包问题 -- 必须装满背包并且同一物品可以重复使用或者说有无限个
+//dp[i] 定义为 长度为 i 时所需短条数最大值,由于完全背包必须装满，存在无解情况即凑不齐 i (定义为 dp[i] < 0)，特殊地 dp[0] 的解就是 0
+//只有延续有效解的状态进行转移才能正确装满背包
+//如案例 918 102 1327 1733 自行dubug看转移方程即可理解
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 4e3 + 5;
+// int n, x[4], dp[N];
+// int main()
+// {
+//     untie();
+//     cin >> n >> x[1] >> x[2] >> x[3];
+//     memset(dp, -2, sizeof dp);//初始状态为无解，-16843010
+//     dp[0] = 0;
+//     for(int i = 1 ; i <= 3; i++)
+//         for(int j = x[i] ; j <= n; j++)
+//             dp[j] = max(dp[j], dp[j - x[i]] + 1);
+//     cout << dp[n];
+//     return 0;
+// }
 
 
 
@@ -7151,31 +7237,43 @@ O(log2n * n) = O(nlogn)
 
 
 //10.合唱队形
-#include <iostream>
-#include <algorithm>
-#include <string>
-#include <vector>
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-const int N = 110;
-int arr[N], dp[N][N], n, res = 0;
-int main()
-{
-    untie();
-    cin >> n;
-    for(int i = 1; i <= n; i++) cin >> arr[i];
-    for(int i = 1; i <= n; i++)
-        for(int j = 1; j <= n; j++)
-        {
-            
-        }
-    return 0;
-}
+// #include <iostream>
+// #include <algorithm>
+// #include <string>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 110;
+// int arr[N], dp1[N], dp2[N], n, ans = 1e6;
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 1; i <= n; i++) cin >> arr[i];
+//     for(int i = 1; i <= n; i++)//左侧最长严格上升子序列
+//     {
+//         dp1[i] = 1;
+//         for(int j = 1; j < i; j++)
+//             if(arr[i] > arr[j]) dp1[i] = max(dp1[i], dp1[j] + 1);
+//     }
+//     for(int i = n; i >= 1; i--)//右侧最长严格下降子序列
+//     {
+//         dp2[i] = 1;
+//         for(int j = n; j > i; j--)
+//             if(arr[i] > arr[j]) dp2[i] = max(dp2[i], dp2[j] + 1);
+//     }
+//     for(int i = 1; i <= n; i++)
+//         ans = min(ans, n - dp1[i] - dp2[i] + 1);
+//     cout << ans;
+//     return 0;
+// }
 
 
 
 
+//背包问题
 
+//1.Bone Collector
 
 
 
