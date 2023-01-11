@@ -7272,12 +7272,37 @@ O(log2n * n) = O(nlogn)
 
 
 //背包问题
+//https://github.com/CSGrandeur/s-1problem1day1ac/discussions/554
 
 //1.Bone Collector
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int M = 1100;
+// int T, n, v, N[M], V[M], dp[M];
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         memset(dp, 0, sizeof dp);
+//         cin >> n >> v;
+//         for(int i = 1; i <= n; i++) cin >> N[i];
+//         for(int i = 1; i <= n; i++) cin >> V[i];
+//         for(int i = 1; i <= n; i++)
+//             for(int j = v; j >= V[i]; j--)
+//                 dp[j] = max(dp[j], dp[j - V[i]] + N[i]);
+//         cout << dp[v] << '\n';
+//     }
+//     return 0;
+// }
 
 
 
-
+//2.疯狂的采药
 
 
 
