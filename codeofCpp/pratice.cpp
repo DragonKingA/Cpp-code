@@ -7303,12 +7303,72 @@ O(log2n * n) = O(nlogn)
 
 
 //2.疯狂的采药
+//完全背包问题
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e4 + 5;
+// typedef long long ll;
+// int t, m, T[N], val[N];
+// int main()
+// {
+//     untie();
+//     cin >> t >> m;
+//     vector<ll> dp(t + 1, 0);
+//     for(int i = 1; i <= m; i++) cin >> T[i] >> val[i];
+//     for(int i = 1; i <= m; i++)
+//         for(int j = T[i]; j <= t; j++)
+//             dp[j] = max(dp[j], dp[j - T[i]] + val[i]);
+//     cout << dp[t];
+//     return 0;
+// }
 
 
 
-
-
-
+//3.宝物筛选
+//多重背包问题 -- 一样物品可以选多件，且不限制要装满背包
+//暴力法
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int n, W;
+// int main()
+// {
+//     untie();
+//     cin >> n >> W;
+//     vector<int> dp(W + 5, 0);
+//     for(int i = 1; i <= n; i++)
+//     {
+//         int v, w, sum;
+//         cin >> v >> w >> sum;
+//         for(int j = W; j >= 0; j--)
+//             for(int k = 1; k <= sum && k * w <= j; k++)
+//                 dp[j] = max(dp[j], dp[j - k * w] + k * v);
+//     }
+//     int res = 0;
+//     for(int i = 1; i <= W; i++) res = max(res, dp[i]);
+//     cout << res;
+//     return 0;
+// }
+//二进制优化法 -- 将 多重背包问题 转化为 01背包问题
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+int n, W;
+int main()
+{
+    untie();
+    cin >> n >> W;
+    vector<int> dp(W + 5, 0);
+    
+    return 0;
+}
 
 
 
