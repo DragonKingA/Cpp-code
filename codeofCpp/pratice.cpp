@@ -6923,7 +6923,7 @@ O(log2n * n) = O(nlogn)
 //         for(int i = 1; i <= n; i++) cin >> val[i];
 //         for(int i = 1; i <= n; i++) cin >> vol[i];
 //         for(int i = 1; i <= n; i++)
-//             for(int j = v; j >= vol[i]; j--)// vol[i] > j 时旧状态不能被覆盖，保留即可
+//             for(int j = v; j >= vol[i]; j--)// vol[i] > j 时装不下，当作旧状态保留即可
 //                 dp[j] = max(dp[j], dp[j - vol[i]] + val[i]);
 //         cout << dp[v] << '\n';
 //     }
@@ -6962,10 +6962,36 @@ O(log2n * n) = O(nlogn)
 //     }
 //     return 0;
 // }
+//相同方法，不同写法，耗时从 32ms 优化至 0ms
+// #include <iostream>
+// #include <string>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int main()
+// {
+//     untie();
+//     string a, b;
+//     while(cin >> a >> b)
+//     {
+//         int alen = a.size(), blen = b.size();
+//         vector<vector<int> > dp(alen + 5, vector<int>(blen + 5, 0));
+//         for(int i = 0; i < alen; i++)
+//             for(int j = 0; j < blen; j++)
+//             {
+//                 if(a[i] == b[j]) dp[i + 1][j + 1] = dp[i][j] + 1;
+//                 else dp[i + 1][j + 1] = max(dp[i][j + 1], dp[i + 1][j]);
+//             }
+//         cout << dp[alen][blen] << '\n';
+//     }
+//     return 0;
+// }
 
 
 
-//3.Longest Ordered Subsequence
+//*3.Longest Ordered Subsequence(最经典问题 LIS - Longest  Increasing Subsequence - 最长上升子序列)
+//动规方法 - O(n^2)
 // #include <iostream>
 // #include <algorithm>
 // using namespace std;
@@ -6987,10 +7013,54 @@ O(log2n * n) = O(nlogn)
 //     cout << res;
 //     return 0;
 // }
+//* 二分 + 贪心(反链构造法) - O(nlogn) - 该写法与第 4 题相比较好
+//这样构造出 cnt 个非升序集合（即：反链）,得到的不是LIS,也不是实际连续有序的序列，而是 各反链最小值的升序集合 -- 最长升序链,详情第 4 题
+//当然，LIS长度 = 最长升序链长度，尽管内容很可能不相同
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e3 + 10;
+// int n, x, cnt = 1, lis[N];
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     cin >> lis[1];
+//     for(int i = 2; i <= n; i++)
+//     {
+//         cin >> x;
+//         if(x > lis[cnt]) lis[++cnt] = x;//严格递增, >
+//         else *lower_bound(lis + 1, lis + 1 + cnt, x) = x;
+//     }
+//     cout << cnt;
+//     return 0;
+// }
+//树状数组优化 - O(nlogn)
 
 
 
-//4.最少拦截系统
+
+
+//4.最少拦截系统(LIS问题)
+//作出散点图，连接所有升序链，最长升序链长度为 k，则拦截系统至少要有 k 个，否则至少会有一个拦截系统截取到最长升序链中至少 2 个导弹
+//容易证得最长升序链长度 k，就是拦截系统最少个数
+/*
+反链：非升序集合，如 9 8 389 207 155 300 299 170 158 65 --> {8}、{389，207，155，65}、{300，299，170，158} --> 三条反链
+每个集合的最小元素相集合起来形成一条升序链 {8, 65, 158}，若有新元素加入，由升序链判断 延长 或 更新升序链头(即该反链最小元素)
+那么 最长升序链的长度 就 代表着 单调不增子序列的总个数，且 LIS长度 = 最长升序链长度， 但内容不一定相同
+解决过程：
+—> {8} // 初始状态，a数组的值：[8], k=1
+—> {8} 、{389} // 与8构成升序链，a数组的值：[8, 389], k=2
+—> {8} 、{389，207} // 与8构成升序链，a数组的值：[8, 207], k=2
+—> {8} 、{389，207，155} // 与8构成升序链，a数组的值：[8, 155], k=2
+—> {8} 、{389，207，155} 、{300} // 与207、155构成升序链，a数组的值：[8, 155, 300], k=3
+—> {8} 、{389，207，155} 、{300，299} // 与207、155构成升序链，a数组的值：[8, 155, 299], k=3
+—> {8} 、{389，207，155} 、{300，299，177} // 与155构成升序链，a数组的值：[8, 155, 177], k=3
+—> {8} 、{389，207，155} 、{300，299，177，158} // 与155构成升序链，a数组的值：[8, 155, 158], k=3
+—> {8} 、{389，207，155， 65} 、{300，299，177，158} // 与8构成升序链，a数组的值：[8, 65, 158], k=3
+*/
+//dp
 // #include <iostream>
 // #include <algorithm>
 // #include <vector>
@@ -7017,6 +7087,47 @@ O(log2n * n) = O(nlogn)
 //     }
 //     return 0;
 // }
+//二分 + 贪心(写法与上面有点不同)
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e5 + 10, MAXH = 3e4;
+// int n, a[N];
+// int main()
+// {
+//     untie();
+//     while(cin >> n)
+//     {
+//         int x, len = 0;//最长升序链的长度 - 1
+//         vector<int> lis(n + 1, MAXH);//维护得到最长升序链(区别于连续的LIS)
+//         for(int i = 0; i < n; i++)
+//         {
+//             cin >> x;
+//             int pos = lower_bound(lis.begin(), lis.begin() + n, x) - lis.begin();
+//             lis[pos] = x;
+//             len = max(len, pos);
+//         }
+//         cout << ++len << "\n";
+//     }
+//     return 0;
+// }
+
+
+//线段树 -- O(nlogn) -- 最快
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7184,8 +7295,9 @@ O(log2n * n) = O(nlogn)
 
 
 //8.Cut Ribbon
-//完全背包问题 -- 必须装满背包并且同一物品可以重复使用或者说有无限个
-//dp[i] 定义为 长度为 i 时所需短条数最大值,由于完全背包必须装满，存在无解情况即凑不齐 i (定义为 dp[i] < 0)，特殊地 dp[0] 的解就是 0
+//完全背包问题 -- 同一物品可以重复使用或者说有无限个
+//但这里比较特殊，要求必须装满背包
+//dp[i] 定义为 长度为 i 时所需短条数最大值,由于这个完全背包必须装满，存在无解情况即凑不齐 i (定义为 dp[i] < 0)，特殊地 dp[0] 的解就是 0
 //只有延续有效解的状态进行转移才能正确装满背包
 //如案例 918 102 1327 1733 自行dubug看转移方程即可理解
 // #include <iostream>
@@ -7275,6 +7387,7 @@ O(log2n * n) = O(nlogn)
 //https://github.com/CSGrandeur/s-1problem1day1ac/discussions/554
 
 //1.Bone Collector
+//01背包问题
 // #include <iostream>
 // #include <algorithm>
 // #include <cstring>
@@ -7319,7 +7432,7 @@ O(log2n * n) = O(nlogn)
 //     vector<ll> dp(t + 1, 0);
 //     for(int i = 1; i <= m; i++) cin >> T[i] >> val[i];
 //     for(int i = 1; i <= m; i++)
-//         for(int j = T[i]; j <= t; j++)
+//         for(int j = T[i]; j <= t; j++)//正序遍历：刚装入背包的马上变成旧状态被利用，即前面的件数可以叠加到新状态，小背包可以装入大背包里
 //             dp[j] = max(dp[j], dp[j - T[i]] + val[i]);
 //     cout << dp[t];
 //     return 0;
@@ -7329,7 +7442,9 @@ O(log2n * n) = O(nlogn)
 
 //3.宝物筛选
 //多重背包问题 -- 一样物品可以选多件，且不限制要装满背包
-//暴力法
+
+//一法：转化为 01背包 -- 枚举 k 件物品，把问题看成仅有一件的占用空间为 k*Vi ，价值为 k*Wi 的物品该不该拿
+//无优化(单例最高耗时922ms)
 // #include <iostream>
 // #include <algorithm>
 // #include <vector>
@@ -7354,39 +7469,239 @@ O(log2n * n) = O(nlogn)
 //     cout << res;
 //     return 0;
 // }
-//二进制优化法 -- 将 多重背包问题 转化为 01背包问题
+//二进制优化(最好用) -- 一种有一定数量 sum 的物品，拆分成 x 个基元，由这 x 个基元组成 1 ~ sum 所有的取件数情况 (单例最高耗时141ms) -- 优化效果显著
+//先按 2 的倍数升序拆分为 x - 1 个数，最后剩下一个余数，共 x 个基数，
+//如 sum = 25，分成 1, 2, 4, 8, 10(10 < 2^4 = 16) 五个基元，并且由 5 个数任意自由组合得到 1 ~ 25 的所有数字
+//多重背包问题 就转化成对 每种物品 的 每个基元数 的 选与不选，即 01背包问题
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int MAXN = 1e6 + 5;//数组一定要够大
+// int n, m, dp[MAXN];
+// struct nd{
+//     int v, w;
+// }goods[MAXN];//存储一种物品分成的若干个01背包，规定在[1, cnt]
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     for(int i = 1; i <= n; i++)//遍历每种物品
+//     {
+//         int v, w, sum, cnt = 0;
+//         cin >> v >> w >> sum;
+//         //二进制倍数枚举拆分
+//         for(int j = 1; j <= sum; j <<= 1)
+//         {
+//             goods[++cnt] = nd{v * j, w * j};
+//             sum -= j;//减去已拆分
+//         }
+//         //最后一个余数 处理
+//         if(sum) goods[++cnt] = nd{v * sum, w * sum};
+//         //01背包 -- 每种物品分成若干个 01背包
+//         for(int k = 1; k <= cnt; k++)
+//             for(int j = m; j >= goods[k].w; j--)//逆序
+//                 dp[j] = max(dp[j], dp[j - goods[k].w] + goods[k].v);
+//     }
+//     cout << dp[m];
+//     return 0;
+// }
+//单调队列优化(最优耗时)
+
+
+
+
+
+
+
+
+
+
+
+//二法：转化为 01背包 + 完全背包 (3.8s微小优化，*仅供加深两种背包的理解*)
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int n, W;
+// int main()
+// {
+//     untie();
+//     cin >> n >> W;
+//     vector<int> dp(W + 5, 0);
+//     for(int i = 1; i <= n; i++)
+//     {
+//         int v, w, sum;
+//         cin >> v >> w >> sum;
+//         if(sum * w >= W)//完全背包,对于总体积为 W 的背包来说，此时 v 物体相当于可以无限选取，即不用担心超额
+//         {
+//             for(int j = w; j <= W; j++)
+//                 dp[j] = max(dp[j], dp[j - w] + v);
+//         }
+//         else
+//         {
+//             for(int j = W; j >= w; j--)//01背包，必须逆序遍历
+//                 for(int k = 1; k <= sum && k * w <= j; k++)//该层遍历顺序不影响结果
+//                     dp[j] = max(dp[j], dp[j - k * w] + k * v);
+//         }
+//     }
+//     cout << dp[W];
+//     return 0;
+// }
+
+
+
+//4.NASA的食物计划
+//二维费用的背包问题
+//指对于每件物品，具有两种不同的空间耗费，选择这件物品必须同时付出这两种代价。
+//对于每种代价都有一个可付出的最大值 （背包容量），问怎样选择物品可以得到最大的价值。
+//由于每个物品只能选一次，所以这是个 二维01背包问题
+//定义 dp[i][j][k] 为遍历到第 i 个物品时体积不超过 j，质量不超过 k 的最大卡路里值
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int H, T, n, dp[500][500];
+// int main()
+// {
+//     untie();
+//     cin >> H >> T >> n;
+//     for(int i = 0; i < n; i++)
+//     {
+//         int h, t, K;
+//         cin >> h >> t >> K;
+//         for(int j = H; j >= h; j--)
+//             for(int k = T; k >= t; k--)
+//                 dp[j][k] = max(dp[j][k], dp[j - h][k - t] + K);
+//     }
+//     cout << dp[H][T];
+//     return 0;
+// }
+//有时,"二维费用" 的条件是以这样一种隐含的方式给出的：最多只能取 U 件物品。
+//这事实上相等于每件物品多了一种 "件数" 的费用，每个物品的件数费用均为 1，可以付出的最大件数费用为 U。
+
+
+
+//5.通天之分组背包
+//分组背包问题 -- 本质上，对于每个物品组就是 01背包问题，又可以称为 多组01背包问题
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e3 + 5;
+// struct nd{
+//     int w, v;
+// };
+// int n, m, ind = 0, dp[N];
+// int main()
+// {
+//     untie();
+//     cin >> m >> n;
+//     vector<vector<nd> > goods(n + 1); 
+//     while(n--)
+//     {
+//         int w, v, grp;
+//         cin >> w >> v >> grp;
+//         goods[grp].push_back(nd{w, v});
+//         ind = max(ind, grp);
+//     }
+//     for(int i = 1; i <= ind; i++)//组数
+//         for(int j = m; j >= 0; j--)//01背包问题，逆序遍历体积（代价）
+//             for(auto x : goods[i])//方案数（物品数）
+//                 if(j >= x.w)
+//                     dp[j] = max(dp[j], dp[j - x.w] + x.v);
+//     cout << dp[m];
+//     return 0;
+// }
+
+
+
+//6.金明的预算方案
+//一个主件及其若干附件将称为分组背包中的一个物品组，故为 有依赖的分组背包问题 -- 依赖性表现在附件选择的前提是先选主件
+//我们可以将每个附件看成一个01背包问题，这样当我们给一个主件分配多少价钱的时候，
+//就可以知道此时这个主件及其附件在对应的价钱可以获得的最大价值。
+//实际上也可以当成有 5 种操作的 01背包来写
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// struct nd{
+//     int v, p;
+// };
+// int n, m;
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     n /= 10;//降低复杂度
+//     vector<nd> goods[m + 1];//goods[0]为主件组，1 ~ m 为附件组
+//     vector<vector<int> > dp(m + 1, vector<int>(n + 1, 0));
+//     for(int i = 1; i <= m; i++)
+//     {
+//         int v, p, q;
+//         cin >> v >> p >> q;
+//         goods[q].push_back(nd{v / 10, p}); 
+//     }
+//     //dp[i][j]表示给第 i 个背包分配 j 钱数的最大价值
+//     for(int i = 1; i <= m; i++)//*遍历背包
+//         for(auto x : goods[i])//遍历物品(附件)
+//             for(int j = n; j >= x.v; j--)//遍历代价
+//                 dp[i][j] = max(dp[i][j], dp[i][j - x.v] + x.v * x.p * 10);
+//     //遍历主件，给附件分配空间，据最大价值判断是否并入主件
+//     for(int i = 0; i < goods[0].size(); i++)
+//     {
+//         nd base = goods[0][i];
+//         for(int j = n; j >= base.v; j--)//遍历主件的代价
+//             for(int k = j - base.v; k >= 0; k--)//遍历附件的代价
+//                 dp[0][j] = max(dp[0][j], dp[0][j - base.v - k] + base.p * base.v * 10 + dp[i + 1][k]);
+                   //这里dp[i + 1][k]出错？
+//     }
+//     cout << dp[0][n];
+//     return 0;
+// }
 #include <iostream>
 #include <algorithm>
 #include <vector>
 using namespace std;
 #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-int n, W;
+struct nd{
+    int v, p;
+};
+int n, m;
 int main()
 {
     untie();
-    cin >> n >> W;
-    vector<int> dp(W + 5, 0);
-    
+    cin >> n >> m;
+    n /= 10;//降低复杂度
+    vector<nd> goods[m + 1];//goods[0]为主件组，1 ~ m 为附件组
+    vector<vector<int> > dp(m + 1, vector<int>(n + 1, 0));
+    for(int i = 1; i <= m; i++)
+    {
+        int v, p, q;
+        cin >> v >> p >> q;
+        goods[q].push_back(nd{v / 10, p}); 
+    }
+    //dp[i][j]表示给第 i 个背包分配 j 钱数的最大价值
+    for(int i = 1; i <= m; i++)//*遍历背包
+        for(auto x : goods[i])//遍历物品(附件)
+            for(int j = n; j >= x.v; j--)//遍历代价
+                dp[i][j] = max(dp[i][j], dp[i][j - x.v] + x.v * x.p * 10);
+    //遍历主件，给附件分配空间，据最大价值判断是否并入主件
+    for(int i = 0; i < goods[0].size(); i++)
+    {
+        nd base = goods[0][i];
+        for(int j = n; j >= base.v; j--)//遍历主件的代价
+            for(int k = j - base.v; k >= 0; k--)//遍历附件的代价
+                dp[0][j] = max(dp[0][j], dp[0][j - base.v - k] + base.p * base.v * 10 + dp[i + 1][k]);
+    }
+    cout << dp[0][n];
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//也可以认为是特殊的树形背包问题(深度为 2)
 
 
 
@@ -11232,6 +11547,696 @@ int main()
 
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑寒期集训赛5↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓阶段赛1↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+
+
+//https://soj.csgrandeur.cn/csgoj/contest/problemset?cid=1038
+
+
+
+
+/*
+
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <set>
+#include <map>
+#include <queue>
+#include <cctype>
+#include <cmath>
+
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+
+int main()
+{
+
+
+    return 0;
+}
+
+*/
+
+//A
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 2e5 + 10;
+// int n, q;
+// map<int, int> mp;
+// typedef pair<int, int> pii;
+// set<pii> st;
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 0; i < n; i++)
+//     {
+//         int x, y;
+//         cin >> x >> y;
+//         if(x > y) swap(x, y);
+//         if(!st.count(pii(x, y)))
+//             st.insert(pii(x, y)), mp[x]++, mp[y]++;
+//     }
+//     cin >> q;
+//     while(q--)
+//     {
+//         int x;
+//         cin >> x;
+//         if(mp.count(x)) cout << mp[x] << '\n';
+//         else cout << "0\n";
+//     }
+//     return 0;
+// }
+//题解简洁写法:
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// map<int, set<int> > gra;//每个人编号 对应与其具有秘密关系的集合
+// int main()
+// {
+//     untie();
+//     int n, x, a, b;
+//     cin >> n;
+//     while(n--)
+//     {
+//         cin >> a >> b;
+//         gra[a].insert(b);//双向地
+//         gra[b].insert(a);
+//     }
+//     cin >> n;
+//     while(n--)
+//     {
+//         int ans = 0;
+//         cin >> x;
+//         if(gra.count(x)) ans = gra[x].size();
+//         cout << ans << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+
+//B
+//未完成
+//线性dp！
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// #include <string>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 150;
+// int n, len, lent;
+// string s0, s, nm;
+// #define mk(str, i) make_pair(str, i)
+// map<string, int> mp{mk("AA", 5),mk("AC", -1),mk("AG", -2),mk("AT", -1),mk("A-", -3),mk("CC", 5),mk("CG", -3),mk("CT", -2),mk("C-", -4),mk("GG", 5),mk("GT", -2),mk("G-", -2),mk("TT", 5),mk("T-", -1)};
+// struct nd{
+//     string name, dna;
+//     int res;
+// }q[N];
+// int cal(string s, int len)
+// {
+//     for(int i = 0; i < len; i++)
+//     {
+//         for(int j = 0 ; j < len; j++)
+//         {
+
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     cin >> len >> s0;
+//     for(int i = 0; i < n ; i++)
+//     {
+//         cin >> nm >> lent >> s;
+//         q[i] = nd{nm, s, cal(s, lent)};
+//     }
+
+//     return 0;
+// }
+
+
+
+
+//C
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// struct nd{
+//     int t, sc;
+// }arr[200];
+// int dp[10005];
+// int main()
+// {
+//     int t, m;
+//     untie();
+//     cin >> t >> m;
+//     for(int i = 1; i <= m; i++)
+//     {
+//         int a, b, c;
+//         cin >> a >> b >> c;
+//         arr[i] = nd{a - c, b};
+//     }
+//     for(int i = 1; i <= m; i++)
+//         for(int j = t; j >= arr[i].t; j--)
+//             dp[j] = max(dp[j], dp[j - arr[i].t] + arr[i].sc);
+//     cout << dp[t];
+//     return 0;
+// }
+
+
+
+//D
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e6 + 10;
+// int n, m, cnt = 0;
+// bool st[N];
+// set<int> sum;
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     while(m--)
+//     {
+//         int x, y;
+//         cin >> x >> y;
+//         if(!st[x] && !st[y])
+//             cnt++;
+//         if(!st[x] || !st[y])
+//             sum.insert(x), sum.insert(y);
+//         st[x] = st[y] = 1;    
+//     }
+//     cout << (cnt + (n - sum.size())) << '\n';
+//     return 0;
+// }  
+//并查集写法：
+// #include <iostream>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e6 + 5;
+// bool vis[N];
+// int ds[N], n, m, res = 0;
+// void init() { for(int i = 1; i <= n; i++) ds[i] = i, vis[i] = 0;}
+// int find_set(int x){ return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     init();
+//     while(m--)
+//     {
+//         int x, y, fx, fy;
+//         cin >> x >> y;
+//         fx = find_set(x), fy = find_set(y);
+//         if(vis[fx] && vis[fy]) continue;
+//         if(fx == x) ds[x] = fy, vis[fy] = 1;
+//         else if(fy = y) ds[y] = fx, vis[fx] = 1;
+//     }
+//     for(int i = 1; i <= n; i++)
+//         res += find_set(i) == i;
+//     cout << res << '\n';
+//     return 0;
+// }
+
+
+
+
+
+//E
+//简单bfs
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <queue>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1024;
+// int n, m, k, stx, sty, etx, ety, res = -1;
+// bool mp[N][N];
+// int b[N][N], dir[4][2] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+// struct nd{
+//     int x, y, times;
+//     nd(int a, int b, int c) {x = a, y = b, times = c;}
+// };
+// void bfs()
+// {
+//     queue<nd> q;
+//     q.push(nd(stx, sty, 0));
+//     mp[stx][sty] = 1;
+//     while(q.size())
+//     {
+//         nd tp = q.front(); q.pop();
+//         int x = tp.x, y = tp.y, time = tp.times;
+//         if(x == etx && y == ety) 
+//         {
+//             res = time;
+//             return;
+//         }
+//         for(int i = 0; i < 4; i++)
+//         {
+//             int nx = x + dir[i][0];
+//             int ny = y + dir[i][1];
+//             if(nx >= 1 && nx <= n && ny >= 1 && ny <= m && !mp[nx][ny] && time < b[nx][ny])
+//             {
+//                 q.push(nd(nx, ny, time + 1));
+//                 mp[nx][ny] = 1;
+//             }
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m >> k;
+//     memset(b, 0x3F, sizeof b);//memset是一个字节一个字节地填充，对于4个字节的每个元素会变成0x3F3F3F3F = 1061109567;
+//     while(k--)
+//     {
+//         int tm, x, y;
+//         cin >> tm >> x >> y;
+//         b[x][y] = min(b[x][y], tm);
+//     }
+//     cin >> stx >> sty >> etx >> ety;
+//     bfs();    
+//     cout << res;
+//     return 0;
+// }
+
+
+
+
+//F
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e5 + 5;
+// struct nd{
+//     int id, h;  
+// }ds[N];
+// int n, m;
+// int find_set(int x)
+// {
+//     return x == ds[x].id ? x : (ds[x].id = find_set(ds[x].id));
+// }
+// void merge_set(int x, int y, int hr)
+// {
+//     if((x = find_set(x)) != (y = find_set(y)))
+//         ds[x].id = ds[y].id, ds[x].h = ds[y].h = max(ds[x].h, ds[y].h);
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     for(int i = 1; i <= n ; i++) ds[i] = nd{i, 0};
+//     for(int i = 0; i < m; i++)
+//     {
+//         int x, y, hr;
+//         cin >> x >> y >> hr;
+//         merge_set(x, y, hr);
+//     }
+    
+//     return 0;
+// }
+
+
+
+
+
+
+
+///G
+//ceil(n / i) == floor((n - 1) / i) + 1;
+//那么 sum(ceil(n / i)) == sum(floor((n - 1) / i) + 1) == sum(floor((n - 1) / i)) + n
+//与求 sum(floor(n / i)) 同理来求 sum(floor((n - 1) / i))
+// #include <iostream>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// long long n;
+// int main()
+// {
+//     untie();
+//     while(!(cin >> n).eof())
+//     {
+//         int L, R;
+//         long long ans = n--;
+//         for(L = 1; L <= n; L = R + 1)
+//         {
+//             R = n / (n / L);
+//             ans += 1LL * (R - L + 1) * (n / L);
+//         }
+//         cout << ans << "\n";
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+//H
+//多层差分
+// #include <iostream>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e5 + 10;
+// typedef pair<int, int> p;//<颜色c, 数量k>
+// vector<p> b[N];
+// int n, m, q[N];
+// long long sum[N];
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     for(int i = 1, x; i <= n; i++) 
+//         cin >> x, q[i] = x;
+//     while(m--)
+//     {
+//         int l, r, k, c;
+//         cin >> l >> r >> k >> c;
+//         b[l].push_back(p(c, k));
+//         b[r + 1].push_back(p(c, ~k + 1));
+//     }
+//     for(int i = 1; i <= n; i++)
+//     {
+//         for(auto x : b[i])
+//             sum[x.first] += x.second;
+//         cout << sum[q[i]] << ' ';
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+//I
+//线段树
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// typedef long long ll;
+// const int N = 1e5 + 2;
+// int n, m;
+// ll p;
+// ll a[N], b[N], s[N];
+// ll qp(ll a, ll n)
+// {
+//     ll ans = 1;
+//     a %= p;
+//     while(n)
+//     {
+//         if(n & 1) ans = (ans * a) % p;
+//         a = (a * a) % p;
+//         n >>= 1;
+//     }
+//     return ans;
+// }
+// int main()
+// {
+//     untie();    
+//     cin >> n >> m >> p;
+//     for(int i = 1; i < n; i ++)
+//     {
+//         cin >> a[i];
+//         b[i] = a[i] - a[i - 1];
+//     }
+//     int op;
+//     while(m--)
+//     {
+//         cin >> op;
+//         if(op == 1)
+//         {
+//             ll l, r, x, k;
+//             cin >> l >> r >> x >> k;
+//             ll cal = qp(x, k);
+//             b[l] += cal;
+//             b[r + 1] -= cal;
+//         }
+//         else if(op == 2) 
+//         {
+//             ll x, k;
+//             cin >> x >> k;
+//             b[x] += k;
+//             b[x + 1] -= k;
+//         }
+//         else if(op == 3)
+//         {
+//             int l, r;
+//             ll sum = 0, res = 0;
+//             cin >>l >> r;
+//             res = a[1];
+//             for(int i = 1; i <= r; i++)
+//             {
+//                 sum += b[i];
+//                 if(i >= l)
+//                 {
+//                     res = max(res, a[i] + sum);
+
+//                 }
+//             }
+//         }
+//         else if(op == 4)
+//         {
+
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+
+//J
+//Dijistra模板
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// typedef long long ll;
+// const int N = 1e5 + 2;
+// const ll INF = 0x3f3f3f3f3f3f3f3fLL;
+// int n, m, s;
+// struct edge{
+//     int from, to;
+//     ll w;
+// };
+// struct nd{
+//     int id;
+//     ll ndis;
+//     bool operator < (const nd &a)const{
+//         return ndis > a.ndis;
+//     }
+// };
+// vector<edge> e[N];
+// ll dis[N];
+// bool done[N];
+// void dij()
+// {
+//     priority_queue<nd> que;
+//     for(int i = 1; i <= n; i++) dis[i] = INF;
+//     dis[s] = 0;
+//     que.push(nd{s, dis[s]});
+//     while(que.size())
+//     {
+//         nd u = que.top();
+//         que.pop();
+//         if(done[u.id]) continue;
+//         done[u.id] = 1;
+//         for(int i = 0; i < e[u.id].size(); i++)
+//         {
+//             edge y = e[u.id][i];
+//             if(done[y.to]) continue;
+//             if(dis[y.to] > y.w + u.ndis)
+//             {
+//                 dis[y.to] = y.w + u.ndis;
+//                 que.push(nd{y.to, dis[y.to]});
+//             }
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m >> s;
+//     while(m--)
+//     {
+//         int u, v;
+//         ll w;
+//         cin >> u >> v >> w;
+//         e[u].push_back(edge{u, v, w});
+//         e[v].push_back(edge{v, u, w});
+//     }
+//     dij();
+//     for(int i = 1; i <= n; i++)
+//         printf(" %lld" + !(i - 1), dis[i]);
+//     return 0;
+// }
+
+
+
+//K
+// #include <cstdio>
+// int main()
+// {
+//     int n;
+//     scanf("%d", &n);
+//     double sum = 0;
+//     for(int i = 1; i <= n; i++)
+//         sum += 1.0 * n / i;
+//     printf("%.6lf\n", sum);
+//     return 0;
+// }
+
+
+
+//L
+// #include <iostream>
+// #include <set>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int flr[100005];
+// set<int> vis;
+// int main()
+// {
+//     untie();
+//     int n;
+//     cin >> n;
+//     for(int i = 1; i <= n; i++) cin >> flr[i];
+//     int l = 1, r = 1, ans = 0;
+//     while(r <= n)
+//     {
+//         if(!vis.count(flr[r])) vis.insert(flr[r++]);
+//         else vis.erase(flr[l++]);
+//         ans = max(ans, r - l);
+//     }
+//     cout << ans;
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑阶段赛1↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
