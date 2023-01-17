@@ -7417,6 +7417,12 @@ O(log2n * n) = O(nlogn)
 
 //2.疯狂的采药
 //完全背包问题
+/*
+形式上，我们只需要将 01 背包问题的「一维空间优化」解法中的「容量维度」遍历方向从「从大到小 改为 从小到大」就可以解决完全背包问题。
+但本质是因为两者进行状态转移时依赖了不同的格子：
+ 01背包 依赖的是「上一行正上方的格子」和「上一行左边的格子」。
+完全背包 依赖的是「上一行正上方的格子」和「本行左边的格子」。
+*/
 // #include <iostream>
 // #include <algorithm>
 // #include <vector>
@@ -7441,7 +7447,7 @@ O(log2n * n) = O(nlogn)
 
 
 //3.宝物筛选
-//多重背包问题 -- 一样物品可以选多件，且不限制要装满背包
+//多重背包问题 -- 一样物品可以选多件，即不同物品有不同的选择上限
 
 //一法：转化为 01背包 -- 枚举 k 件物品，把问题看成仅有一件的占用空间为 k*Vi ，价值为 k*Wi 的物品该不该拿
 //无优化(单例最高耗时922ms)
@@ -7469,6 +7475,7 @@ O(log2n * n) = O(nlogn)
 //     cout << res;
 //     return 0;
 // }
+
 //二进制优化(最好用) -- 一种有一定数量 sum 的物品，拆分成 x 个基元，由这 x 个基元组成 1 ~ sum 所有的取件数情况 (单例最高耗时141ms) -- 优化效果显著
 //先按 2 的倍数升序拆分为 x - 1 个数，最后剩下一个余数，共 x 个基数，
 //如 sum = 25，分成 1, 2, 4, 8, 10(10 < 2^4 = 16) 五个基元，并且由 5 个数任意自由组合得到 1 ~ 25 的所有数字
@@ -7623,14 +7630,29 @@ O(log2n * n) = O(nlogn)
 //一个主件及其若干附件将称为分组背包中的一个物品组，故为 有依赖的分组背包问题 -- 依赖性表现在附件选择的前提是先选主件
 //我们可以将每个附件看成一个01背包问题，这样当我们给一个主件分配多少价钱的时候，
 //就可以知道此时这个主件及其附件在对应的价钱可以获得的最大价值。
-//实际上也可以当成有 5 种操作的 01背包来写
+/*
+案例：
+2000 10
+500 1 0
+400 4 0
+300 5 1
+400 5 1
+200 5 0
+500 4 5
+400 4 0
+320 2 0
+410 3 0
+400 3 5
+7430
+*/
+//先处理附件价值状态，再往主件中加入附件 (230 ms)
 // #include <iostream>
 // #include <algorithm>
 // #include <vector>
 // using namespace std;
 // #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
 // struct nd{
-//     int v, p;
+//     int v, p, pos;
 // };
 // int n, m;
 // int main()
@@ -7644,7 +7666,7 @@ O(log2n * n) = O(nlogn)
 //     {
 //         int v, p, q;
 //         cin >> v >> p >> q;
-//         goods[q].push_back(nd{v / 10, p}); 
+//         goods[q].push_back(nd{v / 10, p, i}); 
 //     }
 //     //dp[i][j]表示给第 i 个背包分配 j 钱数的最大价值
 //     for(int i = 1; i <= m; i++)//*遍历背包
@@ -7656,52 +7678,193 @@ O(log2n * n) = O(nlogn)
 //     {
 //         nd base = goods[0][i];
 //         for(int j = n; j >= base.v; j--)//遍历主件的代价
-//             for(int k = j - base.v; k >= 0; k--)//遍历附件的代价
-//                 dp[0][j] = max(dp[0][j], dp[0][j - base.v - k] + base.p * base.v * 10 + dp[i + 1][k]);
-                   //这里dp[i + 1][k]出错？
+//             for(int k = j - base.v; k >= 0; k--)//遍历加入附件的代价
+//                 dp[0][j] = max(dp[0][j], dp[0][j - base.v - k] + base.p * base.v * 10 + dp[base.pos][k]);
 //     }
 //     cout << dp[0][n];
 //     return 0;
 // }
+
+//实际上也可以当成有 5 种操作的 01背包来写 (38 ms)
+//| 1.不变 | 2.只拿主件 | 3.主件 + 附件1 | 4.主件 + 附件2 | 5.主件 + 附件1 + 附件2 |
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int n, m, v[65][3], p[65][3];//v[i][j] 第 i 个物品，若 j = 0，为主件；而 j = 1, 2 为附件 1，2
+// //物品价值定义为 v * p，直接将原值存入p数组中
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     n /= 10;//降低复杂度
+//     vector<int> dp(n + 1, 0);
+//     for(int i = 1; i <= m; i++)
+//     {
+//         int a, b, grp;
+//         cin >> a >> b >> grp;
+//         if(grp) v[grp][2 - !v[grp][1]] = a / 10, p[grp][2 - !p[grp][1]] = a * b;//附件1位置未占用就存入位置1，已占用就会存入位置2
+//         else v[i][0] = a / 10, p[i][0] = a * b;
+//     }
+//     for(int i = 1; i <= m; i++)
+//         for(int j = n; j >= v[i][0]; j--)
+//         {
+//             dp[j] = max(dp[j], dp[j - v[i][0]] + p[i][0]);//情况1, 2
+//             if(j >= v[i][0] + v[i][1]) dp[j] = max(dp[j], dp[j - v[i][0] - v[i][1]] + p[i][0] + p[i][1]);//3
+//             if(j >= v[i][0] + v[i][2]) dp[j] = max(dp[j], dp[j - v[i][0] - v[i][2]] + p[i][0] + p[i][2]);//4
+//             if(j >= v[i][0] + v[i][1] + v[i][2]) dp[j] = max(dp[j], dp[j - v[i][0] - v[i][1] - v[i][2]] + p[i][0] + p[i][1] + p[i][2]);//5
+//         }
+//     cout << dp[n];
+//     return 0;
+// }
+
+//也可以认为是特殊的树形背包问题 (深度为 2)
+
+
+
+//7.Bone Collector II
+//求第 k 优解(第 k 大价值)
+//在原来 01背包 的基础上在加一维记录即可，即 dp[i][j][k] - 遍历到第 i 个物品，且体积不超过 j 时可得的第 k 大价值
+//当然可以滚动掉第一维，剩余 dp[j][k]
+//a数组记录的是 不选第 i 个物品 的 k 个最大价值
+//b数组记录的是 选第 i 个物品 的 k 个最大价值
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int MAXN = 1e2 + 5;
+// int T, val[MAXN], vol[MAXN];
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         int n, v, k;
+//         cin >> n >> v >> k;
+//         vector<vector<int> > dp(v + 1, vector<int>(k + 1, 0));
+//         for(int i = 1; i <= n; i++) cin >> val[i];
+//         for(int i = 1; i <= n; i++) cin >> vol[i];
+//         for(int i = 1; i <= n; i++)
+//         {
+//             for(int j = v; j >= vol[i]; j--)
+//             {
+//                 int ai = 1, bi = 1;
+//                 vector<int> a(k + 2, 0), b(a);
+//                 a[k + 1] = b[k + 1] = -1;
+//                 //填充a, b
+//                 for(int m = 1; m <= k; m++)
+//                 {
+//                     a[m] = dp[j][m];
+//                     b[m] = dp[j - vol[i]][m] + val[i];
+//                 }
+//                 //合并a, b 取较大者存入 dp
+//                 for(int m = 1; m <= k && (a[ai] != -1 || b[bi] != -1); )//相当于从 2*k 个数排序后取前 k 个数
+//                 {
+//                     dp[j][m] = a[ai] > b[bi] ? a[ai++] : b[bi++];
+//                     if(dp[j][m] != dp[j][m - 1])//题意：两种不同方法得到相同价值是算作同一个种，即去除重复。若无该条件，则去掉该句即可
+//                         m++;//不重复说明该解占用有效
+//                 }
+//             }
+//         }
+//         cout << dp[v][k] << "\n";
+//     }
+//     return 0;
+// }
+
+
+
+//8.投资的最大效益
+//经典技巧降低时空复杂度：由于 a 是 1000 的倍数，那就全程用 a /= 1000 计算
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// typedef long long ll;
+// const int N = 2e5 + 5;
+// int n, d, val[50], cost[50];
+// ll s, sum, dp[N];
+// int main()
+// {
+//     untie();
+//     cin >> s >> n >> d;
+//     sum = s;
+//     for(int i = 1; i <= d; i++) cin >> cost[i] >> val[i], cost[i] /= 1000;
+//     for(int i = 1; i <= n; i++)
+//     {
+//         ll tp = 0;
+//         memset(dp, 0, sizeof dp);
+//         for(int k = 1; k <= d; k++)
+//         {
+//             for(int j = 1; j <= sum / 1000; j++)
+//             {
+//                 if(j >= cost[k]) dp[j] = max(dp[j], dp[j - cost[k]] + val[k]);
+//                 tp = max(tp, dp[j]);
+//             }
+//         }
+//         sum += tp;
+//     }
+//     cout << sum;
+//     return 0;
+// }
+
+
+
+//9.樱花
+//混合背包问题
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <cstring>
 using namespace std;
 #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-struct nd{
-    int v, p;
-};
-int n, m;
+
 int main()
 {
     untie();
-    cin >> n >> m;
-    n /= 10;//降低复杂度
-    vector<nd> goods[m + 1];//goods[0]为主件组，1 ~ m 为附件组
-    vector<vector<int> > dp(m + 1, vector<int>(n + 1, 0));
-    for(int i = 1; i <= m; i++)
-    {
-        int v, p, q;
-        cin >> v >> p >> q;
-        goods[q].push_back(nd{v / 10, p}); 
-    }
-    //dp[i][j]表示给第 i 个背包分配 j 钱数的最大价值
-    for(int i = 1; i <= m; i++)//*遍历背包
-        for(auto x : goods[i])//遍历物品(附件)
-            for(int j = n; j >= x.v; j--)//遍历代价
-                dp[i][j] = max(dp[i][j], dp[i][j - x.v] + x.v * x.p * 10);
-    //遍历主件，给附件分配空间，据最大价值判断是否并入主件
-    for(int i = 0; i < goods[0].size(); i++)
-    {
-        nd base = goods[0][i];
-        for(int j = n; j >= base.v; j--)//遍历主件的代价
-            for(int k = j - base.v; k >= 0; k--)//遍历附件的代价
-                dp[0][j] = max(dp[0][j], dp[0][j - base.v - k] + base.p * base.v * 10 + dp[i + 1][k]);
-    }
-    cout << dp[0][n];
+    
     return 0;
 }
-//也可以认为是特殊的树形背包问题 (深度为 2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
