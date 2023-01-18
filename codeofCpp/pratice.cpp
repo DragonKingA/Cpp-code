@@ -7384,7 +7384,7 @@ O(log2n * n) = O(nlogn)
 
 
 //背包问题
-//https://github.com/CSGrandeur/s-1problem1day1ac/discussions/554
+//背包九讲：https://github.com/CSGrandeur/s-1problem1day1ac/discussions/554
 
 //1.Bone Collector
 //01背包问题
@@ -7816,19 +7816,199 @@ O(log2n * n) = O(nlogn)
 
 //9.樱花
 //混合背包问题
+//老实分算三个背包，并且二进制优化多重背包 (55ms)
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int n, T;
+// struct nd{
+//     int t, c;
+// }arr[10005];
+// string st, se;
+// int transform(string t)
+// {
+//     int h = 0, m = 0, pos = t.find(':');
+//     for(int i = 0; i < pos; i++) h = h * 10 + (t[i] - '0');
+//     for(int i = pos + 1; i < t.size(); i++) m = m * 10 + (t[i] - '0');
+//     return h * 60 + m;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> st >> se >> n;
+//     T = transform(se) - transform(st);
+//     vector<int> dp(T + 1, 0);
+//     for(int i = 0; i < n; i++)
+//     {
+//         int t, c, p;
+//         cin >> t >> c >> p;
+//         if(p == 0 || t * p >= T)//完全背包
+//         {
+//             for(int j = t; j <= T; j++)
+//                 dp[j] = max(dp[j], dp[j - t] + c);
+//         }
+//         else if(p == 1)//01背包
+//         {
+//             for(int j = T; j >= t; j--)
+//                 dp[j] = max(dp[j], dp[j - t] + c);
+//         }
+//         else//多重背包
+//         {
+//             int cnt = 0;
+//             for(int j = 1; j <= p; j <<= 1)
+//             {
+//                 arr[++cnt] = nd{t * j, c * j};
+//                 p -= j;
+//             }
+//             if(p) arr[++cnt] = nd{t * p, c * p};
+//             for(int k = 1; k <= cnt; k++)//转为01背包
+//                 for(int j = T; j >= arr[k].t; j--)
+//                     dp[j] = max(dp[j], dp[j - arr[k].t] + arr[k].c);
+//         }
+//     }
+//     cout << dp[T];
+//     return 0;
+// }
+
+//全部转化为01背包，用二进制优化(77ms)
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// #include <cstring>
+// #include <cstdio>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int n, T, h1, h2, m1, m2;
+// struct nd{
+//     int t, c;
+// }arr[10005];
+// int main()
+// {
+//     scanf("%d:%d %d:%d %d", &h1, &m1, &h2, &m2, &n);
+//     T = (h2 - h1) * 60 + m2 - m1;
+//     vector<int> dp(T + 1, 0);
+//     for(int i = 0; i < n; i++)
+//     {
+//         int t, c, p, cnt = 0;
+//         scanf("%d%d%d", &t, &c, &p);
+//         if(!p) p = T / t;//完全背包的无限次转为有效次数即可
+//         for(int j = 1; j <= p; j <<= 1)
+//         {
+//             arr[++cnt] = nd{t * j, c * j};
+//             p -= j;
+//         }
+//         if(p) arr[++cnt] = nd{t * p, c * p};
+//         for(int k = 1; k <= cnt; k++)
+//             for(int j = T; j >= arr[k].t; j--)
+//                 dp[j] = max(dp[j], dp[j - arr[k].t] + arr[k].c);
+//     }
+//     printf("%d\n", dp[T]);
+//     return 0;
+// }
+
+//亦可单调队列优化
+
+
+
+//10.ACboy needs your help
+//分组背包
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int n, m, a[105][105];
+// int main()
+// {
+//     untie();
+//     while(cin >> n >> m, n || m)
+//     {
+//         vector<int> dp(m + 1, 0);
+//         for(int i = 1; i <= n; i++)
+//             for(int j = 1; j <= m; j++)
+//                 cin >> a[i][j];
+//         for(int i = 1; i <= n; i++)
+//             for(int j = m; j >= 0; j--)
+//                 for(int k = 1; k <= m; k++)
+//                     if(j >= k)
+//                         dp[j] = max(dp[j], dp[j - k] + a[i][k]);
+//         cout << dp[m] << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+//11.Acwing 12	背包问题求具体方案
+//背包问题求具体方案，且要求字典序最小(贪心)
+
+
+
+
+
+
+
+
+
+
+
+
+/*十二. 图论基础, 拓扑排序, 最小生成树*/
+/*
+概念:
+
+
+
+*/
+//链式前向星
 #include <iostream>
 #include <algorithm>
 #include <vector>
-#include <cstring>
 using namespace std;
 #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-
+const int N = 1e6 +5, M = 2e6 + 5;//N为最大结点数，M为最多边数
+int n, m, head[N], cnt = 0;//head[u]指向 u 的一个邻居在edge[]中的存储位置 即 连着 u 的第一条边(按录入顺序), cnt记录当前可存储位置
+struct nd{
+    int from, to, next;//from为边的起点，to为边的终点，next为 u 的下一个邻居
+    int w;//边权
+    nd(int a, int b, int c, int d) { from = a, to = b, next = c, w = d;}
+}edge[M];
+void init()
+{
+    for(int i = 0; i < N; i++) head[i] = -1;        //点初始化
+    for(int i = 0; i < M; i++) edge[i].next = -1;   //边初始化
+    cnt = 0;
+}
+void addedge(int u, int v, int w)
+{
+    edge[cnt] = nd(u, v, head[u], w);
+    head[u] = cnt++;
+}
 int main()
 {
     untie();
+    init();
+    cin >> n >> m;//n个点，m条边
+    for(int i = 0; i < m; i++)
+    {
+        int u, v, w;
+        cin >> u >> v >> w;
+        addedge(u, v, w);
+    }
     
     return 0;
 }
+
+
+
+
+
+
+
+
 
 
 
