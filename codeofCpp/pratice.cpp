@@ -7959,58 +7959,300 @@ O(log2n * n) = O(nlogn)
 /*十二. 图论基础, 拓扑排序, 最小生成树*/
 /*
 概念:
+顶点（Vertex）：图G中的数据元素称为顶点。一条边连接两个顶点。
 
+无向图：若图G中的每条边都是没有方向的，则称图G为无向图。
 
+有向图：若图G中的每条边都是有方向的，则称图G是有向图。
+
+弧：即有向边。边的终点被称为弧头，起始点被称为弧尾。
+
+度（degree）：一个顶点的度就是与该顶点相关联的边的数目。
+
+出度：有向图中，顶点所连接的出边的数量。
+
+入度：有向图中，顶点所连接的入边的数量。
+
+环：环是一条只有第一个和最后一个顶点重复的非空路径。
+
+有向无环图：又称DAG图，即没有环的有向图。DAG图是动态规划和记忆化搜索的结构基础。
+
+子图（Subgraph）：由图中部分节点以及这些节点间的边组成的图。
+
+连通图（Connected Graph）：若图G中的任意两个结点u和v，结点u与结点v相互可达，则成图G是连通图。
+
+连通分量（Connected Component）：各节点间至少存在一条边可以连通。
+
+树: 树就是无环连通图。互不相连的树组成的集合称为森林。具有n个顶点和n-1条边的连通图，是树的充要条件。
+    如果一个无向连通图不包含回路(连通图中不存在环)，那么就是一棵树。
+
+生成树：含有连通图全部顶点并有n-1条边的连通子图。
+
+邻接矩阵: 所谓矩阵其实就是二维数组。对于有n个顶点的图 G=(V,E) 来说，我们可以用一个 n×n 的矩阵 A 来表示 G 中各顶点的相邻关系
+         如果点 i 和 点 j 之间存在边(或弧)，则 A[i][j] = 1，否则 A[i][j] = 0。一个图的邻接矩阵是唯一的，矩阵的大小只与顶点个数N有关。
+
+邻接表：邻接表的思想是，对于图中的每一个顶点，用一个数组来记录这个点和哪些点相连。由于相邻的点会动态的添加，所以对于每个点，我们需要用vector来记录。
 
 */
-//链式前向星
-#include <iostream>
-#include <algorithm>
-#include <vector>
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-const int N = 1e6 +5, M = 2e6 + 5;//N为最大结点数，M为最多边数
-int n, m, head[N], cnt = 0;//head[u]指向 u 的一个邻居在edge[]中的存储位置 即 连着 u 的第一条边(按录入顺序), cnt记录当前可存储位置
-struct nd{
-    int from, to, next;//from为边的起点，to为边的终点，next为 u 的下一个邻居
-    int w;//边权
-    nd(int a, int b, int c, int d) { from = a, to = b, next = c, w = d;}
-}edge[M];
-void init()
-{
-    for(int i = 0; i < N; i++) head[i] = -1;        //点初始化
-    for(int i = 0; i < M; i++) edge[i].next = -1;   //边初始化
-    cnt = 0;
-}
-void addedge(int u, int v, int w)
-{
-    edge[cnt] = nd(u, v, head[u], w);
-    head[u] = cnt++;
-}
-int main()
-{
-    untie();
-    init();
-    cin >> n >> m;//n个点，m条边
-    for(int i = 0; i < m; i++)
-    {
-        int u, v, w;
-        cin >> u >> v >> w;
-        addedge(u, v, w);
-    }
-    
-    return 0;
-}
+//邻接矩阵 gra[N][N]，gra[i][j]表示边(i, j)的权值，若为无权边，则用 1 表示有边，否则 0 表示无边
+
+//*邻接表
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e3 +5;// N 个点
+// int n, m;                 
+// struct edge{
+//     int from, to, w;                                          
+// };
+// vector<edge> e[N];
+// void init()
+// {
+//     for(int i = 0; i <= n; i++)
+//         e[i].clear();
+// }
+// int main()
+// {
+//     untie();
+//     init();
+//     cin >> n >> m;                                  //n个点，m条边
+//     for(int i = 0; i < m; i++)
+//     {
+//         int u, v, w;
+//         cin >> u >> v >> w;
+//         e[u].push_back(edge{u, v, w});
+//     }
+//     //遍历各节点的所有邻居
+//     for(int u = 0; u <= n; u++)
+//     {
+//         if(e[u].empty()) continue;
+//         cout << "node " << u << " 's neighbours: ";
+//         // for(int i = 0; i < e[u].size(); i++)
+//         for(auto v : e[u])
+//         {
+//             cout << v.to << " ";//不同于链式前向星，这里会按输入顺序输出
+//         }
+//         cout << '\n';
+//     }
+//     return 0;
+// }
+
+//*链式前向星
+//1.节点编号范围为 0 ~ n - 1
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e3 + 5, M = 2e3 + 5;                 //N为最大结点数，M为最多边数
+// int n, m, head[N], cnt = 0;                         //head[u]指向 u 的一个邻居在edge[]中的存储位置 即 连着 u 的最后一条边(按录入顺序的最后者), cnt记录当前可存储位置
+// struct node{
+//     int from, to, next;                             //from为边的起点(一般不需要)，to为边的终点，next为 u 的下一个邻居
+//     int w;                                          //边权
+// }edge[M];
+// void init()
+// {
+//     for(int i = 0; i < N; i++) head[i] = -1;        //点初始化
+//     for(int i = 0; i < M; i++) edge[i].next = -1;   //边初始化
+//     cnt = 0;
+// }
+// void addedge(int u, int v, int w)
+// {
+//     edge[cnt] = node{u, v, head[u], w};
+//     //edge[cnt].next = head[u] 将已录入位置存起，对于同一个起点 u，最终是从最后录入的位置连向最先录入的位置以遍历所有邻居
+//     head[u] = cnt++;
+// }
+// int main()
+// {
+//     untie();
+//     init();
+//     cin >> n >> m;                                  //n个点，m条边
+//     for(int i = 0; i < m; i++)
+//     {
+//         int u, v, w;
+//         cin >> u >> v >> w;
+//         addedge(u, v, w);
+//     }
+//     //遍历各节点的所有邻居
+//     for(int u = 0; u <= n; u++)
+//     {
+//         if(!~head[u]) continue;
+//         cout << "node " << u << " 's neighbours: ";
+//         for(int i = head[u]; ~i; i = edge[i].next)//~i = -(i + 1) ，这里相当于 i != -1
+//             cout << edge[i].to << " ";
+//         cout << '\n';
+//     }
+//     return 0;
+// }
+//2.节点编号范围为 1 ~ n，这里就可以用 0 表示空，而不是 -1，省去 init() 函数
+//简化版
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e3 + 5, M = 2e3 + 5;
+// int n, m, head[N], cnt = 1;
+// struct node{ int to, next, w;} edge[M];
+// void addedge(int u, int v, int w)
+// {
+//     edge[cnt] = node{v, head[u], w};
+//     head[u] = cnt++;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;                                  
+//     for(int i = 0; i < m; i++)
+//     {
+//         int u, v, w;
+//         cin >> u >> v >> w;
+//         addedge(u, v, w);
+//     }
+//     //遍历各节点的所有邻居
+//     for(int u = 0; u <= n; u++)
+//     {
+//         if(!head[u]) continue;
+//         cout << "node " << u << " 's neighbours: ";
+//         for(int i = head[u]; i; i = edge[i].next)//不为 0
+//             cout << edge[i].to << " ";
+//         cout << '\n';
+//     }
+//     return 0;
+// }
+/*
+TEST:
+6 11
+1 2 1
+2 1 2
+5 2 3
+6 3 4 
+2 3 5
+1 4 6
+2 4 7
+4 1 8
+2 5 9
+4 5 10
+5 6 11
+*/
+
+
+//拓扑排序
+/*
+概念：
+    对一个有向无环图(Directed Acyclic Graph简称DAG)G进行拓扑排序，是将G中所有顶点排成一个线性序列，
+    使得图中任意一对顶点u和v，若边<u,v>∈E(G)，则u在线性序列中出现在v之前。
+    通常，这样的线性序列称为满足拓扑次序(Topological Order)的序列，简称拓扑序列。
+    简单的说，由某个集合上的一个偏序得到该集合上的一个全序，这个操作称之为拓扑排序。
+    出度：有向图中，顶点所连接的出边的数量。
+    入度：有向图中，顶点所连接的入边的数量。
+?简单地说，在一个有向图中，对所有的节点进行排序，要求没有一个节点指向它前面的节点。当前仅当图是有向无环图时，拓扑排序有解，否则必有环。
+排序方法：
+    基于BFS：
+        1.无前驱的顶点优先：从入度为 0 的点开始，正序
+        2.无后继的顶点优先：从出度为 0 的点逆推，逆序
+    基于DFS：
+
+无前驱的顶点优先法的实现步骤：
+    1.先统计所有节点的入度，将所有入度为 0 的点入队
+    2.遍历此时入度为 0 的点 u，将其指向的所有节点的入度减 1，即分离出 u
+    3.一直重复该操作，直到所有的节点全部入过队
+    4.如果最后不存在入度为0的节点，那就说明有环，不存在拓扑排序，也就是很多题目的无解的情况。
+*/
+//一般写法 - 点(1 ~ n)
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// #include <queue>
+// #include <functional>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e5;
+// int indegree[N];//记录每个点的入度
+// int n, m;//n 个点， m 条边
+// queue<int> q;//当时入度为 0 的点集
+// //若输出字典序最小或编号升序的拓扑序列，则需要优先队列 priority_queue<int> q;
+// vector<int> edge[N], ans;//ans 为拓扑序列
+// void bfs()
+// {
+//     //初始化队列 -- 入度为 0 的点
+//     for(int i = 1; i <= n; i++)
+//         if(indegree[i] == 0) q.push(i);
+//     while(!q.empty())
+//     {
+//         int now = q.front(); q.pop();
+//         ans.push_back(now);
+//         for(int x : edge[now])
+//             if(--indegree[x] == 0)
+//                 q.push(x);
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     for(int i = 0; i < m; i++)
+//     {
+//         int u, v;
+//         cin >> u >> v;
+//         edge[u].push_back(v);
+//         indegree[v]++;
+//     }
+//     bfs();
+//     for(int i = 0; i < ans.size(); i++)
+//         cout << (" " + !i) << ans[i];
+//     return 0;
+// }
+
+//1.确定比赛名次
+//要求输出时编号小的队伍在前，将 queue 更换为 优先队列；该题保证拓扑序列存在。
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// #include <queue>
+// #include <functional>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 505;
+// int n, m;
+// vector<int> ans;
+// int main()
+// {
+//     untie();
+//     while(cin >> n >> m)
+//     {
+//         vector<int> edge[N];
+//         int indegree[N] = {0};
+//         priority_queue<int, vector<int>, greater<int> > q;
+//         for(int i = 0; i < m; i++)
+//         {
+//             int u, v;
+//             cin >> u >> v;
+//             edge[u].push_back(v);
+//             indegree[v]++;
+//         }
+//         for(int i = 1; i <= n; i++)
+//             if(!indegree[i]) q.push(i);
+//         while(!q.empty())
+//         {
+//             int now = q.top(); q.pop();
+//             ans.push_back(now);
+//             for(int x : edge[now])
+//                 if(!(--indegree[x])) q.push(x);
+//         }
+//         for(int i = 0; i < ans.size(); i++)
+//             cout << (" " + !i) << ans[i];
+//         cout << '\n';
+//         ans.clear();
+//     }
+//     return 0;
+// }
 
 
 
-
-
-
-
-
-
-
+//图论基础
+//1.图的遍历
 
 
 
