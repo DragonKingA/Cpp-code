@@ -8253,12 +8253,61 @@ TEST:
 
 //图论基础
 //1.图的遍历
+//建反图（边的方向反过来），从大到小遍历点
+// #include <iostream>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e5 + 5;
+// int n, m, ans[N];
+// vector<int> gra[N];
+// void dfs(int now, int x)
+// {
+//     if(ans[now]) return;
+//     ans[now] = x;
+//     for(auto i : gra[now])
+//         dfs(i, x);
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;                             
+//     for(int i = 1; i <= m; i++)
+//     {
+//         int u, v;
+//         cin >> u >> v;
+//         gra[v].push_back(u);
+//     }
+//     for(int i = n; i > 0; i--)
+//         dfs(i, i);
+//     for(int i = 1; i <= n; i++)
+//         cout << (" " + !(i - 1)) << ans[i];
+//     return 0;
+// }
 
 
 
+//2.产生冠军
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <map>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+const int N = 1e5 + 5;
+int n;
+int main()
+{
+    untie();
+    while(cin >> n, n)
+    {
 
 
-
+    }
+    return 0;
+}
 
 
 
@@ -12805,6 +12854,398 @@ int main()
 
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓第十七届中国计量大学程序设计竞赛↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+
+
+//F
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+
+// string str = "The party began, the greasy uncle was playing cards, the fat otaku was eating, and the little beauty was drawing.At the party, people will play a game called Flag Scramble. The rule of this game is that the host speaks a sentence, and people find the letter that appears the most in the sentence. The first person who calls this letter wins. If your answer is wrong or someone else wins, you will be fined. You don't need to deal with many situations, just find the letter that appears most frequently in the statement of this problem and print it out, the letters are case insensitive.Very simple, right? Please remember to count carefully! Do not count wrong! This is the most straightforward question after all, but do not get a time penalty here, it is not worth it! In order for everyone to have a good experience, I really tried my best, and finally thought of such a question as a sign-in question, do not thank me too much, manual dog head.";
+// map<char, int> mp;
+// int main()
+// {
+//     untie();
+//     cout << 'e';
+//     return 0;
+// }
+
+
+
+
+//I
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int T;
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         int x;
+//         cin >> x;
+//         if(x >= 3) cout << "Yes\n";
+//         else cout << "No\n";
+//     }
+//     return 0;
+// }
+
+
+//B
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int T;
+// string a, b;
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         cin >> a >> b;
+//         int cnta = 0, cntb = 0;
+//         vector<int> v1, v2{0};//无0 和 有0
+//         for(int i = 0; i < a.size(); i++)
+//         {
+//             if(cnta & 1)//反转
+//             {
+//                 if(a[i] == '1') a[i] = '0';
+//                 else a[i] = '1';
+//             }
+//             if(a[i] == b[i]) continue;
+//             v1.push_back(i + 1);
+//             cnta++;
+//         }
+//         //固定 a = "00000···"
+//         for(int i = 0; i < b.size(); i++)
+//         {
+//             if(cntb & 1)
+//             {
+//                 if(b[i] == '1') b[i] = '0';
+//                 else b[i] = '1';
+//             }
+//             if(b[i] == '0') continue;
+//             v2.push_back(i + 1);
+//             cntb++;
+//         }
+//         if(v2.size() <= v1.size())//v2优先
+//         {
+//             for(int i = 0; i < v2.size(); i++) 
+//                 cout << (" " + !i) << v2[i];
+//         }
+//         else
+//         {
+//             for(int i = 0; i < v1.size(); i++) 
+//                 cout << (" " + !i) << v1[i];
+//         }
+//         cout << '\n';
+//     }
+//     return 0;
+// }
+//10001
+//cnta = 1
+
+
+//C
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// typedef long long ll;
+// int T, n;
+// int main()
+// {
+//     scanf("%d", &T);
+//     while(T--)
+//     {
+//         scanf("%d", &n);
+//         ll now = 0, res = n;//至少需要n分
+//         while(n--)
+//         {
+//             ll l, r;
+//             scanf("%lld%lld", &l, &r);
+//             if(now >= l && now <= r) continue;
+//             if(now < l) res += l - now, now = l;
+//             else res += now - r, now = r;
+//         }
+//         printf("%lld\n", res);
+//     }
+//     return 0;
+// }
+
+
+
+
+
+//E
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int T, arr[100005];
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         int n; cin >> n;
+//         for(int i = 1; i <= n; i++) cin >> arr[i];
+//         //最后一个结点上
+//     }
+//     return 0;
+// }
+
+
+
+//K
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// string s;
+// int dy[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+// bool check(int pos)// ' ' - '0' < 0
+// {
+//     int l = pos, r = pos + 7;
+//     int year = 0;
+//     //前4位年份存储 + 判断回文
+//     while(l <= r)
+//     {
+//         year = year * 10 + (s[l] - '0');
+//         if(s[l] != s[r]) return 0;
+//         l++, r--;
+//     }
+//     int month = (s[pos + 4] - '0') * 10 + (s[pos + 5] - '0');
+//     int day = (s[pos + 6] - '0') * 10 + (s[pos + 7] - '0');
+//     if(year < 1 || year > 9999) return 0;
+//     if(month < 1 || month > 12) return 0;
+//     if(day < 1 || day > 31) return 0;
+//     //特判二月
+//     if(month == 2)
+//     {
+//         if((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) return day <= 29;
+//         else return day <= 28;
+//     }
+
+//     return day >= 1 && day <= dy[month];
+// }
+// int main()
+// {
+//     untie();
+//     while(getline(cin, s))
+//     {
+//         if(s == "#") break;
+//         int ans = 0;
+        
+//         s = "*" + s;
+//         for(int i = 1; i + 7 <= s.size() - 1; i++)
+//         {
+//             if(check(i)) ans++;
+//         }
+//         cout << ans << '\n';
+//     }
+//     return 0;
+// }
+
+//20222202
+//12345678
+
+
+
+
+//H
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// typedef long long ll;
+// const int N = 1e5 + 5;
+// int T, n, m;
+// int nb[N];
+
+// int tree[N*4];
+// bool vis[N*4];
+
+// int ls(int p) { return p << 1;}//左子
+// int rs(int p) { return p << 1 | 1;}//右子
+
+// void pushup(int p)//最大值传递
+// {
+//     int pl = ls(p), pr = rs(p);
+//     tree[p] = max(tree[pl] * vis[pl], tree[pr] * vis[pr]);//不存在记为 0
+// }
+
+// void build(int p, int pl, int pr)
+// {
+//     vis[p] = 1;
+//     if(pl == pr)
+//     {
+//         tree[p] = nb[pl];
+//         return;
+//     }
+//     int mid = (pl + pr) >> 1;
+//     build(ls(p), pl, mid);
+//     build(rs(p), mid + 1, pr);
+//     pushup(p);
+// }
+
+// void update(int L, int R, int p, int pl, int pr)//去除区间内元素（状态置为不存在即可）
+// {
+//     if(L <= pl && pr <= R)
+//     {
+//         vis[p] = 0;
+//         return;
+//     }
+//     int mid = (pl + pr) >> 1;
+//     //节点存在就深入访问
+//     int nls = ls(p), nrs = rs(p);
+//     if(L <= mid && vis[nls]) update(L, R, nls, pl, mid);
+//     if(R > mid && vis[nrs]) update(L, R, nrs, mid + 1, pr); 
+//     pushup(p);   
+// }
+
+// int main()
+// {
+//     scanf("%d", &T);
+//     while(T--)
+//     {
+//         scanf("%d%d", &n, &m);
+//         for(int i = 1; i <= n; i++)
+//             scanf("%d", &nb[i]);
+//         build(1, 1, n);
+//         while(m--)
+//         {
+//             int l, r;
+//             scanf("%d%d", &l, &r);
+//             update(l, r, 1, 1, n);
+//             //返回剩余全体区间最大值
+//             printf("%d\n", tree[1] * vis[1]);
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+
+
+//D
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e5 + 5;
+// int n;
+// map<int, int> mp;
+// int main()
+// {
+//     untie();
+//     int T;
+//     cin >> T;
+//     while(T--)
+//     {
+//         int ans = -1;
+//         cin >> n;
+//         for(int i = 0; i < n; i++)
+//         {
+//             int x; 
+//             cin >> x;
+//             mp[x]++;
+//         }
+//         for(auto x : mp)
+//         {
+            
+//         }
+//         mp.clear();
+//     }
+//     return 0;
+// }
+
+//1 1 2 2
+//
+//2 2 2 6 6
+//3 2
+//2 2 6 6 6
+//2 2 2 6 6 6
+
+//2 2 2 2 6 6 6
+//1 1 2 2 3 3
+
+//1 1 1 2 2 3 3 3
+
+//以偶数次到达最后一个盘子，
+
+
+
+
+
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑第十七届中国计量大学程序设计竞赛↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -12812,6 +13253,362 @@ int main()
 
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓2021年GDCPC广东省大学生程序设计竞赛（正式赛）↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+
+
+//题目：https://ac.nowcoder.com/acm/contest/50921?&headNav=www#question
+//题解推荐：https://blog.csdn.net/qq_57404161/article/details/125115217?spm=1001.2101.3001.6650.6&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-6-125115217-blog-124462818.pc_relevant_multi_platform_whitelistv3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-6-125115217-blog-124462818.pc_relevant_multi_platform_whitelistv3&utm_relevant_index=7
+
+
+//A
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// typedef long long ll;
+// int n, m, k;
+// //1*1 1*2 .. 1*m
+// //2*1 ...... 2*m
+// //..
+// //n*1
+// //n个数列,由大到小排列,存各数列最大值，弹出 k-1 次最大值，每次弹出都放入该数列前一个值
+// typedef pair<ll,int> p;
+// priority_queue<p> q;
+// int main()
+// {
+//     untie();
+//     cin >> n >> m >> k;
+//     for(int i = 1; i <= n; i++) q.push(p(1LL * i * m, i));
+//     while(--k)
+//     {
+//         p tp = q.top(); q.pop();
+//         tp.first -= 1LL * tp.second;
+//         q.push(tp);
+//     }
+//     cout << q.top().first;
+//     return 0;
+// }
+
+
+//G (思维题，较难)
+//博弈论
+//Alice 可以选择一个奇数并将其分成两个正数，或者删除一个等于1的数。
+//Bob 可以选择一个偶数并将其分成两个正数。
+//两人都是尽量使得自己剩余更多步骤
+//Bob 分解偶数，最终分解的最小偶数是 2
+//    若分解的是 2，变成两个 1，即Alice获利，Alice能多走两步
+//    若分解非 2 的偶数，如 6，若分为 1 5 或 3 3，相当于送对面步数，只能偶分成偶，即 2 4，Bob多两步
+//Alice 分解奇数，最小奇数为 1
+//    若删除 1，即拖一回合
+//    若分解非 1 的奇数，如 5，分为 1 4 或 2 3 都是一寄一偶，即双方各多一步
+//对于Alice，期望产生更多的 2，这样自己步数会更多
+//对于Bob，期望尽量不分解 2
+//1 是最终必然产生的数，游戏过程变成：bob 尽量不分解 2，alice 拖足够多的回合直到 Bob 没有偶数可分。
+//故Bob分解 x 时希望留下两个偶数即 x-2 和 2，Alice分解 x 时希望尽快堆叠 2 的数量使得能继续用 1 去拖，
+//两人的最优决策都是把 x 拆成 x - 2 和 2
+//那么统计序列中大于 2 的偶数能被分解的次数，这是 bob 的操作次数；统计序列中的奇数能被分解的次数，这是 alice 的操作次数。作比较即可
+
+//未完成
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// typedef long long ll;
+// int main()
+// {
+//     untie();
+//     int T;
+//     cin >> T;
+//     while(T--)
+//     {
+//         int n;
+//         ll bob = 0, alice = 0;
+//         cin >> n;
+//         for(int i = 1; i <= n; i++)
+//         {
+//             ll x;
+//             cin >> x;
+//             if(x & 1) alice += x / 2 + 1;
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+
+//J
+//bfs
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// //[0, x]
+// //314^2 < 1e5 , 315^2 > 1e5
+// const int MAX_RICE = 314, N = 1e5 + 1;
+// int square[MAX_RICE + 5], cost[N];
+// bool vis[N];//记录走过的不能再走，先到的就是最少步数
+// //两个决策，往回走，往前走
+// void bfs()
+// {
+//     vis[0] = 1;
+//     queue<int> q;
+//     q.push(0);
+//     while(!q.empty())
+//     {
+//         int t = q.front(); q.pop();
+//         for(int i = 0; i <= MAX_RICE; i++)
+//         {
+//             int next = t + square[i];
+//             if(next < N && !vis[next]) vis[next] = 1, cost[next] = cost[t] + 1, q.push(next);
+//             next = t - square[i];
+//             if(next >= 0 && !vis[next]) vis[next] = 1, cost[next] = cost[t] + 1, q.push(next);
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     for(int i = 1; i <= MAX_RICE + 1; i++) square[i] = i * i;
+//     bfs();
+//     int q;
+//     cin >> q;
+//     while(q--)
+//     {
+//         int d;
+//         cin >> d;
+//         cout << cost[d] << '\n';
+//     }
+//     return 0;
+// }
+
+//dp
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// //[0, x]
+// //314^2 < 1e5 , 315^2 > 1e5
+// const int MAX_RICE = 314, N = 1e6 + 1, MAXDIS = 1e5;
+// int dp[N];
+// int square[N];
+// int cnt = 0;
+// int main()
+// {
+//     untie();
+    
+//     memset(dp, 0x3f, sizeof dp);
+//     for(int i = 1; i * i <= MAXDIS; i++)
+//     {
+//         square[cnt++] = i * i;
+//         dp[i * i] = 1;
+//     }
+//     dp[0] = 0;
+//     for(int i = 0; i < cnt; i++)//完全背包，两种决策，正向和逆向走
+//     {
+//         int dx = square[i];
+//         for(int j = dx; j <= MAXDIS; j++)          dp[j] = min(dp[j], dp[j - dx] + 1);
+//         for(int j = MAXDIS; j >= 0; j--) dp[j] = min(dp[j], dp[j + dx] + 1);
+//     }
+
+//     int q;
+//     cin >> q;
+//     while(q--)
+//     {
+//         int d;
+//         cin >> d;
+//         cout << dp[d] << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+//K
+//二维线段树
+//学不出来
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// typedef long long ll;
+// const int N = 3e3 + 5;
+// int n, m, last = 0;
+// int nb[N];
+// ll tree[N << 2];
+// ll tag[N << 2];
+
+// int ls(int p) { return p << 1;}//左子
+// int rs(int p) { return p << 1 | 1;}//右子
+
+// void pushup(int p)
+// {
+//     int pl = ls(p), pr = rs(p);
+// }
+
+// void build(int p, int pl, int pr)
+// {
+//     tag[p] = 0;
+//     if(pl == pr)
+//     {
+//         tree[p] = nb[pl];
+//         return;
+//     }
+//     int mid = (pl + pr) >> 1;
+//     build(ls(p), pl, mid);
+//     build(rs(p), mid + 1, pr);
+//     pushup(p);
+// }
+
+// void addtag(int p, int pl, int pr, ll d)
+// {
+//     tag[p] += d;
+//     tree[p] += d * (pr - pl + 1);
+// }
+
+// void pushdown(int p, int pl, int pr)
+// {
+//     if(tag[p])
+//     {
+//         int mid = (pl + pr) >> 1;
+//         addtag(ls(p), pl, mid, tag[p]);
+//         addtag(rs(p), mid + 1, pr, tag[p]);
+//         tag[p] = 0;
+//     }
+// }
+
+// void update(int L, int R, int p, int pl, int pr, ll d)
+// {
+//     if(L <= pl && pr <= R)
+//     {
+//         addtag(p, pl, pr, d);
+//         return;
+//     }
+//     int mid = (pl + pr) >> 1;
+//     if(L <= mid) update(L, R, ls(p), pl, mid, d);
+//     if(R > mid) update(L, R, rs(p), mid + 1, pr, d); 
+//     pushup(p);   
+// }
+
+// ll query(int L, int R, int p, int pl, int pr)
+// {
+//     if(L <= pl && pr <= R) return tree[p];
+//     pushdown(p, pl, pr);
+//     ll res = 0;
+//     int mid = (pl + pr) >> 1;
+//     if(L <= mid) res += query(L, R, ls(p), pl, mid);
+//     if(R > mid) res += query(L, R, rs(p), mid + 1, pr);
+//     return res;
+// }
+
+// int main()
+// {
+//     build(1, 1, N);
+//     scanf("%d%d", &n, &m);
+//     while(n--)
+//     {
+//         int l, r;
+//         ll val;
+//         scanf("%d%d%lld", &l, &r, &val);
+//         update(l, r, 1, 1, N, val);
+//     }
+//     while(m--)
+//     {
+//         int op, l, r;
+//         ll val;
+//         scanf("%d", &op);
+//         if(op == 1)
+//         {
+//             scanf("%d%d%lld", &l, &r, &val);
+//             l ^= last, r ^= last, val ^= last;
+//             update(l, r, 1, 1, N, val);
+//         }
+//         else
+//         {
+//             scanf("%d%d", &l, &r);
+//             l ^= last, r ^= last;
+
+//         }
+        
+
+//     }
+//     return 0;
+// }
+
+
+
+
+
+//L
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+
+// int main()
+// {
+//     //p = 0.5
+//     //x为轮数，统计输场，求E(x)
+//     //x = 4
+//     //  1 2 3
+//     //1 1 0 0
+//     //2 1 1 0
+//     //3 1 1 1
+//     //4 1 决胜
+//     //
+//     //x = 3
+//     //  1 2 3
+//     //1 1 0 0
+//     //2 1 1 0
+//     //3 2 1 0
+//     //
+//     //E(x) = sum(x * p) = 4 * 0.5 + 3 * 0.5;
+//     float ex = 3.5;
+//     printf("%.1f\n", ex); 
+//     return 0;
+// }
 
 
 
@@ -12819,9 +13616,8 @@ int main()
 
 
 
-
-
-
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑2021年GDCPC广东省大学生程序设计竞赛（正式赛）↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
