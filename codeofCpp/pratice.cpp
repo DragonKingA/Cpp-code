@@ -8159,6 +8159,10 @@ TEST:
     2.遍历此时入度为 0 的点 u，将其指向的所有节点的入度减 1，即分离出 u
     3.一直重复该操作，直到所有的节点全部入过队
     4.如果最后不存在入度为0的节点，那就说明有环，不存在拓扑排序，也就是很多题目的无解的情况。
+
+两种拓扑排序：
+1.正向拓扑排序（最常见）：一般出队元素为队中编号最小的元素，适用于输出 字典序最小 的拓扑序列
+2.反向拓扑排序（题意有优先级要求）：建立反图，一般出队元素为队中编号最大的元素，适用于输出 符合优先级要求 的拓扑序列(需翻转输出) —— 这与字典序区别开来
 */
 //一般写法 - 点(1 ~ n)
 // #include <iostream>
@@ -8251,6 +8255,73 @@ TEST:
 
 
 
+//*2.逃生
+//*反向拓扑排序 + 优先队列
+/*
+//较好的题解：https://blog.csdn.net/u012861385/article/details/38059515
+反向拓扑排序 应用于：题目在基本的拓扑排序的基础上又增加了一个要求：编号最小的节点要尽量排在前面；在满足上一个条件的基础上，编号第二小的节点要尽量排在前面；
+                   在满足前两个条件的基础上，编号第三小的节点要尽量排在前面……依此类推。（注意，这和字典序是两回事，不可以混淆。）
+本题要求**并不是字典序最小**，正向建表会出错，逆向建表再倒序输出才是正确答案 （注：拓扑序列保证存在）
+如案例
+5 4
+1 4
+4 2
+5 3
+3 2
+正向建表的答案为 1 4 5 3 2 是错误的，而正确答案应为 1 5 3 4 2，
+因为实际上处于同层关系的有{1， 5} {3， 4} {2}，按部排序就是 1 5 3 4 2
+由于正向建表，队列每次取最小的头，很可能会取到非平行（不在同一层）元素，这样就违背了 ai 与 bi 既定的优先级，故这种贪心是“目光短浅”的。
+对于有约束有平行的拓扑排序，对于若干条平行的路径，小的头部不一定排在前面，但是大的尾部一定排在后面。因为头部会受到尾部的约束，但是尾部没有约束。
+因此，当我们从尾部的 2 出发，此时队列有 {4，3}，只要我们每次取最大元素，这种贪心就能保证平行关系不被破坏；
+选择 4 后，序列为 2 4，队列为{3，1}；选择 3 后，序列为 2 4 3，队列为{5， 1}；故最终为 2 4 3 5 1
+倒序输出后即 1 5 3 4 2
+*/
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// #include <queue>
+// #include <functional>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e5 + 5;
+// int n, m, T;
+// vector<int> ans;
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         cin >> n >> m;
+//         vector<int> edge[m + 5];
+//         vector<int> indegree(n + 5, 0);
+//         priority_queue<int> q;
+//         for(int i = 0; i < m; i++)
+//         {
+//             int u, v;
+//             cin >> u >> v;
+//             edge[v].push_back(u);//建反图
+//             indegree[u]++;
+//         }
+//         for(int i = 1; i <= n; i++)
+//             if(!indegree[i]) q.push(i);
+//         while(!q.empty())
+//         {
+//             int now = q.top(); q.pop();
+//             ans.push_back(now);
+//             for(int x : edge[now])
+//                 if(!(--indegree[x])) q.push(x);
+//         }
+//         for(int i = n - 1; i >= 0; i--)
+//             cout << ans[i] << (!i ? "\n":" ");
+//         ans.clear();
+//     }
+//     return 0;
+// }
+
+
+
+
 //图论基础
 //1.图的遍历
 //建反图（边的方向反过来），从大到小遍历点
@@ -8290,48 +8361,394 @@ TEST:
 
 
 //2.产生冠军
+//寻找是否有入度为 0 的唯一点，有则产生冠军，否则无
+// #include <iostream>
+// #include <algorithm>
+// #include <string>
+// #include <map>
+// #include <set>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e5 + 5;
+// int n;
+// int main()
+// {
+//     untie();
+//     while(cin >> n, n)
+//     {
+//         int cnt = 0;
+//         map<string, int> indegree;
+//         set<string> node;
+//         for(int i = 0; i < n; i++)
+//         {
+//             string x, y;
+//             cin >> x >> y;
+//             node.insert(x);
+//             node.insert(y);
+//             ++indegree[y];
+//         }
+//         for(auto u : node)
+//             if(!indegree[u]) cnt++;
+//         if(cnt == 1) cout << "Yes\n";
+//         else cout << "No\n";
+//     }
+//     return 0;
+// }
+
+
+
+
+
+//最小生成树 Minimal Spanning Tree（有边权的无向图问题，可以得到连通一个图所花费的最小代价(最小边权和)）
+/*
+设一个图有 n 个点，m 条边（m >= n - 1）,连通一个图至少要 n - 1 条边
+概念：
+树：如果一个无向连通图不包含回路(连通图中不存在环)，那么就是一个树。
+生成树：在无向图中，连通且不含回路（不存在环）的一个子图，它包含全部 n 个点 和 其中 n - 1 条边，称为一颗生成树。
+最小生成树：当图中每条边都存在权重时，生成树的总代价就是其包含的每条边的权重相加之和。
+           生成树通常不唯一，我们称包含全部 n 个点及其中 n - 1 条边，并具有 最小权重之和 的生成树为 最小生成树（MST）。
+由于最小生成树一定包含图中权值最小的 n - 1 条边，故可以使用 贪心法 构造MST，满足全局最优包含局部最优。
+基于 贪心思想 的算法具体有两种：
+Kruskal算法：O(mlogm) -- （常用）
+    执行对象：对 图中所有的边 进行贪心选择
+    核心：使用 并查集 判环(O(m))。
+    实现过程：
+        1.排序所有的边，从最短边开始
+        2.每次选中边集合中剩余的权值最小的边
+        3.判断该边是否生成环，若不成环则加入 Tree 上
+        4.重复上述操作，直至 Tree 上包含所有 n 个点，并仅由 n - 1 条边连通所有点
+        5.cnt 统计边数是否为 n - 1 条，以此判断生成树的合法性
+    评估：编码简单，依靠并查集实现，复杂度主要来源于使用 sort() 对 m 条边进行排序，即 O(mlogm)
+Prim算法：O(mlogn)
+    执行对象：对 点的最近邻居 进行贪心选择
+    核心：遍历过程类似BFS + 优先队列 O(mlogn)；用状态数组判断点是否已经在MST中，若在则不做操作即防止成环。
+    实现过程：
+        1.从任意点 u 开始，加入 Tree 上
+        2.每次选择优先队列中距离 Tree 最近的邻居点 v，加入到 Tree 上
+        3.然后将 v 的未遍历过的邻居点都加入队列中
+        4.重复上述操作，直至 Tree 上包含所有 n 个点，并仅由 n - 1 条边连通所有点
+        5.cnt 统计顶点数是否为 n 个，以此判断生成树的合法性
+    评估：当边数非常多（相较于点数）时，才能发挥其高效性，且编码较复杂
+*/
+//Kruskal算法模板（常用）
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 5e3 + 5, M = 2e5 + 5;
+// struct Edge{
+//     int u, v, w;
+//     bool operator < (const Edge &x) const{ return w < x.w;}
+// }edge[M];
+// int n, m;
+// int ds[N];//并查集（用于判断 待取边的两个端点是否已经连通 即 是否属于同一个集合，若是则取该边会导致成环，故此时不取该边）
+// void init_set(){ for(int i = 1; i <= n; i++) ds[i] = i;}
+// int find_set(int x){ return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+// // void merge_set(int x, int y){ if((x = find_set(x)) != (y = find_set(y))) ds[x] = ds[y];} //合并操作无需单独写
+// void kruskal()
+// {
+//     int ans = 0, cnt = 0;//ans为权值和，cnt记录加入MST边数
+//     sort(edge + 1, edge + 1 + m);
+//     for(int i = 1; i <= m; i++)
+//     {
+//         if(cnt == n - 1) break;//小优化，MST必是 n - 1 条边
+//         int e1 = find_set(edge[i].u), e2 = find_set(edge[i].v);//判断第 i 条边的两端点是否已经连通
+//         if(e1 == e2) continue;//若已连通则不使用该边
+//         else
+//         {
+//             ans += edge[i].w;
+//             ds[e1] = e2;//合并,与 ds[e1] = ds[e2] 没有区别
+//             ++cnt;
+//         }
+//     }
+//     if(cnt == n - 1) cout << ans << '\n';
+//     else cout << "orz\n";
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     init_set();
+//     for(int i = 1; i <= m; i++)
+//     {
+//         int u, v, w;
+//         cin >> u >> v >> w;
+//         edge[i] = Edge{u, v, w};
+//     }
+//     kruskal();
+//     return 0;
+// }
+
+//Prim算法模板 -- 与最短路的Dijkstra算法实现过程相似，而两者区别在于Prim算法无需更新当前集合所有点到起点的距离
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// #include <queue>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 5e3 + 5, M = 2e5 + 5;
+// int n, m;
+// struct edge{
+//     int to, w;//边的终点和权值
+// };
+// struct node{
+//     int id, dis;//终点的编号 和 到该点的权值
+//     bool operator < (const node &x) const{ return dis > x.dis;}//使优先队列的堆顶为最小值
+// };
+// vector<edge> G[N];//用 G[u.id].to = v 来表示边 u -> v
+// bool vis[N];//记录点是否已经在 MST 上
+// void prim()
+// {
+//     //memset(vis, 0, sizeof vis);
+//     int s = 1;//从任意点开始，不妨从点 1 开始
+//     int ans = 0, cnt = 0;//cnt记录MST上的顶点数
+//     priority_queue<node> q;
+//     q.push(node{s, 0});
+//     while(!q.empty())
+//     {
+//         node u = q.top(); q.pop();
+//         if(vis[u.id]) continue;//弃去已在MST上的点，防止成环
+//         vis[u.id] = 1;
+//         ans += u.dis;//累计权值
+//         ++cnt;
+//         for(auto v : G[u.id])//遍历点 u 的邻居点 v
+//         {
+//             if(vis[v.to]) continue;
+//             q.push(node{v.to, v.w});
+//         }
+//     }
+//     if(cnt == n) cout << ans << '\n';
+//     else cout << "orz\n";
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     for(int i = 0; i < m; i++)
+//     {
+//         int u, v, w;
+//         cin >> u >> v >> w;
+//         G[u].push_back(edge{v, w});
+//         G[v].push_back(edge{u, w});//双向边
+//     }
+//     prim();
+//     return 0;
+// }
+
+
+
+//1.繁忙的都市
+//题意：保证数据将所有点连通，边数尽量少，最大权值边的权值尽量小，选出整体权值最小的子图。双向边。
+//转义：符合无向连通图性质，不难想到构造其最小生成树，要求输出 边数 和 最大单边权值，而由于最小生成树必存在，边数恒确定为 n - 1
+//数据分析：m >> n，考虑 O(mlogn) 优于 O(mlogm)，选择 prim (43ms)。但实际上该题 n 和 m 都比较小，两个算法耗时上没区别
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// #include <queue>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 305, M = 1e5 + 5;
+// int n, m;
+// struct edge{
+//     int to, w;//边的终点和权值
+// };
+// struct node{
+//     int id, dis;//终点的编号 和 到该点的权值
+//     bool operator < (const node &x) const{ return dis > x.dis;}//使优先队列的堆顶为最小值
+// };
+// vector<edge> G[N];//用 G[u.id].to = v 来表示边 u -> v
+// bool vis[N];//记录点是否已经在 MST 上
+// void prim()
+// {
+//     int s = 1;
+//     int res = 0;
+//     priority_queue<node> q;
+//     q.push(node{s, 0});
+//     while(!q.empty())
+//     {
+//         node u = q.top(); q.pop();
+//         if(vis[u.id]) continue;//弃去已在MST上的点，防止成环
+//         vis[u.id] = 1;
+//         res = max(res, u.dis);
+//         for(auto v : G[u.id])//遍历点 u 的邻居点 v
+//         {
+//             if(vis[v.to]) continue;
+//             q.push(node{v.to, v.w});
+//         }
+//     }
+//     cout << (n - 1) << " " << res;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     for(int i = 0; i < m; i++)
+//     {
+//         int u, v, w;
+//         cin >> u >> v >> w;
+//         G[u].push_back(edge{v, w});
+//         G[v].push_back(edge{u, w});//双向边
+//     }
+//     prim();
+//     return 0;
+// }
+//而实际，整体上 n 和 m 是比较小的，用kruskal显然更方便(42ms)
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 305, M = 1e5 + 5;
+// struct Edge{
+//     int u, v, w;
+//     bool operator < (const Edge &x) const{ return w < x.w;}
+// }edge[M];
+// int n, m;
+// int ds[N];
+// void init_set(){ for(int i = 1; i <= n; i++) ds[i] = i;}
+// int find_set(int x){ return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+// void kruskal()
+// {
+//     int res = 0, cnt = 0;
+//     sort(edge + 1, edge + 1 + m);
+//     for(int i = 1; i <= m; i++)
+//     {
+//         if(cnt == n - 1) break;
+//         int e1 = find_set(edge[i].u), e2 = find_set(edge[i].v);
+//         if(e1 == e2) continue;
+//         else
+//         {
+//             res = max(res, edge[i].w);
+//             ds[e1] = e2;//合并
+//             ++cnt;
+//         }
+//     }
+//     cout << (n - 1) << " " << res;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     init_set();
+//     for(int i = 1; i <= m; i++)
+//     {
+//         int u, v, w;
+//         cin >> u >> v >> w;
+//         edge[i] = Edge{u, v, w};
+//     }
+//     kruskal();
+//     return 0;
+// }
+
+
+
+//2.口袋的天空
+//要求全部连通，构造关于 k 个点的最小生成树
+//思路：全连通，构造 n 个点的最小生成树，要分成 k 个部分，那么取出 k - 1 条较大的边，代价减去这些边，就是最终答案
+//     由于 最小生成树构造过程 与 最后分k个部分 时都是贪心的，该树只需构造到 n - k 个点即可，其后的边都无需考虑，因为会被去掉
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e3 + 5, M = 1e4 + 5;
+// struct Edge{
+//     int u, v, w;
+//     bool operator < (const Edge &x) const{ return w < x.w;}
+// }edge[M];
+// int n, m, k;
+// int ds[N];
+// void init_set(){ for(int i = 1; i <= n; i++) ds[i] = i;}
+// int find_set(int x){ return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+// void kruskal()
+// {
+//     int ans = 0, cnt = 0;//ans为权值和，cnt记录加入MST边数
+//     sort(edge + 1, edge + 1 + m);
+//     for(int i = 1; i <= m; i++)
+//     {
+//         if(cnt == n - k) break;
+//         int e1 = find_set(edge[i].u), e2 = find_set(edge[i].v);
+//         if(e1 == e2) continue;
+//         else
+//         {
+//             ans += edge[i].w;
+//             ds[e1] = e2;//合并
+//             ++cnt;
+//         }
+//     }
+//     if(cnt == n - k) cout << ans << '\n';
+//     else cout << "No Answer\n";
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m >> k;
+//     init_set();
+//     for(int i = 1; i <= m; i++)
+//     {
+//         int u, v, w;
+//         cin >> u >> v >> w;
+//         edge[i] = Edge{u, v, w};
+//     }
+//     kruskal();
+//     return 0;
+// }
+
+
+
+//3.买礼物
 #include <iostream>
 #include <algorithm>
-#include <set>
-#include <map>
 using namespace std;
 #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-const int N = 1e5 + 5;
-int n;
+const int N = 505, M = N * N;
+struct Edge{
+    int u, v, w;
+    bool operator < (const Edge &x) const{ return w < x.w;}
+    // Edge() = default; 这个也可以解决自定义构造函数导致无法编译的问题
+    Edge(){}
+    Edge(int a, int b, int c) {u = a, v = b, w = c;}
+}edge[M];
+int a, b, n, m = 1;
+int ds[N];
+void init_set(){ for(int i = 1; i <= n; i++) ds[i] = i;}
+int find_set(int x){ return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+void kruskal()
+{
+    int res = 0, cnt = 0;
+    sort(edge + 1, edge + 1 + m);
+    for(int i = 1; i <= m; i++)
+    {
+        if(cnt == n - 1) break;
+        int e1 = find_set(edge[i].u), e2 = find_set(edge[i].v);
+        if(e1 == e2) continue;
+        else
+        {
+            res = max(res, edge[i].w);
+            ds[e1] = e2;//合并
+            ++cnt;
+        }
+    }
+
+}
 int main()
 {
     untie();
-    while(cin >> n, n)
+    cin >> a >> b;
+    n = b * b;
+    m = b * (b + 1) / 2;
+    init_set();
+    for(int i = 1; i <= b; i++)
     {
-
-
+        for(int j = 1; j <= b; j++)
+        {
+            int w; 
+            cin >> w;
+            if(!w) w = a;
+            if(j >= i) ;
+        }
     }
+    kruskal();
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
