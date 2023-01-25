@@ -8695,60 +8695,207 @@ Prim算法：O(mlogn)
 
 
 //3.买礼物
+//最小生成树答案必大于等于权值 a ，设一个虚点，所有实际点到该点权值为 a，且该点必要，故该树的边数变成 n 条 
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 505, M = N * N;
+// struct Edge{
+//     int u, v, w;
+//     bool operator < (const Edge &x) const{ return w < x.w;}
+//     // Edge() = default; 这个也可以解决自定义构造函数导致无法编译的问题
+//     Edge(){}
+//     Edge(int a, int b, int c) {u = a, v = b, w = c;}
+// }edge[M];
+// int a, b, n, m;
+// int ds[N];
+// void init_set(){ for(int i = 1; i <= n; i++) ds[i] = i;}
+// int find_set(int x){ return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+// void kruskal()
+// {
+//     int ans = 0, cnt = 0;
+//     sort(edge + 1, edge + 1 + m);
+//     for(int i = 1; i <= m; i++)
+//     {
+//         if(cnt == n) break;//自定义多一个点，最终点数共 n + 1 个，故树的边数变成 n 条
+//         int e1 = find_set(edge[i].u), e2 = find_set(edge[i].v);
+//         if(e1 == e2) continue;
+//         else
+//         {
+//             ans += edge[i].w;
+//             ds[e1] = e2;//合并
+//             ++cnt;
+//         }
+//     }
+//     cout << ans;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> a >> b;
+//     n = b, m = 0;
+//     init_set();
+//     for(int i = 1; i <= b; i++)
+//     {
+//         for(int j = 1; j <= b; j++)
+//         {
+//             int w; 
+//             cin >> w;
+//             if(j > i && w) edge[++m] = Edge(i, j, w);//优惠为零无需再建边，只需要建 b 个“原价边”即可
+//         }
+//     }
+//     for(int i = 1; i <= b; i++) edge[++m] = Edge(0, i, a);
+//     kruskal();
+//     return 0;
+// }
+
+
+
+//4.局域网
+//题意相当于求 全体边权 与 最小生成树权值和 之差
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e2 + 5, M = 1e5 + 5;
+// int n, m, sum = 0, ds[N];
+// struct edge{
+//     int u, v, w;
+//     edge(){}
+//     edge(int _u, int _v, int _w) { u = _u, v = _v, w = _w;}
+//     bool operator <(const edge &x) const{ return w < x.w;}
+// }E[M];
+// int find_set(int x) { return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+// void kruskal()
+// {
+//     int ans = 0, cnt = 0;
+//     sort(E + 1, E + 1 + m);
+//     for(int i = 1; i <= m; i++)
+//     {
+//         if(cnt == n - 1) break;
+//         int e1 = find_set(E[i].u), e2 = find_set(E[i].v);
+//         if(e1 == e2) continue;
+//         else
+//         {
+//             ans += E[i].w;
+//             ds[e1] = e2;
+//             ++cnt;
+//         }
+//     }
+//     cout << (sum - ans);
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     for(int i = 1; i <= n; i++) ds[i] = i;
+//     for(int i = 1; i <= m; i++)
+//     {
+//         int x, y, w;
+//         cin >> x >> y >> w;
+//         E[i] = edge(x, y, w);
+//         sum += w;
+//     }
+//     kruskal();
+//     return 0;
+// }
+
+
+
+//5.部落划分
 #include <iostream>
 #include <algorithm>
 using namespace std;
 #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-const int N = 505, M = N * N;
-struct Edge{
+const int N = 1e2 + 5, M = 1e5 + 5;
+int n, m, sum = 0, ds[N];
+struct edge{
     int u, v, w;
-    bool operator < (const Edge &x) const{ return w < x.w;}
-    // Edge() = default; 这个也可以解决自定义构造函数导致无法编译的问题
-    Edge(){}
-    Edge(int a, int b, int c) {u = a, v = b, w = c;}
-}edge[M];
-int a, b, n, m = 1;
-int ds[N];
-void init_set(){ for(int i = 1; i <= n; i++) ds[i] = i;}
-int find_set(int x){ return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+    edge(){}
+    edge(int _u, int _v, int _w) { u = _u, v = _v, w = _w;}
+    bool operator <(const edge &x) const{ return w < x.w;}
+}E[M];
+int find_set(int x) { return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
 void kruskal()
 {
-    int res = 0, cnt = 0;
-    sort(edge + 1, edge + 1 + m);
+    int ans = 0, cnt = 0;
+    sort(E + 1, E + 1 + m);
     for(int i = 1; i <= m; i++)
     {
         if(cnt == n - 1) break;
-        int e1 = find_set(edge[i].u), e2 = find_set(edge[i].v);
+        int e1 = find_set(E[i].u), e2 = find_set(E[i].v);
         if(e1 == e2) continue;
         else
         {
-            res = max(res, edge[i].w);
-            ds[e1] = e2;//合并
+            ans += E[i].w;
+            ds[e1] = e2;
             ++cnt;
         }
     }
-
+    cout << (sum - ans);
 }
 int main()
 {
     untie();
-    cin >> a >> b;
-    n = b * b;
-    m = b * (b + 1) / 2;
-    init_set();
-    for(int i = 1; i <= b; i++)
+    cin >> n >> m;
+    for(int i = 1; i <= n; i++) ds[i] = i;
+    for(int i = 1; i <= m; i++)
     {
-        for(int j = 1; j <= b; j++)
-        {
-            int w; 
-            cin >> w;
-            if(!w) w = a;
-            if(j >= i) ;
-        }
+        int x, y, w;
+        cin >> x >> y >> w;
+        E[i] = edge(x, y, w);
+        sum += w;
     }
     kruskal();
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
