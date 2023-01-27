@@ -8804,52 +8804,151 @@ Prim算法：O(mlogn)
 
 
 //5.部落划分
-#include <iostream>
-#include <algorithm>
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-const int N = 1e2 + 5, M = 1e5 + 5;
-int n, m, sum = 0, ds[N];
-struct edge{
-    int u, v, w;
-    edge(){}
-    edge(int _u, int _v, int _w) { u = _u, v = _v, w = _w;}
-    bool operator <(const edge &x) const{ return w < x.w;}
-}E[M];
-int find_set(int x) { return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
-void kruskal()
-{
-    int ans = 0, cnt = 0;
-    sort(E + 1, E + 1 + m);
-    for(int i = 1; i <= m; i++)
-    {
-        if(cnt == n - 1) break;
-        int e1 = find_set(E[i].u), e2 = find_set(E[i].v);
-        if(e1 == e2) continue;
-        else
-        {
-            ans += E[i].w;
-            ds[e1] = e2;
-            ++cnt;
-        }
-    }
-    cout << (sum - ans);
-}
-int main()
-{
-    untie();
-    cin >> n >> m;
-    for(int i = 1; i <= n; i++) ds[i] = i;
-    for(int i = 1; i <= m; i++)
-    {
-        int x, y, w;
-        cin >> x >> y >> w;
-        E[i] = edge(x, y, w);
-        sum += w;
-    }
-    kruskal();
-    return 0;
-}
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// #include <cmath>
+// #include <cstdio>
+// using namespace std;
+// typedef pair<int, int> p;
+// const int N = 1e3 + 5, M = 1e6 + 5;//MAX_M < 1e6
+// const double eps = 1e-3;
+// int n, m = 0, k, ds[N];
+// vector<p> node;
+// struct edge{
+//     int u, v;
+//     double w;
+//     edge(){}
+//     edge(int _u, int _v, double _w) { u = _u, v = _v, w = _w;}
+//     bool operator <(const edge &x) const{ return w < x.w;}
+// }E[M];
+// double dabs(double x) { return x > 1e-6 ? x : -x;}
+// double getdis(p n1, p n2)
+// {
+//     double dis1 = dabs(n1.first - n2.first), dis2 = dabs(n1.second - n2.second);
+//     return sqrt(dis1*dis1 + dis2*dis2);
+// }
+// int find_set(int x) { return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+// void kruskal()
+// {
+//     int cnt = 0;
+//     sort(E + 1, E + 1 + m);
+//     //成环边也遍历掉，那么剩余的边都是部落间的距离，则这之后的第一条边即为最小答案
+//     for(int i = 1; i <= m; i++)
+//     {
+//         int e1 = find_set(E[i].u), e2 = find_set(E[i].v);
+//         if(e1 == e2) continue;
+//         else
+//         {
+//             ds[e1] = e2;
+//             ++cnt;
+//         }
+//         if(cnt == n - k + 1)
+//         {
+//             printf("%.2lf\n", E[i].w);
+//             return;
+//         }
+//     }
+// }
+// int main()
+// {
+//     scanf("%d%d", &n, &k);
+//     for(int i = 1; i <= n; i++) ds[i] = i;
+//     for(int i = 1; i <= n; i++)
+//     {
+//         int x, y;
+//         scanf("%d%d", &x, &y);
+//         node.push_back(p(x, y));
+//     }
+//     for(int i = 0; i < node.size(); i++)
+//         for(int j = i + 1; j < node.size(); j++)
+//             E[++m] = edge(i, j, getdis(node[i], node[j]));
+//     kruskal();
+//     return 0;
+// }
+//Prim更快？
+
+
+
+//*6.Explorer
+//本题重点在于 减少边数，要求最小生成树，一个点可能连接最多 4 个点，同条线上与之相邻的 2 个点 以及 向另一条线作垂线，该线上与垂足最近的 2 个点。
+//故一个点产生的边数最多是 4 条
+//思路：求两线交点（特判平行情况），找出将一条线上的一个点映射到另一个线的方法，并找出寻找映射点最近两点的方法
+// #include <iostream>
+// #include <algorithm>
+// #include <cstdio>
+// #include <cmath>
+// using namespace std;
+// typedef double db;
+// const int N = 2e5 + 5, M = 6 * N;
+// struct node{
+//     double x, y;
+//     bool operator < (const node &n) const{ return x < n.x;}
+// }a[N], b[N];
+// struct Edge{
+//     int u, v;
+//     double w;
+//     bool operator < (const Edge &x) const{ return w < x.w;}
+// }edge[M];
+// int n, m, ind = 0, ds[N];
+// db ax, ay, bx, by, cx, cy, dx, dy, t;
+// int find_set(int x){ return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+// db getdis(node a, node b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);}
+// void kruskal()
+// {
+//     db ans = 0;
+//     int cnt = 0;//ans为权值和，cnt记录加入 MST 的边数
+//     sort(edge + 1, edge + 1 + ind);
+//     for(int i = 1; i <= ind; i++)
+//     {
+//         if(cnt == n + m - 1) break;
+//         int e1 = find_set(edge[i].u), e2 = find_set(edge[i].v);
+//         if(e1 != e2)
+//         {
+//             ans += sqrt(edge[i].w);
+//             ds[e1] = e2;//合并
+//             ++cnt;
+//         }
+//     }
+//     printf("%.3lf\n", ans);
+// }
+// int main()
+// {
+//     scanf("%d%d%lf%lf%lf%lf%lf%lf%lf%lf", &n, &m, &ax, &ay, &bx, &by, &cx, &cy, &dx, &dy);
+//     for(int i = 1; i <= n + m; i++) ds[i] = i;
+//     for(int i = 1; i <= n; i++) scanf("%lf", &t), a[i] = node{ax * t + bx * (1 - t), ay * t + by * (1 - t)};
+//     for(int i = 1; i <= m; i++) scanf("%lf", &t), b[i] = node{cx * t + dx * (1 - t), cy * t + dy * (1 - t)};
+//     sort(a + 1, a + 1 + n), sort(b + 1, b + 1 + m);
+//     //先连接同一条线上相邻两点的边
+//     for(int i = 1; i < n; i++) edge[++ind] = Edge{i, i + 1, getdis(a[i], a[i + 1])};
+//     for(int i = 1; i < m; i++) edge[++ind] = Edge{n + i, n + i + 1, getdis(b[i], b[i + 1])};
+//     //再各自选取不共线两点的边，三分法框选可连接的不共线点，理论上只需要两条最近的边，这里直接选取[l, r]上三条边更方便（即无需判断第二条边是左右哪条）
+//     //不同的映射方向，其结果不一样，并不能保证一种映射方向囊括所有情况，所以需遍历两种方向
+//     for(int i = 1; i <= n; i++)//直线ab 映射到 直线cd 上
+//     {
+//         int l = 1, r = m;
+//         while(l < r - 2)
+//         {
+//             int midl = (l * 2 + r) / 3, midr = (l + r * 2) / 3;
+//             if(getdis(a[i], b[midl]) < getdis(a[i], b[midr])) r = midr;//三分逼近极小值邻域
+//             else l = midl;
+//         }
+//         for(int j = l; j <= r; j++) edge[++ind] = Edge{i, n + j, getdis(a[i], b[j])};
+//     }
+//     for(int i = 1; i <= m; i++)//直线cd 映射到 直线ab 上
+//     {
+//         int l = 1, r = n;
+//         while(l < r - 2)
+//         {
+//             int midl = (l * 2 + r) / 3, midr = (l + r * 2) / 3;
+//             if(getdis(b[i], a[midl]) < getdis(b[i], a[midr])) r = midr;//三分逼近极小值邻域
+//             else l = midl;
+//         }
+//         for(int j = l; j <= r; j++) edge[++ind] = Edge{n + i, j, getdis(b[i], a[j])};
+//     }
+//     kruskal();
+//     return 0;
+// }
 
 
 
@@ -8858,7 +8957,7 @@ int main()
 
 
 
-
+/*十三. 最短路径问题*/
 
 
 
