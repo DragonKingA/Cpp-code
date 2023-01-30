@@ -8281,25 +8281,27 @@ TEST:
 // #include <vector>
 // #include <queue>
 // #include <functional>
+// #include <cstring>
 // using namespace std;
-// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-// const int N = 1e5 + 5;
+// const int N = 3e4 + 10;
 // int n, m, T;
 // vector<int> ans;
+// vector<int> edge[N];
+// int indegree[N];
 // int main()
 // {
-//     untie();
-//     cin >> T;
+//     scanf("%d", &T);
 //     while(T--)
 //     {
-//         cin >> n >> m;
-//         vector<int> edge[m + 5];
-//         vector<int> indegree(n + 5, 0);
+//         scanf("%d%d", &n, &m);
+//         memset(indegree, 0, sizeof indegree);
+//         for(int i = 0; i <= n; i++) edge[i].clear();
+//         ans.clear();
 //         priority_queue<int> q;
 //         for(int i = 0; i < m; i++)
 //         {
 //             int u, v;
-//             cin >> u >> v;
+//             scanf("%d%d", &u, &v);
 //             edge[v].push_back(u);//建反图
 //             indegree[u]++;
 //         }
@@ -8313,8 +8315,11 @@ TEST:
 //                 if(!(--indegree[x])) q.push(x);
 //         }
 //         for(int i = n - 1; i >= 0; i--)
-//             cout << ans[i] << (!i ? "\n":" ");
-//         ans.clear();
+//         {
+//             if(i != n - 1) printf(" ");
+//             printf("%d", ans[i]);
+//         }
+//         printf("\n");
 //     }
 //     return 0;
 // }
@@ -8430,111 +8435,112 @@ Prim算法：O(mlogn)
         5.cnt 统计顶点数是否为 n 个，以此判断生成树的合法性
     评估：当边数非常多（相较于点数）时，才能发挥其高效性，且编码较复杂
 */
+/*
 //Kruskal算法模板（常用）
-// #include <iostream>
-// #include <algorithm>
-// using namespace std;
-// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-// const int N = 5e3 + 5, M = 2e5 + 5;
-// struct Edge{
-//     int u, v, w;
-//     bool operator < (const Edge &x) const{ return w < x.w;}
-// }edge[M];
-// int n, m;
-// int ds[N];//并查集（用于判断 待取边的两个端点是否已经连通 即 是否属于同一个集合，若是则取该边会导致成环，故此时不取该边）
-// void init_set(){ for(int i = 1; i <= n; i++) ds[i] = i;}
-// int find_set(int x){ return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
-// // void merge_set(int x, int y){ if((x = find_set(x)) != (y = find_set(y))) ds[x] = ds[y];} //合并操作无需单独写
-// void kruskal()
-// {
-//     int ans = 0, cnt = 0;//ans为权值和，cnt记录加入MST边数
-//     sort(edge + 1, edge + 1 + m);
-//     for(int i = 1; i <= m; i++)
-//     {
-//         if(cnt == n - 1) break;//小优化，MST必是 n - 1 条边
-//         int e1 = find_set(edge[i].u), e2 = find_set(edge[i].v);//判断第 i 条边的两端点是否已经连通
-//         if(e1 == e2) continue;//若已连通则不使用该边
-//         else
-//         {
-//             ans += edge[i].w;
-//             ds[e1] = e2;//合并,与 ds[e1] = ds[e2] 没有区别
-//             ++cnt;
-//         }
-//     }
-//     if(cnt == n - 1) cout << ans << '\n';
-//     else cout << "orz\n";
-// }
-// int main()
-// {
-//     untie();
-//     cin >> n >> m;
-//     init_set();
-//     for(int i = 1; i <= m; i++)
-//     {
-//         int u, v, w;
-//         cin >> u >> v >> w;
-//         edge[i] = Edge{u, v, w};
-//     }
-//     kruskal();
-//     return 0;
-// }
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+const int N = 5e3 + 5, M = 2e5 + 5;
+struct Edge{
+    int u, v, w;
+    bool operator < (const Edge &x) const{ return w < x.w;}
+}edge[M];
+int n, m;
+int ds[N];//并查集（用于判断 待取边的两个端点是否已经连通 即 是否属于同一个集合，若是则取该边会导致成环，故此时不取该边）
+void init_set(){ for(int i = 1; i <= n; i++) ds[i] = i;}
+int find_set(int x){ return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+// void merge_set(int x, int y){ if((x = find_set(x)) != (y = find_set(y))) ds[x] = ds[y];} //合并操作无需单独写
+void kruskal()
+{
+    int ans = 0, cnt = 0;//ans为权值和，cnt记录加入MST边数
+    sort(edge + 1, edge + 1 + m);
+    for(int i = 1; i <= m; i++)
+    {
+        if(cnt == n - 1) break;//小优化，MST必是 n - 1 条边
+        int e1 = find_set(edge[i].u), e2 = find_set(edge[i].v);//判断第 i 条边的两端点是否已经连通
+        if(e1 == e2) continue;//若已连通则不使用该边
+        else
+        {
+            ans += edge[i].w;
+            ds[e1] = e2;//合并,与 ds[e1] = ds[e2] 没有区别
+            ++cnt;
+        }
+    }
+    if(cnt == n - 1) cout << ans << '\n';
+    else cout << "orz\n";
+}
+int main()
+{
+    untie();
+    cin >> n >> m;
+    init_set();
+    for(int i = 1; i <= m; i++)
+    {
+        int u, v, w;
+        cin >> u >> v >> w;
+        edge[i] = Edge{u, v, w};
+    }
+    kruskal();
+    return 0;
+}
 
 //Prim算法模板 -- 与最短路的Dijkstra算法实现过程相似，而两者区别在于Prim算法无需更新当前集合所有点到起点的距离
-// #include <iostream>
-// #include <algorithm>
-// #include <vector>
-// #include <queue>
-// using namespace std;
-// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-// const int N = 5e3 + 5, M = 2e5 + 5;
-// int n, m;
-// struct edge{
-//     int to, w;//边的终点和权值
-// };
-// struct node{
-//     int id, dis;//终点的编号 和 到该点的权值
-//     bool operator < (const node &x) const{ return dis > x.dis;}//使优先队列的堆顶为最小值
-// };
-// vector<edge> G[N];//用 G[u.id].to = v 来表示边 u -> v
-// bool vis[N];//记录点是否已经在 MST 上
-// void prim()
-// {
-//     //memset(vis, 0, sizeof vis);
-//     int s = 1;//从任意点开始，不妨从点 1 开始
-//     int ans = 0, cnt = 0;//cnt记录MST上的顶点数
-//     priority_queue<node> q;
-//     q.push(node{s, 0});
-//     while(!q.empty())
-//     {
-//         node u = q.top(); q.pop();
-//         if(vis[u.id]) continue;//弃去已在MST上的点，防止成环
-//         vis[u.id] = 1;
-//         ans += u.dis;//累计权值
-//         ++cnt;
-//         for(auto v : G[u.id])//遍历点 u 的邻居点 v
-//         {
-//             if(vis[v.to]) continue;
-//             q.push(node{v.to, v.w});
-//         }
-//     }
-//     if(cnt == n) cout << ans << '\n';
-//     else cout << "orz\n";
-// }
-// int main()
-// {
-//     untie();
-//     cin >> n >> m;
-//     for(int i = 0; i < m; i++)
-//     {
-//         int u, v, w;
-//         cin >> u >> v >> w;
-//         G[u].push_back(edge{v, w});
-//         G[v].push_back(edge{u, w});//双向边
-//     }
-//     prim();
-//     return 0;
-// }
-
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+const int N = 5e3 + 5, M = 2e5 + 5;
+int n, m;
+struct edge{
+    int to, w;//边的终点和权值
+};
+struct node{
+    int id, dis;//终点的编号 和 到该点的权值
+    bool operator < (const node &x) const{ return dis > x.dis;}//使优先队列的堆顶为最小值
+};
+vector<edge> G[N];//用 G[u.id].to = v 来表示边 u -> v
+bool vis[N];//记录点是否已经在 MST 上
+void prim()
+{
+    //memset(vis, 0, sizeof vis);
+    int s = 1;//从任意点开始，不妨从点 1 开始
+    int ans = 0, cnt = 0;//cnt记录MST上的顶点数
+    priority_queue<node> q;
+    q.push(node{s, 0});
+    while(!q.empty())
+    {
+        node u = q.top(); q.pop();
+        if(vis[u.id]) continue;//弃去已在MST上的点，防止成环
+        vis[u.id] = 1;
+        ans += u.dis;//累计权值
+        ++cnt;
+        for(auto v : G[u.id])//遍历点 u 的邻居点 v
+        {
+            if(vis[v.to]) continue;
+            q.push(node{v.to, v.w});
+        }
+    }
+    if(cnt == n) cout << ans << '\n';
+    else cout << "orz\n";
+}
+int main()
+{
+    untie();
+    cin >> n >> m;
+    for(int i = 0; i < m; i++)
+    {
+        int u, v, w;
+        cin >> u >> v >> w;
+        G[u].push_back(edge{v, w});
+        G[v].push_back(edge{u, w});//双向边
+    }
+    prim();
+    return 0;
+}
+*/
 
 
 //1.繁忙的都市
@@ -8872,6 +8878,11 @@ Prim算法：O(mlogn)
 
 //*6.Explorer
 //本题重点在于 减少边数，要求最小生成树，一个点可能连接最多 4 个点，同条线上与之相邻的 2 个点 以及 向另一条线作垂线，该线上与垂足最近的 2 个点。
+//1.因为特殊地，一组点在一条直线上，其连接方向除了映射到另一条线上，就只有其左右两个方向。
+//2.我们要知道无序点建图要建全图再sort排序边来得到最小生成树，建全图是因为没办法判断哪个方向是全局最优，所以当算是映射方向只有3个方向时就好说了
+//3.并且左右两个方向所有点共线，所以对于线ABCD，连接AD 与 连接AB,BC,CD 没有区别，所以同一条线上只需要相邻两点相连就可以局部全连通并且实现局部最小生成树，当然两条线都是这样
+//4.那么现在只剩下两条线的相互关系，将一个点投影到另一条线上，这样该点就可以评估与该线上点的距离，左右方向分别与垂足最近的点，与该点连接后
+//5.每个点都实现了所有方向上的最短连接
 //故一个点产生的边数最多是 4 条
 //思路：求两线交点（特判平行情况），找出将一条线上的一个点映射到另一个线的方法，并找出寻找映射点最近两点的方法
 // #include <iostream>
@@ -8952,12 +8963,238 @@ Prim算法：O(mlogn)
 
 
 
+//7.Heavy Transportation（最大生成树）
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <cstdio>
+// #include <vector>
+// using namespace std;
+// const int N = 1e3 + 5;
+// struct Edge{
+//     int u, v, w;
+//     bool operator < (const Edge &x) const{ return w > x.w;}//大顶堆
+// };
+// vector<Edge> edge;
+// int n, m, ds[N];
+// void init_set(){ for(int i = 1; i <= n; i++) ds[i] = i;}
+// int find_set(int x){ return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+// int kruskal()
+// {
+//     sort(edge.begin(), edge.end());
+//     for(int i = 0; i < edge.size(); i++)
+//     {
+//         int e1 = find_set(edge[i].u), e2 = find_set(edge[i].v);//判断第 i 条边的两端点是否已经连通
+//         if(e1 != e2)
+//         {
+//             ds[e1] = e2;
+//             //用若干条长边连通1和n的那一刻就完成任务了，此时最后用的边自然是所有路段边中的最小限重
+//             if(find_set(1) == find_set(n)) return edge[i].w;
+//         }
+//     }
+// }
+// int main()
+// {
+//     int T;
+//     scanf("%d", &T);
+//     for(int k = 1; k <= T; k++)
+//     {
+//         scanf("%d%d", &n, &m);
+//         init_set();
+//         edge.clear();
+//         for(int i = 1; i <= m; i++)
+//         {
+//             int u, v, w;
+//             scanf("%d%d%d", &u, &v, &w);// All streets can be travelled in both directions.无向图
+//             Edge x = {u, v, w};
+//             edge.push_back(x);
+//         }
+//         printf("Scenario #%d:\n%d\n\n", k, kruskal());//Terminate the output for the scenario with a blank line.案例之间有空行
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 /*十三. 最短路径问题*/
+/*
+各最短路算法应用区别：
+所求最短路径对象            边权                    算法(复杂度)
+一个起点，一个终点      非负；无边权或边权为1   A*算法(<O((m + n)logn))，双向广搜(<O((m + n)logn))，贪心最优搜索(<O(m + n))      
+一个起点到其他所有点    无边权或边权为1         BFS(O(m + n))
+                      非负数                 Dijkstra算法-堆优化优先队列(O((m + n)logn))
+                      含负数                 SPFA(<O(m*n)) 
+所有点对之间           含负数                 Floyd-Warshall(O(n^3))
+*/
+
+
+
+/*Floyd 算法（多源最短路径问题） -- O(n^3) -- 求得所有点对之间的最短路径 -- 三重循环，只适用于小规模的稠密图(n < 300)
+应用 动态规划 的思路，定义 dp[k][i][j] 为从第一个点遍历到第 k 个点时，从点 i 到点 j 的最短距离(最小边权和)
+从含有 k - 1 个点的子图拓展到含 k 个点的图，若经历点k使得距离更短，则将点 k 接入到 i -> j 路径上，假设 i -> k -> j
+此时 distance(i -> k -> j) < distance(i -> j)，则 k 点应用到该状态上
+转移方程为 dp[k][i][j] = min(dp[k - 1][i][j], dp[k - 1][i][k] + dp[k - 1][k][j])
+由于第一维状态只与第 k - 1 层状态有关，故可以滚动掉: dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j])
+
+最短距离(处理所有点对间的距离大小)：
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+typedef long long ll;
+const int N = 305;
+const ll INF = 0x3f3f3f3f3f3f3f3fLL;
+int n, m, q;
+ll dp[N][N];
+
+void floyd()
+{
+    for(int k = 1; k <= n; k++)
+        for(int i = 1; i <= n; i++)
+            for(int j = 1; j <= n; j++)
+                dp[i][j] = min(dp[i][j], dp[i][k], dp[k][j]);
+}
+
+int main()
+{
+    untie();
+    memset(dp, 0x3f, sizeof(dp));
+    cin >> n >> m >> q;
+    for(int i = 1; i <= m; i++)
+    {
+        int u, v; ll w;
+        cin >> u >> v >> w;
+        dp[u][v] = dp[v][u] = min(dp[u][v], w);//防止有重边
+    }
+    while(q--)
+    {
+        int s, t;
+        cin >> s >> t;
+        if(dp[s][t] == INF) cout << "-1";
+        else if(s == t) cout << "0";
+        else cout << dp[s][t];
+        cout << '\n';
+    }
+    return 0;
+}
+
+
+
+传递闭包(处理所有点对间的优先关系)：
+    在交际网络中，给定若干个元素和若干对二元关系，且关系具有传递性（假如a 与 b有关系，b与c有关系，那么a和c必定有关系）。”
+    通过传递性推导出尽量多的元素之间的关系"的问题被称为传递闭包。
+    建立邻接矩阵d，其中 d[i, j] = 1 表示 i 与 j 有关系，d[i, j] = 0表示 i 与 j 没有关系。特别的，d[i, i]始终为 1。
+    核心代码：
+    for (int k = 1; k <= n; k++)
+        for (int i = 1; i <= n; i++)
+            for (int j = 1; j <= n; j++)
+                d[i][j] |= d[i][k] & d[k][j];
+    bitset优化(从n<500优化到接受n<=1000)：
+
+*/
+
+//1.Cow Contest(传递闭包)
+//必须知道任一一头奶牛与其他所有奶牛之间的胜负关系，并依个判定其排名是否确认，最后输出个数即可
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 105;
+// int n, m;
+// bool dp[N][N];
+// void floyd()
+// {
+//     for(int k = 1; k <= n; k++)//遍历所有点作中间点k，若经历k点能连通 i->k->j 则说明 i 与 j 连通
+//         for(int i = 1; i <= n; i++)
+//             for(int j = 1; j <= n; j++)
+//                 dp[i][j] |= dp[i][k] & dp[k][j];
+//                 //即 if(dp[i][k] && dp[k][j]) dp[i][j] = 1;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     while(m--)
+//     {
+//         int s, t;
+//         cin >> s >> t;
+//         dp[s][t] = 1;
+//     }
+//     floyd();
+//     //判定点 i 是否以确定排名：点 i 与其他n-1个点是否都具有连通关系
+//     int ans = 0;
+//     for(int i = 1; i <= n; i++)
+//     {
+//         int cnt = 0;
+//         for(int j = 1; j <= n; j++)
+//             if(dp[i][j] || dp[j][i]) ++cnt;
+//         if(cnt == n - 1) ++ans;
+//     }
+//     cout << ans << endl;
+//     return 0;
+// }
+//bitset优化
+// #include <iostream>
+// #include <algorithm>
+// #include <bitset>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 105;
+// int n, m;
+// bitset<N> dp[N];//N串长度为N的二进制，可以对一整串二进制操作，故省去第 j 层循环
+// void floyd()
+// {
+//     for(int k = 1; k <= n; k++)//遍历所有点作中间点k，若经历k点能连通 i->k->j 则说明 i 与 j 连通
+//         for(int i = 1; i <= n; i++)
+//             if(dp[i][k]) 
+//                 dp[i] |= dp[k];            
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     while(m--)
+//     {
+//         int s, t;
+//         cin >> s >> t;
+//         dp[s][t] = 1;
+//     }
+//     floyd();
+//     //判定点 i 是否以确定排名：点 i 与其他n-1个点是否都具有连通关系
+//     int ans = 0;
+//     for(int i = 1; i <= n; i++)s
+//     {
+//         int cnt = 0;
+//         for(int j = 1; j <= n; j++)
+//             if(dp[i][j] || dp[j][i]) ++cnt;
+//         if(cnt == n - 1) ++ans;
+//     }
+//     cout << ans;
+//     return 0;
+// }
 
 
 
@@ -8971,6 +9208,262 @@ Prim算法：O(mlogn)
 
 
 
+/*dijkstra算法（单源最短路径问题） -- BFS + 优先队列（方便得到距 起点s 距离最小的点）
+应用场景：
+    稀疏图：n 较大，用 dijkstra + 优先队列，便于获取最短距离的点  O((m + n)logn)
+    稠密图：n^2 约等于 m，不用优先队列，直接在所有节点中找距离最短的点  O(n^2)
+
+
+dijkstra + 优先队列 的模板(图论题一般输入输出很多，用cstdio完成更好)
+
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <vector>
+#include <cstring>
+#include <cstdio>
+using namespace std;
+typedef long long ll;
+
+const ll inf = (1LL << 31) - 1;
+const int N = 1e5 + 5;
+
+struct edge{
+    int to; ll w;
+    edge(int a = 0, ll b = 0){ to = a, w = b;}
+};
+struct node{
+    int id; ll dis;//dis 为该点到起点的距离
+    node(int a = 0, ll b = 0){ id = a, dis = b;}
+    bool operator <(const node &x)const{ return dis > x.dis;}
+};
+
+int n, m, s = 1;//起点s
+int pre[N];//pre[i] 记录前驱节点即 点 i 的上一个点的编号，用于打印路径
+ll dis[N];//记录 所有节点 到 起点s 的距离
+bool vis[N];//记录是否已找到 节点i 的 最短距离
+vector<edge> e[N];
+
+void print_path(int t)//从 终点n 递归打印
+{
+    if(t == s) { printf("%d", s); return;}
+    print_path(pre[t]);
+    printf("%d ", t);
+}
+
+void dijkstra()
+{
+    for(int i = 0; i <= n; i++) {dis[i] = inf, vis[i] = 0;}
+    dis[s] = 0;
+    priority_queue<node> q;
+    q.push(node(s, 0));
+    while(!q.empty())
+    {
+        node u = q.top(); q.pop();
+        if(vis[u.id]) continue;
+        vis[u.id] = 1;
+        for(auto ne : e[u.id])//遍历邻居
+        {
+            if(vis[ne.to]) continue;
+            if(dis[ne.to] > u.dis + ne.w)//更新邻居点的最短距离
+            {
+                dis[ne.to] = u.dis + ne.w;
+                q.push(node(ne.to, dis[ne.to]));
+                pre[ne.to] = u.id;
+            }
+        }
+    }
+    // print_path(n);//打印路径
+}
+
+int main()
+{
+    scanf("%d%d%d", &n, &m, &s);
+    for(int i = 0; i <= n; i++) e[i].clear();
+    for(int i = 0; i < m; i++)
+    {
+        int u, v; ll w;
+        scanf("%d%d%lld", &u, &v, &w);
+        e[u].push_back(edge(v, w));
+        // e[v].push_back(edge(u, w)); //双向边
+    }
+    dijkstra();
+    for(int i = 1; i <= n; i++) 
+    {
+        if(i != 1) printf(" ");
+        printf("%lld", dis[i]);
+    }
+    return 0;
+}
+
+*/
+//1.Til the Cows Come Home
+//要分析出这是个无向图
+// #include <iostream>
+// #include <algorithm>
+// #include <queue>
+// #include <vector>
+// #include <cstring>
+// #include <cstdio>
+// using namespace std;
+// typedef long long ll;
+// const ll inf = (1LL << 31) - 1;
+// const int N = 1e3 + 5;
+
+// struct edge{
+//     int to; ll w;
+// };
+// struct node{
+//     int id; ll dis;//dis 为该点到起点的距离
+//     bool operator <(const node &x)const{ return dis > x.dis;}
+// };
+
+// int n, m, s = 1;//起点s
+// ll dis[N];//记录 所有节点 到 起点s 的距离
+// bool vis[N];//记录是否已找到 节点i 的 最短距离
+// vector<edge> e[N];
+
+// void dijkstra()
+// {
+//     for(int i = 1; i <= n; i++) dis[i] = inf;
+//     dis[s] = 0;
+//     priority_queue<node> q;
+//     node sta = {s, 0};
+//     q.push(sta);
+//     while(!q.empty())
+//     {
+//         node u = q.top(); q.pop();
+//         if(vis[u.id]) continue;
+//         vis[u.id] = 1;
+//         for(int i = 0; i < e[u.id].size(); i++)//遍历邻居
+//         {
+//             edge ne = e[u.id][i];
+//             if(!vis[ne.to] && dis[ne.to] > u.dis + ne.w)//更新邻居点的最短距离
+//             {
+//                 dis[ne.to] = u.dis + ne.w;
+//                 node next = {ne.to, dis[ne.to]};
+//                 q.push(next);
+//             }
+//         }
+//     }
+// }
+
+// int main()
+// {
+//     scanf("%d%d", &m, &n);
+//     for(int i = 0; i < m; i++)
+//     {
+//         int u, v; ll w;
+//         scanf("%d%d%lld", &u, &v, &w);
+//         edge e1 = {v, w}, e2 = {u, w};
+//         e[u].push_back(e1);
+//         e[v].push_back(e2); //双向边
+//     }
+//     dijkstra();
+//     printf("%lld", dis[n]);
+//     return 0;
+// }
+
+
+
+//*2.Heavy Transportation
+//题意：图里有不同载重限度的路段，一条完整的路上由不同的路段连接，货车重量需能经过其中最小载重限度的路段，整条路才算连通
+//      求 1 ~ n 路上 各路段都采取最大限重连接后 的最小限重路段的限重，即邻居点找最长边连接
+//最长路径问题，题目较特殊，采用非优先队列写法，用邻接矩阵存储方便
+//实际上该题应用最大生成树更合适，但现在拿来练习 Dijkstra算法的变形写法，有点类似动态规划。
+// #include <iostream>
+// #include <algorithm>
+// #include <queue>
+// #include <vector>
+// #include <cstring>
+// #include <cstdio>
+// using namespace std;
+// typedef long long ll;
+// const int N = 1e3 + 5;
+// int n, m, s = 1;//起点s
+// int dp[N];//dp[i] 定义为 从 起点1 到 点i 路上的最小限重值
+// int gra[N][N];
+// bool vis[N];
+// void dijkstra()
+// {
+//     for(int i = 1; i <= n; i++) dp[i] = gra[1][i];//状态初始化为直连情况下的限重值，这样来对比非直连哪个限重更高
+//     memset(vis, 0, sizeof(vis));
+//     dp[1] = 0;
+//     vis[1] = 1;
+//     //最大生成树，遍历 n-1 次，即取前 n - 1 大的边来连通 n 个点
+//     for(int i = 1; i < n; i++)
+//     {
+//         int _max = -1, ne = 0;
+//         for(int j = 1; j <= n; j++)//寻找最大限重的中间点
+//             if(!vis[j] && dp[j] > _max)
+//                 _max = dp[j], ne = j;
+//         vis[ne] = 1;
+//         for(int j = 1; j <= n; j++)//更新dp状态，如果经历 中间点ne 的 非直连路中最小限重值更大，就取该非直连路径
+//             dp[j] = max(dp[j], min(dp[ne], gra[ne][j]));
+//     }
+// }
+// int main()
+// {
+//     int T;
+//     scanf("%d", &T);
+//     for(int k = 1; k <= T; k++)
+//     {
+//         scanf("%d%d", &n, &m);
+//         memset(gra, -1, sizeof(gra));//求最长路径，初始化为无穷小，可判断 点i 与 点j 是否为邻居
+//         for(int i = 0; i < m; i++)
+//         {
+//             int u, v, w;
+//             scanf("%d%d%d", &u, &v, &w);// All streets can be travelled in both directions.无向图
+//             gra[u][v] = gra[v][u] = w;// gra[u][v] = gra[v][u] = max(gra[u][v], w);//该题无重边
+//         }
+//         dijkstra();
+//         printf("Scenario #%d:\n%d\n\n", k, dp[n]);//Terminate the output for the scenario with a blank line.案例之间有空行
+//     }
+//     return 0;
+// }
+//可以用 前向星 + 优先队列 优化
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* A*算法（单起点单终点问题） -- 贪心最优搜索(基于估价函数h(i)) + BFS(Dijkstra) + 优先队列
+重点：此时进入优先队列的不是 起点到当前点的距离，而是 当前点到终点的距离。
+      A*算法的实现关键在于 h函数 的设计是否符合题意。
+
+
+*/
 
 
 
