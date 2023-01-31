@@ -9075,7 +9075,7 @@ void floyd()
     for(int k = 1; k <= n; k++)
         for(int i = 1; i <= n; i++)
             for(int j = 1; j <= n; j++)
-                dp[i][j] = min(dp[i][j], dp[i][k], dp[k][j]);
+                dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j]);
 }
 
 int main()
@@ -9089,6 +9089,7 @@ int main()
         cin >> u >> v >> w;
         dp[u][v] = dp[v][u] = min(dp[u][v], w);//防止有重边
     }
+    floyd();
     while(q--)
     {
         int s, t;
@@ -9198,8 +9199,45 @@ int main()
 
 
 
-
-
+//2.MPI Maelstrom
+//*题意：本题在于题意难解，给一个邻接矩阵(输入给半边)，让你来求从点 1 到 其他点 所花费最短时间集里面的的最大值
+//解法：由于 n <= 100 ，用编码简单的floyd更方便
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <cstdlib>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// typedef long long ll;
+// const int N = 105;
+// const ll INF = 0x4ffffffffLL;
+// int n, m;
+// ll dp[N][N];
+// char str[N];
+// void floyd()
+// {
+//     for(int k = 1; k <= n; k++)
+//         for(int i = 1; i <= n; i++)
+//             for(int j = 1; j <= n; j++)
+//                 dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j]);
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 2; i <= n; i++)
+//         for(int j = 1; j < i; j++)
+//         {
+//             cin >> str;
+//             if(str[0] != 'x') dp[i][j] = dp[j][i] = 1LL * atoi(str);
+//             else dp[i][j] = dp[j][i] = INF;
+//         }
+//     floyd();
+//     ll _max = 0;
+//     for(int i = 1; i <= n; i++) _max = max(_max, dp[1][i]);
+//     cout << _max;
+//     return 0;
+// }
 
 
 
@@ -9262,8 +9300,9 @@ void dijkstra()
         node u = q.top(); q.pop();
         if(vis[u.id]) continue;
         vis[u.id] = 1;
-        for(auto ne : e[u.id])//遍历邻居
+        for(int i = 0; i < e[u.id].size(); i++)//遍历邻居
         {
+            edge ne = e[u.id][i];
             if(vis[ne.to]) continue;
             if(dis[ne.to] > u.dis + ne.w)//更新邻居点的最短距离
             {
@@ -9421,12 +9460,77 @@ int main()
 //     }
 //     return 0;
 // }
-//可以用 前向星 + 优先队列 优化
+//前向星或邻接表 + 优先队列
+// #include <iostream>
+// #include <algorithm>
+// #include <queue>
+// #include <vector>
+// #include <cstring>
+// #include <cstdio>
+// using namespace std;
+// const int inf = (1LL << 31) - 1;
+// const int N = 1e5 + 5;
+// struct edge{
+//     int to, w;
+// };
+// struct node{
+//     int id, dis;//dis 为该点到起点的距离
+//     bool operator <(const node &x)const{ return dis < x.dis;}
+// };
+// int n, m, s = 1;
+// int dis[N];//记录 所有节点 到 起点s 的距离
+// bool vis[N];//记录是否已找到 节点i 的 最短距离
+// vector<edge> e[N];
+// void dijkstra()
+// {
+//     for(int i = 0; i <= n; i++) {dis[i] = 0, vis[i] = 0;}
+//     dis[s] = inf;
+//     priority_queue<node> q;
+//     node sta = {s, dis[s]};
+//     q.push(sta);
+//     while(!q.empty())
+//     {
+//         node u = q.top(); q.pop();
+//         if(vis[u.id]) continue;
+//         vis[u.id] = 1;
+//         for(int i = 0; i < e[u.id].size(); i++)//遍历邻居
+//         {
+//             edge ne = e[u.id][i];
+//             if(vis[ne.to]) continue;
+//             if(dis[ne.to] < min(dis[u.id], ne.w))
+//             {
+//                 dis[ne.to] = min(dis[u.id], ne.w);
+//                 node next = {ne.to, dis[ne.to]};
+//                 q.push(next);
+//             }
+//         }
+//     }
+// }
+// int main()
+// {
+//     int T;
+//     scanf("%d", &T);
+//     for(int k = 1; k <= T; k++)
+//     {
+//         scanf("%d%d", &n, &m);
+//         for(int i = 0; i <= n; i++) e[i].clear();
+//         for(int i = 0; i < m; i++)
+//         {
+//             int u, v, w;
+//             scanf("%d%d%d", &u, &v, &w);
+//             edge e1 = {v, w}, e2 = {u, w};
+//             e[u].push_back(e1);
+//             e[v].push_back(e2); //双向边
+//         }
+//         dijkstra();
+//         printf("Scenario #%d:\n%d\n\n", k, dis[n]);//Terminate the output for the scenario with a blank line.案例之间有空行
+//     }
+//     return 0;
+// }
 
 
 
-
-
+//3.昂贵的聘礼
 
 
 
