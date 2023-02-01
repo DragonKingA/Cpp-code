@@ -9303,8 +9303,7 @@ void dijkstra()
         for(int i = 0; i < e[u.id].size(); i++)//遍历邻居
         {
             edge ne = e[u.id][i];
-            if(vis[ne.to]) continue;
-            if(dis[ne.to] > u.dis + ne.w)//更新邻居点的最短距离
+            if(!vis[ne.to] && dis[ne.to] > u.dis + ne.w)//更新邻居点的最短距离
             {
                 dis[ne.to] = u.dis + ne.w;
                 q.push(node(ne.to, dis[ne.to]));
@@ -9530,15 +9529,211 @@ int main()
 
 
 
-//3.昂贵的聘礼
+//*3.昂贵的聘礼（Dijkstra + 枚举限制区间）
+//题意：有多样物品，每样物品可能有若干件替代品(以更低代价购得原品)，寻找 购得第一件物品所需最低总价钱的购买方案
+//      并且 能否购买i物品 受限于 购买的前一样物品j 与 i物品的地位系数差，|p[i] - p[j]| <= limit 才能购买
+//分析：对于第一件物品，它是必购买的，也就是购买的终点，可直接购买(增设原点)，也可购买其替代品集合中的某一件以代替购买
+//     故图中含有 原点0到每个物品的单向边(边权为物品本身的价钱) 和 物品间具有替代关系的单向边(边权为优惠价)
+//重点：虽然对所有路径全域条件为 p[i] - limit <= p[j] <= p[i] + limit，但若直接以此为条件不符合题意，涉及区间长度并非 limit 而是 2*limit
+//      故由于地位系数都是整数，对于一整条路径，满足题意的条件有 [p[i] - limit, p[j]] [p[i] - limit + 1, p[j] + 1] ··· [p[i], p[j] + limit]
+//      所以存在多个基于不同松弛条件的最短路，现枚举不同的松弛条件(区间)，并从所得的所有最短路中选出最小代价的最短路。
+//      而每条最短路必定经过 终点-点1，那么 对所有路径的全域范围 可简化为 只针对所有最短路的全域范围 [p[1] - limit, p[1] + limit]
+//16ms
+// #include <iostream>
+// #include <algorithm>
+// #include <queue>
+// #include <vector>
+// #include <cstring>
+// #include <cstdio>
+// using namespace std;
+// typedef long long ll;
+// const ll INF = 0x3f3f3f3f3f3f3f3fLL;
+// const int N = 105;
+// struct edge{
+//     int to; ll w;
+//     edge(int a = 0, ll b = 0){ to = a, w = b;}
+// };
+// struct node{
+//     int id; ll dis;
+//     node(int a = 0, ll b = 0){ id = a, dis = b;}
+//     bool operator <(const node &x)const{ return dis > x.dis;}
+// };
+// int n, limit, s = 0;
+// int level[N];
+// ll dis[N];
+// bool vis[N];
+// vector<edge> e[N];
+// ll dijkstra(int l, int r)
+// {
+//     memset(dis, 0x3f, sizeof(dis));
+//     memset(vis, 0, sizeof(vis));
+//     dis[s] = 0;
+//     priority_queue<node> q;
+//     q.push(node(s, 0));
+//     while(!q.empty())
+//     {
+//         node u = q.top(); q.pop();
+//         if(vis[u.id]) continue;
+//         vis[u.id] = 1;
+//         for(int i = 0; i < e[u.id].size(); i++)
+//         {
+//             edge ne = e[u.id][i];
+//             if(!vis[ne.to] && level[ne.to] >= l && level[ne.to] <= r && dis[ne.to] > u.dis + ne.w)
+//             {
+//                 dis[ne.to] = u.dis + ne.w;
+//                 q.push(node(ne.to, dis[ne.to]));
+//             }
+//         }
+//     }
+//     return dis[1];//返回到达终点1的当前最小价值
+// }
+// int main()
+// {
+//     scanf("%d%d", &limit, &n);
+//     for(int v = 1; v <= n; v++)
+//     {
+//         int k; ll w;
+//         scanf("%lld%d%d", &w, &level[v], &k);
+//         e[0].push_back(edge(v, w));
+//         while(k--)
+//         {
+//             int u; ll c;
+//             scanf("%d%lld", &u, &c);
+//             e[u].push_back(edge(v, c));
+//         }
+//     }
+//     ll ans = INF;
+//     for(int l = level[1] - limit; l <= level[1]; l++)
+//         ans = min(ans, dijkstra(l, l + limit));
+//     printf("%lld", ans);
+//     return 0;
+// }
+//79ms(由于 N <= 100，完全可以用邻接矩阵，结合dp思想解决。)
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <cstdio>
+// using namespace std;
+// typedef long long ll;
+// const ll INF = 0x3f3f3f3f3f3f3f3fLL;
+// const int N = 105;
+// int n, limit, s = 0;
+// int level[N];
+// ll dis[N], gra[N][N];
+// bool vis[N];
+// ll dijkstra(int l, int r)
+// {
+//     memset(dis, 0x3f, sizeof(dis));
+//     memset(vis, 0, sizeof(vis));
+//     dis[s] = 0;
+//     for(int i = 0; i <= n; i++)//从 自设原点0 到 点n 共 n + 1 个点，也就是子图大小拓展至全图大小
+//     {
+//         int ind = -1;
+//         for(int j = 0; j <= n; j++)//寻找当前未使用的最短边，同时也是在确定以ind为终点的最短路是否已确定
+//             if(!vis[j] && (ind == -1 || dis[j] < dis[ind])) ind = j;
+//         vis[ind] = 1;//不论是直连(初始状态)或非直连(已经过更新)，以ind为终点的最短路此时便能确定
+//         for(int j = 1; j <= n; j++)//遍历所有终点的最短路，更新其状态，判断接入或不接 0与ind的直连边(或者是终点为ind的最短路径)
+//             if(level[j] >= l && level[j] <= r)
+//                 dis[j] = min(dis[j], dis[ind] + gra[ind][j]);
+//     }
+//     return dis[1];
+// }
+// int main()
+// {
+//     memset(gra, 0x3f, sizeof(gra));
+//     scanf("%d%d", &limit, &n);
+//     for(int v = 1; v <= n; v++)
+//     {
+//         int u, k; ll c, w;
+//         scanf("%lld%d%d", &w, &level[v], &k);
+//         gra[0][v] = w;
+//         while(k--) scanf("%d%lld", &u, &c), gra[u][v] = c;
+//     }
+//     ll ans = INF;
+//     for(int l = level[1] - limit; l <= level[1]; l++)
+//         ans = min(ans, dijkstra(l, l + limit));
+//     printf("%lld", ans);
+//     return 0;
+// }
 
 
 
+//4.Frogger
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <vector>
+#include <cstring>
+#include <cstdio>
+using namespace std;
+typedef long long ll;
 
+const ll inf = (1LL << 31) - 1;
+const int N = 1e5 + 5;
 
+struct edge{
+    int to; ll w;
+    edge(int a = 0, ll b = 0){ to = a, w = b;}
+};
+struct node{
+    int id; ll dis;//dis 为该点到起点的距离
+    node(int a = 0, ll b = 0){ id = a, dis = b;}
+    bool operator <(const node &x)const{ return dis > x.dis;}
+};
 
+int n, m, s = 1;//起点s
+ll dis[N];//记录 所有节点 到 起点s 的距离
+bool vis[N];//记录是否已找到 节点i 的 最短距离
+vector<edge> e[N];
 
+void dijkstra()
+{
+    for(int i = 0; i <= n; i++) {dis[i] = inf, vis[i] = 0;}
+    dis[s] = 0;
+    priority_queue<node> q;
+    q.push(node(s, 0));
+    while(!q.empty())
+    {
+        node u = q.top(); q.pop();
+        if(vis[u.id]) continue;
+        vis[u.id] = 1;
+        for(int i = 0; i < e[u.id].size(); i++)//遍历邻居
+        {
+            edge ne = e[u.id][i];
+            if(!vis[ne.to] && dis[ne.to] > u.dis + ne.w)//更新邻居点的最短距离
+            {
+                dis[ne.to] = u.dis + ne.w;
+                q.push(node(ne.to, dis[ne.to]));
+            }
+        }
+    }
+}
 
+int main()
+{
+    int T = 0;
+    while(~scanf("%d", &n), n)
+    {
+        scanf("%d%d%d", &n, &m, &s);
+        for(int i = 0; i <= n; i++) e[i].clear();
+        for(int i = 0; i < m; i++)
+        {
+            int u, v; ll w;
+            scanf("%d%d%lld", &u, &v, &w);
+            e[u].push_back(edge(v, w));
+            // e[v].push_back(edge(u, w)); //双向边
+        }
+        dijkstra();
+        for(int i = 1; i <= n; i++) 
+        {
+            if(i != 1) printf(" ");
+            printf("%lld", dis[i]);
+        }
+        
+    }
+    
+    return 0;
+}
 
 
 
