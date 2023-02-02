@@ -9051,6 +9051,74 @@ int main()
 
 
 
+/*BFS 一个起点到其他所有点, 无边权或边权为1*/
+//1.最短路计数
+//一个起点到所有其他点，且边权为 1 (无边权) -- 邻接表 + BFS
+//思路：边确定最短路距离，边更新符合最短路的路径个数
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// #include <queue>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e6 + 5, mod = 100003, INF = 0x3f3f3f3f;
+// int n, m, s = 1;
+// int dis[N], cnt[N], vis[N];
+// vector<int> e[N];
+// void bfs()
+// {
+//     memset(dis, 0x3f, sizeof(dis));
+//     cnt[1] = 1, vis[1] = 1;
+//     queue<int> q;
+//     q.push(1);
+//     while(!q.empty())
+//     {
+//         int now = q.front(); q.pop();
+//         for(int i = 0; i < e[now].size(); i++)
+//         {
+//             int to = e[now][i];
+//             if(!vis[to])//固定最短路距离
+//             {
+//                 vis[to] = 1;
+//                 dis[to] = dis[now] + 1;
+//                 q.push(to);
+//             }
+//             if(dis[to] == dis[now] + 1)//最短路径数叠加，把 now点 的路径数全部加到 to点 上
+//                 cnt[to] = (cnt[to] + cnt[now]) % mod;
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     while(m--)
+//     {
+//         int u, v;
+//         cin >> u >> v;
+//         e[u].push_back(v);
+//         e[v].push_back(u); //无向图
+//     }
+//     bfs();
+//     for(int i = 1; i <= n; i++)
+//     {
+//         if(i != 1 && dis[i] == INF) cout << "0\n";
+//         else cout << cnt[i] % mod << "\n";
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
 /*Floyd 算法（多源最短路径问题） -- O(n^3) -- 求得所有点对之间的最短路径 -- 三重循环，只适用于小规模的稠密图(n < 300)
 应用 动态规划 的思路，定义 dp[k][i][j] 为从第一个点遍历到第 k 个点时，从点 i 到点 j 的最短距离(最小边权和)
 从含有 k - 1 个点的子图拓展到含 k 个点的图，若经历点k使得距离更短，则将点 k 接入到 i -> j 路径上，假设 i -> k -> j
@@ -9294,7 +9362,7 @@ void dijkstra()
     for(int i = 0; i <= n; i++) {dis[i] = inf, vis[i] = 0;}
     dis[s] = 0;
     priority_queue<node> q;
-    q.push(node(s, 0));
+    q.push(node(s, dis[s]));
     while(!q.empty())
     {
         node u = q.top(); q.pop();
@@ -9658,85 +9726,126 @@ int main()
 
 
 
-//4.Frogger
-#include <iostream>
-#include <algorithm>
-#include <queue>
-#include <vector>
-#include <cstring>
-#include <cstdio>
-using namespace std;
-typedef long long ll;
-
-const ll inf = (1LL << 31) - 1;
-const int N = 1e5 + 5;
-
-struct edge{
-    int to; ll w;
-    edge(int a = 0, ll b = 0){ to = a, w = b;}
-};
-struct node{
-    int id; ll dis;//dis 为该点到起点的距离
-    node(int a = 0, ll b = 0){ id = a, dis = b;}
-    bool operator <(const node &x)const{ return dis > x.dis;}
-};
-
-int n, m, s = 1;//起点s
-ll dis[N];//记录 所有节点 到 起点s 的距离
-bool vis[N];//记录是否已找到 节点i 的 最短距离
-vector<edge> e[N];
-
-void dijkstra()
-{
-    for(int i = 0; i <= n; i++) {dis[i] = inf, vis[i] = 0;}
-    dis[s] = 0;
-    priority_queue<node> q;
-    q.push(node(s, 0));
-    while(!q.empty())
-    {
-        node u = q.top(); q.pop();
-        if(vis[u.id]) continue;
-        vis[u.id] = 1;
-        for(int i = 0; i < e[u.id].size(); i++)//遍历邻居
-        {
-            edge ne = e[u.id][i];
-            if(!vis[ne.to] && dis[ne.to] > u.dis + ne.w)//更新邻居点的最短距离
-            {
-                dis[ne.to] = u.dis + ne.w;
-                q.push(node(ne.to, dis[ne.to]));
-            }
-        }
-    }
-}
-
-int main()
-{
-    int T = 0;
-    while(~scanf("%d", &n), n)
-    {
-        scanf("%d%d%d", &n, &m, &s);
-        for(int i = 0; i <= n; i++) e[i].clear();
-        for(int i = 0; i < m; i++)
-        {
-            int u, v; ll w;
-            scanf("%d%d%lld", &u, &v, &w);
-            e[u].push_back(edge(v, w));
-            // e[v].push_back(edge(u, w)); //双向边
-        }
-        dijkstra();
-        for(int i = 1; i <= n; i++) 
-        {
-            if(i != 1) printf(" ");
-            printf("%lld", dis[i]);
-        }
-        
-    }
-    
-    return 0;
-}
+//4.Frogger（最短路径中最长路段最小值 -- 最短路极大极小问题）
+//题意：求最短路中最长路段的最小值，起点1 与 终点2 均唯一确定
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <cstdio>
+// #include <cmath>
+// using namespace std;
+// typedef double db;
+// const int N = 205;
+// struct p{
+//     int x, y;
+//     p(int a = 0, int b = 0){ x = a, y = b;}
+// }point[N];
+// db getdis(p e1, p e2) { return 1.0 * (e1.x - e2.x) * (e1.x - e2.x) + 1.0 * (e1.y - e2.y) * (e1.y - e2.y);}
+// int n, T = 0, s = 1, sx, sy, ex, ey;
+// db dis[N];
+// bool vis[N];
+// db dijkstra()
+// {
+//     dis[s] = 0;
+//     memset(vis, 0, sizeof(vis));
+//     for(int i = 2; i <= n; i++) dis[i] = getdis(point[1], point[i]);
+//     for(int i = 1; i <= n; i++)//子图拓展
+//     {
+//         int ind = -1;
+//         for(int j = 1; j <= n; j++)//找现存最短路径
+//             if(!vis[j] && (ind == -1 || dis[j] < dis[ind])) ind = j;
+//         vis[ind] = 1;
+//         for(int j = 1; j <= n; j++)//更新最短路中最大路段的最小值
+//             dis[j] = min(dis[j], max(dis[ind], getdis(point[ind],point[j])));
+//     }    
+//     return sqrt(dis[2]);
+// }
+// int main()
+// {
+//     while(~scanf("%d", &n), n)
+//     {
+//         for(int i = 1, x, y; i <= n; i++)
+//             scanf("%d%d", &x, &y), point[i] = p(x, y);
+//         printf("Scenario #%d\nFrog Distance = %.3lf\n\n", ++T, dijkstra());
+//     }
+//     return 0;
+// }
 
 
 
+//*5.通往奥格瑞玛的道路(最短路 + 二分答案 求解极大极小问题)
+//题意：在所有符合血量条件的路径中，都有一个城市最大收费 x，得出其在所有路径中的最小值
+//思路：用dijkstra维护血量消耗，尽量使其符合血量条件；二分最大收费 x，大于该 x 的二分值的城市不走，二分完毕后得到的便是最小值。
+// #include <iostream>
+// #include <algorithm>
+// #include <queue>
+// #include <vector>
+// #include <cstring>
+// #include <cstdio>
+// using namespace std;
+// typedef long long ll;
+// const int N = 1e4 + 5;
+// struct edge{
+//     int to; ll w;
+//     edge(int a = 0, ll b = 0){ to = a, w = b;}
+// };
+// struct node{
+//     int id; ll dis;//dis 为该点到起点的距离
+//     node(int a = 0, ll b = 0){ id = a, dis = b;}
+//     bool operator <(const node &x)const{ return dis > x.dis;}
+// };
+// int n, m, blood, s = 1;//起点s
+// ll dis[N], cost[N];
+// bool vis[N];
+// vector<edge> e[N];
+// bool dijkstra(ll mid)
+// {
+//     if(mid < cost[s]) return 0;//优化，若起点都走不了，就返回
+//     memset(dis, 0x3f, sizeof(dis));
+//     memset(vis, 0, sizeof(vis));
+//     dis[s] = 0;
+//     priority_queue<node> q;
+//     q.push(node(s, dis[s]));
+//     while(!q.empty())
+//     {
+//         node u = q.top(); q.pop();
+//         if(vis[u.id]) continue;
+//         vis[u.id] = 1;
+//         for(int i = 0; i < e[u.id].size(); i++)
+//         {
+//             edge ne = e[u.id][i];
+//             if(!vis[ne.to] && mid >= cost[ne.to] && dis[ne.to] > u.dis + ne.w)
+//             {
+//                 dis[ne.to] = u.dis + ne.w;
+//                 if(ne.to == n) return dis[n] <= blood;//到n点
+//                 q.push(node(ne.to, dis[ne.to]));
+//             }
+//         }
+//     }
+//     return 0;//无法到达点 n
+// }
+// int main()
+// {
+//     ll l = 1, r = 1, ans = -1;
+//     scanf("%d%d%d", &n, &m, &blood);
+//     for(int i = 1; i <= n; i++) scanf("%lld", &cost[i]), r = max(r, cost[i]);
+//     for(int i = 0; i < m; i++)
+//     {
+//         int u, v; ll w;
+//         scanf("%d%d%lld", &u, &v, &w);
+//         e[u].push_back(edge(v, w));
+//         e[v].push_back(edge(u, w)); //双向边
+//     }
+//     while(l <= r)
+//     {
+//         ll mid = (l + r) >> 1;
+//         if(dijkstra(mid)) r = mid - 1, ans = mid;
+//         else l = mid + 1;
+//     }
+//     if(ans == -1) printf("AFK");//一个符合条件的路径都没有
+//     else printf("%lld\n", ans);
+//     return 0;
+// }
 
 
 
@@ -9775,6 +9884,205 @@ int main()
 
 
 
+
+
+
+
+/*十四. 线段树*/
+/*
+//https://blog.csdn.net/weixin_45697774/article/details/104274713?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522167533467316782428699964%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=167533467316782428699964&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-104274713-null-null.142^v72^pc_new_rank,201^v4^add_ask&utm_term=%E7%BA%BF%E6%AE%B5%E6%A0%91&spm=1018.2226.3001.4187
+线段树是一种基于 分治思想 的 二叉树(二分)，用于在 区间 上进行信息的统计(对于 区间操作 的通用解法)。
+它把一些对于区间（或者线段）的修改、维护，从 O(N) 的时间复杂度变成 O(logN)
+线段树 可以理解为 分治思想 + 二叉树结构 + Lazy-Tag技术 
+
+1.线段树的每一个节点都代表一个区间
+2.线段树具有的唯一根节点，代表的区间是整个统计范围，[1，n]
+3.线段树的每个叶节点都代表长度为 1 的元区间 [x，x]
+4.对于每个内部节点 [l，r]，它的左节点是 [l, mid]，右节点是 [mid, r]，其中 mid = (l + r) / 2(向下取整)
+一个线段树基本结构有：信息和节点的存储、信息合并、信息更新、建树、单点修改、区间查询等
+
+线段树的每个区间维护自己的 左右边界 和 区间总和\最大值\最小值等，假设当前节点维护的区间为[L, R]，
+则 mid = (L + R) / 2，他的左子节点维护[L, mid]，右子节点维护[mid + 1, R]。
+
+操作分析 O(logn)：
+    线段树构造 build() 分治构造 ，pushup() (从下往上传递区间信息)
+    单点修改        ：直接修改叶子节点上元素的值，然后从下往上更新线段树
+    区间查询 query()：查询[L, R]信息(最值或区间和等)，从根节点区间[1, n]开始递归，设为[pl, pr]，每次递归操作分两种情况：
+        [L, R] 完全覆盖 [pl, pr]，直接返回 编号p 所代表的值；
+        [L, R] 与 [pl, pr] 部分重叠，那么二分搜索有重叠的部分。若 L < pr，左子节点与区间有重叠，则继续递归左子。若 R > pl，继续递归右子
+    区间修改update()：用标记数组 tag[i] 统计记录对 区间i 的修改(延迟修改)，仅当修改操作间产生重叠或冲突时不得不向子节点传递 pushdown() (从上往下传递)
+
+*/
+
+//区间修改 + 区间查询 模板
+/*
+//有注释
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define ll long long
+#define il inline
+const int N = 1e5 + 10;
+ll n, m;
+ll a[N];//元素值数列，从下标1开始
+ll tree[N << 2], tag[N << 2];
+il ll ls(ll p) { return p << 1;}       //定位左子：p * 2
+il ll rs(ll p) { return p << 1 | 1;}   //定位右子：p * 2 + 1
+il void addtag(ll p, ll pl, ll pr, ll d) //打标记同时更新tree
+{
+    tag[p] += d;
+    tree[p] += d * (pr - pl + 1);
+}
+il void pushup(ll p)
+{
+    tree[p] = tree[ls(p)] + tree[rs(p)]; //区间和
+    // tree[p] = min(tree[ls(p)], tree[rs(p)]); //区间最值
+}
+il void pushdown(ll p, ll pl, ll pr) //不能覆盖时，将tag传给子树
+{
+    if(tag[p])
+    {
+        ll mid = (pl + pr) >> 1;
+        addtag(ls(p), pl, mid, tag[p]); //传给左子树
+        addtag(rs(p), mid + 1, pr, tag[p]); //传给右子树
+        tag[p] = 0; //传走后自身清零
+    }
+}
+void build(ll p, ll pl, ll pr) //p为节点编号，指向区间[pl, pr]
+{
+    tag[p] = 0;
+    if(pl == pr) { tree[p] = a[pl]; return;} //叶子节点
+    ll mid = (pl + pr) >> 1; //二分分治
+    build(ls(p), pl, mid); //左子
+    build(rs(p), mid + 1, pr); //右子
+    pushup(p); //从下往上传值
+}
+void update(ll L, ll R, ll p, ll pl, ll pr, ll d) //区间修改，给[L, R]每个元素都加上 d
+{
+    if(pl >= L && pr <= R) //完全覆盖则打标记
+    {
+        addtag(p, pl, pr, d);
+        return;
+    }
+    pushdown(p, pl, pr); //不能覆盖时，将tag传给子树
+    ll mid = (pl + pr) >> 1;
+    if(mid >= L) update(L, R, ls(p), pl, mid, d); //有重叠则递归左子树
+    if(mid < R) update(L, R, rs(p), mid + 1, pr, d); // (mid + 1 <= R) 有重叠则递归右子树
+    pushup(p); //递归的最后向上更新
+}
+ll query(ll L, ll R, ll p, ll pl, ll pr) //查询 [L, R] 区间和
+{
+    if(pl >= L && pr <= R) return tree[p];
+    pushdown(p, pl, pr);
+    ll res = 0;
+    ll mid = (pl + pr) >> 1;
+    if(mid >= L) res += query(L, R, ls(p), pl, mid);
+    if(mid < R) res += query(L, R, rs(p), mid + 1, pr);
+    return res;
+}
+int main()
+{
+    scanf("%lld%lld", &n, &m);
+    for(int i = 1; i <= n; i++) scanf("%lld", &a[i]);
+    build(1, 1, n);
+    while(m--)
+    {
+        ll op, L, R, d;
+        scanf("%lld", &op);//操作数
+        if(op == 1) //区间修改，加d
+        {
+            scanf("%lld%lld%lld", &L, &R, &d);
+            update(L, R, 1, 1, n, d);
+        }
+        else //区间和查询
+        {
+            scanf("%lld%lld", &L, &R);
+            printf("%lld\n", query(L, R, 1, 1, n));
+        }
+    }
+    return 0;
+}
+
+//无注释版
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define ll long long
+#define il inline
+const int N = 1e5 + 10;
+ll a[N], tree[N << 2], tag[N << 2];
+il ll ls(ll p){ return p << 1;} 
+il ll rs(ll p){ return p << 1 | 1;} 
+il void addtag(ll p, ll pl, ll pr, ll d){ tag[p] += d, tree[p] += d * (pr - pl + 1);}
+il void push_up(ll p){ tree[p] = tree[ls(p)] + tree[rs(p)];}
+il void push_down(ll p, ll pl, ll pr)
+{
+    if(tag[p])
+    {
+        ll mid = (pl + pr) >> 1;
+        addtag(ls(p), pl, mid, tag[p]);
+        addtag(rs(p), mid + 1, pr, tag[p]);
+        tag[p] = 0;
+    }
+}
+void build(ll p, ll pl, ll pr)
+{
+    tag[p] = 0;
+    if(pl == pr)
+    {
+        tree[p] = a[pl];
+        return ;
+    }
+    ll mid = (pl + pr) >> 1;
+    build(ls(p), pl, mid);
+    build(rs(p), mid + 1, pr);
+    push_up(p);
+}
+void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+{
+    if(L <= pl && pr <= R){ addtag(p, pl, pr, d); return;}
+    push_down(p, pl, pr);
+    ll mid = (pl + pr) >> 1;
+    if(L <= mid) update(L, R, ls(p), pl, mid, d);
+    if(R > mid) update(L, R, rs(p), mid + 1, pr, d);
+    push_up(p);
+}
+ll query(ll L, ll R, ll p, ll pl, ll pr)
+{
+    if(pl >= L && R >= pr) return tree[p];
+    push_down(p, pl, pr);
+    ll res = 0;
+    ll mid = (pl + pr) >> 1;
+    if(L <= mid) res += query(L, R, ls(p), pl, mid);
+    if(R > mid) res += query(L, R, rs(p), mid + 1, pr);
+    return res;
+}
+int main()
+{
+    ll n, m;
+    scanf("%lld%lld", &n, &m);
+    for(ll i = 1; i <= n; i++) scanf("%lld", &a[i]);
+    build(1, 1, n);
+    while(m--)
+    {
+        ll q, L, R, d;
+        scanf("%lld", &q);
+        if(q == 1)
+        {
+            scanf("%lld%lld%lld", &L, &R, &d);
+            update(L, R, 1, 1, n, d);
+        }else
+        {
+            scanf("%lld%lld", &L, &R);
+            printf("%lld\n", query(L, R, 1, 1, n));
+        }
+    }
+    return 0;
+}
+
+*/
 
 
 
