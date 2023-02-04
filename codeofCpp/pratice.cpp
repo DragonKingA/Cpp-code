@@ -9888,7 +9888,7 @@ int main()
 
 
 
-/*十四. 线段树*/
+/*十四. 线段树、树状数组*/
 /*
 //https://blog.csdn.net/weixin_45697774/article/details/104274713?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522167533467316782428699964%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=167533467316782428699964&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-104274713-null-null.142^v72^pc_new_rank,201^v4^add_ask&utm_term=%E7%BA%BF%E6%AE%B5%E6%A0%91&spm=1018.2226.3001.4187
 线段树是一种基于 分治思想 的 二叉树(二分)，用于在 区间 上进行信息的统计(对于 区间操作 的通用解法)。
@@ -10084,8 +10084,673 @@ int main()
 
 */
 
+//1.P3374 树状数组 1
+//线段树写法(855ms)
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define il inline
+// const int N = 5e5 + 10;
+// ll a[N], tree[N << 2], tag[N << 2];
+// il ll ls(ll p){ return p << 1;} 
+// il ll rs(ll p){ return p << 1 | 1;} 
+// il void addtag(ll p, ll pl, ll pr, ll d){ tag[p] += d, tree[p] += d * (pr - pl + 1);}
+// il void push_up(ll p){ tree[p] = tree[ls(p)] + tree[rs(p)];}
+// il void push_down(ll p, ll pl, ll pr)
+// {
+//     if(tag[p])
+//     {
+//         ll mid = (pl + pr) >> 1;
+//         addtag(ls(p), pl, mid, tag[p]);
+//         addtag(rs(p), mid + 1, pr, tag[p]);
+//         tag[p] = 0;
+//     }
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     tag[p] = 0;
+//     if(pl == pr)
+//     {
+//         tree[p] = a[pl];
+//         return ;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     build(ls(p), pl, mid);
+//     build(rs(p), mid + 1, pr);
+//     push_up(p);
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && pr <= R){ addtag(p, pl, pr, d); return;}
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) update(L, R, ls(p), pl, mid, d);
+//     if(R > mid) update(L, R, rs(p), mid + 1, pr, d);
+//     push_up(p);
+// }
+// ll query(ll L, ll R, ll p, ll pl, ll pr)
+// {
+//     if(pl >= L && R >= pr) return tree[p];
+//     push_down(p, pl, pr);
+//     ll res = 0;
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) res += query(L, R, ls(p), pl, mid);
+//     if(R > mid) res += query(L, R, rs(p), mid + 1, pr);
+//     return res;
+// }
+// int main()
+// {
+//     ll n, m;
+//     scanf("%lld%lld", &n, &m);
+//     for(ll i = 1; i <= n; i++) scanf("%lld", &a[i]);
+//     build(1, 1, n);
+//     while(m--)
+//     {
+//         ll q, L, R, d;
+//         scanf("%lld", &q);
+//         if(q == 1)
+//         {
+//             scanf("%lld%lld", &L, &d);
+//             update(L, L, 1, 1, n, d);
+//         }else
+//         {
+//             scanf("%lld%lld", &L, &R);
+//             printf("%lld\n", query(L, R, 1, 1, n));
+//         }
+//     }
+//     return 0;
+// }
 
 
+
+//2. P1816 忠诚
+//求线段区间最小值，修改传递函数push_up()即可
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define il inline
+// const ll INF = 0x3f3f3f3f3f3f3f3fLL;
+// const int N = 1e5 + 10;
+// ll a[N], tree[N << 2], tag[N << 2];
+// il ll ls(ll p){ return p << 1;} 
+// il ll rs(ll p){ return p << 1 | 1;} 
+// il void addtag(ll p, ll pl, ll pr, ll d){ tag[p] += d, tree[p] += d * (pr - pl + 1);}
+// il void push_up(ll p){ tree[p] = min(tree[ls(p)], tree[rs(p)]);}
+// il void push_down(ll p, ll pl, ll pr)
+// {
+//     if(tag[p])
+//     {
+//         ll mid = (pl + pr) >> 1;
+//         addtag(ls(p), pl, mid, tag[p]);
+//         addtag(rs(p), mid + 1, pr, tag[p]);
+//         tag[p] = 0;
+//     }
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     tag[p] = 0;
+//     if(pl == pr)
+//     {
+//         tree[p] = a[pl];
+//         return ;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     build(ls(p), pl, mid);
+//     build(rs(p), mid + 1, pr);
+//     push_up(p);
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && pr <= R){ addtag(p, pl, pr, d); return;}
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) update(L, R, ls(p), pl, mid, d);
+//     if(R > mid) update(L, R, rs(p), mid + 1, pr, d);
+//     push_up(p);
+// }
+// ll query(ll L, ll R, ll p, ll pl, ll pr)
+// {
+//     if(pl >= L && R >= pr) return tree[p];
+//     push_down(p, pl, pr);
+//     ll res = INF;
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) res = min(res, query(L, R, ls(p), pl, mid));
+//     if(R > mid) res = min(res, query(L, R, rs(p), mid + 1, pr));
+//     return res;
+// }
+// int main()
+// {
+//     ll n, m;
+//     scanf("%lld%lld", &n, &m);
+//     for(int i = 1; i <= n; i++) scanf("%lld", &a[i]);
+//     build(1, 1, n);
+//     for(int i = 0; i < m; i++)
+//     {
+//         ll L, R;
+//         scanf("%lld%lld", &L, &R);
+//         printf(" %lld" + !i, query(L, R, 1, 1, n));
+//     }
+//     return 0;
+// }
+
+
+
+//3.开关
+//初始数列为 0串，无需单独建树
+//异或1 实现lazy标记状态切换 ，区间长度 - 原本亮灯的数量 = 现在亮灯的数量
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define il inline
+// const int N = 1e5 + 10;
+// ll a[N], tree[N << 2], tag[N << 2];
+// il ll ls(ll p){ return p << 1;} 
+// il ll rs(ll p){ return p << 1 | 1;} 
+// il void addtag(ll p, ll pl, ll pr, ll d){ tag[p] ^= 1, tree[p] = pr - pl + 1 - tree[p];}
+// il void push_up(ll p){ tree[p] = tree[ls(p)] + tree[rs(p)];}
+// il void push_down(ll p, ll pl, ll pr)
+// {
+//     if(tag[p])
+//     {
+//         ll mid = (pl + pr) >> 1;
+//         addtag(ls(p), pl, mid, tag[p]);
+//         addtag(rs(p), mid + 1, pr, tag[p]);
+//         tag[p] = 0;
+//     }
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && pr <= R){ addtag(p, pl, pr, d); return;}
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) update(L, R, ls(p), pl, mid, d);
+//     if(R > mid) update(L, R, rs(p), mid + 1, pr, d);
+//     push_up(p);
+// }
+// ll query(ll L, ll R, ll p, ll pl, ll pr)
+// {
+//     if(pl >= L && R >= pr) return tree[p];
+//     push_down(p, pl, pr);
+//     ll res = 0;
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) res += query(L, R, ls(p), pl, mid);
+//     if(R > mid) res += query(L, R, rs(p), mid + 1, pr);
+//     return res;
+// }
+// int main()
+// {
+//     ll n, m, q, L, R;
+//     scanf("%lld%lld", &n, &m);
+//     while(m--)
+//     {
+//         scanf("%lld%lld%lld", &q, &L, &R);
+//         if(q) printf("%lld\n", query(L, R, 1, 1, n));
+//         else update(L, R, 1, 1, n, 1);
+//     }
+//     return 0;
+// }
+
+
+
+//*4.线段树 2
+//操作有 区间和，区间乘 以及 查询区间和
+//重点在于如何维护lazy标记实现两种赋值操作，自然需要引入第二个标记实现区间乘
+//对[L, R]每个数乘以 k，实际上就是 tree[p] = tree[p] * k % p，p 即区间[L, R]的编号
+//用括号表示优先级关系： (乘法(加法))，故乘法标记会影响加法标记的值
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define il inline
+// const int N = 1e5 + 10;
+// ll n, m, mod;
+// ll a[N], tree[N << 2], tag[N << 2], tag2[N << 2];
+// il ll ls(ll p){ return p << 1;} 
+// il ll rs(ll p){ return p << 1 | 1;} 
+// il void addtag(ll p, ll pl, ll pr, ll d)
+// {
+//     tag[p] = (tag[p] + d) % mod, tree[p] = (tree[p] + d * (pr - pl + 1) % mod) % mod;
+// }
+// il void addtag2(ll p, ll pl, ll pr, ll d)//乘法标记影响加法标记
+// {
+//     tag[p] = tag[p] * d % mod, tag2[p] = tag2[p] * d % mod, tree[p] = tree[p] * d % mod;
+// }
+// il void push(ll p, ll pl, ll pr, ll u) //传值时同时计算加法和乘法，并且传递加法标记时，加法标记受原乘法标记影响
+// {
+//     tree[p] = ((pr - pl + 1) * tag[u] % mod + (tree[p] * tag2[u]) % mod) % mod;
+//     tag[p] = (tag[p] * tag2[u] % mod + tag[u]) % mod;
+//     tag2[p] = tag2[p] * tag2[u] % mod;
+// }
+// il void push_up(ll p){ tree[p] = (tree[ls(p)] + tree[rs(p)]) % mod;}
+// il void push_down(ll p, ll pl, ll pr)
+// {
+//     if(tag[p] || tag2[p] != 1)
+//     {
+//         ll mid = (pl + pr) >> 1;
+//         push(ls(p), pl, mid, p);
+//         push(rs(p), mid + 1, pr, p);
+//         tag[p] = 0, tag2[p] = 1;
+//     }
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     tag[p] = 0, tag2[p] = 1;//乘法标记初始化为 1
+//     if(pl == pr){ tree[p] = a[pl] % mod; return;}
+//     ll mid = (pl + pr) >> 1;
+//     build(ls(p), pl, mid);
+//     build(rs(p), mid + 1, pr);
+//     push_up(p);
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d, ll op)
+// {
+//     if(L <= pl && pr <= R)
+//     {
+//         if(op == 2) addtag(p, pl, pr, d);
+//         else addtag2(p, pl, pr, d);
+//         return;
+//     }
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) update(L, R, ls(p), pl, mid, d, op);
+//     if(R > mid) update(L, R, rs(p), mid + 1, pr, d, op);
+//     push_up(p);
+// }
+// ll query(ll L, ll R, ll p, ll pl, ll pr)
+// {
+//     if(pl >= L && R >= pr) return tree[p] % mod;
+//     push_down(p, pl, pr);
+//     ll res = 0, mid = (pl + pr) >> 1;
+//     if(L <= mid) res += query(L, R, ls(p), pl, mid);
+//     if(R > mid) res += query(L, R, rs(p), mid + 1, pr);
+//     return res % mod;
+// }
+// int main()
+// {
+//     scanf("%lld%lld%lld", &n, &m, &mod);
+//     for(ll i = 1; i <= n; i++) scanf("%lld", &a[i]);
+//     build(1, 1, n);
+//     while(m--)
+//     {
+//         ll q, L, R, d;
+//         scanf("%lld%lld%lld", &q, &L, &R);
+//         if(q == 3) printf("%lld\n", query(L, R, 1, 1, n));
+//         else scanf("%lld", &d), update(L, R, 1, 1, n, d, q);
+//     }
+//     return 0;
+// }
+
+
+//5.无聊的数列
+//区间修改操作为各元素加上相应的等差数列中的值
+//例如对原区间[1, 6]-{0, 0, 0, 0, 0, 0} 加上 [1, 6]-{1, 3, 5, 7, 9, 0}
+//要转化为对区间加同一个数，不难想到其公差d，上述数列转化为差分数组就是 [1, 6]-{1, 2, 2, 2, 2, -9}
+//那么就可以维护一个线段树求差分数组的区间和，查询某点x上的值即求[1, x]区间和，
+//则每次更新操作都有三次update()：1. tree[L] += k  2.tree的[L + 1, R]上都加d  3. tree[R + 1] -= 末项 即 tree[R + 1] -= k + (R - L) * d
+//线段树(526ms)
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define il inline
+// const int N = 1e5 + 10;
+// ll a[N], tree[N << 2], tag[N << 2];
+// il ll ls(ll p){ return p << 1;} 
+// il ll rs(ll p){ return p << 1 | 1;} 
+// il void addtag(ll p, ll pl, ll pr, ll d){ tag[p] += d, tree[p] += d * (pr - pl + 1);}
+// il void push_up(ll p){ tree[p] = tree[ls(p)] + tree[rs(p)];}
+// il void push_down(ll p, ll pl, ll pr)
+// {
+//     if(tag[p])
+//     {
+//         ll mid = (pl + pr) >> 1;
+//         addtag(ls(p), pl, mid, tag[p]);
+//         addtag(rs(p), mid + 1, pr, tag[p]);
+//         tag[p] = 0;
+//     }
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     tag[p] = 0;
+//     if(pl == pr)
+//     {
+//         tree[p] = a[pl];
+//         return ;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     build(ls(p), pl, mid);
+//     build(rs(p), mid + 1, pr);
+//     push_up(p);
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && pr <= R){ addtag(p, pl, pr, d); return;}
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) update(L, R, ls(p), pl, mid, d);
+//     if(R > mid) update(L, R, rs(p), mid + 1, pr, d);
+//     push_up(p);
+// }
+// ll query(ll L, ll R, ll p, ll pl, ll pr)
+// {
+//     if(pl >= L && R >= pr) return tree[p];
+//     push_down(p, pl, pr);
+//     ll res = 0;
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) res += query(L, R, ls(p), pl, mid);
+//     if(R > mid) res += query(L, R, rs(p), mid + 1, pr);
+//     return res;
+// }
+// int main()
+// {
+//     ll n, m;
+//     scanf("%lld%lld", &n, &m);
+//     for(int i = 1; i <= n; i++) scanf("%lld", &a[i]);
+//     for(int i = n; i >= 1; i--) a[i] = a[i] - a[i - 1];//构建差分数组
+//     build(1, 1, n);
+//     while(m--)
+//     {
+//         ll q, L, R, k, d;
+//         scanf("%lld", &q);
+//         if(q == 1)
+//         {
+//             scanf("%lld%lld%lld%lld", &L, &R, &k, &d);
+//             update(L, L, 1, 1, n, k);//包括 L==R 时的单点修改
+//             if(L != R) update(L + 1, R, 1, 1, n, d);
+//             if(R < n) update(R + 1, R + 1, 1, 1, n, -(k + (R - L) * d));//减去末项
+//         }else
+//         {
+//             scanf("%lld", &R);
+//             printf("%lld\n", query(1, R, 1, 1, n));
+//         }
+//     }
+//     return 0;
+// }
+
+//实际上本题经过转化后变成 “和” 问题，可以使用树状数组更快(303ms)
+//由于树状数组本身查询的是原数组前缀和，现在变成 查询差分数组的前缀和，即用tree数组维护二阶差分
+//区间下标     l-1  l   l+1    l+2   ···        r          r+1             r+2
+//原数列增值    0   k   k+d    k+2d  ···    k+(r-l)*d       0               0
+//一阶差分增值  0   k   d       d    ···        d       -(k+(r-l)*d)        0
+//二阶差分增值  0   k   d-k     0    ···        0       -(k+(r-l+1)*d)  -(k+(r-l)*d)
+//实际上tree[]存的是一维差分的值
+//还没能理解！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define ll long long
+#define lowbit(x) ((x) & -(x))
+const int N = 1e5 + 10;
+ll n, m, tree[N], tree2[N];
+void update(ll x, ll d)
+{
+    for(int i = x; i <= n; i += lowbit(i))
+    {
+        tree[i] += d;
+        tree2[i] += x * d;
+    }
+}
+ll sum(ll x)
+{
+    ll res = 0;
+    for(int i = x; i; i -= lowbit(i))
+    {
+        res += (x + 1) * tree[i] - tree2[i];
+    }
+    return res;
+}
+int main()
+{
+    scanf("%lld%lld", &n, &m);
+    for(int i = 1; i <= n; i++)
+    {
+        ll x; scanf("%lld", &x);
+        //输入二阶差分，这样update()初始化前缀和后实际上变成一阶差分？？？？
+        //此处不理解
+        update(i, x), update(i + 1, -x);
+        update(i + 1, -x), update(i + 2, x);
+    }
+    while(m--)
+    {
+        ll op, L, R, k, d;
+        scanf("%lld", &op);
+        if(op == 1)
+        {
+            scanf("%lld%lld%lld%lld", &L, &R, &k, &d);
+            //添加的是一阶差分的值，则最终查询前缀和就是某元素值
+            // update(L, k), update(L + 1, -k);//单点修改，由于差分性质需要在 L+1 上减去k
+            // update(L + 1, d), update(R + 1, -d);//区间修改，[L + 1, R]上每个数都加 d
+            // update(R + 1, -(k + (R - L) * d)), update(R + 2, k + (R - L) * d);//单点修改，R+1 上减去末项，由于差分性质需要在 R+2 上加回末项
+            //简化上述操作，前后相接后为：
+            update(L, k);
+            update(L + 1, d - k);
+            update(R + 1, -(k + (R - L + 1) * d));
+            update(R + 2, k + (R - L) * d);
+        }
+        else
+        {
+            scanf("%lld", &R);
+            printf("%lld\n", sum(R));//差分求和[1, R] 即 原数组中R上的元素值
+        }
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*树状数组（Binary Indexed Tree, BIT）-- O(logn) -- 一种利用数的二进制特征进行检索的树状结构
+用于高效地 查询和维护 前缀和、前缀积等，它只能维护“操作和”。
+树状数组能用以简洁的编码高效地完以下操作
+    查询前缀和sum:
+        查询的过程是 每次去掉编号二进制最后的 1 来定位，如求 前7个数和 sum(7) = tree[7] + tree[6] + tree[4]，
+        详细地，编号7 二进制为 111，去掉最后的 1，得 110，即定位到 tree[6]，叠加该值，
+        然后 110 去掉最后的 1，得 100，定位到 tree[4]，继续叠加，最后 100 去掉1后为 0，则查询完毕。
+    维护，即可以动态更新树中元素(非静态数组):
+        维护的过程是 每次在编号的二进制最后的 1 上加 1（即最后的 1 进一位），例如当更新了元素 a3 时，除了更新tree[3]还要更新tree[4]、tree[8]等
+        详细地，编号3 二进制为 011，最后的 1 上加 1，得 100，定位到tree[4]，并对其更新，
+        然后 100 最后的 1 进位得 1000，定位到tree[8]，而后tree[16]、tree[32]···以此类推直到 N。
+    单点修改： 
+        update(ind, val)
+    区间修改：
+        利用 前缀和 和 差分 的性质，也可以将 单点修改 拓展为 区间修改
+        只需要这两句：update(L, 1)，update(R + 1, -1)
+
+注意事项：
+1.取二进制数最后一个 1 用函数 lowbit()，设返回值为 m，那么tree[i] = Ai + Ai-1 + ··· + Ai-m+1，即 tree[i] 的值为 包括ai的前m个数的和。
+2.区间修改后，每个元素 ai 都需要用 sum(i) - sum(i - 1) 求得，对于某段和也是一样，它满足差分的运用
+3.原数列a[N]一般是不需要的，因为原值需要直接更新到tree上
+
+从效率来说，如果只用于求和(积)，更推荐写树状数组，代码精简，线段树的空间复杂度常数较大，占用空间也更多。且树状数组通常速度更快。
+
+前缀和模板：
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define ll long long
+#define lowbit(x) ((x) & -(x))
+const int N = 5e5 + 10;
+ll n, m;
+ll tree[N];
+void update(int x, ll d)
+{
+    while(x <= N)
+    {
+        tree[x] += d;
+        x += lowbit(x);
+    }
+}
+ll sum(ll x)
+{
+    ll res = 0;
+    while(x > 0)
+    {
+        res += tree[x];
+        x -= lowbit(x);
+    }
+    return res;
+}
+int main()
+{
+    scanf("%lld%lld", &n, &m);
+    for(int i = 1; i <= n; i++)
+    {
+        ll x;
+        scanf("%lld", &x);
+        update(i, x);
+    }
+    while(m--)
+    {
+        ll op, x, y, k;
+        scanf("%lld", &op);
+        if(op == 1)
+        {
+            scanf("%lld%lld", &x, &k);
+            update(x, k);//单点修改
+            // update(x, k), update(y + 1, -k);//区间修改，[L, R]上每个数都加 k
+        }
+        else
+        {
+            scanf("%lld%lld", &x, &y);
+            printf("%lld\n", sum(y) - sum(x - 1));//差分求和
+        }
+    }
+    return 0;
+}
+
+
+*/
+
+
+
+//1.P3374 树状数组 1
+//树状数组写法(492ms，明显更快)
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 5e5 + 10;
+// ll n, m;
+// ll tree[N];
+// void update(int x, ll d)
+// {
+//     while(x <= N)
+//     {
+//         tree[x] += d;
+//         x += lowbit(x);
+//     }
+// }
+// ll sum(ll x)
+// {
+//     ll res = 0;
+//     while(x > 0)
+//     {
+//         res += tree[x];
+//         x -= lowbit(x);
+//     }
+//     return res;
+// }
+// int main()
+// {
+//     scanf("%lld%lld", &n, &m);
+//     for(int i = 1; i <= n; i++)
+//     {
+//         ll x; scanf("%lld", &x);
+//         update(i, x);
+//     }
+//     while(m--)
+//     {
+//         ll op, x, y, k;
+//         scanf("%lld", &op);
+//         if(op == 1)
+//         {
+//             scanf("%lld%lld", &x, &k);
+//             update(x, k);
+//         }
+//         else
+//         {
+//             scanf("%lld%lld", &x, &y);
+//             printf("%lld\n", sum(y) - sum(x - 1));
+//         }
+//     }
+//     return 0;
+// }
 
 
 
