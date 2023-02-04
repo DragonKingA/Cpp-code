@@ -9252,9 +9252,9 @@ int main()
 //         dp[s][t] = 1;
 //     }
 //     floyd();
-//     //判定点 i 是否以确定排名：点 i 与其他n-1个点是否都具有连通关系
+//     //判定点 i 是否已确定排名：点 i 与其他n-1个点是否都具有连通关系
 //     int ans = 0;
-//     for(int i = 1; i <= n; i++)s
+//     for(int i = 1; i <= n; i++)
 //     {
 //         int cnt = 0;
 //         for(int j = 1; j <= n; j++)
@@ -10481,71 +10481,72 @@ int main()
 //一阶差分增值  0   k   d       d    ···        d       -(k+(r-l)*d)        0
 //二阶差分增值  0   k   d-k     0    ···        0       -(k+(r-l+1)*d)  -(k+(r-l)*d)
 //实际上tree[]存的是一维差分的值
-//还没能理解！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-using namespace std;
-#define ll long long
-#define lowbit(x) ((x) & -(x))
-const int N = 1e5 + 10;
-ll n, m, tree[N], tree2[N];
-void update(ll x, ll d)
-{
-    for(int i = x; i <= n; i += lowbit(i))
-    {
-        tree[i] += d;
-        tree2[i] += x * d;
-    }
-}
-ll sum(ll x)
-{
-    ll res = 0;
-    for(int i = x; i; i -= lowbit(i))
-    {
-        res += (x + 1) * tree[i] - tree2[i];
-    }
-    return res;
-}
-int main()
-{
-    scanf("%lld%lld", &n, &m);
-    for(int i = 1; i <= n; i++)
-    {
-        ll x; scanf("%lld", &x);
-        //输入二阶差分，这样update()初始化前缀和后实际上变成一阶差分？？？？
-        //此处不理解
-        update(i, x), update(i + 1, -x);
-        update(i + 1, -x), update(i + 2, x);
-    }
-    while(m--)
-    {
-        ll op, L, R, k, d;
-        scanf("%lld", &op);
-        if(op == 1)
-        {
-            scanf("%lld%lld%lld%lld", &L, &R, &k, &d);
-            //添加的是一阶差分的值，则最终查询前缀和就是某元素值
-            // update(L, k), update(L + 1, -k);//单点修改，由于差分性质需要在 L+1 上减去k
-            // update(L + 1, d), update(R + 1, -d);//区间修改，[L + 1, R]上每个数都加 d
-            // update(R + 1, -(k + (R - L) * d)), update(R + 2, k + (R - L) * d);//单点修改，R+1 上减去末项，由于差分性质需要在 R+2 上加回末项
-            //简化上述操作，前后相接后为：
-            update(L, k);
-            update(L + 1, d - k);
-            update(R + 1, -(k + (R - L + 1) * d));
-            update(R + 2, k + (R - L) * d);
-        }
-        else
-        {
-            scanf("%lld", &R);
-            printf("%lld\n", sum(R));//差分求和[1, R] 即 原数组中R上的元素值
-        }
-    }
-    return 0;
-}
+//*还没能理解！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 1e5 + 10;
+// ll n, m, tree[N], tree2[N];
+// void update(ll x, ll d)
+// {
+//     for(int i = x; i <= n; i += lowbit(i))
+//     {
+//         tree[i] += d;
+//         tree2[i] += x * d;
+//     }
+// }
+// ll sum(ll x)
+// {
+//     ll res = 0;
+//     for(int i = x; i; i -= lowbit(i))
+//     {
+//         res += (x + 1) * tree[i] - tree2[i];
+//     }
+//     return res;
+// }
+// int main()
+// {
+//     scanf("%lld%lld", &n, &m);
+//     for(int i = 1; i <= n; i++)
+//     {
+//         ll x; scanf("%lld", &x);
+//         //输入二阶差分，这样update()初始化前缀和后实际上变成一阶差分？？？？
+//         //此处不理解
+//         update(i, x), update(i + 1, -x);
+//         update(i + 1, -x), update(i + 2, x);
+//     }
+//     while(m--)
+//     {
+//         ll op, L, R, k, d;
+//         scanf("%lld", &op);
+//         if(op == 1)
+//         {
+//             scanf("%lld%lld%lld%lld", &L, &R, &k, &d);
+//             //添加的是一阶差分的值，则最终查询前缀和就是某元素值
+//             // update(L, k), update(L + 1, -k);//单点修改，由于差分性质需要在 L+1 上减去k
+//             // update(L + 1, d), update(R + 1, -d);//区间修改，[L + 1, R]上每个数都加 d
+//             // update(R + 1, -(k + (R - L) * d)), update(R + 2, k + (R - L) * d);//单点修改，R+1 上减去末项，由于差分性质需要在 R+2 上加回末项
+//             //简化上述操作，前后相接后为：
+//             update(L, k);
+//             update(L + 1, d - k);
+//             update(R + 1, -(k + (R - L + 1) * d));
+//             update(R + 2, k + (R - L) * d);
+//         }
+//         else
+//         {
+//             scanf("%lld", &R);
+//             printf("%lld\n", sum(R));//差分求和[1, R] 即 原数组中R上的元素值
+//         }
+//     }
+//     return 0;
+// }
 
 
 
+//6.数学计算
 
 
 
