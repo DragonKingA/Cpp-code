@@ -10547,15 +10547,104 @@ int main()
 
 
 //6.数学计算
+//起初，操作次数级别是5e5，认为可以模拟，但是可能由于炸long long导致答案是错的
+//X
+// #include <cstdio>
+// #include <cstring>
+// #include <algorithm>
+// typedef long long ll;
+// const int N = 5e5 + 10;
+// ll t, q, mod, op[N];
+// int main()
+// {
+//     scanf("%lld", &t);
+//     while(t--)
+//     {
+//         ll now = 1;
+//         scanf("%lld%lld", &q, &mod);
+//         for(int i = 0; i <= q; i++) op[i] = 1;
+//         for(int i = 1; i <= q; i++)
+//         {
+//             ll tp, k;
+//             scanf("%lld%lld", &tp, &k);
+//             if(tp == 1)
+//                 now = now * k % mod, op[i] = k;
+//             else
+//                 now /= op[k];
+//             printf("%lld\n", now % mod);
+//         }
+//     }
+//     return 0;
+// }
+//实际上，在一个时间轴(1 ~ q)上可以认为不同时间上不同的 改变值m 组成一段序列，初始时只是一段均为 1 的序列，
+//经过 操作1 的单点修改后，[1, q]的区间乘就是最终(当前)的x值，所以可以维护一个线段树处理区间乘，tree[1]就是总乘量即当前x值
+//该线段树操作简单，只有单点修改 -- 操作1 对某时间点乘值修改为 m ； 操作2 对某时间点乘值修改为 1；而查询操作直接查询[1, q]总值，即tree[1]
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define il inline
+// const int N = 1e5 + 10;
+// ll T, q, mod;
+// ll tree[N << 2], tag[N << 2];
+// il ll ls(ll p){ return p << 1;} 
+// il ll rs(ll p){ return p << 1 | 1;} 
+// il void addtag(ll p, ll pl, ll pr, ll d)
+// {
+//     if(d) tag[p] = tag[p] * d % mod, tree[p] = tree[p] * d % mod;
+//     else tag[p] = 1, tree[p] = 1;
+// }
+// il void push_up(ll p){ tree[p] = tree[ls(p)] * tree[rs(p)] % mod;}
+// il void push_down(ll p, ll pl, ll pr)
+// {
+//     if(tag[p] != 1)
+//     {
+//         ll mid = (pl + pr) >> 1;
+//         addtag(ls(p), pl, mid, tag[p]);
+//         addtag(rs(p), mid + 1, pr, tag[p]);
+//         tag[p] = 1;
+//     }
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     tag[p] = 1, tree[p] = 1;
+//     if(pl == pr) return;
+//     ll mid = (pl + pr) >> 1;
+//     build(ls(p), pl, mid);
+//     build(rs(p), mid + 1, pr);
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && pr <= R){ addtag(p, pl, pr, d); return;}
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) update(L, R, ls(p), pl, mid, d);
+//     if(R > mid) update(L, R, rs(p), mid + 1, pr, d);
+//     push_up(p);
+// }
+// int main()
+// {
+//     scanf("%lld", &T);
+//     while(T--)
+//     {
+//         scanf("%lld%lld", &q, &mod);
+//         build(1, 1, q);
+//         for(int i = 1; i <= q; i++)
+//         {
+//             ll op, d;
+//             scanf("%lld%lld", &op, &d);
+//             if(op == 1) update(i, i, 1, 1, q, d);
+//             else update(d, d, 1, 1, q, 0);
+//             printf("%lld\n", tree[1] % mod);
+//         }
+//     }
+//     return 0;
+// }
 
 
 
-
-
-
-
-
-
+//7.贪婪大陆
 
 
 
