@@ -9931,10 +9931,10 @@ il ll ls(ll p) { return p << 1;}       //定位左子：p * 2
 il ll rs(ll p) { return p << 1 | 1;}   //定位右子：p * 2 + 1
 il void addtag(ll p, ll pl, ll pr, ll d) //打标记同时更新tree
 {
-    tag[p] += d;
-    tree[p] += d * (pr - pl + 1);
+    tag[p] += d;//区间p增量加d
+    tree[p] += d * (pr - pl + 1);//[pl, pr]区间p上的每个值都加 d，计算区间和
 }
-il void pushup(ll p)
+il void pushup(ll p) //向上更新编号为 p 的 “区间值”
 {
     tree[p] = tree[ls(p)] + tree[rs(p)]; //区间和
     // tree[p] = min(tree[ls(p)], tree[rs(p)]); //区间最值
@@ -10078,6 +10078,206 @@ int main()
             scanf("%lld%lld", &L, &R);
             printf("%lld\n", query(L, R, 1, 1, n));
         }
+    }
+    return 0;
+}
+
+//应对 操作多(标记多)时，标记之间会有互相影响，产生不同优先级的处理顺序，没办法单独列出addtag()函数。
+//结构体模板
+//有注释
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define ll long long
+#define il inline
+#define ls (p << 1)
+#define rs (p << 1 | 1)
+const int N = 1e5 + 10;
+struct node{
+    ll sum;//要查询的值，区间和、区间乘等
+    ll sum_tag, mul_tag;//lazy标记(对区间内的个值的操作)，加值、乘值等
+    node(ll a = 0, ll b = 0, ll c = 0) {sum = a, sum_tag = b, mul_tag = c;}
+}tree[N << 2];
+ll n, m, mod;
+
+il void push_up(ll p) //计算 查询值
+{
+    tree[p].sum = (tree[ls].sum + tree[rs].sum) % mod;
+}
+il void push_down_change(ll p, ll u, ll pl, ll pr) //方便push_down()的修改作用到左右子树，传递方向 u -> p
+{
+    //区间值更新
+    tree[p].sum = (tree[p].sum * tree[u].mul_tag % mod + (pr - pl + 1) * tree[u].sum_tag % mod) % mod;
+    //标记积累
+    tree[p].sum_tag = (tree[u].sum_tag + tree[p].sum_tag * tree[u].mul_tag % mod) % mod;
+    tree[p].mul_tag = tree[p].mul_tag * tree[u].mul_tag % mod;
+}
+il void push_down(ll p, ll pl, ll pr) //标记传递至左右子树 与 子树查询值的更新
+{
+    if(tree[p].sum_tag != 0 || tree[p].mul_tag != 1) //小优化，所有标记都为初始值时无需传递
+    {
+        //区间值更新，传下所有标记，最后清除当前所有标记
+        ll mid = (pl + pr) >> 1;
+        push_down_change(ls, p, pl, mid);
+        push_down_change(rs, p, mid + 1, pr);
+        tree[p].sum_tag = 0, tree[p].mul_tag = 1;
+    }
+}
+void build(ll p, ll pl, ll pr) //直接读取叶子结点的值，省去原数列空间(除非原数列值有用)
+{
+    tree[p] = node(0, 0, 1);
+    if(pl == pr)
+    {
+        scanf("%lld", &tree[p].sum);
+        return;
+    }
+    ll mid = (pl + pr) >> 1;
+    build(ls, pl, mid);
+    build(rs, mid + 1, pr);
+    push_up(p);//计算初始查询值(区间值)
+}
+void update(ll L, ll R, ll p, ll pl, ll pr, ll d, ll op)
+{
+    if(L <= pl && R >= pr)
+    {
+        //更新区间值 并 添加标记
+        if(op == 1)//乘值操作
+        {
+            tree[p].sum = tree[p].sum * d % mod;
+            tree[p].sum_tag = tree[p].sum_tag * d % mod; //对已有的和标记产生影响
+            tree[p].mul_tag = tree[p].mul_tag * d % mod; 
+        }
+        else//加值操作
+        {
+            tree[p].sum = (tree[p].sum + d * (pr - pl + 1) % mod) % mod;
+            tree[p].sum_tag = (tree[p].sum_tag + d) % mod;
+        }
+        return;
+    }
+    push_down(p, pl, pr);
+    ll mid = (pl + pr) >> 1;
+    if(L <= mid) update(L, R, ls, pl, mid, d, op);
+    if(R > mid) update(L, R, rs, mid + 1, pr, d, op);
+    push_up(p);
+}
+ll query(ll L, ll R, ll p, ll pl, ll pr)
+{
+    if(L <= pl && R >= pr) return tree[p].sum % mod;
+    push_down(p, pl, pr);
+    ll mid = (pl + pr) >> 1, res = 0;
+    if(L <= mid) res = (res + query(L, R, ls, pl, mid)) % mod;
+    if(R > mid) res = (res + query(L, R, rs, mid + 1, pr)) % mod;
+    return res % mod;
+}
+
+int main()
+{
+    scanf("%lld%lld%lld", &n, &m, &mod);
+    build(1, 1, n);
+    while(m--)
+    {
+        ll q, L, R, d;
+        scanf("%lld%lld%lld", &q, &L, &R);
+        if(q == 3) printf("%lld\n", query(L, R, 1, 1, n));
+        else scanf("%lld", &d), update(L, R, 1, 1, n, d, q);
+    }
+    return 0;
+}
+
+//无注释
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define ll long long
+#define il inline
+#define ls (p << 1)
+#define rs (p << 1 | 1)
+const int N = 1e5 + 10;
+struct node{
+    ll sum;//要查询的值，区间和、区间乘等
+    ll sum_tag, mul_tag;//lazy标记(对区间内的个值的操作)，加值、乘值等
+    node(ll a = 0, ll b = 0, ll c = 0) {sum = a, sum_tag = b, mul_tag = c;}
+}tree[N << 2];
+ll n, m, mod;
+
+il void push_up(ll p)
+{
+    tree[p].sum = (tree[ls].sum + tree[rs].sum) % mod;
+}
+il void push_down_change(ll p, ll u, ll pl, ll pr)
+{
+    tree[p].sum = (tree[p].sum * tree[u].mul_tag % mod + (pr - pl + 1) * tree[u].sum_tag % mod) % mod;
+    tree[p].sum_tag = (tree[u].sum_tag + tree[p].sum_tag * tree[u].mul_tag % mod) % mod;
+    tree[p].mul_tag = tree[p].mul_tag * tree[u].mul_tag % mod;
+}
+il void push_down(ll p, ll pl, ll pr)
+{
+    if(tree[p].sum_tag != 0 || tree[p].mul_tag != 1)
+    {
+        ll mid = (pl + pr) >> 1;
+        push_down_change(ls, p, pl, mid);
+        push_down_change(rs, p, mid + 1, pr);
+        tree[p].sum_tag = 0, tree[p].mul_tag = 1;
+    }
+}
+void build(ll p, ll pl, ll pr)
+{
+    tree[p] = node(0, 0, 1);
+    if(pl == pr)
+    {
+        scanf("%lld", &tree[p].sum);
+        return;
+    }
+    ll mid = (pl + pr) >> 1;
+    build(ls, pl, mid);
+    build(rs, mid + 1, pr);
+    push_up(p);
+}
+void update(ll L, ll R, ll p, ll pl, ll pr, ll d, ll op)
+{
+    if(L <= pl && R >= pr)
+    {
+        if(op == 1)
+        {
+            tree[p].sum = tree[p].sum * d % mod;
+            tree[p].sum_tag = tree[p].sum_tag * d % mod;
+            tree[p].mul_tag = tree[p].mul_tag * d % mod; 
+        }
+        else
+        {
+            tree[p].sum = (tree[p].sum + d * (pr - pl + 1) % mod) % mod;
+            tree[p].sum_tag = (tree[p].sum_tag + d) % mod;
+        }
+        return;
+    }
+    push_down(p, pl, pr);
+    ll mid = (pl + pr) >> 1;
+    if(L <= mid) update(L, R, ls, pl, mid, d, op);
+    if(R > mid) update(L, R, rs, mid + 1, pr, d, op);
+    push_up(p);
+}
+ll query(ll L, ll R, ll p, ll pl, ll pr)
+{
+    if(L <= pl && R >= pr) return tree[p].sum % mod;
+    push_down(p, pl, pr);
+    ll mid = (pl + pr) >> 1, res = 0;
+    if(L <= mid) res = (res + query(L, R, ls, pl, mid)) % mod;
+    if(R > mid) res = (res + query(L, R, rs, mid + 1, pr)) % mod;
+    return res % mod;
+}
+
+int main()
+{
+    scanf("%lld%lld%lld", &n, &m, &mod);
+    build(1, 1, n);
+    while(m--)
+    {
+        ll q, L, R, d;
+        scanf("%lld%lld%lld", &q, &L, &R);
+        if(q == 3) printf("%lld\n", query(L, R, 1, 1, n));
+        else scanf("%lld", &d), update(L, R, 1, 1, n, d, q);
     }
     return 0;
 }
@@ -10302,7 +10502,137 @@ int main()
 //操作有 区间和，区间乘 以及 查询区间和
 //重点在于如何维护lazy标记实现两种赋值操作，自然需要引入第二个标记实现区间乘
 //对[L, R]每个数乘以 k，实际上就是 tree[p] = tree[p] * k % p，p 即区间[L, R]的编号
-//用括号表示优先级关系： (乘法(加法))，故乘法标记会影响加法标记的值
+/*多操作问题解读（以加法和乘法操作为例）：
+首先要记住，lazy标记是用于 当前编号 的 儿子区间 的 修改，当前区间的修改需引用 父区间 的标记
+优先级关系：乘法（加法），因此添加标记时需要注意 积标记 对 和标记 的影响
+和标记 与 积标记 的关系推导：从需求出发(查询的是什么) -- 查询和
+此前区间值(可能已改变，并非特指初始化时的数列) X = al + ··· + ar，和操作 与 乘操作 都是对原数列各值作用。
+不同情况下：
+    添加标记时的更新 update()：
+        1.此前无标记 + 添加 和\积标记: X' = al + ··· + ar + (r - l + 1) * d_sum 或 X' = (al + ··· + ar) * d_mul
+
+        2.原和标记 + 和标记: X' = (al + ··· + ar) + (r - l + 1) * d_sum + (r - l + 1) * d_sum' = (al + ··· + ar) + (r - l + 1) * (d_sum + d_sum') 
+                            = X + (r - l + 1) * (d_sum + d_sum') -- 和标记间累和
+          原积标记 + 积标记：X' = X * d_mul * d_mul'
+
+        3.原和标记 + 积标记：X' = (al + d_sum) * d_mul + (al+1 + d_sum) * d_mul ··· (ar + d_sum) * d_mul
+                            = (al + ··· + ar) * d_mul + (r - l + 1) * d_sum * d_mul
+                            = X * d_mul + (r - l + 1) * (d_sum * d_mul) -- 此处 新和标记 = 原和标记 * 新积标记
+                            所以进行乘法操作时，除了 原乘法标记 的更新，还需要更新 原和标记
+          原积标记 + 和标记：X' = (al * d_mul + d_sum) + (al+1 * d_mul + d_sum) ··· (ar * d_mul + d_sum) = (al + ··· + ar) * d_mul + (r - l + 1) * d_sum
+                            = X * d_mul + (r - l + 1) * d_sum
+                            结合 和+和，任何情况下，进行加和操作时，只需要更新 原和标记
+    区间值更新，标记的传递与积累 push_down()：
+        （此前区间值(含 原和标记，原积标记) =  X * d_mul + (r - l + 1) * d_sum * d_mul = X * mul_tag + (r-l+1) * sum_tag，其中 X 为 此前数列值和）
+        由于这些标记的传递是统一的，同时的，互相影响的，需将两种标记的传递合并：
+            可知，乘法标记向下传递时影响儿子的所有标记，因为 和标记 实际上是 原来要加的值d * 当前积标记自顶向下的累乘值
+            所以，各标记积累：
+                sum_tag = sum_tag' + sum_tag * mul_tag'，
+                mul_tag = mul_tag * mul_tag'。
+            区间值更新(基于新标记)：
+                X' = X * mul_tag' + (r - l + 1) * sum_tag'。
+*/
+//结构体写法
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define il inline
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// const int N = 1e5 + 10;
+// struct node{
+//     ll sum;//要查询的值，区间和、区间乘等
+//     ll sum_tag, mul_tag;//lazy标记(对区间内的个值的操作)，加值、乘值等
+//     node(ll a = 0, ll b = 0, ll c = 0) {sum = a, sum_tag = b, mul_tag = c;}
+// }tree[N << 2];
+// ll n, m, mod;
+
+// il void push_up(ll p) //计算 查询值
+// {
+//     tree[p].sum = (tree[ls].sum + tree[rs].sum) % mod;
+// }
+// il void push_down_change(ll p, ll u, ll pl, ll pr) //方便push_down()的修改作用到左右子树，传递方向 u -> p
+// {
+//     //区间值更新
+//     tree[p].sum = (tree[p].sum * tree[u].mul_tag % mod + (pr - pl + 1) * tree[u].sum_tag % mod) % mod;
+//     //标记积累
+//     tree[p].sum_tag = (tree[u].sum_tag + tree[p].sum_tag * tree[u].mul_tag % mod) % mod;
+//     tree[p].mul_tag = tree[p].mul_tag * tree[u].mul_tag % mod;
+// }
+// il void push_down(ll p, ll pl, ll pr) //标记传递至左右子树 与 子树查询值的更新
+// {
+//     if(tree[p].sum_tag != 0 || tree[p].mul_tag != 1) //小优化，所有标记都为初始值时无需传递
+//     {
+//         //区间值更新，传下所有标记，最后清除当前所有标记
+//         ll mid = (pl + pr) >> 1;
+//         push_down_change(ls, p, pl, mid);
+//         push_down_change(rs, p, mid + 1, pr);
+//         tree[p].sum_tag = 0, tree[p].mul_tag = 1;
+//     }
+// }
+// void build(ll p, ll pl, ll pr) //直接读取叶子结点的值，省去原数列空间(除非原数列值有用)
+// {
+//     tree[p] = node(0, 0, 1);
+//     if(pl == pr)
+//     {
+//         scanf("%lld", &tree[p].sum);
+//         return;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     build(ls, pl, mid);
+//     build(rs, mid + 1, pr);
+//     push_up(p);//计算初始查询值(区间值)
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d, ll op)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         //更新区间值 并 添加标记
+//         if(op == 1)//乘值操作
+//         {
+//             tree[p].sum = tree[p].sum * d % mod;
+//             tree[p].sum_tag = tree[p].sum_tag * d % mod; //对已有的和标记产生影响
+//             tree[p].mul_tag = tree[p].mul_tag * d % mod; 
+//         }
+//         else//加值操作
+//         {
+//             tree[p].sum = (tree[p].sum + d * (pr - pl + 1) % mod) % mod;
+//             tree[p].sum_tag = (tree[p].sum_tag + d) % mod;
+//         }
+//         return;
+//     }
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) update(L, R, ls, pl, mid, d, op);
+//     if(R > mid) update(L, R, rs, mid + 1, pr, d, op);
+//     push_up(p);
+// }
+// ll query(ll L, ll R, ll p, ll pl, ll pr)
+// {
+//     if(L <= pl && R >= pr) return tree[p].sum % mod;
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1, res = 0;
+//     if(L <= mid) res = (res + query(L, R, ls, pl, mid)) % mod;
+//     if(R > mid) res = (res + query(L, R, rs, mid + 1, pr)) % mod;
+//     return res % mod;
+// }
+
+// int main()
+// {
+//     scanf("%lld%lld%lld", &n, &m, &mod);
+//     build(1, 1, n);
+//     while(m--)
+//     {
+//         ll q, L, R, d;
+//         scanf("%lld%lld%lld", &q, &L, &R);
+//         if(q == 3) printf("%lld\n", query(L, R, 1, 1, n));
+//         else scanf("%lld", &d), update(L, R, 1, 1, n, d, q);
+//     }
+//     return 0;
+// }
+//非结构体：
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
@@ -10385,6 +10715,20 @@ int main()
 //     }
 //     return 0;
 // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //5.无聊的数列
@@ -10644,33 +10988,290 @@ int main()
 
 
 
-//7.贪婪大陆
+//7.序列操作
+/*如序列 01101011
+            01101011
+      0110           1011
+   01      10     10      11
+ 0   1   1   0   1   0   1   1
+push_up():
+    1的个数sum，即两子区间的sum之和
+    连续1的最大数量cnt，
+        若 左儿子的cntr && 右儿子的cntl，则 cnt = 左儿子区间从右往左的连续1数量cntr + 右儿子区间从左往右的连续1数量cntl
+        若有一个为0则无法连接，取max(左儿子cnt，右儿子cnt)
+    由于翻转操作的存在，连续0串的最大数量也同上存储，最终视是否翻转取 连续0 或 连续1 的个数
+操作优先级：取反（单点修改置值1或0），则当 (tag0 || tag1) == 1 时取反操作应用到两个标记上，对两标记取反，否则对 nega_tag取反
+*/
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define il inline
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// const int N = 1e5 + 10;
+// struct node{
+//     ll sum, cnt, cntl, cntr;//要查询的值，1的个数、连续1的最大数量，从左往右最长1个数cntl，从右往左最长1个数cntr
+//     ll tag0, tag1, nega_tag;//lazy标记，tag0、tag1为1则说明置为0或1，nega_tag 为1说明进行取反操作
+//     node(ll a = 0, ll b = 0, ll c = 0, ll d = 0, ll e = 0, ll f = 0, ll g = 0) {sum = a, cnt = b, cntl = c, cntr = d, tag0 = e, tag1 = f, nega_tag = g;}
+// }tree[N << 2];
+// ll n, m;
+
+// il void push_up(ll p)
+// {
+//     tree[p].sum = tree[ls].sum + tree[rs].sum;
+//     if(tree[ls].cntr && tree[rs].cntl) tree[p].cnt = tree[ls].cntr + tree[rs].cntl;
+//     tree[p].cnt = max(tree[p].cnt, max(tree[ls].cnt, tree[rs].cnt));//此处包括了 非连接情况 以及 连接后仍然没有中间1串长的情况
+// }
+// il void push_down_change(ll p, ll u, ll pl, ll pr)
+// {
+//     if(tree[u].tag0) tree[p].sum = 0;
+//     if(tree[u].tag1) tree[p].sum = pr - pl + 1;
+//     if(tree[u].nega_tag)
+//     {
+//         tree[p].sum = pr - pl + 1 - tree[p].sum;
+//         tree[p].nega_tag ^= 1;
+//     }
+
+//     tree[p].tag0 = tree[u].tag0;
+//     tree[p].tag1 = tree[u].tag1;
+// }
+// il void push_down(ll p, ll pl, ll pr)
+// {
+//     ll mid = (pl + pr) >> 1;
+//     push_down_change(ls, p, pl, mid);
+//     push_down_change(rs, p, mid + 1, pr);
+//     tree[p].tag0 = tree[p].tag1 = tree[p].nega_tag = 0;
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     tree[p] = node(0, 0, 0, 0, 0, 0, 0);
+//     if(pl == pr)
+//     {
+//         scanf("%lld", &tree[p].sum);
+//         if(tree[p].sum) tree[p].cnt = tree[p].cntl = tree[p].cntr = 1;
+//         return;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     build(ls, pl, mid);
+//     build(rs, mid + 1, pr);
+//     push_up(p);
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         if(!d) tree[p].tag0 = 1, tree[p].tag1 = 0, tree[p].nega_tag = 0, tree[p].sum = 0;
+//         else if(d == 1) tree[p].tag1 = 1, tree[p].tag0 = 0, tree[p].nega_tag = 0, tree[p].sum = pr - pl + 1;
+//         else //取反
+//         {
+//             tree[p].sum = pr - pl + 1 - tree[p].sum;
+//             if(tree[p].tag0 || tree[p].tag1)
+//                 tree[p].tag0 ^= 1, tree[p].tag1 ^= 1;
+//             else
+//                 tree[p].nega_tag ^= 1;
+//         }
+//         return;
+//     }
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) update(L, R, ls, pl, mid, d);
+//     if(R > mid) update(L, R, rs, mid + 1, pr, d);
+//     push_up(p);
+// }
+// ll query(ll L, ll R, ll p, ll pl, ll pr, ll op)
+// {
+//     if(L <= pl && R >= pr) 
+//     {
+//         return op == 3 ? tree[p].sum : tree[p].cnt;
+//     }
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1, res = 0;
+//     if(L <= mid) res = op == 3 ? (res + query(L, R, ls, pl, mid, op)) : max(res, query(L, R, ls, pl, mid, op));
+//     if(R > mid) res = op == 3 ? (res + query(L, R, rs, mid + 1, pr, op)) : max(res, query(L, R, rs, mid + 1, pr, op));
+//     return res;
+// }
+
+// int main()
+// {
+//     ll n, m;
+//     scanf("%lld%lld", &n, &m);
+//     build(1, 1, n); 
+//     while(m--)
+//     {
+//         ll q, L, R, d;
+//         scanf("%lld%lld%lld", &q, &L, &R);
+//         ++L, ++R;
+//         if(q > 2) printf("%lld\n", query(L, R, 1, 1, n, q));
+//         else update(L, R, 1, 1, n, q);
+//     }
+//     return 0;
+// }
+
+//0 0 0 1 1 0 1 0 1 1
+//1 1 1 1 1 0 1 0 1 1
+//0 0 0 0 0 1 1 0 1 1
 
 
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define ll long long
+#define il inline
+#define ls (p << 1)
+#define rs (p << 1 | 1)
+const int N = 1e5 + 10;
+struct node{
+    ll sum, cnt[2], cntl[2], cntr[2];//要查询的值，1的个数(亦可得出0的个数)、连续0\1的最大数量，从左往右最长0\1个数cntl，从右往左最长0\1个数cntr
+    ll set_tag, nega_tag;//lazy标记，set_tag初始为-1，若为0或1则说明置为0或1，nega_tag 为1说明进行取反操作
+    ll len;//特别地，存一下该区间长度
+}tree[N << 2];
+ll n, m;
 
+il void push_up(ll p)
+{
+    tree[p].sum = tree[ls].sum + tree[rs].sum;
+    for(int i = 0; i < 2; i++)
+    {
+        // if(tree[ls].cntr[i] && tree[rs].cntl[i]) tree[p].cnt[i] = tree[ls].cntr[i] + tree[rs].cntl[i];
+        // tree[p].cnt[i] = max(tree[p].cnt[i], max(tree[ls].cnt[i], tree[rs].cnt[i]));//此处包括了 非连接情况 以及 连接后仍然没有中间1串长的情况
+        tree[p].cntl[i] = tree[ls].cntl[i];//先传递左子的cntl，作为当前区间的cntl
+        if(tree[ls].cntl[i] == tree[ls].len) tree[p].cntl[i] += tree[rs].cntl[i]; //如果左子是全1串，那么当前区间的cntl可以继续接上右子的cntl
+        //同上
+        tree[p].cntr[i] = tree[rs].cntl[i];
+        if(tree[rs].cntl[i] == tree[rs].len) tree[p].cntr[i] += tree[ls].cntr[i];
+    }
+}
+il void push_down_change(ll p, ll u, ll pl, ll pr, ll for_update)//for_update方便update()内调用该函数的某部分, for_update = 3 时为正常传递函数
+{
+    ll d = for_update < 2 ? for_update : (for_update == 3 ? tree[u].set_tag : -1);
+    if(d != -1 || for_update < 2) 
+    {
+        tree[p].sum = d * (pr - pl + 1);
+        tree[p].cnt[d] = tree[p].cntl[d] = tree[p].cntr[d] = 1;
+        tree[p].cnt[!d] = tree[p].cntl[!d] = tree[p].cntr[!d] = 0;
+        tree[p].set_tag = d;
+        tree[p].nega_tag = 0;
+    }
+    else if(tree[u].nega_tag || for_update == 2)
+    {
+        tree[p].sum = pr - pl + 1 - tree[p].sum;
+        swap(tree[p].cnt[0], tree[p].cnt[1]);
+        swap(tree[p].cntl[0], tree[p].cntl[1]);
+        swap(tree[p].cntr[0], tree[p].cntr[1]);
+        if(tree[p].set_tag != -1) tree[p].set_tag ^= 1;//影响置值
+        else tree[p].nega_tag ^= 1;
+    }
+}
+// il void push_set(ll p, ll u, ll pl, ll pr)
+// {
+    
+// }
+il void push_down(ll p, ll pl, ll pr)
+{
+    ll mid = (pl + pr) >> 1;
+    push_down_change(ls, p, pl, mid, 3);
+    push_down_change(rs, p, mid + 1, pr, 3);
+    tree[p].set_tag = -1, tree[p].nega_tag = 0;
+}
+void build(ll p, ll pl, ll pr)
+{
+    tree[p].set_tag = -1;
+    tree[p].len = pr - pl + 1;
+    if(pl == pr)
+    {
+        ll d;
+        scanf("%lld", &d);
+        tree[p].sum = d;
+        tree[p].cnt[d] = tree[p].cntl[d] = tree[p].cntr[d] = 1;
+        return;
+    }
+    ll mid = (pl + pr) >> 1;
+    build(ls, pl, mid);
+    build(rs, mid + 1, pr);
+    push_up(p);
+}
+void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+{
+    if(L <= pl && R >= pr)
+    {
+        push_down_change(p, 1, pl, pr, d);//此时 u 没用， d = 0, 1 时设值为d， d = 2 时取反
+        return;
+    }
+    push_down(p, pl, pr);
+    ll mid = (pl + pr) >> 1;
+    if(L <= mid) update(L, R, ls, pl, mid, d);
+    if(R > mid) update(L, R, rs, mid + 1, pr, d);
+    push_up(p);
+}
+ll query(ll L, ll R, ll p, ll pl, ll pr)
+{
+    if(L <= pl && R >= pr) 
+    {
+        return tree[p].sum;
+    }
+    push_down(p, pl, pr);
+    ll mid = (pl + pr) >> 1, res = 0;
+    if(L <= mid) res += query(L, R, ls, pl, mid);
+    if(R > mid) res += query(L, R, rs, mid + 1, pr);
+    return res;
+}
+ll query2(ll L, ll R, ll p, ll pl, ll pr)
+{
+    if(L == pl && R == pr) 
+    {
+        return tree[p].cnt[1];
+    }
+    push_down(p, pl, pr);
+    ll mid = (pl + pr) >> 1;
+    if(R <= mid) query2(L, R, ls, pl, mid);
+    else if(L > mid) query2(L, R, rs, mid + 1, pr);
+    else return max(max(query2(L, mid, ls, pl, mid), query2(mid + 1, R, rs, mid + 1, pr)), min(tree[ls].cntr[1], mid + 1 - L) + min(tree[rs].cntl[1], R - mid));
+}
+// ll query2(ll L, ll R, ll p, ll pl, ll pr)
+// {
+//     if(L == pl && R == pr) 
+//     {
+//         return tree[p].cnt[1];
+//     }
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1;
+//     if(R <= mid) query2(L, R, ls, pl, mid);
+//     else if(L > mid) query2(L, R, rs, mid + 1, pr);
+//     else return max(max(query2(L, R, ls, pl, mid), query2(L, R, rs, mid + 1, pr)));
+// }
+void test(ll p, ll pl, ll pr)
+{
+    if(pl == pr)
+    {
+        printf("%lld ", tree[p].sum);
+        return;
+    }
+    ll mid = (pl + pr) >> 1;
+    test(ls, pl, mid);
+    test(rs, mid + 1, pr);
+}
+int main()
+{
+    ll n, m;
+    scanf("%lld%lld", &n, &m);
+    build(1, 1, n); 
+    while(m--)
+    {
+        ll q, L, R, d;
+        scanf("%lld%lld%lld", &q, &L, &R);
+        ++L, ++R;
+        if(q == 3) printf("%lld\n", query(L, R, 1, 1, n));
+        else if(q == 4) printf("%lld\n", query2(L, R, 1, 1, n));
+        else update(L, R, 1, 1, n, q);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        test(1, 1, n);
+        printf("\n");
+    }
+    return 0;
+}
 
 
 
@@ -10841,6 +11442,70 @@ int main()
 //     }
 //     return 0;
 // }
+
+
+
+//2.贪婪大陆
+//分析：起初以为可以 区间叠加1 并 求区间最大值 来计算种类，假设查询[1, 6]，已知两次埋地雷操作[1, 3]，[5, 6]，此时序列为 {1, 1, 1, 0, 1, 1}，应输出2，但求最大值却输出1
+//      证明这个思路是错的，所以这类查询”区间种类数“的题需要在其两端点数量关系下手，正序地看，[1, 3],[5, 6]的右端点3, 6均在[1, 6]上，且由于左端点1, 5也在[1, 6]上，所以
+//      这两个区间都与所求区间有关，假设某序列{1 1 [1 0 1 1 0 1 1 0 1 1] 1}，查询区间[L, R]设为[3, 12]，[1, R]的所有左端点都可能为答案做贡献，
+//      而我们还要删除那些右端点在 L 之前的，因为这些地雷的区间不在[L, R]之间是不合法的，现问题转化为 区间种数 = [1, R]上左端点数 - [1, L - 1]上右端点数
+//考虑"操作和"问题，维护两个树状数组分别记录左右端点更方便
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 1e5 + 10;
+// ll n, m, tl[N], tr[N];//tl[]记录左端点数，tr[]记录右端点数
+// void update(ll *t, ll x)
+// {
+//     for(; x <= n; x += lowbit(x)) ++t[x];
+// }
+// ll sum(ll *t, ll x)
+// {
+//     ll res = 0;
+//     for(; x > 0; x -= lowbit(x)) res += t[x];
+//     return res;
+// }
+// int main()
+// {
+//     scanf("%lld%lld", &n, &m);
+//     while(m--)
+//     {
+//         ll op, L, R;
+//         scanf("%lld%lld%lld", &op, &L, &R);
+//         if(op == 1) update(tl, L), update(tr, R);//两次单点修改
+//         else printf("%lld\n", sum(tl, R) - sum(tr, L - 1));//[1,R]上左端个数 - [1,L-1]上右端个数
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
