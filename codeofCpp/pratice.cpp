@@ -10185,7 +10185,7 @@ int main()
     return 0;
 }
 
-//无注释
+//无注释(可以再参照题目 序列操作 的代码)
 #include <cstdio>
 #include <iostream>
 #include <algorithm>
@@ -10988,7 +10988,7 @@ int main()
 
 
 
-//7.序列操作
+//***7.序列操作
 /*如序列 01101011
             01101011
       0110           1011
@@ -11001,56 +11001,74 @@ push_up():
         若有一个为0则无法连接，取max(左儿子cnt，右儿子cnt)
     由于翻转操作的存在，连续0串的最大数量也同上存储，最终视是否翻转取 连续0 或 连续1 的个数
 操作优先级：取反（单点修改置值1或0），则当 (tag0 || tag1) == 1 时取反操作应用到两个标记上，对两标记取反，否则对 nega_tag取反
+该题实际操作过程中极容易出错。
 */
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
 // using namespace std;
-// #define ll long long
+// #define ll int
 // #define il inline
 // #define ls (p << 1)
 // #define rs (p << 1 | 1)
-// const int N = 1e5 + 10;
+// const int N = 2e5 + 10;
 // struct node{
-//     ll sum, cnt, cntl, cntr;//要查询的值，1的个数、连续1的最大数量，从左往右最长1个数cntl，从右往左最长1个数cntr
-//     ll tag0, tag1, nega_tag;//lazy标记，tag0、tag1为1则说明置为0或1，nega_tag 为1说明进行取反操作
-//     node(ll a = 0, ll b = 0, ll c = 0, ll d = 0, ll e = 0, ll f = 0, ll g = 0) {sum = a, cnt = b, cntl = c, cntr = d, tag0 = e, tag1 = f, nega_tag = g;}
+//     ll sum, cnt[2], cntl[2], cntr[2];//要查询的值，1的个数(亦可得出0的个数)、连续0\1的最大数量，从左往右最长0\1个数cntl，从右往左最长0\1个数cntr
+//     ll set_tag, nega_tag;//lazy标记，set_tag初始为-1，若为0或1则说明置为0或1，nega_tag 为1说明进行取反操作
+//     ll len;//特别地，存一下该区间长度
 // }tree[N << 2];
 // ll n, m;
-
 // il void push_up(ll p)
 // {
 //     tree[p].sum = tree[ls].sum + tree[rs].sum;
-//     if(tree[ls].cntr && tree[rs].cntl) tree[p].cnt = tree[ls].cntr + tree[rs].cntl;
-//     tree[p].cnt = max(tree[p].cnt, max(tree[ls].cnt, tree[rs].cnt));//此处包括了 非连接情况 以及 连接后仍然没有中间1串长的情况
-// }
-// il void push_down_change(ll p, ll u, ll pl, ll pr)
-// {
-//     if(tree[u].tag0) tree[p].sum = 0;
-//     if(tree[u].tag1) tree[p].sum = pr - pl + 1;
-//     if(tree[u].nega_tag)
+//     for(int i = 0; i < 2; i++)
 //     {
-//         tree[p].sum = pr - pl + 1 - tree[p].sum;
-//         tree[p].nega_tag ^= 1;
+//         tree[p].cntl[i] = tree[ls].cntl[i];//先传递左子的cntl，作为当前区间的cntl
+//         if(tree[ls].cntl[i] == tree[ls].len) tree[p].cntl[i] += tree[rs].cntl[i]; //如果左子是全1串，那么当前区间的cntl可以继续接上右子的cntl
+//         tree[p].cntr[i] = tree[rs].cntr[i];//同上
+//         if(tree[rs].cntr[i] == tree[rs].len) tree[p].cntr[i] += tree[ls].cntr[i];
+//         //上述更新的是cntl 和 cntr，现在更新cnt
+//         tree[p].cnt[i] = max(tree[ls].cntr[i] + tree[rs].cntl[i], max(tree[ls].cnt[i], tree[rs].cnt[i])); //合并后中间连续串 与 左、右连续子串 求三者的最大
 //     }
-
-//     tree[p].tag0 = tree[u].tag0;
-//     tree[p].tag1 = tree[u].tag1;
+// }
+// il void push_set(ll p, ll d)
+// {
+//     tree[p].set_tag = d, tree[p].nega_tag = 0, tree[p].sum = d * tree[p].len;
+//     tree[p].cnt[d] = tree[p].cntl[d] = tree[p].cntr[d] = tree[p].len;
+//     tree[p].cnt[!d] = tree[p].cntl[!d] = tree[p].cntr[!d] = 0;
+// }
+// il void push_rev(ll p)
+// {
+//     tree[p].sum = tree[p].len - tree[p].sum;
+//     swap(tree[p].cnt[0], tree[p].cnt[1]);
+//     swap(tree[p].cntl[0], tree[p].cntl[1]);
+//     swap(tree[p].cntr[0], tree[p].cntr[1]);
+//     if(tree[p].set_tag != -1) tree[p].set_tag ^= 1;//影响置值
+//     else tree[p].nega_tag ^= 1;
 // }
 // il void push_down(ll p, ll pl, ll pr)
 // {
 //     ll mid = (pl + pr) >> 1;
-//     push_down_change(ls, p, pl, mid);
-//     push_down_change(rs, p, mid + 1, pr);
-//     tree[p].tag0 = tree[p].tag1 = tree[p].nega_tag = 0;
+//     if(tree[p].set_tag != -1)
+//     {
+//         push_set(ls, tree[p].set_tag);
+//         push_set(rs, tree[p].set_tag);
+//         tree[p].set_tag = -1;
+//     }
+//     if(tree[p].nega_tag)
+//     {
+//         push_rev(ls);
+//         push_rev(rs);
+//         tree[p].nega_tag = 0;
+//     }
 // }
 // void build(ll p, ll pl, ll pr)
 // {
-//     tree[p] = node(0, 0, 0, 0, 0, 0, 0);
+//     tree[p].set_tag = -1, tree[p].len = pr - pl + 1;
 //     if(pl == pr)
 //     {
-//         scanf("%lld", &tree[p].sum);
-//         if(tree[p].sum) tree[p].cnt = tree[p].cntl = tree[p].cntr = 1;
+//         ll d; scanf("%d", &d);
+//         tree[p].sum = d, tree[p].cnt[d] = tree[p].cntl[d] = tree[p].cntr[d] = 1;
 //         return;
 //     }
 //     ll mid = (pl + pr) >> 1;
@@ -11060,221 +11078,165 @@ push_up():
 // }
 // void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
 // {
-//     if(L <= pl && R >= pr)
-//     {
-//         if(!d) tree[p].tag0 = 1, tree[p].tag1 = 0, tree[p].nega_tag = 0, tree[p].sum = 0;
-//         else if(d == 1) tree[p].tag1 = 1, tree[p].tag0 = 0, tree[p].nega_tag = 0, tree[p].sum = pr - pl + 1;
-//         else //取反
-//         {
-//             tree[p].sum = pr - pl + 1 - tree[p].sum;
-//             if(tree[p].tag0 || tree[p].tag1)
-//                 tree[p].tag0 ^= 1, tree[p].tag1 ^= 1;
-//             else
-//                 tree[p].nega_tag ^= 1;
-//         }
-//         return;
-//     }
+//     if(L <= pl && R >= pr){ d == 2 ? push_rev(p) : push_set(p, d); return;}
 //     push_down(p, pl, pr);
 //     ll mid = (pl + pr) >> 1;
 //     if(L <= mid) update(L, R, ls, pl, mid, d);
 //     if(R > mid) update(L, R, rs, mid + 1, pr, d);
 //     push_up(p);
 // }
-// ll query(ll L, ll R, ll p, ll pl, ll pr, ll op)
+// ll query(ll L, ll R, ll p, ll pl, ll pr)
 // {
-//     if(L <= pl && R >= pr) 
-//     {
-//         return op == 3 ? tree[p].sum : tree[p].cnt;
-//     }
+//     if(L <= pl && R >= pr) return tree[p].sum;
 //     push_down(p, pl, pr);
 //     ll mid = (pl + pr) >> 1, res = 0;
-//     if(L <= mid) res = op == 3 ? (res + query(L, R, ls, pl, mid, op)) : max(res, query(L, R, ls, pl, mid, op));
-//     if(R > mid) res = op == 3 ? (res + query(L, R, rs, mid + 1, pr, op)) : max(res, query(L, R, rs, mid + 1, pr, op));
+//     if(L <= mid) res += query(L, R, ls, pl, mid);
+//     if(R > mid) res += query(L, R, rs, mid + 1, pr);
 //     return res;
 // }
-
+// ll query2(ll L, ll R, ll p, ll pl, ll pr)
+// {
+//     if(L <= pl && R >= pr) return tree[p].cnt[1];
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1;
+//     if(R <= mid) return query2(L, R, ls, pl, mid);
+//     else if(L > mid) return query2(L, R, rs, mid + 1, pr);
+//     else return max(max(query2(L, mid, ls, pl, mid), query2(mid + 1, R, rs, mid + 1, pr)), min(tree[ls].cntr[1], mid + 1 - L) + min(tree[rs].cntl[1], R - mid));
+// }
 // int main()
 // {
 //     ll n, m;
-//     scanf("%lld%lld", &n, &m);
+//     scanf("%d%d", &n, &m);
 //     build(1, 1, n); 
 //     while(m--)
 //     {
 //         ll q, L, R, d;
-//         scanf("%lld%lld%lld", &q, &L, &R);
+//         scanf("%d%d%d", &q, &L, &R);
 //         ++L, ++R;
-//         if(q > 2) printf("%lld\n", query(L, R, 1, 1, n, q));
+//         if(q == 3) printf("%d\n", query(L, R, 1, 1, n));
+//         else if(q == 4) printf("%d\n", query2(L, R, 1, 1, n));
 //         else update(L, R, 1, 1, n, q);
 //     }
 //     return 0;
 // }
-
-//0 0 0 1 1 0 1 0 1 1
-//1 1 1 1 1 0 1 0 1 1
-//0 0 0 0 0 1 1 0 1 1
-
-
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-using namespace std;
-#define ll long long
-#define il inline
-#define ls (p << 1)
-#define rs (p << 1 | 1)
-const int N = 1e5 + 10;
-struct node{
-    ll sum, cnt[2], cntl[2], cntr[2];//要查询的值，1的个数(亦可得出0的个数)、连续0\1的最大数量，从左往右最长0\1个数cntl，从右往左最长0\1个数cntr
-    ll set_tag, nega_tag;//lazy标记，set_tag初始为-1，若为0或1则说明置为0或1，nega_tag 为1说明进行取反操作
-    ll len;//特别地，存一下该区间长度
-}tree[N << 2];
-ll n, m;
-
-il void push_up(ll p)
-{
-    tree[p].sum = tree[ls].sum + tree[rs].sum;
-    for(int i = 0; i < 2; i++)
-    {
-        // if(tree[ls].cntr[i] && tree[rs].cntl[i]) tree[p].cnt[i] = tree[ls].cntr[i] + tree[rs].cntl[i];
-        // tree[p].cnt[i] = max(tree[p].cnt[i], max(tree[ls].cnt[i], tree[rs].cnt[i]));//此处包括了 非连接情况 以及 连接后仍然没有中间1串长的情况
-        tree[p].cntl[i] = tree[ls].cntl[i];//先传递左子的cntl，作为当前区间的cntl
-        if(tree[ls].cntl[i] == tree[ls].len) tree[p].cntl[i] += tree[rs].cntl[i]; //如果左子是全1串，那么当前区间的cntl可以继续接上右子的cntl
-        //同上
-        tree[p].cntr[i] = tree[rs].cntl[i];
-        if(tree[rs].cntl[i] == tree[rs].len) tree[p].cntr[i] += tree[ls].cntr[i];
-    }
-}
-il void push_down_change(ll p, ll u, ll pl, ll pr, ll for_update)//for_update方便update()内调用该函数的某部分, for_update = 3 时为正常传递函数
-{
-    ll d = for_update < 2 ? for_update : (for_update == 3 ? tree[u].set_tag : -1);
-    if(d != -1 || for_update < 2) 
-    {
-        tree[p].sum = d * (pr - pl + 1);
-        tree[p].cnt[d] = tree[p].cntl[d] = tree[p].cntr[d] = 1;
-        tree[p].cnt[!d] = tree[p].cntl[!d] = tree[p].cntr[!d] = 0;
-        tree[p].set_tag = d;
-        tree[p].nega_tag = 0;
-    }
-    else if(tree[u].nega_tag || for_update == 2)
-    {
-        tree[p].sum = pr - pl + 1 - tree[p].sum;
-        swap(tree[p].cnt[0], tree[p].cnt[1]);
-        swap(tree[p].cntl[0], tree[p].cntl[1]);
-        swap(tree[p].cntr[0], tree[p].cntr[1]);
-        if(tree[p].set_tag != -1) tree[p].set_tag ^= 1;//影响置值
-        else tree[p].nega_tag ^= 1;
-    }
-}
-// il void push_set(ll p, ll u, ll pl, ll pr)
+//query2如下写法也行
+// node query2(ll L, ll R, ll p, ll pl, ll pr)
 // {
-    
-// }
-il void push_down(ll p, ll pl, ll pr)
-{
-    ll mid = (pl + pr) >> 1;
-    push_down_change(ls, p, pl, mid, 3);
-    push_down_change(rs, p, mid + 1, pr, 3);
-    tree[p].set_tag = -1, tree[p].nega_tag = 0;
-}
-void build(ll p, ll pl, ll pr)
-{
-    tree[p].set_tag = -1;
-    tree[p].len = pr - pl + 1;
-    if(pl == pr)
-    {
-        ll d;
-        scanf("%lld", &d);
-        tree[p].sum = d;
-        tree[p].cnt[d] = tree[p].cntl[d] = tree[p].cntr[d] = 1;
-        return;
-    }
-    ll mid = (pl + pr) >> 1;
-    build(ls, pl, mid);
-    build(rs, mid + 1, pr);
-    push_up(p);
-}
-void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
-{
-    if(L <= pl && R >= pr)
-    {
-        push_down_change(p, 1, pl, pr, d);//此时 u 没用， d = 0, 1 时设值为d， d = 2 时取反
-        return;
-    }
-    push_down(p, pl, pr);
-    ll mid = (pl + pr) >> 1;
-    if(L <= mid) update(L, R, ls, pl, mid, d);
-    if(R > mid) update(L, R, rs, mid + 1, pr, d);
-    push_up(p);
-}
-ll query(ll L, ll R, ll p, ll pl, ll pr)
-{
-    if(L <= pl && R >= pr) 
-    {
-        return tree[p].sum;
-    }
-    push_down(p, pl, pr);
-    ll mid = (pl + pr) >> 1, res = 0;
-    if(L <= mid) res += query(L, R, ls, pl, mid);
-    if(R > mid) res += query(L, R, rs, mid + 1, pr);
-    return res;
-}
-ll query2(ll L, ll R, ll p, ll pl, ll pr)
-{
-    if(L == pl && R == pr) 
-    {
-        return tree[p].cnt[1];
-    }
-    push_down(p, pl, pr);
-    ll mid = (pl + pr) >> 1;
-    if(R <= mid) query2(L, R, ls, pl, mid);
-    else if(L > mid) query2(L, R, rs, mid + 1, pr);
-    else return max(max(query2(L, mid, ls, pl, mid), query2(mid + 1, R, rs, mid + 1, pr)), min(tree[ls].cntr[1], mid + 1 - L) + min(tree[rs].cntl[1], R - mid));
-}
-// ll query2(ll L, ll R, ll p, ll pl, ll pr)
-// {
-//     if(L == pl && R == pr) 
+//     if(L <= pl && R >= pr) 
 //     {
-//         return tree[p].cnt[1];
+//         return tree[p];
 //     }
 //     push_down(p, pl, pr);
 //     ll mid = (pl + pr) >> 1;
-//     if(R <= mid) query2(L, R, ls, pl, mid);
-//     else if(L > mid) query2(L, R, rs, mid + 1, pr);
-//     else return max(max(query2(L, R, ls, pl, mid), query2(L, R, rs, mid + 1, pr)));
+//     if(L <= mid && R > mid)
+//     {
+//         node lans, rans, ans;
+//         lans = query2(L, R, ls, pl, mid);
+//         rans = query2(L, R, rs, mid + 1, pr);
+//         ans.cntl[1] = lans.cntl[1];
+//         if(lans.cntl[1] == lans.len) ans.cntl[1] += rans.cntl[1];
+//         ans.cntr[1] = rans.cntr[1];
+//         if(rans.cntr[1] == rans.len) ans.cntr[1] += lans.cntr[1];
+//         ans.cnt[1] = max(lans.cntr[1] + rans.cntl[1], max(lans.cnt[1], rans.cnt[1]));
+//         return ans;
+//     }
+//     if(L <= mid) return query2(L, R, ls, pl, mid);
+//     if(R > mid) return query2(L, R, rs, mid + 1, pr);
 // }
-void test(ll p, ll pl, ll pr)
-{
-    if(pl == pr)
-    {
-        printf("%lld ", tree[p].sum);
-        return;
-    }
-    ll mid = (pl + pr) >> 1;
-    test(ls, pl, mid);
-    test(rs, mid + 1, pr);
-}
-int main()
-{
-    ll n, m;
-    scanf("%lld%lld", &n, &m);
-    build(1, 1, n); 
-    while(m--)
-    {
-        ll q, L, R, d;
-        scanf("%lld%lld%lld", &q, &L, &R);
-        ++L, ++R;
-        if(q == 3) printf("%lld\n", query(L, R, 1, 1, n));
-        else if(q == 4) printf("%lld\n", query2(L, R, 1, 1, n));
-        else update(L, R, 1, 1, n, q);
-
-        test(1, 1, n);
-        printf("\n");
-    }
-    return 0;
-}
 
 
 
+//8.踩气球
+//强制在线 + 线段树
+//本题显然需要用线段树维护区间操作，而难点在于如何快速判定给定孩子区间上所有个值是否均为 0
+//思路：若是直接遍历全部孩子区间，1e5的线性复杂度O(M) 乘上线段树的查询复杂度 O(QlogN) -- 查询操作 O(M * Q * logN) 肯定会TLE
+//     那么重点就在于每个区间结点该如何存储某样信息，以快速对应到哪些孩子与该区间有关 -- vector<int>存储孩子编号
+//     一个孩子可能对应线段树的多个区间，当其中的区间变成全0时，那么涉及该孩子的区间就少一个 cnt[孩子编号]--
+//     当涉及区间减到 0 即该孩子全区间为 0 时就能计数 lastans++
+//     每次update()更新时都判断当前叶子结点是否为0，且是否对应至少一个孩子
+//     修改操作：只有 单点修改。 查询操作：无。
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// using namespace std;
+// #define ll int
+// #define il inline
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// const int N = 1e5 + 10;
+// struct node{
+//     ll sum;
+//     vector<ll> rel;
+// }tree[N << 2];
+// ll n, m, q, lastans = 0;
+// ll cnt[N];//cnt[孩子编号] 记录孩子涉及的线段树区间个数
+// il void check(ll p)
+// {
+//     for(int i = 0; !tree[p].sum && i < tree[p].rel.size(); i++)
+//         if(--cnt[tree[p].rel[i]] == 0) 
+//             ++lastans;
+// }
+// il void push_up(ll p, bool op)
+// {
+//     tree[p].sum = tree[ls].sum + tree[rs].sum;
+//     if(op) check(p);
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     if(pl == pr)
+//     {
+//         scanf("%d", &tree[p].sum);
+//         return;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     build(ls, pl, mid);
+//     build(rs, mid + 1, pr);
+//     push_up(p, 0);
+// }
+// void sign(ll L, ll R, ll p, ll pl, ll pr, ll id) //标记涉及孩子区间的线段树区间，id为孩子区间编号
+// {
+//     if(pl >= L && pr <= R)
+//     {
+//         ++cnt[id];
+//         tree[p].rel.push_back(id);
+//         return;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) sign(L, R, ls, pl, mid, id);
+//     if(R > mid) sign(L, R, rs, mid + 1, pr, id);
+// }
+// void update(ll p, ll pl, ll pr, ll x) //单点修改
+// {
+//     if(pl == pr)
+//     {
+//         --tree[p].sum;
+//         check(p);
+//         return;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     if(x <= mid) update(ls, pl, mid, x);
+//     else update(rs, mid + 1, pr, x);
+//     push_up(p, 1);
+// }
+// int main()
+// {
+//     scanf("%d%d", &n, &m);
+//     build(1, 1, n);
+//     for(int i = 1, l, r; i <= m; i++)
+//     {
+//         scanf("%d%d", &l, &r);
+//         sign(l, r, 1, 1, n, i);
+//     }
+//     scanf("%d", &q);
+//     while(q--)
+//     {
+//         ll x; scanf("%d", &x);
+//         x = (x + lastans - 1) % n + 1;
+//         update(1, 1, n, x);
+//         printf("%d\n", lastans);
+//     }
+//     return 0;
+// }
 
 
 
@@ -11284,6 +11246,22 @@ int main()
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//问题：zkw线段树是什么？
 
 
 
@@ -11427,18 +11405,10 @@ int main()
 //     }
 //     while(m--)
 //     {
-//         ll op, x, y, k;
-//         scanf("%lld", &op);
-//         if(op == 1)
-//         {
-//             scanf("%lld%lld", &x, &k);
-//             update(x, k);
-//         }
-//         else
-//         {
-//             scanf("%lld%lld", &x, &y);
-//             printf("%lld\n", sum(y) - sum(x - 1));
-//         }
+//         ll op, x, y;
+//         scanf("%lld%lld%lld", &op, &x, &y);
+//         if(op == 1) update(x, y);
+//         else printf("%lld\n", sum(y) - sum(x - 1));
 //     }
 //     return 0;
 // }
@@ -11481,6 +11451,21 @@ int main()
 //     }
 //     return 0;
 // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
