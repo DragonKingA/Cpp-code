@@ -2599,7 +2599,19 @@ int main() {
 
 //进阶搜索
 //搜索剪枝、记忆化搜索
+/*dfs的剪枝手段：
+可行性剪枝：当目前状态和题意不符，并且由于题目可以推出，往后的所有情况和题意都不符，那么就可以进行剪枝，
+           直接把这种情况及后续的所有情况判断为不可行，直接返回。
 
+排除等效冗余：当几个子树具有完全相同的效果的时候，只选择其中一个搜索。
+
+搜索顺序剪枝：不同的搜索顺序会导致搜索树形态差异很大，那么时间复杂度自然差异也很大。
+            比如说我们搜索一个最小值，那肯定是从最小的节点开始搜索，而非从最大的节点开始搜索。
+            一般来讲，有单调性存在的搜索问题可以和贪心思想结合，进行顺序剪枝。
+
+最优性剪枝：当搜索还没结束的时候，当前记录的状态已经比当前保存的最优解更劣，就没有必要在继续搜索下去了，
+            因为该路径已经不可能成为我们的最优解了。(如限定步数等条件下的曼哈顿距离剪枝)
+*/
 //1.选数
 // #include <cstdio>
 // int n, k, ans = 0, a[30];
@@ -2747,12 +2759,34 @@ int main() {
 
 
 //4.Network Saboteur
+//N <= 20 可以用dfs枚举策略
+//起初将所有点留在A组，再计算 继续留在A组 和 分去B组 的情况
 // #include <iostream>
 // #include <algorithm>
 // using namespace std;
 // #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
-// int n, mp[25][25];
-
+// int n, ans = 0, mp[25][25], vis[25];
+// void dfs(int i, int sum)
+// {
+//     if(i == n)
+//     {
+//         ans = max(ans, sum);
+//         return;
+//     }
+//     dfs(i + 1, sum);//留在A组
+//     //分去B组，重算∑Cij
+//     vis[i] = 1;
+//     for(int j = 0; j < n; j++)
+//     {
+//         if(j != i)
+//         {
+//             if(vis[j]) sum -= mp[i][j];//有已经移过去B组的点j，消去当时产生的权值mp[i][j]
+//             else sum += mp[i][j];//i移过去后，j -> i 间有权值，加权
+//         }
+//     }
+//     dfs(i + 1, sum);//分去B组后继续递归
+//     vis[i] = 0;//回溯
+// }
 // int main()
 // {
 //     untie();
@@ -2760,21 +2794,209 @@ int main() {
 //     for(int i = 0; i < n; i++)
 //         for(int j = 0; j < n; j++)
 //             cin >> mp[i][j];
-    
+//     dfs(0, 0);
+//     cout << ans;
 //     return 0;
 // }
 
 
 
+//5.Tempter of the Bone(曼哈顿距离优化 + 简单剪枝)
+//小图，dfs
+//764ms，以下四个优化缺一个都会TLE
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <cmath>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// char mp[10][10];
+// int n, m, T, vis[10][10], sx, sy, ex, ey;
+// int dir[4][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+// bool res = 0;
+// void dfs(int x, int y, int time)
+// {
+//     if(res) return;//优化1
+//     if(time == T)//优化2
+//     {
+//         res |= mp[x][y] == 'D';
+//         return;
+//     }
+//     if(mp[x][y] == 'D')//优化3
+//     {
+//         res |= time == T;
+//         return;
+//     }
+//     for(int i = 0; i < 4; i++)
+//     {
+//         int nx = x + dir[i][0], ny = y + dir[i][1];
+//         if(nx >= 1 && nx <= n && ny >= 1 && ny <= m && !vis[nx][ny] && mp[nx][ny] != 'X')
+//         {
+//             vis[nx][ny] = 1;
+//             dfs(nx, ny, time + 1);
+//             vis[nx][ny] = 0;
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     while(cin >> n >> m >> T, n)
+//     {
+//         memset(vis, 0, sizeof(vis));
+//         res = 0;
+//         for(int i = 1; i <= n; i++)
+//         {
+//             for(int j = 1; j <= m; j++)
+//             {
+//                 cin >> mp[i][j];
+//                 if(mp[i][j] == 'S') sx = i, sy = j;
+//                 else if(mp[i][j] == 'D') ex = i, ey = j;
+//             }
+//         }
+//         //曼哈顿距离优化
+//         int mdis = abs(sx - ex) + abs(sy - ey);
+//         if(T < mdis) cout << "NO\n";//优化4
+//         else 
+//         {
+//             vis[sx][sy] = 1;
+//             dfs(sx, sy, 0);
+//             if(res) cout << "YES\n";
+//             else cout << "NO\n";
+//         }
+//     }
+//     return 0;
+// }
+//更佳优化（6处）-- 374ms
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <cmath>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// char mp[10][10];
+// int n, m, T, vis[10][10], sx, sy, ex, ey;
+// int dir[4][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+// bool res = 0;
+// void dfs(int x, int y, int time)
+// {
+//     if(res) return;
+//     if(time == T)
+//     {
+//         res |= mp[x][y] == 'D';
+//         return;
+//     }
+//     if(mp[x][y] == 'D')
+//     {
+//         res |= time == T;
+//         return;
+//     }
+//     if(time + abs(x - ex) + abs(y - ey) > T)//若当前最短距离所花费时间超过T，就一定不能在time==T时到达，该路径作废
+//     {
+//         return;
+//     }
+//     for(int i = 0; i < 4; i++)
+//     {
+//         int nx = x + dir[i][0], ny = y + dir[i][1];
+//         if(nx >= 1 && nx <= n && ny >= 1 && ny <= m && !vis[nx][ny] && mp[nx][ny] != 'X')
+//         {
+//             vis[nx][ny] = 1;
+//             dfs(nx, ny, time + 1);
+//             vis[nx][ny] = 0;
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     while(cin >> n >> m >> T, n)
+//     {
+//         memset(vis, 0, sizeof(vis));
+//         res = 0;
+//         for(int i = 1; i <= n; i++)
+//         {
+//             for(int j = 1; j <= m; j++)
+//             {
+//                 cin >> mp[i][j];
+//                 if(mp[i][j] == 'S') sx = i, sy = j;
+//                 else if(mp[i][j] == 'D') ex = i, ey = j;
+//             }
+//         }
+//         //曼哈顿距离优化
+//         int mdis = abs(sx - ex) + abs(sy - ey);
+//         if(T < mdis || mdis % 2 != T % 2) cout << "NO\n";// 曼哈顿距离和最短步数奇偶性必然相同
+//         else 
+//         {
+//             vis[sx][sy] = 1;
+//             dfs(sx, sy, 0);
+//             if(res) cout << "YES\n";
+//             else cout << "NO\n";
+//         }
+//     }
+//     return 0;
+// }
 
 
 
+//***6.小木棍
+//n <= 65, dfs + 枚举
+//最小可能长度范围 [max_len, sum]，升序枚举答案即可，最先符合条件的长度即最小值
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// int n, sum = 0, max_ = 0, min_ = 1e9;
+// int num[100];//num[x] 为 长度为x 的木棍的根数
+// //len:每根木棍长度，now:现在拼成一根长为len的木棍的进度，cnt:要拼成cnt个长为len的木棍的进度，
+// //last:最近一次选取的木棍长度 -- 每次从最长的木棍选起，并继续降序选取，这样选取的次数一定最少
+// bool dfs(int len, int now, int cnt, int last)
+// {
+//     if(cnt == 0) return 1;//全部拼完
+//     if(now == len) return dfs(len, 0, cnt - 1, max_);//拼完一根，重置now和last 并 计数后继续拼
+//     for(int i = last; i >= min_; i--)//降序选取
+//     {
+//         if(num[i] && now + i <= len)//初步判断方案具有搜索价值
+//         {
+//             --num[i];
+//             if(dfs(len, now + i, cnt, i))//拓展方案
+//                 return 1;
+//             ++num[i];//回溯
+//             //最重要的两个优化：都是基于 降序选取，如果放入这一根 i 就完成了拼接，但最后的结果是失败的，那么前面的抉择有问题，回溯重选
+//             //now == 0，代表现在是拼木棍的第一根棒子，并且后面无论怎么拼都不行，那么当前这一根换成其他的当然也就不行。
+//             //          当上面的dfs没有返回1时，说明 木棍i 没有用上，此时 now 仍为刚拼完上一根时初始的 0。
+//             //now + i == len，代表现在是拼木棍的最后一根棒子，此时 木棍i 显然最优，若最优都怎么拼也不行，那么换成其他的棒子来拼也依旧不行。
+//             if(now == 0 || now + i == len) 
+//                 return 0;
+//         }
+//     }
+//     return 0;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 1, x; i <= n; i++)
+//     {
+//         cin >> x;
+//         num[x]++;
+//         max_ = max(max_, x);
+//         min_ = min(min_, x);
+//         sum += x;
+//     }
+//     for(int len = max_; len <= sum; len++)//枚举最小答案
+//     {
+//         if(sum % len == 0 && dfs(len, 0, sum / len, max_))//答案需满足 sum % len == 0，即能够整分
+//         {
+//             cout << len << '\n';
+//             break;
+//         }
+//     }
+//     return 0;
+// }
 
 
 
-
-
-
+//7.矩形嵌套
 
 
 
@@ -11529,37 +11751,46 @@ int main()
 
 //曼哈顿距离(又名出租车距离)
 //d(i,j)=|x1-x2|+|y1-y2|
-//打印一个菱形
 /*
-当n=5时，有" * “号的地方是距离中心点曼哈顿距离小于2的地方；
-当n=7时，有” * " 号的地方是距离中心点曼哈顿距离小于3的地方。
-找到中心点与n的关系：中心点用n表示为（n/2，n/2），将与中心点距离小于n/2的点用" * "表示，其他地方用空格表示，
-完成一行（一行指i的一次循环）后进行换行。
+应用1：打印中心规律图形
+//如打印一个菱形
+// 当n=5时，有" * “号的地方是距离中心点曼哈顿距离小于2的地方；
+// 当n=7时，有” * " 号的地方是距离中心点曼哈顿距离小于3的地方。
+// 找到中心点与n的关系：中心点用n表示为（n/2，n/2），将与中心点距离小于n/2的点用" * "表示，其他地方用空格表示，
+// 完成一行（一行指i的一次循环）后进行换行。
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int main()
+{
+    int n;
+    cin >> n;//n为奇数
+    int cx = n/2, cy = n/2;//中心点(cx,cy)
+    for(int i = 0; i < n; i++)
+    {
+        for(int j = 0; j < n; j++)
+        {
+            if(abs(i-cx) + abs(j-cy) <= n/2)
+                 cout << '*' ;
+            else
+                 cout << ' ';
+        }
+        cout << endl;
+    }
+    return 0;
+}
+
+应用2：搜索的剪枝和优化
+如在图中行走的过程中，限定步数或时间 limit
+已知起点s(sx, sy) 和 终点e(ex, ey)
+记曼哈顿距离 mdis = |sx - ex| + |sy - ey|;
+搜索前：
+    如果 limit < mdis 或 mdis % 2 != limit % 2 ，则该图无解
+    （特性：曼哈顿距离 和 最短步数(或至少步数) 奇偶性必然相同）
+搜索中：
+    若搜索到当前点(x, y)，且已经过步数或时间 step，仍可以用当前点与终点的曼哈顿距离剪枝
+    如果 step + |x - ex| + |y - ey| > limit 则该路径无解
 */
-// #include <iostream>
-// #include <algorithm>
-// using namespace std;
-// int main()
-// {
-//     int n;
-//     cin >> n;//n为奇数
-//     int cx = n/2, cy = n/2;//中心点(cx,cy)
-//     for(int i = 0; i < n; i++)
-//     {
-//         for(int j = 0; j < n; j++)
-//         {
-//             if(abs(i-cx) + abs(j-cy) <= n/2)
-//                  cout << '*' ;
-//             else
-//                  cout << ' ';
-//         }
-//         cout << endl;
-//     }
-//     return 0;
-// }
-
-
-
 
 
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑算法↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
