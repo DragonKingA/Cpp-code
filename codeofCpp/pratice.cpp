@@ -2996,23 +2996,163 @@ int main() {
 
 
 
-//7.矩形嵌套
+//7.矩形嵌套 (DAG图的记忆化搜索)
+//路径需满足每个矩形能嵌套在下一个矩形，现求最长路径的长度。
+//建图：对满足嵌套条件的两个矩阵建边，权值为 1 
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// #define X first
+// #define Y second
+// typedef pair<int, int> p;
+// const int N = 1e3 + 5;
+// int n, gra[N][N], f[N], res = 0;
+// p a[N];
+// int dfs(int i)
+// {
+//     if(f[i] != -1) return f[i];
+//     f[i] = 1;
+//     for(int v = 1; v <= n; v++)
+//         if(gra[i][v])
+//             f[i] = max(f[i], dfs(v) + 1);
+//     return f[i];
+// }
+// int main()
+// {
+//     untie();
+//     int T; cin >> T;
+//     while(T--)
+//     {
+//         cin >> n;
+//         memset(gra, 0, sizeof(gra));
+//         memset(f, -1, sizeof(f));
+//         for(int i = 1; i <= n; i++) 
+//             cin >> a[i].X >> a[i].Y;
+//         for(int i = 1; i <= n; i++)
+//             for(int j = 1; j <= n; j++)
+//                 if(i != j && (a[i].X < a[j].X && a[i].Y < a[j].Y) || (a[i].Y < a[j].X && a[i].X < a[j].Y))
+//                     gra[i][j] = 1;
+//         for(int i = 1; i <= n; i++)
+//         {
+//             f[i] = dfs(i);
+//             res = max(res, f[i]);
+//         }
+//         cout << res << '\n';
+//     }
+//     return 0;
+// }
 
 
 
+//8.滑雪 (DAG图的记忆化搜索)
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e2 + 5;
+// int n, m;
+// int dir[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+// int dis[N][N], gra[N][N];
+// int dfs(int x, int y)
+// {
+//     if(dis[x][y] != -1) return dis[x][y];
+//     dis[x][y] = 1;
+//     for(int i = 0; i < 4; i++)
+//     {
+//         int nx = x + dir[i][0], ny = y + dir[i][1];
+//         if(nx >= 0 && nx < n && ny >= 0 && ny < m && gra[nx][ny] < gra[x][y])
+//             dis[x][y] = max(dis[x][y], dfs(nx, ny) + 1);
+//     }
+//     return dis[x][y];
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     memset(dis, -1, sizeof(dis));
+//     for(int i = 0; i < n; i++)
+//         for(int j = 0, x; j < m; j++)
+//             cin >> gra[i][j];
+//     int res = 1;
+//     for(int i = 0; i < n; i++)
+//     {
+//         for(int j = 0; j < m; j++)
+//         {
+//             dis[i][j] = max(dis[i][j], dfs(i, j));
+//             res = max(res, dis[i][j]);
+//         }
+//     }
+//     cout << res;
+//     return 0;
+// }
 
 
 
+//9.食物链 (DAG图的记忆化搜索)
+//从食物链顶点(入度为0)开始搜，遇到一个叶子结点(出度为0)就计数一条食物链
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e5 + 5;
+// int n, m, res = 0;
+// int f[N], indegree[N];//f[i] 记录以 i 为顶点的食物链条数
+// vector<int> gra[N];
+// int dfs(int u)
+// {
+//     if(f[u]) return f[u];
+//     if(!gra[u].size()) return 1;//没有邻居出边，说明是叶子结点
+//     int cnt = 0;
+//     for(int v = 0; v < gra[u].size(); v++)
+//         cnt += dfs(gra[u][v]);
+//     return f[u] = cnt;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     while(m--)
+//     {
+//         int x, y; cin >> x >> y;
+//         gra[x].push_back(y);
+//         ++indegree[y];
+//     }
+//     for(int i = 1; i <= n; i++)
+//         if(!indegree[i] && gra[i].size())//size是否为空(相当于出度)判断单独点，单独点不计数
+//             res += dfs(i);
+//     cout << res;    
+//     return 0;
+// }
 
 
 
-
-
-
-
-
-
-
+//10.Tian Ji -- The Horse Racing
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cstring>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+const int N = 1e3 + 5;
+int n;
+int dfs(int u)
+{
+    
+}
+int main()
+{
+    untie();
+    while(cin >> n, n) 
+    {
+        
+    }
+    return 0;
+}
 
 
 
@@ -11388,7 +11528,7 @@ push_up():
 // const int N = 1e5 + 10;
 // struct node{
 //     ll sum;
-//     vector<ll> rel;
+//     vector<ll> rel;//该区间涉及的孩子
 // }tree[N << 2];
 // ll n, m, q, lastans = 0;
 // ll cnt[N];//cnt[孩子编号] 记录孩子涉及的线段树区间个数
