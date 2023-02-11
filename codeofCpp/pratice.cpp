@@ -3004,11 +3004,10 @@ int main() {
 // #include <cstring>
 // using namespace std;
 // #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
-// #define X first
-// #define Y second
+// #define CHECK(a, b, c, d) ((a < c && b < d) || (a < d && b < c))
 // typedef pair<int, int> p;
 // const int N = 1e3 + 5;
-// int n, gra[N][N], f[N], res = 0;
+// int n, gra[N][N], f[N];
 // p a[N];
 // int dfs(int i)
 // {
@@ -3029,16 +3028,14 @@ int main() {
 //         memset(gra, 0, sizeof(gra));
 //         memset(f, -1, sizeof(f));
 //         for(int i = 1; i <= n; i++) 
-//             cin >> a[i].X >> a[i].Y;
+//             cin >> a[i].first >> a[i].second;
 //         for(int i = 1; i <= n; i++)
 //             for(int j = 1; j <= n; j++)
-//                 if(i != j && (a[i].X < a[j].X && a[i].Y < a[j].Y) || (a[i].Y < a[j].X && a[i].X < a[j].Y))
+//                 if(i != j && CHECK(a[i].first, a[i].second, a[j].first, a[j].second))
 //                     gra[i][j] = 1;
+//         int res = 0;
 //         for(int i = 1; i <= n; i++)
-//         {
-//             f[i] = dfs(i);
-//             res = max(res, f[i]);
-//         }
+//             res = max(res, f[i] = dfs(i));
 //         cout << res << '\n';
 //     }
 //     return 0;
@@ -3131,29 +3128,44 @@ int main() {
 
 
 
-//10.Tian Ji -- The Horse Racing
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <cstring>
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
-const int N = 1e3 + 5;
-int n;
-int dfs(int u)
-{
-    
-}
-int main()
-{
-    untie();
-    while(cin >> n, n) 
-    {
-        
-    }
-    return 0;
-}
-
+//10.Tian Ji -- The Horse Racing (区间DP + 记忆化搜索)
+//定义状态dp[k][i][j] 为第 k 轮比赛时(与国王第k只马比赛时)田忌剩下马[i, j]。用区间[i, j]来快速定位最小和最大的马。
+//贪心策略：如果该轮一定输（田忌最快赢不了其最慢），田忌就派最小的马；最快比最快能赢就比；打平就搜索派最小和最大的最优解
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e3 + 5;
+// int n;
+// int dp[N][N], a[N], b[N];
+// bool cmp(int a, int b) {return a > b;}
+// int dfs(int i, int j, int k)//返回钱数
+// {
+//     if(k == n + 1) return 0;
+//     if(dp[i][j] != -1) return dp[i][j];
+//     if(a[i] > b[k])//最快的马能赢就赢
+//         return dp[i][j] = dfs(i + 1, j, k + 1) + 1;
+//     else if(a[i] < b[k])//赢不了就拿最差的马当炮灰
+//         return dp[i][j] = dfs(i, j - 1, k + 1) - 1;
+//     else//平局就搜索最佳选择 -- 选择平局还是拿劣马去输
+//         return dp[i][j] = max(dfs(i + 1, j, k + 1), dfs(i, j - 1, k + 1) - 1);
+// }
+// int main()
+// {
+//     untie();
+//     while(cin >> n, n) 
+//     {
+//         memset(dp, -1, sizeof(dp));
+//         for(int i = 1; i <= n; i++) cin >> a[i];
+//         for(int i = 1; i <= n; i++) cin >> b[i];
+//         sort(a + 1, a + 1 + n, cmp);
+//         sort(b + 1, b + 1 + n, cmp);
+//         printf("%d\n", 200 * dfs(1, n, 1));
+//     }
+//     return 0;
+// }
+//也可以用双指针解
 
 
 
