@@ -11606,6 +11606,116 @@ push_up():
 
 //以下为kuanbin题单的线段树专题
 //9.敌兵布阵
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <string>
+// using namespace std;
+// #define ll int
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const ll N = 5e4 + 4;
+// ll tree[N << 2], tag[N << 2];
+// string op;
+// void addtag(ll p, ll pl, ll pr, ll d)
+// {
+//     tree[p] += d * (pr - pl + 1);
+//     tag[p] += d;
+// }
+// void push_up(ll p)
+// {
+//     tree[p] = tree[ls] + tree[rs];
+// }
+// void push_down(ll p, ll pl, ll pr)
+// {
+//     if(tag[p] != 0)
+//     {
+//         ll mid = (pl + pr) >> 1;
+//         addtag(ls, pl, mid, tag[p]);
+//         addtag(rs, mid + 1, pr, tag[p]);
+//         tag[p] = 0;
+//     }
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     tree[p] = 0;
+//     tag[p] = 0;
+//     if(pl == pr)
+//     {
+//         cin >> tree[p];
+//         return ;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     build(ls, pl, mid);
+//     build(rs, mid + 1, pr);
+//     push_up(p);
+// }
+// void update(ll x, ll p, ll pl, ll pr, ll d)
+// {
+//     if(pl == pr)
+//     {
+//         addtag(p, pl, pr, d);
+//         return;
+//     }
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1;
+//     if(x <= mid) update(x, ls, pl, mid, d);
+//     if(x > mid) update(x, rs, mid + 1, pr, d);
+//     push_up(p);
+// }
+// ll query(ll L, ll R, ll p, ll pl, ll pr)
+// {
+//     if(L <= pl && R >= pr)
+//         return tree[p];
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1, res = 0;
+//     if(L <= mid) res += query(L, R, ls, pl, mid);
+//     if(R > mid) res += query(L, R, rs, mid + 1, pr);
+//     return res;
+// }
+// int main()
+// {
+//     untie();
+//     int T;
+//     cin >> T;
+//     for(int i = 1; i <= T; i++)
+//     {
+//         printf("Case %d:\n", i);
+//         int n;
+//         cin >> n;
+//         build(1, 1, n);
+//         while(cin >> op && op != "End")
+//         {
+//             ll x, y;
+//             cin >> x >> y;
+//             if(op == "Add") update(x, 1, 1, n, y);
+//             else if(op == "Sub") update(x, 1, 1, n, -y);
+//             else printf("%d\n", query(x, y, 1, 1, n));
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+//10.I Hate It	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
