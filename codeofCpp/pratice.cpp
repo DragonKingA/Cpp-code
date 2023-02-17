@@ -11700,21 +11700,346 @@ push_up():
 
 
 //10.I Hate It
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// using namespace std;
+// #define ll int
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define lc ls, pl, mid
+// #define rc rs, mid + 1, pr
+// const ll N = 2e5 + 10;
+// ll tree[N << 2];
+// ll n, m;
+// void push_up(ll p){ tree[p] = max(tree[ls], tree[rs]);}
+// void build(ll p, ll pl, ll pr)
+// {
+//     tree[p] = 0;
+//     if(pl == pr)
+//     {
+//         scanf("%d", &tree[p]);
+//         return ;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     build(lc);
+//     build(rc);
+//     push_up(p);
+// }
+// void update(ll x, ll p, ll pl, ll pr, ll d)
+// {
+//     if(pl == pr)
+//     {
+//         tree[p] = d;
+//         return;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     if(x <= mid) update(x, lc, d);
+//     if(x > mid) update(x, rc, d);
+//     push_up(p);
+// }
+// ll query(ll L, ll R, ll p, ll pl, ll pr)
+// {
+//     if(L <= pl && R >= pr) return tree[p];
+//     ll mid = (pl + pr) >> 1, res = 0;
+//     if(L <= mid) res = max(res, query(L, R, lc));
+//     if(R > mid) res = max(res, query(L, R, rc));
+//     return res;
+// }
+// int main()
+// {
+//     while(~scanf("%d%d", &n, &m))
+//     {
+//         build(1, 1, n);
+//         while(m--)
+//         {
+//             char op;
+//             ll x, y;
+//             getchar();
+//             scanf("%c%d%d", &op, &x, &y);
+//             if(op == 'U') update(x, 1, 1, n, y);
+//             else printf("%d\n", query(x, y, 1, 1, n));
+//         }
+//     }
+//     return 0;
+// }
 
 
 
+//11.A Simple Problem with Integers(区间和)
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// using namespace std;
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define ll long long
+// #define lc ls, pl, mid
+// #define rc rs, mid + 1, pr
+// const int N = 1e5 + 10;
+// struct node{
+//     ll sum;
+//     ll tag;
+// }tree[N << 2];
+// void addtag(ll p, ll pl, ll pr, ll d)
+// {
+//     tree[p].tag += d;
+//     tree[p].sum += d * (pr - pl + 1);
+// }
+// void push_up(ll p)
+// {
+//     tree[p].sum = tree[ls].sum + tree[rs].sum;
+// }
+// void push_down(ll p, ll pl, ll pr)
+// {
+//     if(tree[p].tag != 0)
+//     {
+//         ll mid = (pl + pr) >> 1;
+//         addtag(lc, tree[p].tag);
+//         addtag(rc, tree[p].tag);
+//         tree[p].tag = 0;
+//     }
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     tree[p].tag = 0;
+//     if(pl == pr)
+//     {
+//         scanf("%lld", &tree[p].sum);
+//         return;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     build(lc);
+//     build(rc);
+//     push_up(p);
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         addtag(p, pl, pr, d);
+//         return;
+//     }
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) update(L, R, lc, d);
+//     if(R > mid) update(L, R, rc, d);
+//     push_up(p);
+// }
+// ll query(ll L, ll R, ll p, ll pl, ll pr)
+// {
+//     if(L <= pl && R >= pr)
+//         return tree[p].sum;
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1, res = 0;
+//     if(L <= mid) res += query(L, R, lc);
+//     if(R > mid) res += query(L, R, rc);
+//     return res;
+// }
+// int main()
+// {
+//     int n, m;
+//     scanf("%d%d", &n, &m);
+//     build(1, 1, n);
+//     while(m--)
+//     {
+//         char op;
+//         ll a, b, c;
+//         getchar();
+//         scanf("%c%lld%lld", &op, &a, &b);
+//         if(op == 'Q') printf("%lld\n", query(a, b, 1, 1, n));
+//         else
+//         {
+//             scanf("%lld", &c);
+//             update(a, b, 1, 1, n, c);
+//         }
+//     }
+//     return 0;
+// }
 
 
 
+//12.Balanced Lineup(区间当前最值)
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// using namespace std;
+// #define ll int
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define lc ls, pl, mid
+// #define rc rs, mid + 1, pr
+// const ll N = 5e4 + 5, INF = 1e6;
+// struct node{
+//     ll min_, max_;
+//     node(ll mmin = 0, ll mmax = 0) {min_ = mmin, max_ = mmax;}
+// }tree[N << 2];
+// ll min_res = INF, max_res = 0;
+// void push_up(ll p)
+// {
+//     tree[p].max_ = max(tree[ls].max_, tree[rs].max_);
+//     tree[p].min_ = min(tree[ls].min_, tree[rs].min_);
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     tree[p] = node(INF, 0);
+//     if(pl == pr)
+//     {
+//         ll t;
+//         scanf("%d", &t);
+//         tree[p] = node(t, t);
+//         return;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     build(lc);
+//     build(rc);
+//     push_up(p);
+// }
+// void query(ll L, ll R, ll p, ll pl, ll pr)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         max_res = max(max_res, tree[p].max_);
+//         min_res = min(min_res, tree[p].min_);
+//         return;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) query(L, R, lc);
+//     if(R > mid) query(L, R, rc);
+//     return;
+// }
+// int main()
+// {
+//     int n, q;
+//     scanf("%d%d", &n, &q);
+//     build(1, 1, n);
+//     while(q--)
+//     {
+//         min_res = INF, max_res = 0;
+//         ll l, r;
+//         scanf("%d%d", &l, &r);
+//         query(l, r, 1, 1, n);
+//         printf("%d\n", max_res - min_res);
+//     }
+//     return 0;
+// }
+//同时查询最大最小值的写法
+// PII query(int now, int L, int R) {
+//     // 找到了要的区间返回这个区间的最大值和最小值，用来和后面的区间进行对比 
+//     if (L <= root[now].l && root[now].r <= R) return PII(root[now].hei, root[now].low);
+//     // 规定first为最大值，second为最小值，那么没找到就返回一个极端值就行了 
+//     if (L > root[now].r || R < root[now].l) return PII(-1e9, 1e9);
+//     // 不用pushdown
+//     // 找到左右子树的最大值和最小值对，然后对比 
+//     PII nhei = query(now << 1, L, R);
+//     PII nlow = query(now << 1 | 1, L ,R); 
+//     // 对比左区间的最大值和右区间的最大值，左区间的最小值和右区间的最小值... 
+//     return PII(max(nhei.first, nlow.first), min(nhei.second, nlow.second));
+// }
 
 
 
+//13.Just a Hook(简单置值 与 区间和)
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// #define ll int
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define lc ls, pl, mid
+// #define rc rs, mid + 1, pr
+// const ll N = 1e5 + 10;
+// long long tree[N << 2];
+// ll tag[N << 2];
+// void addtag(ll p, ll pl, ll pr, long long d)
+// {
+//     tag[p] = d;
+//     tree[p] = d * (pr - pl + 1);
+// }
+// void push_up(ll p)
+// {
+//     tree[p] = tree[ls] + tree[rs];
+// }
+// void push_down(ll p, ll pl, ll pr)
+// {
+//     if(tag[p])
+//     {
+//         ll mid = (pl + pr) >> 1;
+//         addtag(lc, tag[p]);
+//         addtag(rc, tag[p]);
+//         tag[p] = 0;
+//     }
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     tag[p] = 0, tree[p] = 0;
+//     if(pl == pr)
+//     {
+//         tree[p] = 1;
+//         return ;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     build(lc);
+//     build(rc);
+//     push_up(p);
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, long long d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         addtag(p, pl, pr, d);
+//         return;
+//     }
+//     push_down(p, pl, pr);
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) update(L, R, lc, d);
+//     if(R > mid) update(L, R, rc, d);
+//     push_up(p);
+// }
+// int main()
+// {
+//     int T;
+//     scanf("%d", &T);
+//     for(int i = 1; i <= T; ++i)
+//     {
+//         int n, q;
+//         scanf("%d%d", &n, &q);
+//         build(1, 1, n);
+//         while(q--)
+//         {
+//             ll x, y;
+//             long long z;
+//             scanf("%d%d%lld", &x, &y, &z);
+//             update(x, y, 1, 1, n, z);
+//         }
+//         printf("Case %d: The total value of the hook is %lld.\n", i, tree[1]);
+//     }
+//     return 0;
+// }
 
 
 
+//14.Mayor's posters
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+using namespace std;
 
+int n;
+int main()
+{
+    int T;
+    scanf("%d", &T);
+    while(T--)
+    {
+        scanf("%d", &n);
 
-
+        
+    }
+    return 0;
+}
 
 
 
