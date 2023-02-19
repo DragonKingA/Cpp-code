@@ -12022,24 +12022,24 @@ push_up():
 
 
 //14.Mayor's posters
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-using namespace std;
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
 
-int n;
-int main()
-{
-    int T;
-    scanf("%d", &T);
-    while(T--)
-    {
-        scanf("%d", &n);
+// int n;
+// int main()
+// {
+//     int T;
+//     scanf("%d", &T);
+//     while(T--)
+//     {
+//         scanf("%d", &n);
 
         
-    }
-    return 0;
-}
+//     }
+//     return 0;
+// }
 
 
 
@@ -12293,8 +12293,9 @@ int main()
 
 
 
-
-
+//3.线段树 1
+//树状数组写法(差分)，重点在于开第二个数组 tree2[i]=tree1[i]*(i-1)
+//https://www.luogu.com.cn/problem/solution/P3372
 
 
 
