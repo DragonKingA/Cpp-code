@@ -7646,7 +7646,7 @@ O(log2n * n) = O(nlogn)
 // #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
 // #define x first
 // #define y second
-// const int N = 15e4 + 5, M = 3e6 + 5;
+// const int N = 15e4 + 5, M = 3e3 + 5;
 // pair<int, int> arr[N];
 // int n, last = 0, dp[M];
 // int main()
