@@ -5084,9 +5084,8 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 //2 4 1 2 2 5 1
 //10
 //3 2 2 2
-//3 + 2 + 1 =6
-//3 2 1
-//2
+//3 + 2 + 1 = 6
+
 
 
 
@@ -5821,13 +5820,12 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 //     ll n, sum = 1;
 //     cin >> n;
 //     ll l = 0, r = 1;
-//     while(l * l <= n)
+//     while(l * l <= n && l != r)
 //     {
 //         while(l <= r && sum < n) ++r, sum += r * r;
 //         if(sum == n) v.push_back(pii(r, r - l));
 //         l++;
 //         sum -= l * l;
-//         if(l == r) break;
 //     }
 //     int len = v.size();
 //     cout << len << '\n';
@@ -5857,7 +5855,7 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 //         scanf("%d%d", &n, &k);
 //         for(int i = 0; i < n; i++) scanf("%d", &arr[i]);
 //         std::sort(arr, arr + n);
-//         int l = 0, r = 0;
+//         int l = 0, r = 1;
 //         while(r < n)
 //         {
 //             if(arr[r] - arr[l] <= k)
