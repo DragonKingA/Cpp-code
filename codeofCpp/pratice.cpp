@@ -4492,6 +4492,7 @@ int main() {
 */
 
 
+
 //6. Monthly Expense (二分 + 贪心)
 // #include <cstdio>
 // #include <algorithm>
@@ -4537,10 +4538,10 @@ int main() {
 
 
 //*7. Last Rook(交互式二分)
-//问题转换为两个子问题
+// 问题转换为两个子问题
 // ·哪一列不包含 Rook？
 // ·哪一行不包含 Rook？
-//分别查找二分答案即可，最后将共同指向一个坐标
+// 分别查找二分答案即可，最后将共同指向一个坐标
 // #include <cstdio>
 // int IO(int a, int b, int c, int d)
 // {
@@ -6115,6 +6116,20 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 
 /*九. 分治*/
 /*
+采用分治法解决的问题一般具有的特征如下：
+1.问题的规模缩小到一定的规模就可以较容易地解决。
+2.问题可以分解为若干个规模较小的模式相同的子问题，即该问题具有最优子结构性质。
+3.合并问题分解出的子问题的解可以得到问题的解。
+4.问题所分解出的各个子问题之间是独立的，即子问题之间不存在公共的子问题。
+
+设计步骤：
+1.划分步：把输入的问题划分为k个子问题，并尽量使这k个子问题的规模大致相同。
+2.治理步：当问题的规模大于某个预定的阈值n0时，治理步由k个递归调用组成。
+3.组合步：组合步把各个子问题的解组合起来，它对分治算法的实际性能至关重要，算法的有效性很大地依赖于组合步的实现。
+
+分治法的关键是算法的组合步。究竟应该怎样合并，目前没有统一的模式，因此需要对具体问题进行具体分析，以得出比较好的合并算法。
+*/
+/*
 快速幂
 郭的板子：
 int PowMod(int a, int n, int mod)
@@ -6342,7 +6357,7 @@ O(log2n * n) = O(nlogn)
 
 
 //*4.快速排序
-//https://blog.csdn.net/weixin_44915226/article/details/119535259?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522167176851016800222868521%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=167176851016800222868521&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-5-119535259-null-null.142^v68^control,201^v4^add_ask,213^v2^t3_control1&utm_term=c%2B%2B%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F&spm=1018.2226.3001.4187
+// https://blog.csdn.net/weixin_44915226/article/details/119535259?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522167176851016800222868521%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=167176851016800222868521&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-5-119535259-null-null.142^v68^control,201^v4^add_ask,213^v2^t3_control1&utm_term=c%2B%2B%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F&spm=1018.2226.3001.4187
 // #include <cstdio>
 // #include <algorithm>
 // int arr[100000], n;
@@ -6412,6 +6427,7 @@ O(log2n * n) = O(nlogn)
 
 
 //*5.逆序对(归并排序)
+//归并操作指的是将两个顺序序列合并成一个顺序序列的方法。
 // #include <cstdio>
 // const int N = 5e5 + 5;
 // int n, arr[N], tmp[N];
