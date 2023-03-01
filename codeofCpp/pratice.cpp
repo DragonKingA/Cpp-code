@@ -12037,26 +12037,47 @@ push_up():
 
 
 
-//14.Mayor's posters
-// #include <cstdio>
-// #include <iostream>
-// #include <algorithm>
-// using namespace std;
+//14.Mayor's posters （一维染色问题）
+//给一个无限长广告牌，给你n个广告和其放置的位置，按照输入数据的顺序放置前后，问能看见几个广告（注意，看见一部分也算）。
+//题意转换：设每个广告都是独立的一种颜色，放置广告相当于给一个区间染色，问某个区间有多少种颜色。
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define ll long long
+#define ls (p << 1)
+#define rs (p << 1 | 1)
+#define lc ls, pl, mid
+#define rc rs, mid + 1, pr
+const ll N = 1e4 + 5;
+ll tree[N << 2], tag[N << 2];
+void pushdown(ll p, ll pl, ll pr)
+{
 
-// int n;
-// int main()
-// {
-//     int T;
-//     scanf("%d", &T);
-//     while(T--)
-//     {
-//         scanf("%d", &n);
+}
+void build(ll p, ll pl, ll pr)
+{
+    if(pl == pr)
+    {
+        
+    }
+}
+int n;
+int main()
+{
+    int T;
+    scanf("%d", &T);
+    while(T--)
+    {
+        scanf("%d", &n);
 
         
-//     }
-//     return 0;
-// }
+    }
+    return 0;
+}
 
+
+//一维、二维染色问题讲解：https://blog.csdn.net/qq_45748404/article/details/119489831?ops_request_misc=&request_id=&biz_id=102&utm_term=Mayor%27s%20posters&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-3-119489831.142^v73^pc_search_v2,201^v4^add_ask,239^v2^insert_chatgpt&spm=1018.2226.3001.4187
 
 
 
