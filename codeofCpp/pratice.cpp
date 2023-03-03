@@ -12037,58 +12037,187 @@ push_up():
 
 
 
-//14.Mayor's posters （一维染色问题）
+//*14.Mayor's posters （一维染色问题 + 特殊离散化处理）
 //给一个无限长广告牌，给你n个广告和其放置的位置，按照输入数据的顺序放置前后，问能看见几个广告（注意，看见一部分也算）。
 //题意转换：设每个广告都是独立的一种颜色，放置广告相当于给一个区间染色，问某个区间有多少种颜色。
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-using namespace std;
-#define ll long long
-#define ls (p << 1)
-#define rs (p << 1 | 1)
-#define lc ls, pl, mid
-#define rc rs, mid + 1, pr
-const ll N = 1e4 + 5;
-ll tree[N << 2], tag[N << 2];
-void pushdown(ll p, ll pl, ll pr)
-{
-
-}
-void build(ll p, ll pl, ll pr)
-{
-    if(pl == pr)
-    {
-        
-    }
-}
-int n;
-int main()
-{
-    int T;
-    scanf("%d", &T);
-    while(T--)
-    {
-        scanf("%d", &n);
-
-        
-    }
-    return 0;
-}
-
-
+//由于 l, r <= 1e7，需要离散化降低复杂度，并且l和r两两离散，为保证不交叉区间的非连续性，需要离散时间隔一个数
+//如输入区间[1, 100],[1, 30],[50, 100]，其答案为3，若连续离散则得到[1, 4],[1, 2],[3, 4]导致答案为2，因此应该将离散数字两两间隔一个数
+//即[1, 7],[1, 3],[5, 7]，才能得到答案为3，
+//unique() 的返回值是一个地址指向去重后序列（这个序列不含有重复数值）的 末尾 的 下一个元素
+//v.erase(unique(v.begin(), v.end()), v.end()) 可以去掉容器中后面重复的元素
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <vector>
+// #include <set>
+// using namespace std;
+// #define ll int
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define lc ls, pl, mid
+// #define rc rs, mid + 1, pr
+// const ll N = 1e6 + 5;
+// vector<ll> v;
+// set<ll> st;
+// pair<ll, ll> que[N];
+// ll tree[N << 2], n ,T;
+// void pushdown(ll p)
+// {
+//     if(tree[p])
+//     {
+//         tree[ls] = tree[rs] = tree[p];
+//         tree[p] = 0;
+//     }
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         tree[p] = d;
+//         return;
+//     }
+//     pushdown(p);
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) update(L, R, lc, d);
+//     if(R > mid) update(L, R, rc, d);
+// }
+// void query(ll L, ll R, ll p, ll pl, ll pr)//重点
+// {
+//     if(tree[p]) //区间p有颜色就记录
+//     {
+//         st.insert(tree[p]);
+//         return;//区间p有颜色，说明该区间下都为这个颜色，故不用再搜索
+//     }
+//     if(pl == pr) return;
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) query(L, R, lc);
+//     if(R > mid) query(L, R, rc);
+// }
+// int main()
+// {
+//     scanf("%d", &T);
+//     while(T--)
+//     {
+//         v.clear();
+//         st.clear();
+//         memset(tree, 0, sizeof(tree));
+//         scanf("%d", &n);
+//         for(int i = 1; i <= n; i++)
+//         {
+//             ll l, r;
+//             scanf("%d%d", &l, &r);
+//             que[i] = make_pair(l, r);
+//             v.push_back(l);
+//             v.push_back(r);
+//         }
+//         sort(v.begin(), v.end());
+//         v.erase(unique(v.begin(), v.end()), v.end());
+//         ll len = v.size();
+//         for(int i = 1; i < len; i++)
+//             if(v[i] - v[i - 1] > 1) // 即两区间不连续
+//                 v.push_back(v[i - 1] + 1);
+//         sort(v.begin(), v.end());
+//         len = v.size();
+//         for(int i = 1; i <= n; i++)
+//         {
+//             ll L = lower_bound(v.begin(), v.end(), que[i].first) - v.begin() + 1;//记得要使其从1开始，都得加1。
+//             ll R = lower_bound(v.begin(), v.end(), que[i].second) - v.begin() + 1;
+//             update(L, R, 1, 1, len, i);
+//         }
+//         query(1, len, 1, 1, len);
+//         printf("%d\n", st.size());
+//     }
+//     return 0;
+// }
 //一维、二维染色问题讲解：https://blog.csdn.net/qq_45748404/article/details/119489831?ops_request_misc=&request_id=&biz_id=102&utm_term=Mayor%27s%20posters&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-3-119489831.142^v73^pc_search_v2,201^v4^add_ask,239^v2^insert_chatgpt&spm=1018.2226.3001.4187
 
 
 
+//*15.Count the Colors（一维染色问题）
+//题意：在长度为n的线段上，每次操作给其中一个区间染上颜色c，可以覆盖前面的颜色，求最后整条线段上能看到多少种颜色。
+//l, r <= 8e3，无需离散化
+//本题重点在于如何联系连续区间
+// #include <cstdio>
+// #include <algorithm>
+// #include <cstring>
+// #include <set>
+// #include <map>
+// using namespace std;
+// #define ll int
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define lc ls, pl, mid
+// #define rc rs, mid + 1, pr
+// const ll N = 8e3 + 5;
+// ll tree[N << 2];
+// ll last = 0;//重点：记录上次碰到的颜色或者说上次碰到非颜色区间，方便排除连续区间
+// map<ll, ll> ans;
+// void pushdown(ll p)
+// {
+//     if(tree[p])
+//     {
+//         tree[ls] = tree[rs] = tree[p];
+//         tree[p] = 0;
+//     }
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         tree[p] = d;
+//         return;
+//     }
+//     pushdown(p);
+//     ll mid = (pl + pr) >> 1;
+//     if(L <= mid) update(L, R, lc, d);
+//     if(R > mid) update(L, R, rc, d);
+// }
+// void query(ll p, ll pl, ll pr)
+// {
+//     if(tree[p] != last) //防止重复计数
+//         ans[tree[p]]++;
+//     if(pl == pr || tree[p]) //遇到叶子结点或有颜色印记时存
+//     {
+//         last = tree[p];
+//         return;
+//     }
+//     pushdown(p);
+//     ll mid = (pl + pr) >> 1;
+//     query(lc);
+//     query(rc);
+// }
+// int main()
+// {
+//     int n;
+//     while(~scanf("%d", &n))
+//     {
+//         set<ll> st;
+//         memset(tree, 0, sizeof(tree));
+//         ans.clear();
+//         for(int i = 1; i <= n; i++)
+//         {
+//             ll l, r, c;
+//             scanf("%d%d%d", &l, &r, &c);
+//             update(l + 1, r, 1, 1, N, ++c);//区间端点和颜色编号都从1开始
+//             st.insert(c);
+//         }
+//         query(1, 1, N);
+//         for(auto x : st)
+//             if(ans[x])
+//                 printf("%d %d\n", x - 1, ans[x]);
+//         printf("\n");
+//     }
+//     return 0;
+// }
 
-
-
-
-
-
-
-
+//判断连续区间
+// ++ st[query(0)];
+// for (int i = 1, j = 0; i < nums.size(); ++ i){
+//     int ci = query(i), cj = query(j);
+//     // printf("%d ", ci);
+//     if (ci != cj) ++ st[ci], j = i;
+// }
 
 
 
