@@ -12040,7 +12040,7 @@ push_up():
 //*14.Mayor's posters （一维染色问题 + 特殊离散化处理）
 //给一个无限长广告牌，给你n个广告和其放置的位置，按照输入数据的顺序放置前后，问能看见几个广告（注意，看见一部分也算）。
 //题意转换：设每个广告都是独立的一种颜色，放置广告相当于给一个区间染色，问某个区间有多少种颜色。
-//由于 l, r <= 1e7，需要离散化降低复杂度，并且l和r两两离散，为保证不交叉区间的非连续性，需要离散时间隔一个数
+//由于 l, r <= 1e7，需要离散化降低复杂度，并且l和r两两离散，为保证不交叉区间的非连续性，需要离散时 间隔一个数
 //如输入区间[1, 100],[1, 30],[50, 100]，其答案为3，若连续离散则得到[1, 4],[1, 2],[3, 4]导致答案为2，因此应该将离散数字两两间隔一个数
 //即[1, 7],[1, 3],[5, 7]，才能得到答案为3，
 //unique() 的返回值是一个地址指向去重后序列（这个序列不含有重复数值）的 末尾 的 下一个元素
@@ -12137,8 +12137,13 @@ push_up():
 //*15.Count the Colors（一维染色问题）
 //题意：在长度为n的线段上，每次操作给其中一个区间染上颜色c，可以覆盖前面的颜色，求最后整条线段上能看到多少种颜色。
 //l, r <= 8e3，无需离散化
-//本题重点在于如何联系连续区间
+//本题重点在于如何联系连续区间(注意区间[1,3][3,5]连续可看作[1,5]，而[1,2][3,4]不连续，因为被[2,3]分开了)。
+//搞明白涂色的是区间而不是点，染色区间[a,b]并不是把a～b的所有点都染成c，故区间不能取闭区间。
+//防止不连续区间判断为连续，需要将一侧的端点收束（左端点+1 或 右端点-1）或直接两端点值乘2，来使得连续数字间有中间值，因为连续数字的两个区间其实不连续，
+//这里可以选择用 左开右闭 区间，设染色区间[l, r]即染色[l + 1, r]上的每个点，对于一个单位区间[0, 1]，将点1染色等同于将[0, 1]染色，
+//即染色某个点，即染色该点的前一段单位区间。
 // #include <cstdio>
+// #include <iostream>
 // #include <algorithm>
 // #include <cstring>
 // #include <set>
@@ -12147,12 +12152,8 @@ push_up():
 // #define ll int
 // #define ls (p << 1)
 // #define rs (p << 1 | 1)
-// #define lc ls, pl, mid
-// #define rc rs, mid + 1, pr
 // const ll N = 8e3 + 5;
-// ll tree[N << 2];
-// ll last = 0;//重点：记录上次碰到的颜色或者说上次碰到非颜色区间，方便排除连续区间
-// map<ll, ll> ans;
+// ll tree[N << 2], ans[N], last = 0;//重点：记录上次碰到的颜色或者说上次碰到非颜色区间，方便排除连续区间
 // void pushdown(ll p)
 // {
 //     if(tree[p])
@@ -12163,6 +12164,7 @@ push_up():
 // }
 // void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
 // {
+//     if(tree[p] == d) return;//优化，若已经染成d色，则退出
 //     if(L <= pl && R >= pr)
 //     {
 //         tree[p] = d;
@@ -12170,54 +12172,148 @@ push_up():
 //     }
 //     pushdown(p);
 //     ll mid = (pl + pr) >> 1;
-//     if(L <= mid) update(L, R, lc, d);
-//     if(R > mid) update(L, R, rc, d);
+//     if(L <= mid) update(L, R, ls, pl, mid, d);
+//     if(R > mid) update(L, R, rs, mid + 1, pr, d);
 // }
-// void query(ll p, ll pl, ll pr)
+// void query(ll p, ll pl, ll pr)//搜索每个线段树区间
 // {
-//     if(tree[p] != last) //防止重复计数
-//         ans[tree[p]]++;
-//     if(pl == pr || tree[p]) //遇到叶子结点或有颜色印记时存
+//     if(tree[p])//有颜色
 //     {
-//         last = tree[p];
+//         if(tree[p] != last) 
+//         {
+//             ans[tree[p]]++;//非连续区间才计数
+//             last = tree[p];//更新last
+//         }
 //         return;
 //     }
-//     pushdown(p);
+//     if(pl == pr)//到了叶子结点都还没颜色，说明颜色断片，已经不连续了，那就初始化last
+//     {
+//         last = 0;
+//         return;
+//     }
 //     ll mid = (pl + pr) >> 1;
-//     query(lc);
-//     query(rc);
+//     query(ls, pl, mid);
+//     query(rs, mid + 1, pr);
 // }
 // int main()
 // {
 //     int n;
 //     while(~scanf("%d", &n))
 //     {
-//         set<ll> st;
+//         last = 0;
+//         memset(ans, 0, sizeof(ans));
 //         memset(tree, 0, sizeof(tree));
-//         ans.clear();
 //         for(int i = 1; i <= n; i++)
 //         {
 //             ll l, r, c;
 //             scanf("%d%d%d", &l, &r, &c);
-//             update(l + 1, r, 1, 1, N, ++c);//区间端点和颜色编号都从1开始
-//             st.insert(c);
+//             update(l + 1, r, 1, 1, N, c + 1);
 //         }
 //         query(1, 1, N);
-//         for(auto x : st)
-//             if(ans[x])
-//                 printf("%d %d\n", x - 1, ans[x]);
+//         for(int i = 1; i < N; i++)
+//             if(ans[i]) printf("%d %d\n", i - 1, ans[i]);
 //         printf("\n");
 //     }
 //     return 0;
 // }
 
-//判断连续区间
-// ++ st[query(0)];
-// for (int i = 1, j = 0; i < nums.size(); ++ i){
-//     int ci = query(i), cj = query(j);
-//     // printf("%d ", ci);
-//     if (ci != cj) ++ st[ci], j = i;
+
+
+//16.Can you answer these queries? （题意转换 + update()的优化）
+//注意题目并不保证 X <= Y，题意每次原值x减去平方根值d = sqrt(x)，而d要四舍五入，则原值x即向下取整的平方根值，得到每次修改 x = x - round(d) = ceil(d)
+//不优化会TLE:当区间[l,r]上每个点都是1时，取平方根值还是1，没有更新的必要
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <cmath>
+// using namespace std;
+// #define ll long long
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define mid ((pl + pr) >> 1)
+// #define lc ls, pl, mid
+// #define rc rs, mid + 1, pr
+// const ll N = 1e5 + 5;
+// ll n, m, tree[N << 2];
+// inline void push_up(ll p) { tree[p] = tree[ls] + tree[rs];}
+// void build(ll p, ll pl, ll pr)
+// {
+//     tree[p] = 0;
+//     if(pl == pr)
+//     {
+//         scanf("%lld", &tree[p]);
+//         return;
+//     }
+//     build(lc);
+//     build(rc);
+//     push_up(p);
 // }
+// void update(ll L, ll R, ll p, ll pl, ll pr)//单点修改
+// {
+//     if(tree[p] == pr - pl + 1) return;//*优化：当这个区间每个点都是1时，没有更新的必要
+//     if(pl == pr)
+//     {
+//         tree[p] = (ll)sqrt(tree[p]);
+//         return;
+//     }
+//     if(L <= mid) update(L, R, lc);
+//     if(R > mid) update(L, R, rc);
+//     push_up(p);
+// }
+// ll query(ll L, ll R, ll p, ll pl, ll pr)
+// {
+//     if(L <= pl && R >= pr) return tree[p];
+//     if(R <= mid) return query(L, R, lc);
+//     else if(L > mid) return query(L, R, rc);
+//     else return  query(L, R, lc) + query(L, R, rc);
+// }
+// int main()
+// {
+//     int _ = 1;
+//     while(~scanf("%lld", &n))
+//     {
+//         printf("Case #%d:\n", _++);
+//         build(1, 1, n);
+//         scanf("%lld", &m);
+//         while(m--)
+//         {
+//             ll t, x, y;
+//             scanf("%lld%lld%lld", &t, &x, &y);
+//             if(x > y) swap(x, y);
+//             if(t) printf("%lld\n", query(x, y, 1, 1, n));
+//             else update(x, y, 1, 1, n);
+//         }
+//         printf("\n");
+//     }
+//     return 0;
+// }
+
+
+
+//17.Tunnel Warfare
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

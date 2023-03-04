@@ -152,6 +152,82 @@ int main()
 */
 
 
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <string>
+// #include <cctype>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+
+// int main()
+// {
+//     untie();
+//     string s;
+//     cin >> s;
+//     for(auto &ch : s)
+//     {
+//         ch -= 32;
+//     }
+//     cout << s;
+//     return 0;
+// }
+
+
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <string>
+// #include <cctype>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// pair<int, int> arr[105];
+// int main()
+// {
+//     untie();
+//     int op, x, q, n;
+//     cin >> n >> q;
+//     while(q--)
+//     {
+//         cin >> op >> x;
+//         if(op == 1) arr[x].first++;
+//         else if(op == 2) arr[x].second++;
+//         else
+//         {
+//             if(arr[x].first >= 2 || arr[x].second >= 1) cout << "Yes\n";
+//             else cout << "No\n";
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+typedef int ll;
+long long cnt = 0;
+const ll N = 2e5 + 5;
+ll n;
+
+int main()
+{
+    untie();
+    cin >> n;
+    for(int i = 1; i <= n; i++)
+    {
+
+    }
+    
+    cout << cnt;
+    return 0;
+}
 
 
 
@@ -159,10 +235,56 @@ int main()
 
 
 
-
-
-
-
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 2e5 + 5;
+// struct component{
+//     int edge, node;
+// }cnt[N];//每个连通块
+// int n, m;
+// int ds[N];
+// void init_set()
+// { 
+//     for(int i = 1; i <= n; i++) 
+//     {
+//         ds[i] = i;
+//         cnt[i].edge = 0;
+//         cnt[i].node = 1;
+//     }
+// }
+// int find_set(int x){ return x == ds[x] ? x : (ds[x] = find_set(ds[x]));}
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     init_set();
+//     for(int i = 1; i <= m; i++)
+//     {
+//         int u, v;
+//         cin >> u >> v;
+//         int uu = find_set(u), vv = find_set(v);
+//         if(uu == vv) cnt[uu].edge++;
+//         else
+//         {
+//             ds[vv] = uu;
+//             cnt[uu].edge += cnt[vv].edge + 1;
+//             cnt[uu].node += cnt[vv].node;
+//         }
+//     }
+//     for(int i = 1; i <= n; i++)
+//     {
+//         int x = find_set(i);
+//         if(cnt[x].edge != cnt[x].node)
+//         {
+//             cout << "No";
+//             return 0;
+//         }
+//     }
+//     cout << "Yes";
+//     return 0;
+// }
 
 
 
