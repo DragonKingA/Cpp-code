@@ -151,7 +151,8 @@ int main()
 
 */
 
-
+//ABC 292
+//A CAPS LOCK (签到题)
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
@@ -173,7 +174,7 @@ int main()
 //     return 0;
 // }
 
-
+//B Yellow and Red Card (签到题)
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
@@ -203,38 +204,59 @@ int main()
 
 
 
+//C Four Variables
+//给(A, B, C, D)，满足 A*B + C*D = n，即 x + y = n，先计算每个数的因数对的个数存在arr[]中，如 x 有多少个(A, B)使得 A*B = x，
+//这样就能知道每对(x, y)能产生多少(A, B, C, D)方案，然后枚举x (y = n - x)，计数即可。
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// typedef long long ll;
+// const int N = 2e5 + 5;
+// ll cnt = 0;
+// ll arr[N] = {1};
+// int n;
+// // void init() //149ms
+// // {
+// //     for(int i = 1; i <= n; i++)
+// //     {
+// //         ll sum = 1, tp = 1;
+// //         for(int j = 2; j * j <= i; j++)
+// //         {
+// //             if(i % j == 0)
+// //             {
+// //                 ++sum;
+// //             }
+// //             tp = j;
+// //         }
+// //         arr[i] = 2 * sum - (tp * tp == i);
+// //     }
+// // }
+// //更好的写法 //12ms
+// void init()
+// {
+//     for(int i = 1; i < n; i++)//枚举两个因数
+//         for(int j = 1; i * j <= n; j++)
+//             arr[i * j]++;//这个乘积组合种数加1
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     init();
+//     for(int x = 1; x < n; x++) cnt += arr[x] * arr[n - x];
+//     cout << cnt;
+//     return 0;
+// }
 
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-#include <string>
-
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-typedef int ll;
-long long cnt = 0;
-const ll N = 2e5 + 5;
-ll n;
-
-int main()
-{
-    untie();
-    cin >> n;
-    for(int i = 1; i <= n; i++)
-    {
-
-    }
-    
-    cout << cnt;
-    return 0;
-}
 
 
 
 
 
-
-
+//D Unicyclic Components 简单图论
+//问图中每个连通块是否都满足该块内顶点个数与边个数相等
 // #include <iostream>
 // #include <algorithm>
 // using namespace std;
@@ -285,6 +307,157 @@ int main()
 //     cout << "Yes";
 //     return 0;
 // }
+
+
+
+// E Transitivity
+//本题题意理解起来较麻烦
+//给一个有向图，给一个目标图，该目标图的每个点u满足，u与其在原图中所能到达的所有点v都要有直连边
+//bfs遍历每个点u作为起点，连通路径上的其他所有点都要与u建边，计数cnt++，最后减去已有边数就是要操作的次数
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// #include <queue>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 2e3 + 5;
+// int n, m, cnt = 0;
+// bool vis[N];
+// vector<int> G[N];
+// void bfs(int s)
+// {
+//     memset(vis, 0, sizeof(vis));
+//     queue<int> q;
+//     q.push(s);
+//     vis[s] = 1;
+//     while(q.size())
+//     {
+//         int u = q.front();
+//         q.pop();
+//         for(int i = 0; i < G[u].size(); i++)
+//         {
+//             int v = G[u][i];
+//             if(!vis[v])
+//             {
+//                 vis[v] = 1;
+//                 ++cnt;
+//                 q.push(v);
+//             }
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     for(int i = 0; i < m; i++)
+//     {
+//         int u, v;
+//         cin >> u >> v;
+//         G[u].push_back(v);
+//     }
+//     for(int i = 1; i <= n; i++) bfs(i);
+//     cnt -= m;
+//     cout << cnt;
+//     return 0;
+// }
+
+
+
+//F Regular Triangle Inside a Rectangle (数学几何)
+//设 A >= B
+//我们先假设A远大于B，显然此时以B为高的正三角形边长最大，即 B / cos(pi / 6) = 2 * B / sqrt(3)                         (1)
+//而当A = 12, B = 11此类情况时上述结果大于A，显然不成立，故上述结论不能应用到任意 A > B
+//假设长为A，宽为B的矩形，规定最大正三角形一个顶点在矩形右上角，一个顶点在矩形底长边，而第三个点可能在边上也可能不在边上
+//这样右侧就形成了一个以边B为其中一条直角边、以正三角形边的斜边的一个封闭直角三角形
+//设三角形最近一条边与边B形成角θ，则最近一条边与边A形成角 (pi / 2 - θ - pi / 3) = pi / 6 - θ
+//设最大边为L，得到两个方程 Lcosθ = B， Lcos(pi / 6 - θ) = A，联立得 θ = arctan(2 * A / B - sqrt(3))
+//此时代入 L = B / cosθ                                                                                            (2)
+//最后只要判断结果(1)和结果(2)哪个合理且哪个最大，res1和res2都可能会超过A，也只有一个会超过A，而实际上结果(1)和(2)有且只有一个是合理的，则答案便是两者最小值
+
+//AC
+// #include <iostream>
+// #include <algorithm>
+// #include <cmath>
+// #include <cstdio>
+// using namespace std;
+// int main()
+// {
+//     int a, b;
+//     scanf("%d%d", &a, &b);
+//     if(a < b) swap(a, b);
+//     double res1 = 2.0 * b / sqrt(3.0);
+//     double res2 = 1.0 * b / cos(atan(2.0 * a / b - sqrt(3.0)));
+//     // if(res1 > a) printf("%.20lf\n", res2);
+//     // else printf("%.20lf\n",res1);
+//     // 等同下句
+//     printf("%.20lf\n", min(res1, res2));
+//     return 0;
+// }
+
+//PA    57 pts / 70 pts 
+// #include <iostream>
+// #include <algorithm>
+// #include <cmath>
+// #include <cstdio>
+// using namespace std;
+// const long double MAXL = sqrt(6.0L) - sqrt(2.0L);
+// int main()
+// {
+//     int a, b;
+//     scanf("%d%d", &a, &b);
+//     if(a < b) swap(a, b);
+//     if(a > b) 
+//     {
+//         long double ml = 2.0L * b / sqrt(3.0L);
+//         if(ml > a)  printf("%.20Lf\n", 1.0L * b * MAXL);
+//         else printf("%.20Lf\n", ml);
+//     }
+//     else printf("%.20Lf\n", 1.0L * a * MAXL);
+//     return 0;
+// }
+
+
+
+//*G Count Strictly Increasing Sequences (DP)
+//dp[l][r][k][m]
+#include <iostream>
+#include <algorithm>
+#include <cstdio>
+#include <string>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+typedef int ll;
+const ll mod = 998244353;
+ll n, m;
+string str[50];
+int num[50];
+int main()
+{
+    untie();
+    cin >> n >> m;
+    for(int i = 1; i <= n; i++) cin >> str[i];
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -12291,23 +12291,242 @@ push_up():
 
 
 
-//17.Tunnel Warfare
+//17.Tunnel Warfare (区间合并问题)
+//三种操作：单点修改、求最长连续1的个数 和 撤销上一次单点修改
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define lc ls, pl, mid
+// #define rc rs, mid + 1, pr
+// #define ll int
+// const ll N = 5e4 + 5;
+// ll tree[N << 2], pre[N << 2], suf[N << 2];//线段树维护子节点，pre保存区间前缀最长1的个数，suf保存区间后缀最长1的个数
+// ll history[N];//存在撤回操作，记录村庄被毁的历史
+// void push_up(ll p, ll len)//更新区间p的前缀1和后缀1个数
+// {
+//     //先传承，再判断左右子区间合并情况
+//     pre[p] = pre[ls];
+//     suf[p] = suf[rs];
+//     //如果左子区间均为1，则可以将值合并到右子区间的前缀1和。右子同理。
+//     if(pre[ls] == len - (len >> 1)) pre[p] += pre[rs];
+//     if(suf[rs] == (len >> 1)) suf[p] += suf[ls];
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     if(pl == pr)
+//     {
+//         tree[p] = pre[p] = suf[p] = 1;
+//         return;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     build(lc);
+//     build(rc);
+//     push_up(p, pr - pl + 1);
+// }
+// void update(ll x, ll p, ll pl, ll pr, ll d)
+// {
+//     if(pl == pr) 
+//     {
+//         tree[p] = pre[p] = suf[p] = d;
+//         return;
+//     }
+//     ll mid = (pl + pr) >> 1;
+//     if(x <= mid) update(x, lc, d);
+//     else update(x, rc, d);
+//     push_up(p, pr - pl + 1);
+// }
+// ll query(ll x, ll p, ll pl, ll pr)
+// {
+//     if(pl == pr) return tree[p];
+//     ll mid = (pl + pr) >> 1;
+//     if(x <= mid)//查询点落在左子
+//     {
+//         //若查询点落在左子的后缀最长1区间内，直接返回最长连续1；若不是则继续探查左子
+//         if(x + suf[ls] > mid) return suf[ls] + pre[rs];
+//         else return query(x, lc);
+//     }
+//     else
+//     {
+//         if(pre[rs] >= x - mid) return suf[ls] + pre[rs];
+//         else return query(x, rc);
+//     }
+// }
+// int main()
+// {
+//     ll n, q;
+//     while(~scanf("%d%d", &n, &q))
+//     {
+//         ll ind = 0;
+//         build(1, 1, n);
+//         while(q--)
+//         {
+//             char op[5];
+//             ll x;
+//             scanf("%s", &op);
+//             if(op[0] == 'D')
+//             {
+//                 scanf("%d", &x);
+//                 update(x, 1, 1, n, 0);
+//                 history[++ind] = x;//依次记录破坏操作
+//             }
+//             else if(op[0] == 'Q')
+//             {
+//                 scanf("%d", &x);
+//                 printf("%d\n", query(x, 1, 1, n));
+//             }
+//             else
+//             {
+//                 x = history[ind--];
+//                 update(x, 1, 1, n, 1);
+//             }
+//         }
+//     }
+//     return 0;
+// }
 
 
 
+//18.Hotel (区间合并)
+//区间修改 + 统计连续个数
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define lc ls, pl, mid
+// #define rc rs, mid + 1, pr
+// #define ll int
+// const ll N = 5e4 + 4;
+// struct nd{
+//     ll sum, pre, suf;//统计对象为1，即空位置个数
+//     ll tag;          //为0\1时区间置为0\1
+//     nd(ll s = 0, ll p = 0, ll sf = 0, ll t = 0) { sum = s, pre = p, suf = sf, tag = t;}
+// }tree[N << 2];
+// void addtag(ll p, ll len, ll d)
+// {
+//     ll x = d * len;
+//     tree[p] = nd(x, x, x, d);
+// }
+// void push_up(ll p, ll len)
+// {
+//     tree[p].pre = tree[ls].pre;
+//     tree[p].suf = tree[rs].suf;
+    
+//     if(tree[ls].pre == len - (len >> 1)) tree[p].pre += tree[rs].pre;
+//     if(tree[rs].suf == (len >> 1)) tree[p].suf += tree[ls].suf;
+//     tree[p].sum = max(max(tree[ls].sum, tree[rs].sum), tree[ls].suf + tree[rs].pre);
+// }
+// void push_down(ll p, ll pl, ll pr)
+// {
+//     if(tree[p].tag != -1)
+//     {
+//         ll mid = pl + pr >> 1;
+//         addtag(ls, mid - pl + 1, tree[p].tag);
+//         addtag(rs, pr - mid, tree[p].tag);
+//         tree[p].tag = -1;
+//     }
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     ll len = pr - pl + 1;
+//     tree[p] = nd(len, len, len, -1);
+//     if(pl == pr) return;
+//     ll mid = pl + pr >> 1;
+//     build(lc);
+//     build(rc);
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         addtag(p, pr - pl + 1, d);
+//         return;
+//     }
+//     push_down(p, pl, pr);
+//     ll mid = pl + pr >> 1;
+//     if(L <= mid) update(L, R, lc, d);
+//     if(R > mid) update(L, R, rc, d);
+//     push_up(p, pr - pl + 1);
+// }
+// ll query(ll p, ll pl, ll pr, ll k)
+// {
+//     if(pl == pr && k == 1) return pl;//特判
+//     push_down(p, pl, pr);
+//     //按左端点编号由小到大搜，左->中->右
+//     ll mid = pl + pr >> 1;
+//     if(tree[p].sum < k) return 0;
+//     if(tree[ls].sum >= k)
+//         return query(lc, k);
+//     else if(tree[ls].suf + tree[rs].pre >= k)
+//         return mid - tree[ls].suf + 1;
+//     else
+//         return query(rc, k);
+// }
+// int main()
+// {
+//     ll n, m;
+//     scanf("%d%d", &n, &m);
+//     build(1, 1, n);
+//     while(m--)
+//     {
+//         ll op, x, d;
+//         scanf("%d", &op);
+//         if(op == 1)
+//         {
+//             scanf("%d", &d);
+//             ll res = query(1, 1, n, d);
+//             printf("%d\n", res);
+//             if(res) update(res, res + d - 1, 1, 1, n, 0);
+//         }
+//         else
+//         {
+//             scanf("%d%d", &x, &d);
+//             update(x, x + d - 1, 1, 1, n, 1);
+//         }
+//     }
+//     return 0;
+// }
 
 
 
+//19. Assign the task 
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+using namespace std;
 
+const int N = 5e4 + 5;
+int main()
+{
+    int T;
+    scanf("%d", &T);
+    for(int _ = 1; _ <= T; _++)
+    {
+        printf("Case #%d:\n", _);
+        int n, q;
+        scanf("%d", &n);
+        for(int i = 1; i <= n; i++)
+        {
 
+        }
+        scanf("%d", &q);
+        while(q--)
+        {
+            char op[5];
+            scanf("%s", &op);
 
+            
+        }
+    }
 
-
-
-
-
-
-
+    return 0;
+}
 
 
 
