@@ -12735,7 +12735,106 @@ push_up():
 
 
 //21.Vases and Flowers
-
+//操作1：从A开始，只对空瓶插花，最多插F朵花或花瓶遍历完时停止；操作2：相当于先 求区间和 再 清空区间
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define ls (p << 1)
+#define rs (p << 1 | 1)
+#define lc ls, pl, mid
+#define rc rs, mid + 1, pr
+#define ll int
+const int N = 5e4 + 5;
+ll n, m;
+ll tree[N << 2], tag[N << 2];
+void push_up(ll p) {tree[p] = tree[ls] + tree[rs];}
+void push_down(ll p, ll pl, ll pr)
+{
+    if(tag[p] != -1)
+    {
+        ll mid = pl + pr >> 1;
+        tree[ls] += tag[p] * (mid - pl + 1);
+        tree[rs] += tag[p] * (pr - mid);
+        tag[ls] = tag[rs] = tag[p];
+        tag[p] = -1;
+    }
+}
+void build(ll p, ll pl, ll pr)
+{
+    tree[p] = 0, tag[p] = -1;
+    if(pl == pr) return;
+    ll mid = pl + pr >> 1;
+    build(lc);
+    build(rc);
+}
+void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+{
+    if(L <= pl && R >= pr)
+    {
+        tree[p] = d * (pr - pl + 1);
+        tag[p] = d;
+        return;
+    }
+    push_down(p, pl, pr);
+    ll mid = pl + pr >> 1;
+    if(L <= mid) update(L, R, lc, d);
+    if(R > mid) update(L, R, rc, d);
+    push_up(p);
+}
+ll query_ind(ll L, ll R, ll p, ll pl, ll pr, ll cnt)//cnt为要找第几个0，为 1 或 b-1
+{
+    ll ind = -1;
+    if(!cnt) return ind;
+    if(pl == pr && !tree[p]) return query_ind(L, R); 
+    push_down(p, pl, pr);
+    ll mid = pl + pr >> 1;
+    if(tree[ls] < mid - pl + 1) return ind = query_ind(L, R, lc, cnt);
+    else if(tree[rs] < pr - mid) return ind = query_ind(L, R, rc, cnt);
+}
+ll query_sum(ll L, ll R, ll p, ll pl, ll pr)
+{
+    if(L <= pl && R >= pr) return tree[p];
+    push_down(p, pl, pr);
+    ll mid = pl + pr >> 1, res = 0;
+    if(L <= mid) res += query_sum(L, R, lc);
+    if(R > mid) res += query_sum(L, R, rc);
+    return res;
+}
+int main()
+{
+    int T;
+    scanf("%d", &T);
+    while(T--)
+    {
+        scanf("%d%d", &n, &m);
+        build(1, 1, n);
+        while(m--)
+        {
+            ll op, a, b, posl, posr;
+            scanf("%d%d%d", &op, &a, &b);
+            ++a;
+            if(op == 1)
+            {
+                posl = query_ind(a, n, 1, 1, n, 1);
+                if(~posl)//如果一个都没有就输出
+                    printf("Can not put any one.\n");
+                else
+                {
+                    printf("%d %d\n", posl, posr = query_ind(posl + 1, n, 1, 1, n, b - 1));
+                    update(posl, posr, 1, 1, n, 1);
+                }
+            }
+            else
+            {
+                ++b;
+                printf("%d\n", query_sum(a, b, 1, 1, n));
+                update(a, b, 1, 1, n, 0);
+            }
+        }
+    }
+    return 0;
+}
 
 
 
