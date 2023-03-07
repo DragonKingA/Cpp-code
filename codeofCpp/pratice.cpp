@@ -12495,38 +12495,275 @@ push_up():
 
 
 
-//19. Assign the task 
-#include <iostream>
-#include <cstdio>
-#include <algorithm>
-using namespace std;
+//*19. Assign the task (DFS序 将 树结构 转换为 线段树区间处理)
+//题意：给你一棵树，共n个结点，每个结点具有一个颜色，可以对结点所处的子树（包括其自身）的染色 以及 查询某结点的颜色
+//dfs序是指：每个节点在dfs深度优先遍历中的进出栈的时间序列。
+//先建图存树，用 dfs序 将 树 区间化，可以求出每个节点的管辖区间（即 所得该节点区间 表示 以该节点为根的子树），以此维护任意一个子树或单个结点的变化
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <vector>
+// #include <cstring>
+// using namespace std;
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define lc ls, pl, mid
+// #define rc rs, mid + 1, pr
+// #define ll int
+// const int N = 5e4 + 5;
+// ll tree[N << 2], tag[N << 2];
+// ll in[N], out[N];//记录结点在dfs序上进出栈的时间
+// ll n, q, time = 0;//时间
+// ll indegree[N];//记录入度，方便找树根
+// vector<ll> G[N];
+// void init()
+// {
+//     memset(tree, -1, sizeof(tree));
+//     memset(tag, -1, sizeof(tag));
+//     for(int i = 1; i <= n; i++) G[i].clear();
+//     time = 0;
+// }
+// void dfs(int u)
+// {
+//     in[u] = ++time;
+//     for(int i = 0; i < G[u].size(); i++) dfs(G[u][i]);
+//     out[u] = time;
+// }
+// void push_down(ll p)
+// {
+//     if(tag[p] != -1)
+//     {
+//         tree[ls] = tree[rs] = tag[p];
+//         tag[ls] = tag[rs] = tag[p];
+//         tag[p] = -1;
+//     }
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         tree[p] = tag[p] = d;
+//         return;
+//     }
+//     push_down(p);
+//     ll mid = pl + pr >> 1;
+//     if(L <= mid) update(L, R, lc, d);
+//     if(R > mid) update(L, R, rc, d);
+// }
+// ll query(ll x, ll p, ll pl, ll pr)
+// {
+//     if(pl == pr) return tree[p];
+//     push_down(p);
+//     ll mid = pl + pr >> 1;
+//     if(x <= mid) return query(x, lc);
+//     else return query(x, rc);
+// }
+// int main()
+// {
+//     int T;
+//     scanf("%d", &T);
+//     for(int _ = 1; _ <= T; _++)
+//     {
+//         printf("Case #%d:\n", _);
+//         scanf("%d", &n);
+//         init();
+//         for(int i = 1; i < n; i++)//n个结点建一颗单根树，需要 n-1 条边
+//         {
+//             ll u, v;
+//             scanf("%d%d", &v, &u);
+//             G[u].push_back(v);
+//             ++indegree[v];
+//         }
+//         //存储dfs时间序列
+//         for(int i = 1; i <= n; i++)
+//         {
+//             if(!indegree[i]) //从树根出发一次即可
+//             {
+//                 dfs(i);
+//                 break;
+//             }
+//         }
+//         scanf("%d", &q);
+//         while(q--)
+//         {
+//             char op[5];
+//             ll x, d;
+//             scanf("%s", &op);
+//             if(op[0] == 'T')
+//             {
+//                 scanf("%d%d", &x, &d);
+//                 update(in[x], out[x], 1, 1, n, d);
+//             }
+//             else
+//             {
+//                 scanf("%d", &x);
+//                 printf("%d\n", query(in[x], 1, 1, n));
+//             }
+//         }
+//     }
+//     return 0;
+// }
 
-const int N = 5e4 + 5;
-int main()
-{
-    int T;
-    scanf("%d", &T);
-    for(int _ = 1; _ <= T; _++)
-    {
-        printf("Case #%d:\n", _);
-        int n, q;
-        scanf("%d", &n);
-        for(int i = 1; i <= n; i++)
-        {
 
-        }
-        scanf("%d", &q);
-        while(q--)
-        {
-            char op[5];
-            scanf("%s", &op);
 
-            
-        }
-    }
+//20.Transformation (混合多种区间操作)
+//一个长为n的序列，对区间[l,r]有4种操作：每个数加c，每个数乘c，每个数置为c，查询每个数p次方后的区间和
+//思路1：对查询操作的p次方和，用s[3]分别存起1次到3次方的值，传递时结合完全平方式和完全立方式
+//对于(x + d)^3 = x^3 + 3 * x^2 * d + 3 * x * d^2 + d^3，拓展到长度为len的区间得到：Σ(x + d)^3 = Σx^3 + 3 * d * Σ(x^2) + 3 * d^2 * Σx + Σd^3
+//即tree[p].s[2] = tree[p].s[2] + 3 * d * tree[p].s[1] + 3 * d * d * tree[p].s[0] + len * d * d * d 
+//(x + d)^2 = x^2 + 2*d*x + d^2，同理
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <vector>
+// #include <cstring>
+// #include <cmath>
+// using namespace std;
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define lc ls, pl, mid
+// #define rc rs, mid + 1, pr
+// #define ll int
+// #define mod(x) ((x) % 10007)
+// const int N = 1e5 + 5;
+// ll n, m;
+// struct nd{
+//     ll s[3];
+//     ll sum, mul, setx;
+//     nd(ll a = 0, ll b = 0, ll c = 0, ll d = 0, ll e = 0, ll f = 0) {s[0] = a, s[1] = b, s[2] = c, sum = d, mul = e, setx = f;}
+// }tree[N << 2];
+// void addtag_sum(ll p, ll pl, ll pr, ll d)//注意三种求和的更新先后关系
+// {
+//     ll len = pr - pl + 1;
+//     tree[p].s[2] = mod(tree[p].s[2] + mod(3 * d * tree[p].s[1]) + mod(3 * d * d * tree[p].s[0]) + mod(len * d * d * d));
+//     tree[p].s[1] = mod(tree[p].s[1] + mod(2 * d * tree[p].s[0]) + mod(len * d * d));
+//     tree[p].s[0] = mod(tree[p].s[0] + mod(len * d));
+//     tree[p].sum  = mod(tree[p].sum + d);
+// }
+// void addtag_mul(ll p, ll pl, ll pr, ll d)
+// {
+//     tree[p].s[2] = mod(tree[p].s[2] * d * d * d);
+//     tree[p].s[1] = mod(tree[p].s[1] * d * d);
+//     tree[p].s[0] = mod(tree[p].s[0] * d);
+//     tree[p].sum  = mod(tree[p].sum * d);
+//     tree[p].mul  = mod(tree[p].mul * d);
+// }
+// void addtag_set(ll p, ll pl, ll pr, ll d)
+// {
+//     ll len = pr - pl + 1;
+//     tree[p].s[2] = mod(len * d * d * d);
+//     tree[p].s[1] = mod(len * d * d);
+//     tree[p].s[0] = mod(len * d);
+//     tree[p].setx = d;
+// }
+// void push_up(ll p)
+// {
+//     for(int i = 0; i < 3; i++) tree[p].s[i] = mod(tree[ls].s[i] + tree[rs].s[i]);
+// }
+// void push_down(ll p, ll pl, ll pr)//注意标记更新的先后关系和覆盖性
+// {
+//     ll mid = pl + pr >> 1;
+//     if(tree[p].setx != -1)//覆盖其他标记
+//     {
+//         addtag_set(lc, tree[p].setx);
+//         addtag_set(rc, tree[p].setx);
+//     }
+//     else
+//     {
+//         if(tree[p].mul != 1)
+//         {
+//             addtag_mul(lc, tree[p].mul);
+//             addtag_mul(rc, tree[p].mul);
+//         }
+//         if(!tree[p].sum)
+//         {
+//             addtag_sum(lc, tree[p].sum);
+//             addtag_sum(rc, tree[p].sum);
+//         }
+//     }
+//     tree[p].sum = 0, tree[p].mul = 1, tree[p].setx = -1;
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     tree[p] = nd(0, 0, 0, 0, 1, -1);
+//     if(pl == pr) return;
+//     ll mid = pl + pr >> 1;
+//     build(lc);
+//     build(rc);
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll op, ll d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         ll len = pr - pl + 1;
+//         if(op == 1) addtag_sum(p, pl, pr, d);
+//         else if(op == 2) addtag_mul(p, pl, pr, d);
+//         else addtag_set(p, pl, pr, d);
+//         return;
+//     }
+//     push_down(p, pl, pr);
+//     ll mid = pl + pr >> 1;
+//     if(L <= mid) update(L, R, lc, op, d);
+//     if(R > mid) update(L, R, rc, op, d);
+//     push_up(p);
+// }
+// ll query(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && R >= pr) return mod(tree[p].s[d]);
+//     push_down(p, pl, pr);
+//     ll mid = pl + pr >> 1, ans = 0;
+//     if(L <= mid) ans = mod(ans + query(L, R, lc, d));
+//     if(R > mid) ans = mod(ans + query(L, R, rc, d));
+//     return mod(ans);
+// }
+// int main()
+// {
+//     while(~scanf("%d%d", &n, &m), n)
+//     {
+//         build(1, 1, n);
+//         while(m--)
+//         {
+//             ll op, x, y, k;
+//             scanf("%d%d%d%d", &op, &x, &y, &k);
+//             if(op == 4) printf("%d\n", query(x, y, 1, 1, n, k - 1));
+//             else update(x, y, 1, 1, n, op, k);
+//         }
+//     }
+//     return 0;
+// }
 
-    return 0;
-}
+
+
+//21.Vases and Flowers
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
