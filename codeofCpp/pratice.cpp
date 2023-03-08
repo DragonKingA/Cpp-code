@@ -12734,107 +12734,249 @@ push_up():
 
 
 
-//21.Vases and Flowers
+//*21.Vases and Flowers (线段树 + 二分)
 //操作1：从A开始，只对空瓶插花，最多插F朵花或花瓶遍历完时停止；操作2：相当于先 求区间和 再 清空区间
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-using namespace std;
-#define ls (p << 1)
-#define rs (p << 1 | 1)
-#define lc ls, pl, mid
-#define rc rs, mid + 1, pr
-#define ll int
-const int N = 5e4 + 5;
-ll n, m;
-ll tree[N << 2], tag[N << 2];
-void push_up(ll p) {tree[p] = tree[ls] + tree[rs];}
-void push_down(ll p, ll pl, ll pr)
-{
-    if(tag[p] != -1)
-    {
-        ll mid = pl + pr >> 1;
-        tree[ls] += tag[p] * (mid - pl + 1);
-        tree[rs] += tag[p] * (pr - mid);
-        tag[ls] = tag[rs] = tag[p];
-        tag[p] = -1;
-    }
-}
-void build(ll p, ll pl, ll pr)
-{
-    tree[p] = 0, tag[p] = -1;
-    if(pl == pr) return;
-    ll mid = pl + pr >> 1;
-    build(lc);
-    build(rc);
-}
-void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
-{
-    if(L <= pl && R >= pr)
-    {
-        tree[p] = d * (pr - pl + 1);
-        tag[p] = d;
-        return;
-    }
-    push_down(p, pl, pr);
-    ll mid = pl + pr >> 1;
-    if(L <= mid) update(L, R, lc, d);
-    if(R > mid) update(L, R, rc, d);
-    push_up(p);
-}
-ll query_ind(ll L, ll R, ll p, ll pl, ll pr, ll cnt)//cnt为要找第几个0，为 1 或 b-1
-{
-    ll ind = -1;
-    if(!cnt) return ind;
-    if(pl == pr && !tree[p]) return query_ind(L, R); 
-    push_down(p, pl, pr);
-    ll mid = pl + pr >> 1;
-    if(tree[ls] < mid - pl + 1) return ind = query_ind(L, R, lc, cnt);
-    else if(tree[rs] < pr - mid) return ind = query_ind(L, R, rc, cnt);
-}
-ll query_sum(ll L, ll R, ll p, ll pl, ll pr)
-{
-    if(L <= pl && R >= pr) return tree[p];
-    push_down(p, pl, pr);
-    ll mid = pl + pr >> 1, res = 0;
-    if(L <= mid) res += query_sum(L, R, lc);
-    if(R > mid) res += query_sum(L, R, rc);
-    return res;
-}
-int main()
-{
-    int T;
-    scanf("%d", &T);
-    while(T--)
-    {
-        scanf("%d%d", &n, &m);
-        build(1, 1, n);
-        while(m--)
-        {
-            ll op, a, b, posl, posr;
-            scanf("%d%d%d", &op, &a, &b);
-            ++a;
-            if(op == 1)
-            {
-                posl = query_ind(a, n, 1, 1, n, 1);
-                if(~posl)//如果一个都没有就输出
-                    printf("Can not put any one.\n");
-                else
-                {
-                    printf("%d %d\n", posl, posr = query_ind(posl + 1, n, 1, 1, n, b - 1));
-                    update(posl, posr, 1, 1, n, 1);
-                }
-            }
-            else
-            {
-                ++b;
-                printf("%d\n", query_sum(a, b, 1, 1, n));
-                update(a, b, 1, 1, n, 0);
-            }
-        }
-    }
-    return 0;
-}
+//操作2实现简单，而操作1需要利用 线段树的二分结构 去 二分搜索 第一个 和 最后一个 空瓶的位置
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define lc ls, pl, mid
+// #define rc rs, mid + 1, pr
+// #define ll int
+// const int N = 5e4 + 5;
+// ll n, m;
+// ll tree[N << 2], tag[N << 2];
+// void push_up(ll p) {tree[p] = tree[ls] + tree[rs];}
+// void push_down(ll p, ll pl, ll pr)
+// {
+//     if(tag[p] != -1)
+//     {
+//         ll mid = pl + pr >> 1;
+//         tree[ls] = tag[p] * (mid - pl + 1);
+//         tree[rs] = tag[p] * (pr - mid);
+//         tag[ls] = tag[rs] = tag[p];
+//         tag[p] = -1;
+//     }
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     tree[p] = 0, tag[p] = -1;
+//     if(pl == pr) return;
+//     ll mid = pl + pr >> 1;
+//     build(lc);
+//     build(rc);
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         tree[p] = d * (pr - pl + 1);
+//         tag[p] = d;
+//         return;
+//     }
+//     push_down(p, pl, pr);
+//     ll mid = pl + pr >> 1;
+//     if(L <= mid) update(L, R, lc, d);
+//     if(R > mid) update(L, R, rc, d);
+//     push_up(p);
+// }
+// ll query_sum(ll L, ll R, ll p, ll pl, ll pr)
+// {
+//     if(L <= pl && R >= pr) return tree[p];
+//     push_down(p, pl, pr);
+//     ll mid = pl + pr >> 1, res = 0;
+//     if(L <= mid) res += query_sum(L, R, lc);
+//     if(R > mid) res += query_sum(L, R, rc);
+//     return res;
+// }
+// ll query_ind(ll st, ll cnt)//cnt为要找第几个0
+// {
+//     ll l = st, r = n, res = -1;
+//     while(l <= r)
+//     {
+//         ll mid = l + r >> 1;
+//         ll sum = mid - st + 1 - query_sum(st, mid, 1, 1, n);
+//         if(sum >= cnt) res = mid, r = mid - 1;//数量充分，收束右端
+//         else l = mid + 1;
+//     }
+//     return res;
+// }
+// int main()
+// {
+//     int T;
+//     scanf("%d", &T);
+//     while(T--)
+//     {
+//         scanf("%d%d", &n, &m);
+//         build(1, 1, n);
+//         while(m--)
+//         {
+//             ll op, a, b, posl, posr;
+//             scanf("%d%d%d", &op, &a, &b);
+//             ++a;
+//             if(op == 1)
+//             {
+//                 posl = query_ind(a, 1);//第1个空花瓶位置
+//                 if(posl == -1)//如果一个都没有就输出
+//                     printf("Can not put any one.\n");
+//                 else
+//                 {
+//                     ll sum = n - posl + 1 - query_sum(posl, n, 1, 1, n);//用于判断给的花是不是比空花瓶多
+//                     posr = query_ind(a, min(b, sum));//第b个空花瓶位置
+//                     printf("%d %d\n", posl - 1, posr - 1);
+//                     update(posl, posr, 1, 1, n, 1);
+//                 }
+//             }
+//             else
+//             {
+//                 ++b;
+//                 printf("%d\n", query_sum(a, b, 1, 1, n));
+//                 update(a, b, 1, 1, n, 0);
+//             }
+//         }
+//         printf("\n");
+//     }
+//     return 0;
+// }
+
+
+
+//22.约会安排 (同时维护两个区间，两区间之间具有单向覆盖关系 + 维护最长连续序列长度)
+//维护两个时间区间 DS、NS，需要记录连续0个数(最长前缀连续、最长后缀连续 和 最长总连续)
+//DS T 和 NS T 都要求找一段编号最靠前的长为T的连续空闲空间，而 NS 如果没找到则可以占据 DS 的空间； STUDY!! L R 表示清空[L, R]区间
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define lc ls, pl, mid
+// #define rc rs, mid + 1, pr
+// #define ll int
+// const int N = 1e5 + 5;
+// struct nd{
+//     ll pre, suf, cnt;//1代表有空间
+//     ll tag;
+//     nd(ll a = 0, ll b = 0, ll c = 0, ll d = 0) {pre = a, suf = b, cnt = c, tag = d;}
+// }tree[2][N << 2];
+// ll n, m, _;
+// void addtag(ll p, ll pl, ll pr, ll ind, ll d)
+// {
+//     ll len = pr - pl + 1, x = d * len;
+//     tree[ind][p] = nd(x, x, x, d);
+// }
+// void push_up(ll p, ll pl, ll pr, ll i)
+// {
+//     ll len = pr - pl + 1;
+//     tree[i][p].pre = tree[i][ls].pre;
+//     tree[i][p].suf = tree[i][rs].suf;
+//     if(tree[i][ls].cnt == len - (len >> 1)) tree[i][p].pre += tree[i][rs].pre;
+//     if(tree[i][rs].cnt == (len >> 1)) tree[i][p].suf += tree[i][ls].suf;
+//     tree[i][p].cnt = max(max(tree[i][ls].cnt, tree[i][rs].cnt), tree[i][ls].suf + tree[i][rs].pre);
+// }
+// void push_down(ll p, ll pl, ll pr, ll i)
+// {
+//     ll mid = pl + pr >> 1;
+//     if(tree[i][p].tag != -1)
+//     {
+//         addtag(lc, i, tree[i][p].tag);
+//         addtag(rc, i, tree[i][p].tag);
+//         tree[i][p].tag = -1;
+//     }
+// }
+// void build(ll p, ll pl, ll pr)
+// {
+//     ll len = pr - pl + 1;
+//     for(int i = 0; i < 2; i++) tree[i][p] = nd(len, len, len, -1);
+//     if(pl == pr) return;
+//     ll mid = pl + pr >> 1;
+//     build(lc);
+//     build(rc);
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll ind, ll d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         addtag(p, pl, pr, ind, d);
+//         return;
+//     }
+//     push_down(p, pl, pr, ind);
+//     ll mid = pl + pr >> 1;
+//     if(L <= mid) update(L, R, lc, ind, d);
+//     if(R > mid) update(L, R, rc, ind, d);
+//     push_up(p, pl, pr, ind);
+// }
+// ll query(ll p, ll pl, ll pr, ll ind, ll d)
+// {
+//     if(pl == pr) return pl;
+//     push_down(p, pl, pr, ind);
+//     ll mid = pl + pr >> 1;
+//     if(tree[ind][ls].cnt >= d) return query(lc, ind, d);
+//     else if(tree[ind][ls].suf + tree[ind][rs].pre >= d) return mid - tree[ind][ls].suf + 1;
+//     else return query(rc, ind, d);
+// }
+// int main()
+// {
+//     scanf("%d", &_);
+//     for(int __ = 1; __ <= _; __++)
+//     {
+//         printf("Case %d:\n", __);
+//         scanf("%d%d", &n, &m);
+//         build(1, 1, n);
+//         while(m--)
+//         {
+//             char op[5];
+//             ll T, L, R, pos;
+//             scanf("%s", &op);
+//             if(op[0] == 'D')
+//             {
+//                 scanf("%d", &T);
+//                 if(tree[1][1].cnt < T)//同时受NS、DS区间占用情况的影响
+//                 {
+//                     printf("fly with yourself\n");
+//                     continue;   
+//                 }
+//                 //DS区间只影响tree[0]
+//                 pos = query(1, 1, n, 0, T);
+//                 update(pos, pos + T - 1, 1, 1, n, 0, 0);
+//                 printf("%d,let's fly\n", pos);
+//             }
+//             else if(op[0] == 'N')
+//             {
+//                 ll res;
+//                 scanf("%d", &T);
+//                 if(tree[0][1].cnt >= T)//依据题意先找DS区间是否有足够的连续空闲区间
+//                     res = query(1, 1, n, 0, T);
+//                 else if(tree[1][1].cnt >= T)//再“无视DS区间占用”找
+//                     res = query(1, 1, n, 1, T);
+//                 else
+//                 {
+//                     printf("wait for me\n");
+//                     continue;
+//                 }
+//                 //NS区间只影响tree[1]
+//                 update(res, res + T - 1, 1, 1, n, 1, 0);
+//                 printf("%d,don't put my gezi\n", res);
+//             }
+//             else
+//             {
+//                 scanf("%d%d", &L, &R);
+//                 update(1, n, 1, 1, n, 0, 1);
+//                 update(1, n, 1, 1, n, 1, 1);
+//                 printf("I am the hope of chinese chengxuyuan!!\n");
+//             }
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+//23.Picture
+
 
 
 
