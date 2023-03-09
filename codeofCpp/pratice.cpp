@@ -12976,6 +12976,32 @@ push_up():
 
 
 //23.Picture
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define ls (p << 1)
+#define rs (p << 1 | 1)
+#define ll int
+
+
+int main()
+{
+
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+//24.覆盖的面积
 
 
 
@@ -12992,6 +13018,86 @@ push_up():
 
 
 
+
+
+
+//25.Atlantis （扫描线 - 矩形面积并）
+//题意：x-y坐标系上有若干个矩形，它们的边分别平行两个坐标轴，求它们的面积并（面积并集），要求重复部分面积只计算一次。
+//注意：扫描线问题。由于x, y是实数，需要离散化处理。由于线段树维护的是x的区间长度，都是区间即不含点，如区间[2, 2]等点不具有意义，所以线段树的叶子结点为区间[pl, pl + 1]
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define ll int
+// #define db double
+// const int N = 1e2 + 5;
+// ll n, cnt[N << 2];//cnt[p] 记录当前区间p被覆盖的次数，跟其它节点无关。可判断该区间长度是否有效
+// //一个节点代表的区间被覆盖的次数不需要继承其父亲的信息，每条入边一一对应一条等长的出边，由该入边产生的覆盖次数cnt应由其对应出边抵消，因此去掉pushdown
+// db tree[N << 2], X[N << 2];
+// struct Line{
+//     db lx, rx, y;
+//     ll d;//1为入边，-1为出边
+//     Line(db a = 0, db b = 0, db c = 0, ll dd = 0) {lx = a, rx = b, y = c, d = dd;}
+//     bool operator <(const Line &x) const{ return y < x.y;}
+// }line[N << 2];
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         cnt[p] += d;
+//         if(cnt[p]) 
+//             tree[p] = X[pr] - X[pl];
+//         //区间p长度无效时
+//         else if(pl + 1 == pr)//叶子结点没办法向下索取有效长度，即后面没有有效长度排队占用，置为0即可
+//             tree[p] = 0;
+//         else
+//             tree[p] = tree[ls] + tree[rs];//向下索取有效长度（或者说到这段有效长度占据区间p了）
+//         return;
+//     }
+//     if(pl + 1 == pr) return;
+//     ll mid = pl + pr >> 1;
+//     if(L <= mid) update(L, R, ls, pl, mid, d);
+//     if(R > mid) update(L, R, rs, mid, pr, d); //注意这里不是 mid + 1
+
+//     if(!cnt[p]) tree[p] = tree[ls] + tree[rs];
+//     //仅区间p没有有效长度时才传值，因为若区间p已经有效，说明它已经是最长的覆盖长度pr-pl。若直接传值则会错误地覆盖这个仍有效的长度。
+//     //应等区间p被出边抵消时，才把子区间值传上来，即它是有顺序的。
+// }
+// int main()
+// {
+//     int _ = 1;
+//     while(scanf("%d", &n), n)
+//     {
+//         memset(tree, 0, sizeof(tree));
+//         memset(cnt, 0, sizeof(cnt));
+//         db ans = 0;
+//         ll ind = 0;
+//         for(int i = 0; i < n; i++)
+//         {
+//             db x1, y1, x2, y2;
+//             scanf("%lf%lf%lf%lf", &x1, &y1, &x2, &y2);
+//             line[++ind] = Line(x1, x2, y1, 1);
+//             X[ind] = x1;
+//             line[++ind] = Line(x1, x2, y2, -1);
+//             X[ind] = x2;
+//         }
+//         sort(X + 1, X + 1 + ind);
+//         sort(line + 1, line + 1 + ind);
+//         ll x_max = unique(X + 1, X + 1 + ind) - X - 1;
+//         for(int i = 1; i <= ind; i++)
+//         {
+//             ans += tree[1] * (line[i].y - line[i - 1].y);//第一条边不计算面积
+//             ll L = lower_bound(X + 1, X + 1 + ind, line[i].lx) - X;
+//             ll R = lower_bound(X + 1, X + 1 + ind, line[i].rx) - X;
+//             update(L, R, 1, 1, x_max, line[i].d);
+//         }
+//         printf("Test case #%d\nTotal explored area: %.2lf\n\n", _++, ans);
+//     }
+//     return 0;
+// }
 
 
 
