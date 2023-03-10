@@ -12975,20 +12975,97 @@ push_up():
 
 
 
-//23.Picture
+//23.Picture (扫描线 - 矩形周长并)
+//给n个矩形，求n个矩形合并后的周长是多少。(数据都是整数)
+//重点：判断当前扫描线是否被已有长度所覆盖，若是则不能计算该扫描线
 #include <cstdio>
 #include <iostream>
 #include <algorithm>
+#include <cstring>
+#include <cmath>
 using namespace std;
 #define ls (p << 1)
 #define rs (p << 1 | 1)
 #define ll int
+const ll N = 1e4 + 5;//这里一定要开够大
+struct Line{
+    ll lx, rx, h, d;
+    Line(ll a = 0, ll b = 0, ll c = 0, ll dd = 0) {lx = a, rx = b, h = c, d = dd;}
+    bool operator <(const Line &m) const{ return h < m.h;}
+}line[N << 1];
+struct nd{
+    ll len;               //总有效长度
+    bool l_cover, r_cover;//标记线段左、右端点是否被覆盖
+    nd(ll s = 0, bool a = 0, bool b = 0) {len = s, l_cover = a, r_cover = b;}
+}tree[N << 2];
+ll n, ind = 0, ans = 0, last = 0;
+ll cnt[N << 2], num[N << 2], xx[N];//cnt记录区间入边出边情况，而num记录区间内有多少条独立的线段以计算出有多少对竖边
+void push_up(ll p, ll pl, ll pr)
+{
+    if(cnt[p])            //区间p有效，且整个区间p已被完全覆盖，则此时独立线段个数仅1条
+    {
+        tree[p] = nd(xx[pr] - xx[pl], 1, 1);
+        num[p] = 1;
+    }
+    else if(pl + 1 == pr)
+    {
+        tree[p] = nd(0, 0, 0);
+        num[p] = 0;       //这里记得清空为0，因为出边后叶子节点已经无法从下面索取到有效长度，拥有的线段数量自然也必须为0
+    }
+    else                  //向上传递覆盖性、有效长度 和 独立线段个数
+    {
+        tree[p] = nd(tree[ls].len + tree[rs].len, tree[ls].l_cover, tree[rs].r_cover);
+        num[p] = num[ls] + num[rs];
+        if(tree[ls].r_cover && tree[rs].l_cover) num[p]--;//左右子线段合并
+    }
+}
+void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+{
+    if(L <= pl && R >= pr)
+    {
+        cnt[p] += d;
+        push_up(p, pl, pr);
+        return;
+    }
+    if(pl + 1 == pr) return;
+    ll mid = pl + pr >> 1;
+    if(L <= mid) update(L, R, ls, pl, mid, d);
+    if(R > mid) update(L, R, rs, mid, pr, d);
 
-
+    push_up(p, pl, pr);
+    
+    // if(!cnt[p])
+    // {
+    //     tree[p] = nd(tree[ls].len + tree[rs].len, tree[ls].l_cover, tree[rs].r_cover);
+    //     num[p] = num[ls] + num[rs];
+    //     if(tree[ls].r_cover && tree[rs].l_cover) num[p]--;
+    // }
+}
 int main()
 {
-
-
+    scanf("%d", &n);
+    for(int i = 1; i <= n; i++)
+    {
+        ll x1, y1, x2, y2;
+        scanf("%d%d%d%d", &x1, &y1, &x2, &y2);
+        line[++ind] = Line(x1, x2, y1, 1);
+        xx[ind] = x1;
+        line[++ind] = Line(x1, x2, y2, -1);
+        xx[ind] = x2;
+    }
+    sort(line + 1, line + 1 + ind);
+    sort(xx + 1, xx + 1 + ind);
+    ll max_x = unique(xx + 1, xx + 1 + ind) - xx - 1;
+    for(int i = 1; i <= ind; i++)
+    {
+        ll L = lower_bound(xx + 1, xx + 1 + max_x, line[i].lx) - xx;
+        ll R = lower_bound(xx + 1, xx + 1 + max_x, line[i].rx) - xx;
+        update(L, R, 1, 1, max_x, line[i].d);
+        ans += 2 * num[1] * (line[i + 1].h - line[i].h);//总竖边长(2 * 竖边对数num * 长度)
+        ans += abs(tree[1].len - last);                 //底边长(除去了覆盖部分)
+        last = tree[1].len;
+    }
+    printf("%d\n", ans);
     return 0;
 }
 
@@ -13090,8 +13167,8 @@ int main()
 //         for(int i = 1; i <= ind; i++)
 //         {
 //             ans += tree[1] * (line[i].y - line[i - 1].y);//第一条边不计算面积
-//             ll L = lower_bound(X + 1, X + 1 + ind, line[i].lx) - X;
-//             ll R = lower_bound(X + 1, X + 1 + ind, line[i].rx) - X;
+//             ll L = lower_bound(X + 1, X + 1 + max_x, line[i].lx) - X;
+//             ll R = lower_bound(X + 1, X + 1 + max_x, line[i].rx) - X;
 //             update(L, R, 1, 1, x_max, line[i].d);
 //         }
 //         printf("Test case #%d\nTotal explored area: %.2lf\n\n", _++, ans);
