@@ -10830,8 +10830,8 @@ int main()
 
 
 //3.开关
-//初始数列为 0串，无需单独建树
-//异或1 实现lazy标记状态切换 ，区间长度 - 原本亮灯的数量 = 现在亮灯的数量
+// 初始数列为 0串，无需单独建树
+// 异或1 实现lazy标记状态切换 ，区间长度 - 原本亮灯的数量 = 现在亮灯的数量
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
@@ -12038,13 +12038,13 @@ push_up():
 
 
 //*14.Mayor's posters （一维染色问题 + 特殊离散化处理）
-//给一个无限长广告牌，给你n个广告和其放置的位置，按照输入数据的顺序放置前后，问能看见几个广告（注意，看见一部分也算）。
-//题意转换：设每个广告都是独立的一种颜色，放置广告相当于给一个区间染色，问某个区间有多少种颜色。
-//由于 l, r <= 1e7，需要离散化降低复杂度，并且l和r两两离散，为保证不交叉区间的非连续性，需要离散时 间隔一个数
-//如输入区间[1, 100],[1, 30],[50, 100]，其答案为3，若连续离散则得到[1, 4],[1, 2],[3, 4]导致答案为2，因此应该将离散数字两两间隔一个数
-//即[1, 7],[1, 3],[5, 7]，才能得到答案为3，
-//unique() 的返回值是一个地址指向去重后序列（这个序列不含有重复数值）的 末尾 的 下一个元素
-//v.erase(unique(v.begin(), v.end()), v.end()) 可以去掉容器中后面重复的元素
+// 给一个无限长广告牌，给你n个广告和其放置的位置，按照输入数据的顺序放置前后，问能看见几个广告（注意，看见一部分也算）。
+// 题意转换：设每个广告都是独立的一种颜色，放置广告相当于给一个区间染色，问某个区间有多少种颜色。
+// 由于 l, r <= 1e7，需要离散化降低复杂度，并且l和r两两离散，为保证不交叉区间的非连续性，需要离散时 间隔一个数
+// 如输入区间[1, 100],[1, 30],[50, 100]，其答案为3，若连续离散则得到[1, 4],[1, 2],[3, 4]导致答案为2，因此应该将离散数字两两间隔一个数
+// 即[1, 7],[1, 3],[5, 7]，才能得到答案为3，
+// unique() 的返回值是一个地址指向去重后序列（这个序列不含有重复数值）的 末尾 的 下一个元素
+// v.erase(unique(v.begin(), v.end()), v.end()) 可以去掉容器中后面重复的元素
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
@@ -12135,13 +12135,13 @@ push_up():
 
 
 //*15.Count the Colors（一维染色问题）
-//题意：在长度为n的线段上，每次操作给其中一个区间染上颜色c，可以覆盖前面的颜色，求最后整条线段上能看到多少种颜色。
-//l, r <= 8e3，无需离散化
-//本题重点在于如何联系连续区间(注意区间[1,3][3,5]连续可看作[1,5]，而[1,2][3,4]不连续，因为被[2,3]分开了)。
-//搞明白涂色的是区间而不是点，染色区间[a,b]并不是把a～b的所有点都染成c，故区间不能取闭区间。
-//防止不连续区间判断为连续，需要将一侧的端点收束（左端点+1 或 右端点-1）或直接两端点值乘2，来使得连续数字间有中间值，因为连续数字的两个区间其实不连续，
-//这里可以选择用 左开右闭 区间，设染色区间[l, r]即染色[l + 1, r]上的每个点，对于一个单位区间[0, 1]，将点1染色等同于将[0, 1]染色，
-//即染色某个点，即染色该点的前一段单位区间。
+// 题意：在长度为n的线段上，每次操作给其中一个区间染上颜色c，可以覆盖前面的颜色，求最后整条线段上能看到多少种颜色。
+// l, r <= 8e3，无需离散化
+// 本题重点在于如何联系连续区间(注意区间[1,3][3,5]连续可看作[1,5]，而[1,2][3,4]不连续，因为被[2,3]分开了)。
+// 搞明白涂色的是区间而不是点，染色区间[a,b]并不是把a～b的所有点都染成c，故区间不能取闭区间。
+// 防止不连续区间判断为连续，需要将一侧的端点收束（左端点+1 或 右端点-1）或直接两端点值乘2，来使得连续数字间有中间值，因为连续数字的两个区间其实不连续，
+// 这里可以选择用 左开右闭 区间，设染色区间[l, r]即染色[l + 1, r]上的每个点，对于一个单位区间[0, 1]，将点1染色等同于将[0, 1]染色，
+// 即染色某个点，即染色该点的前一段单位区间。
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
@@ -12496,9 +12496,9 @@ push_up():
 
 
 //*19. Assign the task (DFS序 将 树结构 转换为 线段树区间处理)
-//题意：给你一棵树，共n个结点，每个结点具有一个颜色，可以对结点所处的子树（包括其自身）的染色 以及 查询某结点的颜色
-//dfs序是指：每个节点在dfs深度优先遍历中的进出栈的时间序列。
-//先建图存树，用 dfs序 将 树 区间化，可以求出每个节点的管辖区间（即 所得该节点区间 表示 以该节点为根的子树），以此维护任意一个子树或单个结点的变化
+// 题意：给你一棵树，共n个结点，每个结点具有一个颜色，可以对结点所处的子树（包括其自身）的染色 以及 查询某结点的颜色
+// dfs序是指：每个节点在dfs深度优先遍历中的进出栈的时间序列。
+// 先建图存树，用 dfs序 将 树 区间化，可以求出每个节点的管辖区间（即 所得该节点区间 表示 以该节点为根的子树），以此维护任意一个子树或单个结点的变化
 // #include <iostream>
 // #include <cstdio>
 // #include <algorithm>
@@ -12607,11 +12607,11 @@ push_up():
 
 
 //20.Transformation (混合多种区间操作)
-//一个长为n的序列，对区间[l,r]有4种操作：每个数加c，每个数乘c，每个数置为c，查询每个数p次方后的区间和
-//思路1：对查询操作的p次方和，用s[3]分别存起1次到3次方的值，传递时结合完全平方式和完全立方式
-//对于(x + d)^3 = x^3 + 3 * x^2 * d + 3 * x * d^2 + d^3，拓展到长度为len的区间得到：Σ(x + d)^3 = Σx^3 + 3 * d * Σ(x^2) + 3 * d^2 * Σx + Σd^3
-//即tree[p].s[2] = tree[p].s[2] + 3 * d * tree[p].s[1] + 3 * d * d * tree[p].s[0] + len * d * d * d 
-//(x + d)^2 = x^2 + 2*d*x + d^2，同理
+// 一个长为n的序列，对区间[l,r]有4种操作：每个数加c，每个数乘c，每个数置为c，查询每个数p次方后的区间和
+// 思路1：对查询操作的p次方和，用s[3]分别存起1次到3次方的值，传递时结合完全平方式和完全立方式
+// 对于(x + d)^3 = x^3 + 3 * x^2 * d + 3 * x * d^2 + d^3，拓展到长度为len的区间得到：Σ(x + d)^3 = Σx^3 + 3 * d * Σ(x^2) + 3 * d^2 * Σx + Σd^3
+// 即tree[p].s[2] = tree[p].s[2] + 3 * d * tree[p].s[1] + 3 * d * d * tree[p].s[0] + len * d * d * d 
+// (x + d)^2 = x^2 + 2*d*x + d^2，同理
 // #include <iostream>
 // #include <cstdio>
 // #include <algorithm>
@@ -12735,8 +12735,8 @@ push_up():
 
 
 //*21.Vases and Flowers (线段树 + 二分)
-//操作1：从A开始，只对空瓶插花，最多插F朵花或花瓶遍历完时停止；操作2：相当于先 求区间和 再 清空区间
-//操作2实现简单，而操作1需要利用 线段树的二分结构 去 二分搜索 第一个 和 最后一个 空瓶的位置
+// 操作1：从A开始，只对空瓶插花，最多插F朵花或花瓶遍历完时停止；操作2：相当于先 求区间和 再 清空区间
+// 操作2实现简单，而操作1需要利用 线段树的二分结构 去 二分搜索 第一个 和 最后一个 空瓶的位置
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
@@ -12845,8 +12845,8 @@ push_up():
 
 
 //22.约会安排 (同时维护两个区间，两区间之间具有单向覆盖关系 + 维护最长连续序列长度)
-//维护两个时间区间 DS、NS，需要记录连续0个数(最长前缀连续、最长后缀连续 和 最长总连续)
-//DS T 和 NS T 都要求找一段编号最靠前的长为T的连续空闲空间，而 NS 如果没找到则可以占据 DS 的空间； STUDY!! L R 表示清空[L, R]区间
+// 维护两个时间区间 DS、NS，需要记录连续0个数(最长前缀连续、最长后缀连续 和 最长总连续)
+// DS T 和 NS T 都要求找一段编号最靠前的长为T的连续空闲空间，而 NS 如果没找到则可以占据 DS 的空间； STUDY!! L R 表示清空[L, R]区间
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
@@ -12975,132 +12975,295 @@ push_up():
 
 
 
-//23.Picture (扫描线 - 矩形周长并)
-//给n个矩形，求n个矩形合并后的周长是多少。(数据都是整数)
-//重点：判断当前扫描线是否被已有长度所覆盖，若是则不能计算该扫描线
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-#include <cstring>
-#include <cmath>
-using namespace std;
-#define ls (p << 1)
-#define rs (p << 1 | 1)
-#define ll int
-const ll N = 1e4 + 5;//这里一定要开够大
-struct Line{
-    ll lx, rx, h, d;
-    Line(ll a = 0, ll b = 0, ll c = 0, ll dd = 0) {lx = a, rx = b, h = c, d = dd;}
-    bool operator <(const Line &m) const{ return h < m.h;}
-}line[N << 1];
-struct nd{
-    ll len;               //总有效长度
-    bool l_cover, r_cover;//标记线段左、右端点是否被覆盖
-    nd(ll s = 0, bool a = 0, bool b = 0) {len = s, l_cover = a, r_cover = b;}
-}tree[N << 2];
-ll n, ind = 0, ans = 0, last = 0;
-ll cnt[N << 2], num[N << 2], xx[N];//cnt记录区间入边出边情况，而num记录区间内有多少条独立的线段以计算出有多少对竖边
-void push_up(ll p, ll pl, ll pr)
-{
-    if(cnt[p])            //区间p有效，且整个区间p已被完全覆盖，则此时独立线段个数仅1条
-    {
-        tree[p] = nd(xx[pr] - xx[pl], 1, 1);
-        num[p] = 1;
-    }
-    else if(pl + 1 == pr)
-    {
-        tree[p] = nd(0, 0, 0);
-        num[p] = 0;       //这里记得清空为0，因为出边后叶子节点已经无法从下面索取到有效长度，拥有的线段数量自然也必须为0
-    }
-    else                  //向上传递覆盖性、有效长度 和 独立线段个数
-    {
-        tree[p] = nd(tree[ls].len + tree[rs].len, tree[ls].l_cover, tree[rs].r_cover);
-        num[p] = num[ls] + num[rs];
-        if(tree[ls].r_cover && tree[rs].l_cover) num[p]--;//左右子线段合并
-    }
-}
-void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
-{
-    if(L <= pl && R >= pr)
-    {
-        cnt[p] += d;
-        push_up(p, pl, pr);
-        return;
-    }
-    if(pl + 1 == pr) return;
-    ll mid = pl + pr >> 1;
-    if(L <= mid) update(L, R, ls, pl, mid, d);
-    if(R > mid) update(L, R, rs, mid, pr, d);
+//*23.Picture (扫描线 - 矩形周长并)
+// 给n个矩形，求n个矩形合并后的周长是多少。(数据都是整数)
+// 重点：判断当前扫描线是否被已有长度所覆盖，若是则不能计算该扫描线
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <cmath>
+// using namespace std;
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define ll int
+// const ll N = 1e4 + 5;//这里一定要开够大
+// struct Line{
+//     ll lx, rx, h, d;
+//     Line(ll a = 0, ll b = 0, ll c = 0, ll dd = 0) {lx = a, rx = b, h = c, d = dd;}
+//     bool operator <(const Line &m) const{ return h < m.h;}
+// }line[N << 1];
+// struct nd{
+//     ll len;               //总有效长度
+//     bool l_cover, r_cover;//标记线段左、右端点是否被覆盖
+//     nd(ll s = 0, bool a = 0, bool b = 0) {len = s, l_cover = a, r_cover = b;}
+// }tree[N << 2];
+// ll n, ind = 0, ans = 0, last = 0;
+// ll cnt[N << 2], num[N << 2], xx[N];//cnt记录区间入边出边情况，而num记录区间内有多少条独立的线段以计算出有多少对竖边
+// void push_up(ll p, ll pl, ll pr)
+// {
+//     if(cnt[p])            //区间p有效，且整个区间p已被完全覆盖，则此时独立线段个数仅1条
+//     {
+//         tree[p] = nd(xx[pr] - xx[pl], 1, 1);
+//         num[p] = 1;
+//     }
+//     else if(pl + 1 == pr)
+//     {
+//         tree[p] = nd(0, 0, 0);
+//         num[p] = 0;       //这里记得清空为0，因为出边后叶子节点已经无法从下面索取到有效长度，拥有的线段数量自然也必须为0
+//     }
+//     else                  //向上传递覆盖性、有效长度 和 独立线段个数
+//     {
+//         tree[p] = nd(tree[ls].len + tree[rs].len, tree[ls].l_cover, tree[rs].r_cover);
+//         num[p] = num[ls] + num[rs];
+//         if(tree[ls].r_cover && tree[rs].l_cover) num[p]--;//左右子线段合并
+//     }
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         cnt[p] += d;
+//         push_up(p, pl, pr);
+//         return;
+//     }
+//     if(pl + 1 == pr) return;
+//     ll mid = pl + pr >> 1;
+//     if(L <= mid) update(L, R, ls, pl, mid, d);
+//     if(R > mid) update(L, R, rs, mid, pr, d);
 
-    push_up(p, pl, pr);
+//     push_up(p, pl, pr);
+//     // 也可以分出来写    
+//     // if(!cnt[p])
+//     // {
+//     //     tree[p] = nd(tree[ls].len + tree[rs].len, tree[ls].l_cover, tree[rs].r_cover);
+//     //     num[p] = num[ls] + num[rs];
+//     //     if(tree[ls].r_cover && tree[rs].l_cover) num[p]--;
+//     // }
+// }
+// int main()
+// {
+//     scanf("%d", &n);
+//     for(int i = 1; i <= n; i++)
+//     {
+//         ll x1, y1, x2, y2;
+//         scanf("%d%d%d%d", &x1, &y1, &x2, &y2);
+//         line[++ind] = Line(x1, x2, y1, 1);
+//         xx[ind] = x1;
+//         line[++ind] = Line(x1, x2, y2, -1);
+//         xx[ind] = x2;
+//     }
+//     sort(line + 1, line + 1 + ind);
+//     sort(xx + 1, xx + 1 + ind);
+//     ll max_x = unique(xx + 1, xx + 1 + ind) - xx - 1;
+//     for(int i = 1; i <= ind; i++)
+//     {
+//         ll L = lower_bound(xx + 1, xx + 1 + max_x, line[i].lx) - xx;
+//         ll R = lower_bound(xx + 1, xx + 1 + max_x, line[i].rx) - xx;
+//         update(L, R, 1, 1, max_x, line[i].d);
+//         ans += 2 * num[1] * (line[i + 1].h - line[i].h);//总竖边长(2 * 竖边对数num * 长度)
+//         ans += abs(tree[1].len - last);                 //底边长(除去了覆盖部分)
+//         last = tree[1].len;
+//     }
+//     printf("%d\n", ans);
+//     return 0;
+// }
+
+
+
+//*24.覆盖的面积 （扫描线进阶）
+//写法1：区间处理为[L, R - 1]，线段树叶子结点为一个点即如[1, 1], [3, 3] -- 实际上分别代表区间[1, 2], [3, 4]
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cstring>
+// using namespace std;
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define ll int
+// #define db double
+// const ll N = 1e5 + 5;
+// ll n, T;
+// ll cnt[N];
+// db tree[N], tree2[N], xx[N];//tree[]维护独立有效长度，tree2[]维护被覆盖的有效长度
+// struct Line{
+//     db lx, rx, h;
+//     ll d;
+//     Line(){}
+//     Line(db a, db b, db c, ll dd) {lx = a, rx = b, h = c, d = dd;}
+//     bool operator <(const Line &m) const{ return h < m.h;}
+// }line[N];
+// void push_up(ll p, ll pl, ll pr)
+// {
+//     if(cnt[p])
+//         tree[p] = xx[pr + 1] - xx[pl];//注意要线段树区间如[1, 2]代表实际区间[1, 3]，长度按实际区间长度算
+//     else if(pl == pr)
+//         tree[p] = 0;
+//     else
+//         tree[p] = tree[ls] + tree[rs];
+
+//     if(cnt[p] > 1)
+//         tree2[p] = xx[pr + 1] - xx[pl];
+//     else if(pl == pr)
+//         tree2[p] = 0;
+//     else if(cnt[p] == 1)
+//         tree2[p] = tree[ls] + tree[rs];
+//     else
+//         tree2[p] = tree2[ls] + tree2[rs];
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         cnt[p] += d;
+//         push_up(p, pl, pr);
+//         return;
+//     }
+//     if(pl == pr) return;
+//     ll mid = pl + pr >> 1;
+//     if(L <= mid) update(L, R, ls, pl, mid, d);
+//     if(R > mid) update(L, R, rs, mid + 1, pr, d);
+//     push_up(p, pl, pr);
+// }
+// int main()
+// {
+//     scanf("%d", &T);
+//     while(T--)
+//     {
+//         memset(cnt, 0, sizeof(cnt));
+//         memset(tree, 0, sizeof(tree));
+//         memset(tree2, 0, sizeof(tree2));
+//         db ans = 0;
+//         ll ind = 0;
+//         scanf("%d", &n);
+//         for(int i = 1; i <= n; i++)
+//         {
+//             db x1, y1, x2, y2;
+//             scanf("%lf%lf%lf%lf", &x1, &y1, &x2, &y2);
+//             line[++ind] = Line(x1, x2, y1, 1);
+//             xx[ind] = x1;
+//             line[++ind] = Line(x1, x2, y2, -1);
+//             xx[ind] = x2;
+//         }
+//         sort(line + 1, line + 1 + ind);
+//         sort(xx + 1, xx + 1 + ind);
+//         ll num = unique(xx + 1, xx + 1 + ind) - xx - 1;
+//         for(int i = 1; i <= ind; i++) 
+//         {
+//             ans += tree2[1] * (line[i].h - line[i - 1].h);
+//             ll L = lower_bound(xx + 1, xx + 1 + num, line[i].lx) - xx;
+//             ll R = lower_bound(xx + 1, xx + 1 + num, line[i].rx) - xx;
+//             update(L, R - 1, 1, 1, num, line[i].d);
+//         }
+//         printf("%.2lf\n", ans);
+//     }
+//     return 0;
+// }
+
+
+//写法2：将线段树叶子结点设为[pl, pl + 1]，即设定最小结点是一个长度为1的小区间
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cstring>
+// using namespace std;
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define ll int
+// #define db double
+// const ll N = 1e5 + 5;
+// ll n, T;
+// ll cnt[N];
+// db tree[N], tree2[N], xx[N];//tree[]维护有效长度len1(至少覆盖过一次)，tree2[]维护至少被覆盖两次的有效长度len2
+// struct Line{
+//     db lx, rx, h;
+//     ll d;
+//     Line(){}
+//     Line(db a, db b, db c, ll dd) {lx = a, rx = b, h = c, d = dd;}
+//     bool operator <(const Line &m) const{ return h < m.h;}
+// }line[N];
+// void push_up(ll p, ll pl, ll pr)
+// {
+//     //len1
+//     if(cnt[p])
+//         tree[p] = xx[pr] - xx[pl];
+//     else if(pl + 1 == pr)
+//         tree[p] = 0;
+//     else
+//         tree[p] = tree[ls] + tree[rs];
     
-    // if(!cnt[p])
-    // {
-    //     tree[p] = nd(tree[ls].len + tree[rs].len, tree[ls].l_cover, tree[rs].r_cover);
-    //     num[p] = num[ls] + num[rs];
-    //     if(tree[ls].r_cover && tree[rs].l_cover) num[p]--;
-    // }
-}
-int main()
-{
-    scanf("%d", &n);
-    for(int i = 1; i <= n; i++)
-    {
-        ll x1, y1, x2, y2;
-        scanf("%d%d%d%d", &x1, &y1, &x2, &y2);
-        line[++ind] = Line(x1, x2, y1, 1);
-        xx[ind] = x1;
-        line[++ind] = Line(x1, x2, y2, -1);
-        xx[ind] = x2;
-    }
-    sort(line + 1, line + 1 + ind);
-    sort(xx + 1, xx + 1 + ind);
-    ll max_x = unique(xx + 1, xx + 1 + ind) - xx - 1;
-    for(int i = 1; i <= ind; i++)
-    {
-        ll L = lower_bound(xx + 1, xx + 1 + max_x, line[i].lx) - xx;
-        ll R = lower_bound(xx + 1, xx + 1 + max_x, line[i].rx) - xx;
-        update(L, R, 1, 1, max_x, line[i].d);
-        ans += 2 * num[1] * (line[i + 1].h - line[i].h);//总竖边长(2 * 竖边对数num * 长度)
-        ans += abs(tree[1].len - last);                 //底边长(除去了覆盖部分)
-        last = tree[1].len;
-    }
-    printf("%d\n", ans);
-    return 0;
-}
-
-
-
-
-
-
-
-
-
-
-//24.覆盖的面积
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//     //对于len2的更新情况进行讨论：
+//     //经过一次 覆盖 或 撤除 后 (cnt[p] += d)：
+//     //1. 当区间p至少共被一次性完全覆盖过两次时，此时 cnt[p] >= 2，说明整段p都是有效覆盖长度len2，即 tree2[p] = xx[pr] - xx[pl]
+//     //2. 当区间p没达到有效覆盖要求，且为叶子结点(这里是长度为1的最小区间)时，没办法再向下索取长度，只能 tree2[p] = 0
+//     //3. 当区间p(非叶子)被一次性完全覆盖过一次时，此时cnt[p] == 1，说明它有资格向下从左右子索取同样是曾被覆盖过一次的长度len1，这部分加起来就覆盖了两次
+//     //   即 tree2[p] = tree[ls] + tree[rs] 
+//     //4. 当区间p(非叶子)从没被一次性完全覆盖过时，此时cnt[p] == 0，注意只是没有一次性覆盖完，它还可以从左右子len2索取有效覆盖长度
+//     //   即 tree2[p] = tree2[ls] + tree2[rs]
+//     if(cnt[p] > 1)
+//         tree2[p] = xx[pr] - xx[pl];//对len2，至少覆盖两次时 长度有效
+//     else if(pl + 1 == pr)
+//         tree2[p] = 0;
+//     else if(cnt[p] == 1)//重点
+//         tree2[p] = tree[ls] + tree[rs];
+//     else
+//         tree2[p] = tree2[ls] + tree2[rs];
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         cnt[p] += d;
+//         push_up(p, pl, pr);
+//         return;
+//     }
+//     if(pl + 1 == pr) return;
+//     ll mid = pl + pr >> 1;
+//     if(L <= mid) update(L, R, ls, pl, mid, d);
+//     if(R > mid) update(L, R, rs, mid, pr, d);
+//     push_up(p, pl, pr);
+// }
+// int main()
+// {
+//     scanf("%d", &T);
+//     while(T--)
+//     {
+//         memset(cnt, 0, sizeof(cnt));
+//         memset(tree, 0, sizeof(tree));
+//         memset(tree2, 0, sizeof(tree2));
+//         db ans = 0;
+//         ll ind = 0;
+//         scanf("%d", &n);
+//         for(int i = 1; i <= n; i++)
+//         {
+//             db x1, y1, x2, y2;
+//             scanf("%lf%lf%lf%lf", &x1, &y1, &x2, &y2);
+//             line[++ind] = Line(x1, x2, y1, 1);
+//             xx[ind] = x1;
+//             line[++ind] = Line(x1, x2, y2, -1);
+//             xx[ind] = x2;
+//         }
+//         sort(line + 1, line + 1 + ind);
+//         sort(xx + 1, xx + 1 + ind);
+//         ll num = unique(xx + 1, xx + 1 + ind) - xx - 1;
+//         for(int i = 1; i <= ind; i++) 
+//         {
+//             ans += tree2[1] * (line[i].h - line[i - 1].h);
+//             ll L = lower_bound(xx + 1, xx + 1 + num, line[i].lx) - xx;
+//             ll R = lower_bound(xx + 1, xx + 1 + num, line[i].rx) - xx;
+//             update(L, R, 1, 1, num, line[i].d);
+//         }
+//         printf("%.2f\n", ans);
+//     }
+//     return 0;
+// }
 
 
 
 //25.Atlantis （扫描线 - 矩形面积并）
-//题意：x-y坐标系上有若干个矩形，它们的边分别平行两个坐标轴，求它们的面积并（面积并集），要求重复部分面积只计算一次。
-//注意：扫描线问题。由于x, y是实数，需要离散化处理。由于线段树维护的是x的区间长度，都是区间即不含点，如区间[2, 2]等点不具有意义，所以线段树的叶子结点为区间[pl, pl + 1]
+// 题意：x-y坐标系上有若干个矩形，它们的边分别平行两个坐标轴，求它们的面积并（面积并集），要求重复部分面积只计算一次。
+// 注意：扫描线问题。由于x, y是实数，需要离散化处理。由于线段树维护的是x的区间长度，都是区间即不含点，如区间[2, 2]等点不具有意义，所以线段树的叶子结点为区间[pl, pl + 1]
+// 基本原理：遍历所有扫描线，只要还没遇到其对应的出边时，该入边长度一直有效（指属于当前新矩形的底边长度），每次会得到当前的总有效长度tree[1]，就是新矩形的底边长。
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
@@ -13178,7 +13341,114 @@ int main()
 
 
 
+//*26.Get The Treasury （三维扫描线 - 矩体体积并 + 枚举）
+// 参考：https://blog.csdn.net/qq_41280600/article/details/104094400
+// 题意：给若干个矩体（长方体），求至少重合三次的体积之和。
+// 思路：维护x, y的面积并，枚举 z (|z| < 500 且为整数)，每次枚举都相当于寻找高度为1的矩体三次重叠部分的体积 -- 体积元。
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// #define ls (p << 1)
+// #define rs (p << 1 | 1)
+// #define lc ls, pl, mid
+// #define rc rs, mid + 1, pr
+// #define ll long long
+// const ll N = 2e4 + 5;
+// ll n, T, cnt[N << 2];
+// ll xx[N], yy[N], zz[N];
+// struct Line{
+//     ll lx, rx, y, d;
+//     ll z1, z2;//所属矩体高度范围
+//     Line(ll a = 0, ll b = 0, ll c = 0, ll dd = 0, ll e = 0, ll f = 0){ lx = a, rx = b, y = c, d = dd, z1 = e, z2 = f;}
+//     bool operator <(const Line &m) const{ return y < m.y;}
+// }line[N];
+// struct nd{
+//     ll len1, len2, len3;
+//     nd(ll l1 = 0, ll l2 = 0, ll l3 = 0) {len1 = l1, len2 = l2, len3 = l3;}
+// }tree[N << 2];
+// void build(ll p, ll pl, ll pr)
+// {
+//     tree[p] = nd(0, 0, 0);
+//     if(pl == pr) return;
+//     ll mid = pl + pr >> 1;
+//     build(lc);
+//     build(rc);
+// }
+// void push_up(ll p, ll pl, ll pr)                                      //记得 xx[pr + 1] - xx[pl]
+// {
+//     if(cnt[p]) tree[p].len1 = xx[pr + 1] - xx[pl];
+//     else if(pl == pr) tree[p].len1 = 0;
+//     else tree[p].len1 = tree[ls].len1 + tree[rs].len1;
 
+//     if(cnt[p] >= 2) tree[p].len2 = xx[pr + 1] - xx[pl];
+//     else if(pl == pr) tree[p].len2 = 0;
+//     else if(cnt[p] == 1) tree[p].len2 = tree[ls].len1 + tree[rs].len1;//只差一次覆盖，从len1拿
+//     else tree[p].len2 = tree[ls].len2 + tree[rs].len2;
+
+//     if(cnt[p] >= 3) tree[p].len3 = xx[pr + 1] - xx[pl];
+//     else if(pl == pr) tree[p].len3 = 0;
+//     else if(cnt[p] == 1) tree[p].len3 = tree[ls].len2 + tree[rs].len2;//还差两次覆盖，从len2拿
+//     else if(cnt[p] == 2) tree[p].len3 = tree[ls].len1 + tree[rs].len1;//只差一次覆盖，从len1拿
+//     else tree[p].len3 = tree[ls].len3 + tree[rs].len3;
+    
+// }
+// void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
+// {
+//     if(L <= pl && R >= pr)
+//     {
+//         cnt[p] += d;
+//         push_up(p, pl, pr);
+//         return;
+//     }
+//     if(pl == pr) return;
+//     ll mid = pl + pr >> 1;
+//     if(L <= mid) update(L, R, lc, d);
+//     if(R > mid) update(L, R, rc, d);
+//     push_up(p, pl, pr);
+// }
+// int main()
+// {
+//     scanf("%lld", &T);
+//     for(int _ = 1; _ <= T; _++)
+//     {
+//         ll ind = 0, ans = 0;
+//         scanf("%lld", &n);
+
+//         for(int i = 1; i <= n; i++)
+//         {
+//             ll x1, y1, z1, x2, y2, z2;
+//             scanf("%lld%lld%lld%lld%lld%lld", &x1, &y1, &z1, &x2, &y2, &z2);
+//             line[++ind] = Line(x1, x2, y1, 1, z1, z2);
+//             xx[ind] = x1, zz[ind] = z1;
+//             line[++ind] = Line(x1, x2, y2, -1, z1, z2);
+//             xx[ind] = x2, zz[ind] = z2;
+//         }
+
+//         sort(line + 1, line + 1 + ind);
+//         sort(xx + 1, xx + 1 + ind);
+//         ll num_x = unique(xx + 1, xx + 1 + ind) - xx - 1;
+
+//         for(int z = -500; z <= 500; z++)             //遍历所有体积元
+//         {
+//             ll area = 0;                             //扫描面符合条件的面积
+//             for(int i = 1; i <= ind; i++)            //遍历所有属于体积元所在的矩体连结体的"扫描面"
+//             {
+//                 if(line[i].z1 <= z && z < line[i].z2)//一个矩体的体积元个数为 z2 - z1 个，即区间 [z1, z2)，合起来恰好是该矩体的体积
+//                 {
+//                     area += tree[1].len3 * (line[i].y - line[i - 1].y);
+//                     ll L = lower_bound(xx + 1, xx + 1 + num_x, line[i].lx) - xx;
+//                     ll R = lower_bound(xx + 1, xx + 1 + num_x, line[i].rx) - xx;
+//                     update(L, R - 1, 1, 1, num_x, line[i].d);
+//                 }
+//             }
+//             ans += area;
+//         }
+//         printf("Case %d: %lld\n", _, ans);
+//     }
+//     return 0;
+// }
 
 
 
