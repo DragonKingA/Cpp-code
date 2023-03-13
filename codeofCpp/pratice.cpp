@@ -5811,11 +5811,11 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 #include <algorithm>
 using namespace std;
 #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+int n;
 
 int main()
 {
     untie();
-    int n;
     cin >> n;
     
 
