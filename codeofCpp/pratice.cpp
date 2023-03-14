@@ -5806,21 +5806,21 @@ i= 0 1 2 3 4 5 6 7 8 9 10 (其中i=0和i=10仅为定位所用，其高度意义为0或无穷小)
 */
 
 
-#include <iostream>
-#include <set>
-#include <algorithm>
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
-int n;
+// #include <iostream>
+// #include <set>
+// #include <algorithm>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// int n;
 
-int main()
-{
-    untie();
-    cin >> n;
+// int main()
+// {
+//     untie();
+//     cin >> n;
     
 
-    return 0;
-}
+//     return 0;
+// }
 
 
 
@@ -13731,6 +13731,68 @@ int main()
 //3.线段树 1
 //树状数组写法(差分)，重点在于开第二个数组 tree2[i]=tree1[i]*(i-1)
 //https://www.luogu.com.cn/problem/solution/P3372
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*十五. 哈希算法(HASH)*/
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
