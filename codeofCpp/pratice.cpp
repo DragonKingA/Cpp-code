@@ -13748,11 +13748,115 @@ int main()
 
 
 /*十五. 哈希算法(HASH)*/
-//
+//1. PTA 航空公司VIP客户查询 (基本数值哈希)
+#include <cstdio>
+#include <algorithm>
+#include <iostream>
+#include <cmath>
+#include <cstdlib>
+#include <cstring>
+using namespace std;
+#define ll long long
+#define ull unsigned long long
+#define num(x) ((x) - '0')
+const int M = 2e5;//使用开放定址法，散列表必须足够大
 
+int n, m, k, P;
 
+struct node{
+    char arr[20];  //身份证号 [0, 17]
+    int pts;     //里程积分
+    node *next;   //指向下一个单元，没有则为 NULL
+};
 
+typedef node* Hash;
 
+int cal(const char *s)//哈希处理身份证号，得到下标地址
+{
+    //依据待定散列表大小，处理得到的 id 为 1e5 级别，这里共选5位，必选最后一位，前四位集中在后段会快很多
+    int id = num(s[5]) * 10000 + num(s[9]) * 1000 + num(s[13]) * 100 + num(s[15]) * 10 + num(s[16]);
+    if(s[17] == 'x') id = id * 10 + 10;//特殊处理字符位
+    else id = id * 10 + num(s[17]);
+    return id;
+}
+int getprime(int N)
+{
+    int p = (N % 2) ? (N + 2) : (N + 1);
+    int i;
+    while(p < M)
+    {
+        for(i = (int)sqrt(N); i >= 2; --i)
+            if(p % i == 0) break;
+        if(i < 2) break;
+        else p += 2;
+    }
+    return p;
+}
+//注意：链表的连接方向 与 散列表方向 相反！！！
+//所以每次加入的新结点都会变成该链表的头，即原来的head[ind]链表一整个接入新结点下
+Hash insert(Hash h, char *s, int d) //哈希链表的插入
+{
+    Hash p = h;
+    while(p) // 即 p != NULL
+    {
+        if(!strcmp(p -> arr, s))//已存在，则叠加里程积分
+        {
+            p -> pts += d;
+            return h;           //返回原来的头
+        }
+        p = p -> next;
+    }
+    //尚不存在，则新建结点后插入
+    p = (Hash)malloc(sizeof(node));
+    strcpy(p -> arr, s);
+    p -> pts = d;
+    p -> next = h;//??????????????????????????????????????????????????????????????????????????????????????????????????
+    return p;
+}
+void check(Hash h, char *s) //判断该人是否为会员
+{
+    Hash p = h;
+    while(p) 
+    {
+        if(!strcmp(p -> arr, s)) //相等时, strcmp() 返回 0
+        {
+            printf("%d\n", p -> pts);
+            return;
+        }
+        p = p -> next;
+    }
+    printf("No Info\n");
+}
+int main()
+{
+    scanf("%d%d", &n, &k);
+
+    P = getprime(n);
+    Hash *head = (Hash *)malloc(P * sizeof(Hash));//头插法的指针数组，存储链表起点
+    for(int i = 0; i < P; i++) head[i] = NULL;    //初始化指针数组
+
+    int ind, d;  //下标，里程
+    char arr[20];//身份证号
+
+    while(n--)
+    {
+        scanf("%s%d", arr, &d);
+        if(d < k) d = k;//题意：航程低于k公里的航班也按k公里累积
+        ind = cal(arr) % P;
+        head[ind] = insert(head[ind], arr, d);
+    }
+
+    scanf("%d", &m);
+    while(m--)
+    {
+        scanf("%s", arr);
+        ind = cal(arr) % P;
+        check(head[ind], arr);
+    }
+
+    return 0;
+}
+//非指针数组写法：
 
 
 

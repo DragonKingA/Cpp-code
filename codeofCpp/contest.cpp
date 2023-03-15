@@ -802,44 +802,44 @@ blue - 3 - red
 //I
 //二分 单位价值x
 //二分判断式子推导：sum = Σv / Σw >= x  --->  sum = Σv - x * Σw >= 0 ---> 收束左端点
-#include <cstdio>
-#include <algorithm>
-#include <iostream>
-using namespace std;
-#define db double
-const int N = 1e5 + 5;
-const db eps = 1e-8;
-int n, k;
-db w[N], v[N], sum[N];
-bool check(db x)
-{
-    double s = 0;
-    for(int i = 1; i <= n; i++)
-        sum[i] = v[i] - x * w[i];
-    sort(sum + 1, sum + 1 + n);
-    for(int i = n; i >= n - k + 1; i--)//选前k大
-        s += sum[i];
-    return s >= 0;
-}
-int main()
-{
-    int T;
-    scanf("%d", &T);
-    while(T--)
-    {
-        scanf("%d%d", &n, &k);
-        for(int i = 1; i <= n; i++) scanf("%lf%lf", &w[i], &v[i]);
-        db l = 0, r = 1e6;
-        while(r - l >= eps)
-        {
-            db mid = (l + r) / 2;
-            if(check(mid)) l = mid;
-            else r = mid;
-        }
-        printf("%.2lf\n", l);
-    }
-    return 0;
-}
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// using namespace std;
+// #define db double
+// const int N = 1e5 + 5;
+// const db eps = 1e-8;
+// int n, k;
+// db w[N], v[N], sum[N];
+// bool check(db x)
+// {
+//     double s = 0;
+//     for(int i = 1; i <= n; i++)
+//         sum[i] = v[i] - x * w[i];
+//     sort(sum + 1, sum + 1 + n);
+//     for(int i = n; i >= n - k + 1; i--)//选前k大
+//         s += sum[i];
+//     return s >= 0;
+// }
+// int main()
+// {
+//     int T;
+//     scanf("%d", &T);
+//     while(T--)
+//     {
+//         scanf("%d%d", &n, &k);
+//         for(int i = 1; i <= n; i++) scanf("%lf%lf", &w[i], &v[i]);
+//         db l = 0, r = 1e6;
+//         while(r - l >= eps)
+//         {
+//             db mid = (l + r) / 2;
+//             if(check(mid)) l = mid;
+//             else r = mid;
+//         }
+//         printf("%.2lf\n", l);
+//     }
+//     return 0;
+// }
 
 
 
