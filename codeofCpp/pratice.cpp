@@ -13749,113 +13749,106 @@ int main()
 
 /*十五. 哈希算法(HASH)*/
 //1. PTA 航空公司VIP客户查询 (基本数值哈希)
-#include <cstdio>
-#include <algorithm>
-#include <iostream>
-#include <cmath>
-#include <cstdlib>
-#include <cstring>
-using namespace std;
-#define ll long long
-#define ull unsigned long long
-#define num(x) ((x) - '0')
-const int M = 2e5;//使用开放定址法，散列表必须足够大
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cmath>
+// #include <cstdlib>
+// #include <cstring>
+// using namespace std;
+// #define ll long long
+// #define ull unsigned long long
+// #define num(x) ((x) - '0')
+// const int M = 2e5;//使用开放定址法，散列表必须足够大
+// //实际上这道题由于给的空间仅64MB，否则要取五位数字拟哈希值的话，M的大小应至少定义为1e6（这里2e5测试数据已经63MB左右了）
+// int n, m, k, P;
+// struct node{
+//     char arr[20];  //身份证号 [0, 17]
+//     int pts;     //里程积分
+//     node *next;   //指向下一个单元，没有则为 NULL
+// };
+// typedef node* Hash;
+// int cal(const char *s)//哈希处理身份证号，得到下标地址
+// {
+//     //依据待定散列表大小，处理得到的 id 为 1e5 级别，这里共选5位，必选最后一位，前四位集中在后段会快很多
+//     int id = num(s[5]) * 10000 + num(s[9]) * 1000 + num(s[13]) * 100 + num(s[15]) * 10 + num(s[16]);
+//     if(s[17] == 'x') id = id * 10 + 10;//特殊处理字符位
+//     else id = id * 10 + num(s[17]);
+//     return id;
+// }
+// int getprime(int N)
+// {
+//     int p = (N % 2) ? (N + 2) : (N + 1);
+//     int i;
+//     while(p < M)
+//     {
+//         for(i = (int)sqrt(N); i >= 2; --i)
+//             if(p % i == 0) break;
+//         if(i < 2) break;
+//         else p += 2;
+//     }
+//     return p;
+// }
+// //注意：链表的连接方向 与 散列表方向 相反！！！
+// //所以每次加入的新结点都会变成该链表的头，即原来的head[ind]链表一整个接入新结点下
+// Hash insert(const Hash h, char *s, int d) //哈希链表的插入
+// {
+//     Hash p = h;
+//     while(p) // 即 p != NULL
+//     {
+//         if(!strcmp(p -> arr, s))//已存在，则叠加里程积分
+//         {
+//             p -> pts += d;
+//             return h;           //返回原来的头
+//         }
+//         p = p -> next;
+//     }
+//     //尚不存在，则新建结点后插入
+//     p = (Hash)malloc(sizeof(node));
+//     strcpy(p -> arr, s);
+//     p -> pts = d;
+//     p -> next = h;
+//     return p;
+// }
+// void check(const Hash h, char *s) //判断该人是否为会员
+// {
+//     Hash p = h;
+//     while(p) 
+//     {
+//         if(!strcmp(p -> arr, s)) //相等时, strcmp() 返回 0
+//         {
+//             printf("%d\n", p -> pts);
+//             return;
+//         }
+//         p = p -> next;
+//     }
+//     printf("No Info\n");
+// }
+// int main()
+// {
+//     scanf("%d%d", &n, &k);
+//     P = getprime(n);
+//     Hash *head = (Hash *)malloc(P * sizeof(Hash));//头插法的指针数组，存储链表起点
+//     for(int i = 0; i < P; i++) head[i] = NULL;    //初始化指针数组
+//     int ind, d;  //下标，里程
+//     char arr[20];//身份证号
+//     while(n--)
+//     {
+//         scanf("%s%d", arr, &d);
+//         if(d < k) d = k;//题意：航程低于k公里的航班也按k公里累积
+//         ind = cal(arr) % P;
+//         head[ind] = insert(head[ind], arr, d);
+//     }
+//     scanf("%d", &m);
+//     while(m--)
+//     {
+//         scanf("%s", arr);
+//         ind = cal(arr) % P;
+//         check(head[ind], arr);
+//     }
+//     return 0;
+// }
 
-int n, m, k, P;
-
-struct node{
-    char arr[20];  //身份证号 [0, 17]
-    int pts;     //里程积分
-    node *next;   //指向下一个单元，没有则为 NULL
-};
-
-typedef node* Hash;
-
-int cal(const char *s)//哈希处理身份证号，得到下标地址
-{
-    //依据待定散列表大小，处理得到的 id 为 1e5 级别，这里共选5位，必选最后一位，前四位集中在后段会快很多
-    int id = num(s[5]) * 10000 + num(s[9]) * 1000 + num(s[13]) * 100 + num(s[15]) * 10 + num(s[16]);
-    if(s[17] == 'x') id = id * 10 + 10;//特殊处理字符位
-    else id = id * 10 + num(s[17]);
-    return id;
-}
-int getprime(int N)
-{
-    int p = (N % 2) ? (N + 2) : (N + 1);
-    int i;
-    while(p < M)
-    {
-        for(i = (int)sqrt(N); i >= 2; --i)
-            if(p % i == 0) break;
-        if(i < 2) break;
-        else p += 2;
-    }
-    return p;
-}
-//注意：链表的连接方向 与 散列表方向 相反！！！
-//所以每次加入的新结点都会变成该链表的头，即原来的head[ind]链表一整个接入新结点下
-Hash insert(Hash h, char *s, int d) //哈希链表的插入
-{
-    Hash p = h;
-    while(p) // 即 p != NULL
-    {
-        if(!strcmp(p -> arr, s))//已存在，则叠加里程积分
-        {
-            p -> pts += d;
-            return h;           //返回原来的头
-        }
-        p = p -> next;
-    }
-    //尚不存在，则新建结点后插入
-    p = (Hash)malloc(sizeof(node));
-    strcpy(p -> arr, s);
-    p -> pts = d;
-    p -> next = h;//??????????????????????????????????????????????????????????????????????????????????????????????????
-    return p;
-}
-void check(Hash h, char *s) //判断该人是否为会员
-{
-    Hash p = h;
-    while(p) 
-    {
-        if(!strcmp(p -> arr, s)) //相等时, strcmp() 返回 0
-        {
-            printf("%d\n", p -> pts);
-            return;
-        }
-        p = p -> next;
-    }
-    printf("No Info\n");
-}
-int main()
-{
-    scanf("%d%d", &n, &k);
-
-    P = getprime(n);
-    Hash *head = (Hash *)malloc(P * sizeof(Hash));//头插法的指针数组，存储链表起点
-    for(int i = 0; i < P; i++) head[i] = NULL;    //初始化指针数组
-
-    int ind, d;  //下标，里程
-    char arr[20];//身份证号
-
-    while(n--)
-    {
-        scanf("%s%d", arr, &d);
-        if(d < k) d = k;//题意：航程低于k公里的航班也按k公里累积
-        ind = cal(arr) % P;
-        head[ind] = insert(head[ind], arr, d);
-    }
-
-    scanf("%d", &m);
-    while(m--)
-    {
-        scanf("%s", arr);
-        ind = cal(arr) % P;
-        check(head[ind], arr);
-    }
-
-    return 0;
-}
 //非指针数组写法：
 
 
@@ -13866,17 +13859,195 @@ int main()
 
 
 
+//2.P3370 【模板】字符串哈希
+//写法1：自然溢出（158ms 得益于 set 的加速）
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cmath>
+// #include <cstdlib>
+// #include <cstring>
+// #include <unordered_set>
+// using namespace std;
+// #define ll long long
+// #define ull unsigned long long
+// #define num(x) ((x) - '0')
+// const int N = 1e4 + 5, M = 1505;
+// ull base = 131;
+// char s[M];
+// unordered_set<ull> cnt;//或者存起哈希值，前后两两对比哈希值是否相同
+// ull cal(char *s)
+// {
+//     int len = strlen(s);
+//     ull h = 0;
+//     for(int i = 0; i < len; i++)
+//         h = h * base + num(s[i]);
+//     return h;
+// }
+// int main()
+// {
+//     int n;
+//     scanf("%d", &n);
+//     for(int i = 0; i < n; i++)
+//     {
+//         scanf("%s", s);
+//         cnt.insert(cal(s));
+//     }
+//     printf("%d\n", cnt.size());
+//     return 0;
+// }
+
+//写法2：单Hash法（609ms）
+//由于数据量较小，底数取 31，余数 P 取到 1e9 ~ 1e10，使其尽量不要到达取模点即可“避免”冲突。
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cmath>
+// #include <cstdlib>
+// #include <cstring>
+// using namespace std;
+// #define ll long long
+// #define ull unsigned long long
+// #define num(x) ((x) - '0')
+// const int N = 1e4 + 5, M = 1505;
+// ll base = 31, P = 9999999929;
+// char s[N][M];
+// ll Hash[N];
+// void print_prime(ll MIN, ll MAX)
+// {
+//     for(; MIN <= MAX; MIN++)
+//     {
+//         bool ok = 1;
+//         for(ll i = (ll)sqrt(MIN); i >= 2; i--)
+//         {
+//             if(MIN % i == 0) 
+//             {
+//                 ok = 0;
+//                 break;
+//             }
+//         }
+//         if(ok) printf("%lld\n", MIN);
+//     }
+// }
+// ll cal(char *s)
+// {
+//     ll len = strlen(s);
+//     ll h = 0;
+//     for(int i = 0; i < len; i++)
+//         h = (h * base + num(s[i])) % P;
+//     return h;
+// }
+// int main()
+// {
+//     // print_prime(9999999900LL, (ll)1e10);
+//     ll ans = 1;
+//     int n;
+//     scanf("%d", &n);
+//     for(int i = 0; i < n; i++)
+//     {
+//         scanf("%s", s[i]);
+//         Hash[i] = cal(s[i]);
+//     }
+//     sort(Hash, Hash + n);
+//     for(int i = 1; i < n; i++)
+//     {
+//         if(Hash[i] != Hash[i - 1])
+//             ans++;
+//     }
+//     printf("%d\n", ans);
+//     return 0;
+// }
+
+//写法3：双Hash法（1070ms）
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cmath>
+// #include <cstdlib>
+// #include <cstring>
+// using namespace std;
+// #define ll long long
+// #define ull unsigned long long
+// #define num(x) ((x) - '0')
+// const int N = 1e4 + 5, M = 1505;
+// ll base1 = 31, base2 = 131, P1 = 800000821, P2 = 9999999943;
+// char s[M];
+// struct nd{
+//     ll h1, h2;
+//     bool operator <(const nd &x) const{ return h1 < x.h1;}
+// }Hash[N];
+// ll cal(ll base, ll P, char *s)
+// {
+//     ll len = strlen(s);
+//     ll h = 0;
+//     for(int i = 0; i < len; i++)
+//         h = (h * base + num(s[i])) % P;
+//     return h;
+// }
+// int main()
+// {
+//     ll ans = 1;
+//     int n;
+//     scanf("%d", &n);
+//     for(int i = 0; i < n; i++)
+//     {
+//         scanf("%s", s);
+//         Hash[i].h1 = cal(base1, P1, s);
+//         Hash[i].h2 = cal(base2, P2, s);
+//     }
+//     sort(Hash, Hash + n);
+//     for(int i = 1; i < n; i++)
+//         if(Hash[i].h1 != Hash[i - 1].h1 || Hash[i].h2 != Hash[i - 1].h2)
+//             ++ans;
+//     printf("%d\n", ans);
+//     return 0;
+// }
 
 
 
+//3.不同的循环子字符串（循环子串数目，注意与回文串区分）
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cmath>
+// #include <cstdlib>
+// #include <cstring>
+// #include <unordered_set>
+// using namespace std;
+// #define ll long long
+// #define ull unsigned long long
+// #define num(x) ((x) - 'a' + 1)//注意这里不能是 x - 'a'，则对于"aaaaaa"这类串所有哈希值都为0，导致出错
+// const int M = 2005;
+// ull base = 31;
+// char s[M];
+// ull Hash[M], p[M];
+// ull gethash(int L, int R)
+// {
+//     return Hash[R] - Hash[L - 1] * p[R - L + 1];
+// }
+// void init()
+// {
+//     Hash[0] = 0, p[0] = 1;
+//     for(int i = 1; i < M; ++i) p[i] = p[i - 1] * base;//预处理计算 base^i
+// }
+// int main()
+// {
+//     init();    
+//     scanf("%s", s + 1);
+//     int n = strlen(s + 1);
+//     //处理前缀哈希值
+//     for(int i = 1; i <= n; i++) Hash[i] = Hash[i - 1] * base + num(s[i]);
 
-
-
-
-
-
-
-
+//     //枚举子串长度，判断循环串
+//     unordered_set<ull> ans;
+//     ull temp = 0;
+//     for(int len = 1; 2 * len <= n; len++)
+//         for(int L = 1; L + 2 * len - 1 <= n; L++)
+//             if((temp = gethash(L, L + len - 1)) == gethash(L + len, L + 2 * len - 1))
+//                 ans.insert(temp);
+//     printf("%d\n", ans.size());
+//     return 0;
+// }
 
 
 
