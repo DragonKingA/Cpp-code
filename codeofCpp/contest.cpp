@@ -1255,3 +1255,32 @@ CCX
 
 
 
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <iomanip>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+double k1 = 6.2619, k2 = 6.6744, k3 = 0.0516, k4 = 0.8065;
+int main()
+{
+    untie();
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        char op[3];
+        double x, res = 0;
+        double const *rate;
+        cin >> op >> x;
+        if(op[0] == 'D') rate = &k1;
+        else if(op[0] == 'E') rate = &k2;
+        else if(op[0] == 'Y') rate = &k3;
+        else rate = &k4;
+        res = x * *rate;
+        cout << fixed << setprecision(4) << res <<"\n";
+    }
+    return 0;
+}
+
+

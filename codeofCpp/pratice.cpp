@@ -12541,6 +12541,7 @@ push_up():
 // vector<ll> G[N];
 // void init()
 // {
+//     memset(indegree, 0, sizeof(indegree));
 //     memset(tree, -1, sizeof(tree));
 //     memset(tag, -1, sizeof(tag));
 //     for(int i = 1; i <= n; i++) G[i].clear();
@@ -12653,20 +12654,19 @@ push_up():
 // struct nd{
 //     ll s[3];
 //     ll sum, mul, setx;
-//     nd(ll a = 0, ll b = 0, ll c = 0, ll d = 0, ll e = 0, ll f = 0) {s[0] = a, s[1] = b, s[2] = c, sum = d, mul = e, setx = f;}
 // }tree[N << 2];
 // void addtag_sum(ll p, ll pl, ll pr, ll d)//注意三种求和的更新先后关系
 // {
 //     ll len = pr - pl + 1;
-//     tree[p].s[2] = mod(tree[p].s[2] + mod(3 * d * tree[p].s[1]) + mod(3 * d * d * tree[p].s[0]) + mod(len * d * d * d));
-//     tree[p].s[1] = mod(tree[p].s[1] + mod(2 * d * tree[p].s[0]) + mod(len * d * d));
+//     tree[p].s[2] = mod(tree[p].s[2] + mod(3 * d * tree[p].s[1]) + mod(mod(3 * d * d) * tree[p].s[0]) + mod(mod(mod(len * d) * d) * d));
+//     tree[p].s[1] = mod(tree[p].s[1] + mod(2 * d * tree[p].s[0]) + mod(mod(len * d) * d));
 //     tree[p].s[0] = mod(tree[p].s[0] + mod(len * d));
 //     tree[p].sum  = mod(tree[p].sum + d);
 // }
 // void addtag_mul(ll p, ll pl, ll pr, ll d)
 // {
-//     tree[p].s[2] = mod(tree[p].s[2] * d * d * d);
-//     tree[p].s[1] = mod(tree[p].s[1] * d * d);
+//     tree[p].s[2] = mod(mod(mod(tree[p].s[2] * d) * d) * d);
+//     tree[p].s[1] = mod(mod(tree[p].s[1] * d) * d);
 //     tree[p].s[0] = mod(tree[p].s[0] * d);
 //     tree[p].sum  = mod(tree[p].sum * d);
 //     tree[p].mul  = mod(tree[p].mul * d);
@@ -12674,10 +12674,12 @@ push_up():
 // void addtag_set(ll p, ll pl, ll pr, ll d)
 // {
 //     ll len = pr - pl + 1;
-//     tree[p].s[2] = mod(len * d * d * d);
-//     tree[p].s[1] = mod(len * d * d);
+//     tree[p].s[2] = mod(mod(mod(len * d) * d) * d);
+//     tree[p].s[1] = mod(mod(len * d) * d);
 //     tree[p].s[0] = mod(len * d);
 //     tree[p].setx = d;
+//     tree[p].mul = 1;//向下传递覆盖信息
+//     tree[p].sum = 0;
 // }
 // void push_up(ll p)
 // {
@@ -12690,25 +12692,27 @@ push_up():
 //     {
 //         addtag_set(lc, tree[p].setx);
 //         addtag_set(rc, tree[p].setx);
+//         tree[p].setx = -1;
 //     }
-//     else
+
+//     if(tree[p].mul != 1)
 //     {
-//         if(tree[p].mul != 1)
-//         {
-//             addtag_mul(lc, tree[p].mul);
-//             addtag_mul(rc, tree[p].mul);
-//         }
-//         if(!tree[p].sum)
-//         {
-//             addtag_sum(lc, tree[p].sum);
-//             addtag_sum(rc, tree[p].sum);
-//         }
+//         addtag_mul(lc, tree[p].mul);
+//         addtag_mul(rc, tree[p].mul);
+//         tree[p].mul = 1;
 //     }
-//     tree[p].sum = 0, tree[p].mul = 1, tree[p].setx = -1;
+//     if(tree[p].sum)
+//     {
+//         addtag_sum(lc, tree[p].sum);
+//         addtag_sum(rc, tree[p].sum);
+//         tree[p].sum = 0;
+//     }
+//     // tree[p].sum = 0, tree[p].mul = 1, tree[p].setx = -1;
 // }
 // void build(ll p, ll pl, ll pr)
 // {
-//     tree[p] = nd(0, 0, 0, 0, 1, -1);
+//     tree[p].s[0] = tree[p].s[1] = tree[p].s[2] = tree[p].sum = 0;
+//     tree[p].mul = 1, tree[p].setx = -1;
 //     if(pl == pr) return;
 //     ll mid = pl + pr >> 1;
 //     build(lc);
@@ -12718,7 +12722,6 @@ push_up():
 // {
 //     if(L <= pl && R >= pr)
 //     {
-//         ll len = pr - pl + 1;
 //         if(op == 1) addtag_sum(p, pl, pr, d);
 //         else if(op == 2) addtag_mul(p, pl, pr, d);
 //         else addtag_set(p, pl, pr, d);
@@ -12741,8 +12744,9 @@ push_up():
 // }
 // int main()
 // {
-//     while(~scanf("%d%d", &n, &m), n)
+//     while(~scanf("%d%d", &n, &m))//while(~scanf("%d%d", &n, &m), n) 会WA
 //     {
+//         if(n + m == 0) break;
 //         build(1, 1, n);
 //         while(m--)
 //         {
@@ -12869,6 +12873,8 @@ push_up():
 
 //22.约会安排 (同时维护两个区间，两区间之间具有单向覆盖关系 + 维护最长连续序列长度)
 // 维护两个时间区间 DS、NS，需要记录连续0个数(最长前缀连续、最长后缀连续 和 最长总连续)
+// tree[0][] -- DS
+// tree[1][] -- NS
 // DS T 和 NS T 都要求找一段编号最靠前的长为T的连续空闲空间，而 NS 如果没找到则可以占据 DS 的空间； STUDY!! L R 表示清空[L, R]区间
 // #include <cstdio>
 // #include <iostream>
@@ -12896,8 +12902,8 @@ push_up():
 //     ll len = pr - pl + 1;
 //     tree[i][p].pre = tree[i][ls].pre;
 //     tree[i][p].suf = tree[i][rs].suf;
-//     if(tree[i][ls].cnt == len - (len >> 1)) tree[i][p].pre += tree[i][rs].pre;
-//     if(tree[i][rs].cnt == (len >> 1)) tree[i][p].suf += tree[i][ls].suf;
+//     if(tree[i][p].pre == len - (len >> 1)) tree[i][p].pre += tree[i][rs].pre;
+//     if(tree[i][p].suf == (len >> 1)) tree[i][p].suf += tree[i][ls].suf;
 //     tree[i][p].cnt = max(max(tree[i][ls].cnt, tree[i][rs].cnt), tree[i][ls].suf + tree[i][rs].pre);
 // }
 // void push_down(ll p, ll pl, ll pr, ll i)
@@ -12957,7 +12963,7 @@ push_up():
 //             if(op[0] == 'D')
 //             {
 //                 scanf("%d", &T);
-//                 if(tree[1][1].cnt < T)//同时受NS、DS区间占用情况的影响
+//                 if(tree[0][1].cnt < T)//tree[0] 同时受NS、DS区间占用情况的影响，即 DS 只能找tree[0]
 //                 {
 //                     printf("fly with yourself\n");
 //                     continue;   
@@ -12971,24 +12977,25 @@ push_up():
 //             {
 //                 ll res;
 //                 scanf("%d", &T);
-//                 if(tree[0][1].cnt >= T)//依据题意先找DS区间是否有足够的连续空闲区间
-//                     res = query(1, 1, n, 0, T);
-//                 else if(tree[1][1].cnt >= T)//再“无视DS区间占用”找
-//                     res = query(1, 1, n, 1, T);
-//                 else
+//                 if(tree[1][1].cnt < T)
 //                 {
 //                     printf("wait for me\n");
 //                     continue;
 //                 }
-//                 //NS区间只影响tree[1]
+//                 if(tree[0][1].cnt >= T)        //依据题意看DS区间是否有足够的连续空闲区间
+//                     res = query(1, 1, n, 0, T);
+//                 else                           //再“无视DS区间占用”找
+//                     res = query(1, 1, n, 1, T);
+
+//                 update(res, res + T - 1, 1, 1, n, 0, 0);
 //                 update(res, res + T - 1, 1, 1, n, 1, 0);
 //                 printf("%d,don't put my gezi\n", res);
 //             }
 //             else
 //             {
 //                 scanf("%d%d", &L, &R);
-//                 update(1, n, 1, 1, n, 0, 1);
-//                 update(1, n, 1, 1, n, 1, 1);
+//                 update(L, R, 1, 1, n, 0, 1);
+//                 update(L, R, 1, 1, n, 1, 1);
 //                 printf("I am the hope of chinese chengxuyuan!!\n");
 //             }
 //         }
@@ -13296,7 +13303,7 @@ push_up():
 // #define rs (p << 1 | 1)
 // #define ll int
 // #define db double
-// const int N = 1e2 + 5;
+// const int N = 1e3 + 5;
 // ll n, cnt[N << 2];//cnt[p] 记录当前区间p被覆盖的次数，跟其它节点无关。可判断该区间长度是否有效
 // //一个节点代表的区间被覆盖的次数不需要继承其父亲的信息，每条入边一一对应一条等长的出边，由该入边产生的覆盖次数cnt应由其对应出边抵消，因此去掉pushdown
 // db tree[N << 2], X[N << 2];
@@ -13306,18 +13313,22 @@ push_up():
 //     Line(db a = 0, db b = 0, db c = 0, ll dd = 0) {lx = a, rx = b, y = c, d = dd;}
 //     bool operator <(const Line &x) const{ return y < x.y;}
 // }line[N << 2];
+// void push_up(ll p, ll pl, ll pr)
+// {
+//     if(cnt[p]) 
+//         tree[p] = X[pr] - X[pl];
+//     //区间p长度无效时
+//     else if(pl + 1 == pr)//叶子结点没办法向下索取有效长度，即后面没有有效长度排队占用，置为0即可
+//         tree[p] = 0;
+//     else
+//         tree[p] = tree[ls] + tree[rs];//向下索取有效长度（或者说到这段有效长度占据区间p了）
+// }
 // void update(ll L, ll R, ll p, ll pl, ll pr, ll d)
 // {
 //     if(L <= pl && R >= pr)
 //     {
 //         cnt[p] += d;
-//         if(cnt[p]) 
-//             tree[p] = X[pr] - X[pl];
-//         //区间p长度无效时
-//         else if(pl + 1 == pr)//叶子结点没办法向下索取有效长度，即后面没有有效长度排队占用，置为0即可
-//             tree[p] = 0;
-//         else
-//             tree[p] = tree[ls] + tree[rs];//向下索取有效长度（或者说到这段有效长度占据区间p了）
+//         push_up(p, pl, pr);
 //         return;
 //     }
 //     if(pl + 1 == pr) return;
@@ -13328,12 +13339,14 @@ push_up():
 //     if(!cnt[p]) tree[p] = tree[ls] + tree[rs];
 //     //仅区间p没有有效长度时才传值，因为若区间p已经有效，说明它已经是最长的覆盖长度pr-pl。若直接传值则会错误地覆盖这个仍有效的长度。
 //     //应等区间p被出边抵消时，才把子区间值传上来，即它是有顺序的。
+//     push_up(p, pl, pr);
 // }
 // int main()
 // {
 //     int _ = 1;
-//     while(scanf("%d", &n), n)
+//     while(~scanf("%d", &n))
 //     {
+//         if(!n) break;
 //         memset(tree, 0, sizeof(tree));
 //         memset(cnt, 0, sizeof(cnt));
 //         db ans = 0;
@@ -13349,13 +13362,13 @@ push_up():
 //         }
 //         sort(X + 1, X + 1 + ind);
 //         sort(line + 1, line + 1 + ind);
-//         ll x_max = unique(X + 1, X + 1 + ind) - X - 1;
+//         ll max_x = unique(X + 1, X + 1 + ind) - X - 1;
 //         for(int i = 1; i <= ind; i++)
 //         {
 //             ans += tree[1] * (line[i].y - line[i - 1].y);//第一条边不计算面积
 //             ll L = lower_bound(X + 1, X + 1 + max_x, line[i].lx) - X;
 //             ll R = lower_bound(X + 1, X + 1 + max_x, line[i].rx) - X;
-//             update(L, R, 1, 1, x_max, line[i].d);
+//             update(L, R, 1, 1, max_x, line[i].d);
 //         }
 //         printf("Test case #%d\nTotal explored area: %.2lf\n\n", _++, ans);
 //     }
@@ -13394,6 +13407,7 @@ push_up():
 // void build(ll p, ll pl, ll pr)
 // {
 //     tree[p] = nd(0, 0, 0);
+//     cnt[p] = 0;
 //     if(pl == pr) return;
 //     ll mid = pl + pr >> 1;
 //     build(lc);
@@ -13412,8 +13426,8 @@ push_up():
 
 //     if(cnt[p] >= 3) tree[p].len3 = xx[pr + 1] - xx[pl];
 //     else if(pl == pr) tree[p].len3 = 0;
-//     else if(cnt[p] == 1) tree[p].len3 = tree[ls].len2 + tree[rs].len2;//还差两次覆盖，从len2拿
 //     else if(cnt[p] == 2) tree[p].len3 = tree[ls].len1 + tree[rs].len1;//只差一次覆盖，从len1拿
+//     else if(cnt[p] == 1) tree[p].len3 = tree[ls].len2 + tree[rs].len2;//还差两次覆盖，从len2拿
 //     else tree[p].len3 = tree[ls].len3 + tree[rs].len3;
     
 // }
@@ -13449,35 +13463,33 @@ push_up():
 //             xx[ind] = x2, zz[ind] = z2;
 //         }
 
-//         sort(line + 1, line + 1 + ind);
 //         sort(xx + 1, xx + 1 + ind);
+//         sort(line + 1, line + 1 + ind);
 //         ll num_x = unique(xx + 1, xx + 1 + ind) - xx - 1;
 
 //         for(int z = -500; z <= 500; z++)             //遍历所有体积元
 //         {
-//             ll area = 0;                             //扫描面符合条件的面积
+//             build(1, 1, num_x);
+//             ll area = 0, last = 0;                   //扫描面符合条件的面积
 //             for(int i = 1; i <= ind; i++)            //遍历所有属于体积元所在的矩体连结体的"扫描面"
 //             {
 //                 if(line[i].z1 <= z && z < line[i].z2)//一个矩体的体积元个数为 z2 - z1 个，即区间 [z1, z2)，合起来恰好是该矩体的体积
 //                 {
-//                     area += tree[1].len3 * (line[i].y - line[i - 1].y);
+//                     //这里不能直接 line[i].y - line[i-1].y，因为最开始一次扫描line[i-1].y不一定就是line[0].y 即不一定为0，所以很可能减多了
+//                     //这也是没有对 Z坐标 离散化处理的弊端
+//                     area += tree[1].len3 * (line[i].y - last);
+//                     last = line[i].y;
 //                     ll L = lower_bound(xx + 1, xx + 1 + num_x, line[i].lx) - xx;
 //                     ll R = lower_bound(xx + 1, xx + 1 + num_x, line[i].rx) - xx;
 //                     update(L, R - 1, 1, 1, num_x, line[i].d);
 //                 }
 //             }
-//             ans += area;
+//             ans += area;                             //相当于加一个高为1的矩体体积 ans += 1 * area
 //         }
 //         printf("Case %d: %lld\n", _, ans);
 //     }
 //     return 0;
 // }
-
-
-
-
-
-
 
 
 
@@ -13763,8 +13775,8 @@ int main()
 // //实际上这道题由于给的空间仅64MB，否则要取五位数字拟哈希值的话，M的大小应至少定义为1e6（这里2e5测试数据已经63MB左右了）
 // int n, m, k, P;
 // struct node{
-//     char arr[20];  //身份证号 [0, 17]
-//     int pts;     //里程积分
+//     char arr[20]; //身份证号 [0, 17]
+//     int pts;      //里程积分
 //     node *next;   //指向下一个单元，没有则为 NULL
 // };
 // typedef node* Hash;
@@ -13850,12 +13862,98 @@ int main()
 // }
 
 //非指针数组写法：
-
-
-
-
-
-
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cmath>
+// #include <cstdlib>
+// #include <cstring>
+// using namespace std;
+// #define ll long long
+// #define ull unsigned long long
+// #define num(x) ((x) - '0')
+// const int M = 2e5;//使用开放定址法，散列表必须足够大
+// int n, m, k, P;
+// int head[M];
+// int cnt = 0;      //vec[]的尾标
+// struct node{
+//     char arr[20]; //身份证号 [0, 17]
+//     int pts;      //里程积分
+//     int next;     //指向下一个单元
+// }vec[M];
+// typedef node* Hash;
+// int cal(const char *s)//哈希处理身份证号，得到下标地址
+// {
+//     int id = num(s[5]) * 10000 + num(s[9]) * 1000 + num(s[13]) * 100 + num(s[15]) * 10 + num(s[16]);
+//     if(s[17] == 'x') id = id * 10 + 10;
+//     else id = id * 10 + num(s[17]);
+//     return id;
+// }
+// int getprime(int N)
+// {
+//     int p = (N % 2) ? (N + 2) : (N + 1);
+//     int i;
+//     while(p < M)
+//     {
+//         for(i = (int)sqrt(N); i >= 2; --i)
+//             if(p % i == 0) break;
+//         if(i < 2) break;
+//         else p += 2;
+//     }
+//     return p;
+// }
+// void insert(int id, char *s, int d) //哈希链表的插入
+// {
+//     for(int i = head[id]; ~i; i = vec[i].next)
+//     {
+//         if(!strcmp(vec[i].arr, s))//已存在，则叠加里程积分
+//         {
+//             vec[i].pts += d;
+//             return;
+//         }
+//     }
+//     //尚不存在，则新建结点后插入
+//     ++cnt;
+//     strcpy(vec[cnt].arr, s);
+//     vec[cnt].pts = d;
+//     vec[cnt].next = head[id];//新结点（链表新头）指向原链表头结点
+//     head[id] = cnt;          //新结点作为链表新的头结点
+// }
+// void check(int id, char *s) //判断该人是否为会员
+// {
+//     for(int i = head[id]; ~i; i = vec[i].next)
+//     {
+//         if(!strcmp(vec[i].arr, s)) //相等时, strcmp() 返回 0
+//         {
+//             printf("%d\n", vec[i].pts);
+//             return;
+//         }
+//     }
+//     printf("No Info\n");
+// }
+// int main()
+// {
+//     int ind, d;  //下标，里程
+//     char arr[20];//身份证号
+//     memset(head, -1, sizeof(head));
+//     scanf("%d%d", &n, &k);
+//     P = getprime(n);
+//     while(n--)
+//     {
+//         scanf("%s%d", arr, &d);
+//         if(d < k) d = k;//题意：航程低于k公里的航班也按k公里累积
+//         ind = cal(arr) % P;
+//         insert(ind, arr, d);
+//     }
+//     scanf("%d", &m);
+//     while(m--)
+//     {
+//         scanf("%s", arr);
+//         ind = cal(arr) % P;
+//         check(ind, arr);
+//     }
+//     return 0;
+// }
 
 
 
@@ -14051,34 +14149,259 @@ int main()
 
 
 
+//3.Crazy Search（滚动哈希）
+//注意如果用 set 去重会 TLE，常数太大
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cmath>
+// #include <cstdlib>
+// #include <cstring>
+// #include <vector>
+// using namespace std;
+// #define ll long long
+// #define ull unsigned long long
+// #define num(x) ((x) - 'a' + 1)
+// const int M = 1e6 + 5;
+// ull h = 0, p = 1, base = 31, P = 800000821;
+// int len, n, m;
+// char s[M];
+// vector<ull> cnt;
+// int main()
+// {
+//     scanf("%d%d", &len, &m);
+//     scanf("%s", s + 1);
+//     int n = strlen(s + 1);
+//     //初始化第一个窗口作为基底，维护窗口[l, r]内哈希值 h 
+//     for(int i = 1; i <= len && i <= n; i++)//防止 len > n
+//     {
+//         h = h * base + num(s[i]);
+//         p *= base;
+//     }
+//     if(len <= n) cnt.push_back(h);
+//     //窗口移动，整体移向高位空出低位，去除最高位，最后低位加上右边的字符
+//     //如len = 3， s1*base^2 + s2*base + s3,  p = base^3
+//     for(int i = len + 1; i <= n; i++)
+//     {
+//         h = h * base + num(s[i]) - num(s[i - len]) * p;
+//         cnt.push_back(h);
+//     }
+//     sort(cnt.begin(), cnt.end());
+//     int num = unique(cnt.begin(), cnt.end()) - cnt.begin();
+//     printf("%d\n", num);
+//     return 0;
+// }
 
 
 
+//4.Barn Echoes G（简单前缀哈希应用）
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cmath>
+// #include <cstdlib>
+// #include <cstring>
+// #include <vector>
+// using namespace std;
+// #define ll long long
+// #define ull unsigned long long
+// #define num(x) ((x) - 'a' + 1)
+// const int N = 1e2 + 5, M = 1e6;
+// ull base = 31, P = 800000821;
+// ull p[N] = {1}, h1[N], h2[N];
+// int len1, len2, ans = 0;
+// char s1[N], s2[N];
+// inline ull gethash(const ull *h, int L, int R){ return h[R] - h[L - 1] * p[R - L + 1];}
+// int main()
+// {
+//     for(int i = 1; i < N; i++) p[i] = p[i - 1] * base;
+//     scanf("%s %s", s1 + 1, s2 + 1);
+//     len1 = strlen(s1 + 1), len2 = strlen(s2 + 1);
+//     for(int i = 1; i <= len1; i++) h1[i] = h1[i - 1] * base + num(s1[i]);
+//     for(int i = 1; i <= len2; i++) h2[i] = h2[i - 1] * base + num(s2[i]);
+//     for(int len = 1; len <= min(len1, len2); len++)
+//         if(h1[len] == gethash(h2, len2 - len + 1, len2) || gethash(h1, len1 - len + 1, len1) == h2[len])
+//             ans = max(ans, len);
+//     printf("%d\n", ans);
+//     return 0;
+// }
 
 
 
+//5.Three Friends
+#include <cstdio>
+#include <algorithm>
+#include <iostream>
+#include <cmath>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <map>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+#define ll long long
+#define ull unsigned long long
+#define num(x) ((x) - '0' + 1)
+const ll N = 2e6 + 10, M = 1e8;
+ull base = 131, lt, rt;
+ll n;
+ll mid, pos = 0, cnt = 0;
+string s;
+ull h[N], p[N];
+map<ull, bool> vis;
+unsigned long long get_hash(int l,int r)//算下标为l到下标为r的哈希值
+{
+	return h[r]-h[l-1]*p[r-l+1];
+}
+unsigned long long re_hash(int l,int r,int pos)//算下标为l到下标为r且删去下标为pos的字符后的哈希值
+{
+	return get_hash(l,pos-1)*p[r-pos]+get_hash(pos+1,r);
+}
+bool check(int pos)
+{
+	unsigned long long left,right;
+	if(pos==mid)
+	{
+		lt=get_hash(1,mid-1);
+		rt=get_hash(mid+1,n);
+		return lt==rt;
+	}
+	else if(pos<mid)
+	{
+		lt=re_hash(1,mid,pos);
+		rt=get_hash(mid+1,n);
+		return lt==rt;
+	}
+	else
+	{
+		lt=get_hash(1,mid-1);
+		rt=re_hash(mid,n,pos);
+		return lt==rt;
+	}
+	return 0;
+}
+int main()
+{
+    untie();
+    cin >> n >> s;
+    mid = (n + 1) >> 1;
+    s = '0' + s;
+    if(!(n & 1)) cout << "NOT POSSIBLE";
+    else
+    {
+        h[0] = 1;
+        p[0] = 1;
+        for(int i = 1; i <= n; i++) h[i] = h[i - 1] * base + num(s[i]), p[i] = p[i - 1] * base;
+        for(int i = 1; i <= n; i++)
+        {
+            if(check(i))
+            {
+                pos = i;
+                ull tmp;
+                if(pos <= mid) tmp = rt;
+                else tmp = lt;
+                if(vis[lt]) continue;
+                vis[tmp] = 1;
+                ++cnt;
+                // if(++cnt > 1) break;
+            }
+        }
+        if(!cnt) cout << "NOT POSSIBLE";
+        else if(cnt > 1) cout << "NOT UNIQUE";
+        else if(pos <= mid) cout << s.substr(mid + 1);
+        else cout << s.substr(1, mid - 1);
+    }
+    return 0;
+}
 
+//ABCXABC
+//ABXCABC
+//AXBCABC
+//ABCAXBC
+//XABCABC
+//ABCABXC
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cmath>
+// #include <cstdlib>
+// #include <cstring>
+// #include <string>
+// #include <map>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// #define ll long long
+// #define ull unsigned long long
+// #define num(x) ((x) - '0' + 1)
+// const ll N = 2e6 + 10, M = 1e8;
+// ull base = 131, lt, rt;
+// ll n;
+// ll mid, pos = 0, cnt = 0;
+// string s;
+// ull h[N], p[N];
+// map<ull, bool> vis;
+// ull gethash(int L, int R)
+// {
+//     return h[R] - h[L - 1] * p[R - L + 1];
+// }
+// ull hash_del(int L, int R, int k)//删去第k个字符后的哈希值
+// {
+//     return gethash(L, k - 1) * p[R - k] + gethash(k + 1, R);
+// }
+// bool check(int i)
+// {
+//     bool ok = 0;
+//     if(i == mid)
+//     {
+//         if((lt = gethash(1, i - 1)) == (rt = gethash(i + 1, n)))
+//             ok = 1;
+//     }
+//     else if(i < mid)
+//     {
+//         if((lt = hash_del(1, mid, i)) == (rt = gethash(mid + 1, n)));
+//             ok = 1;
+//     }
+//     else
+//     {
+//         if((lt = gethash(1, mid - 1)) == (rt = hash_del(mid, n, i)))
+//             ok = 1;
+//     }
+//     return ok;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> s;
+//     mid = (n + 1) >> 1;
+//     s = '0' + s;
+//     if(!(n & 1)) cout << "NOT POSSIBLE";
+//     else
+//     {
+//         h[0] = 1;
+//         p[0] = 1;
+//         for(int i = 1; i <= n; i++) h[i] = h[i - 1] * base + num(s[i]), p[i] = p[i - 1] * base;
+//         for(int i = 1; i <= n; i++)
+//         {
+//             if(check(i))
+//             {
+//                 pos = i;
+//                 ull tmp;
+//                 if(i <= mid) tmp = rt;
+//                 else tmp = lt;
+//                 if(vis[tmp]) continue;
+//                 vis[tmp] = 1;
+//                 ++cnt;
+//                 // if(++cnt > 1) break;
+//             }
+//         }
+//         if(!cnt) cout << "NOT POSSIBLE";
+//         else if(cnt > 1) cout << "NOT UNIQUE";
+//         else if(pos <= mid) cout << s.substr(mid + 1);
+//         else cout << s.substr(1, mid - 1);
+//     }
+//     return 0;
+// }
 
 
 
