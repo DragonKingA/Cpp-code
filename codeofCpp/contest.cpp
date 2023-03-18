@@ -174,6 +174,124 @@ int main()
 
 */
 
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <cmath>
+// #include <queue>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int n;
+// int dir[2][2] = {{1, 1}, {-1, 0}};
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     while(n--) 
+//     {
+//         int a, b, c, d;
+//         cin >> a >> b >> c >> d;
+//         a = a + d - b;
+//         int res = d - b + (a -  c);
+//         if(a < c || d < b) cout << "-1\n";
+//         else cout << res << '\n';
+//     }
+//     return 0;
+// }
+
+//B 
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <cmath>
+// #include <vector>
+// #include <queue>
+// #include <functional>
+// #include <map>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 2e5 + 10;
+// int t, n;
+// int arr[N], b[N];
+// map<int, int> mp;
+// int main()
+// {
+//     untie();
+//     cin >> t;
+//     while(t--)
+//     {
+//         mp.clear();
+//         cin >> n;
+//         int num = 0;
+//         for(int i = 1; i <= n; i++) cin >> arr[i];
+//         sort(arr + 1, arr + 1 + n);
+//         for(int i = 1; i <= n; i++) ++mp[arr[i]];
+//         int ind = mp[0] + 1;
+//         num = n - mp[0];
+//         if(arr[1] > 0 || num + 1 >= mp[0]) cout << "0\n";
+//         else if(arr[n] > 1) 
+//         {
+//             cout << "1\n";
+//         }
+//         else{
+//             cout << arr[n] + 1 << '\n';
+//         }
+//     }
+//     return 0;
+// }
+
+
+//0 0 0 0 1 1 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //ABC 293
 
@@ -1251,36 +1369,5 @@ CCX
 
 
 
-
-
-
-
-#include <iostream>
-#include <cstdio>
-#include <algorithm>
-#include <iomanip>
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-double k1 = 6.2619, k2 = 6.6744, k3 = 0.0516, k4 = 0.8065;
-int main()
-{
-    untie();
-    int t;
-    cin >> t;
-    while (t--)
-    {
-        char op[3];
-        double x, res = 0;
-        double const *rate;
-        cin >> op >> x;
-        if(op[0] == 'D') rate = &k1;
-        else if(op[0] == 'E') rate = &k2;
-        else if(op[0] == 'Y') rate = &k3;
-        else rate = &k4;
-        res = x * *rate;
-        cout << fixed << setprecision(4) << res <<"\n";
-    }
-    return 0;
-}
 
 

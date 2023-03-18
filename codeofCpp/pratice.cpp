@@ -14228,99 +14228,85 @@ int main()
 
 
 
-//5.Three Friends
-#include <cstdio>
-#include <algorithm>
-#include <iostream>
-#include <cmath>
-#include <cstdlib>
-#include <cstring>
-#include <string>
-#include <map>
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
-#define ll long long
-#define ull unsigned long long
-#define num(x) ((x) - '0' + 1)
-const ll N = 2e6 + 10, M = 1e8;
-ull base = 131, lt, rt;
-ll n;
-ll mid, pos = 0, cnt = 0;
-string s;
-ull h[N], p[N];
-map<ull, bool> vis;
-unsigned long long get_hash(int l,int r)//算下标为l到下标为r的哈希值
-{
-	return h[r]-h[l-1]*p[r-l+1];
-}
-unsigned long long re_hash(int l,int r,int pos)//算下标为l到下标为r且删去下标为pos的字符后的哈希值
-{
-	return get_hash(l,pos-1)*p[r-pos]+get_hash(pos+1,r);
-}
-bool check(int pos)
-{
-	unsigned long long left,right;
-	if(pos==mid)
-	{
-		lt=get_hash(1,mid-1);
-		rt=get_hash(mid+1,n);
-		return lt==rt;
-	}
-	else if(pos<mid)
-	{
-		lt=re_hash(1,mid,pos);
-		rt=get_hash(mid+1,n);
-		return lt==rt;
-	}
-	else
-	{
-		lt=get_hash(1,mid-1);
-		rt=re_hash(mid,n,pos);
-		return lt==rt;
-	}
-	return 0;
-}
-int main()
-{
-    untie();
-    cin >> n >> s;
-    mid = (n + 1) >> 1;
-    s = '0' + s;
-    if(!(n & 1)) cout << "NOT POSSIBLE";
-    else
-    {
-        h[0] = 1;
-        p[0] = 1;
-        for(int i = 1; i <= n; i++) h[i] = h[i - 1] * base + num(s[i]), p[i] = p[i - 1] * base;
-        for(int i = 1; i <= n; i++)
-        {
-            if(check(i))
-            {
-                pos = i;
-                ull tmp;
-                if(pos <= mid) tmp = rt;
-                else tmp = lt;
-                if(vis[lt]) continue;
-                vis[tmp] = 1;
-                ++cnt;
-                // if(++cnt > 1) break;
-            }
-        }
-        if(!cnt) cout << "NOT POSSIBLE";
-        else if(cnt > 1) cout << "NOT UNIQUE";
-        else if(pos <= mid) cout << s.substr(mid + 1);
-        else cout << s.substr(1, mid - 1);
-    }
-    return 0;
-}
+//5.Three Friends（求[L,R]子串删去其中一个字符后的哈希值）
+//枚举要删除的字符，分在前半、恰好在中间、在后半的情况
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cmath>
+// #include <cstdlib>
+// #include <cstring>
+// #include <string>
+// #include <map>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// #define ll long long
+// #define ull unsigned long long
+// #define num(x) ((x) - ' ' + 1)
+// const ll N = 2e6 + 10;
+// ull base = 131;
+// ll n;
+// string s;
+// ull h[N], p[N];
+// map<ull, bool> vis;//防止找到重复串
+// ull gethash(int L, int R)
+// {
+//     return h[R] - h[L - 1] * p[R - L + 1];
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> s;
+//     s = ' ' + s;
+//     if(!(n & 1))
+//     {
+//         cout << "NOT POSSIBLE\n";
+//         return 0;
+//     }
+//     ll mid = n + 1 >> 1, pos = 0, cnt = 0;
+//     p[0] = 1;
+//     for(int i = 1; i <= n; i++) h[i] = h[i - 1] * base + num(s[i]), p[i] = p[i - 1] * base;
+    
+//     ull tl, tr;
+//     //前半
+//     for(int i = 1; i <= mid - 1; i++)
+//     {
+//         tl = gethash(1, i - 1) * p[mid - i] + gethash(i + 1, mid), tr = gethash(mid + 1, n);
+//         if(tl == tr && !vis[tl])
+//         {
+//             vis[tl] = 1;
+//             ++cnt;
+//             pos = i;
+//         }
+//     }
+//     //令 i = mid
+//     tl = gethash(1, mid - 1), tr = gethash(mid + 1, n);
+//     if(tl == tr && !vis[tl])
+//     {
+//         vis[tl] = 1;
+//         ++cnt;
+//         pos = mid;
+//     }
+//     //后半
+//     for(int i = mid + 1; i <= n; i++)
+//     {
+//         tl = gethash(1, mid - 1), tr = gethash(mid, i - 1) * p[n - i] + gethash(i + 1, n);
+//         if(tl == tr && !vis[tl])
+//         {
+//             vis[tl] = 1;
+//             ++cnt;
+//             pos = i;
+//         }
+//     }
+//     if(cnt == 1) cout << (pos <= mid ? s.substr(mid + 1) : s.substr(1, mid - 1));
+//     else cout << (cnt > 1 ? "NOT UNIQUE" : "NOT POSSIBLE");
+//     return 0;
+// }
 
-//ABCXABC
-//ABXCABC
-//AXBCABC
-//ABCAXBC
-//XABCABC
-//ABCABXC
 
+
+//6. Compress Words
+//数据卡了自然溢出，会WA，需要取余法
 // #include <cstdio>
 // #include <algorithm>
 // #include <iostream>
@@ -14334,74 +14320,138 @@ int main()
 // #define ll long long
 // #define ull unsigned long long
 // #define num(x) ((x) - '0' + 1)
-// const ll N = 2e6 + 10, M = 1e8;
-// ull base = 131, lt, rt;
-// ll n;
-// ll mid, pos = 0, cnt = 0;
-// string s;
-// ull h[N], p[N];
-// map<ull, bool> vis;
-// ull gethash(int L, int R)
+// const ll N = 1e6 + 10;
+// ull base = 13131, P = 9999999943;
+// int n;
+// string s = "", ans = "";
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     cin >> ans;
+//     for(int i = 1; i < n; i++)
+//     {
+//         cin >> s;
+//         ull hl = 0, hr = 0, p = 1;
+//         int ind = 0, len1 = ans.size(), len2 = s.size();
+//         for(int i = 0; i < min(len1, len2); i++)//直接枚举重复串长度，可二分?
+//         {
+//             //规定右侧为hash值大头
+//             hl = (hl * base + num(ans[len1 - i - 1])) % P;
+//             hr = (hr + num(s[i]) * p) % P;
+//             p = p * base % P;
+//             if(hl == hr) ind = i + 1;
+//         }
+//         for(int i = ind; i < len2; i++)     //取不重复部分连接
+//             ans += s[i];
+//     }
+//     cout << ans << '\n';
+//     return 0;
+// }
+
+
+
+//7.Long Long Message
+//二分最大重复长度mid，每次用滚动窗口取出所有长为mid的子串的哈希值，有相同就扩大左界找更长
+//其中一般用map、set判重会因常数过大而TLE，用求余减小常数又会导致Hash冲突，只能退而求其次，用 排序 + 二分 查重
+//规定 len1 <= len2
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cstring>
+// #include <string>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// #define ll long long
+// #define ull unsigned long long
+// #define num(x) ((x) - 'a' + 1)
+// const ll N = 1e5 + 10;
+// ull base = 131, P = 9999999943;
+// int n, len1, len2;
+// ull h1[N], h2[N], p[N];
+// string s1 = "", s2 = "";
+// void init(int n) //初始化前缀哈希
+// {
+//     p[0] = 1;
+//     for(int i = 1; i <= n; i++) p[i] = p[i - 1] * base;
+//     for(int i = 1; i <= len1; i++) h1[i] = h1[i - 1] * base + num(s1[i]);
+//     for(int i = 1; i <= len2; i++) h2[i] = h2[i - 1] * base + num(s2[i]);
+// }
+// ull gethash(const ull *h, int L, int R)
 // {
 //     return h[R] - h[L - 1] * p[R - L + 1];
 // }
-// ull hash_del(int L, int R, int k)//删去第k个字符后的哈希值
+// bool check(int len)
 // {
-//     return gethash(L, k - 1) * p[R - k] + gethash(k + 1, R);
-// }
-// bool check(int i)
-// {
-//     bool ok = 0;
-//     if(i == mid)
-//     {
-//         if((lt = gethash(1, i - 1)) == (rt = gethash(i + 1, n)))
-//             ok = 1;
-//     }
-//     else if(i < mid)
-//     {
-//         if((lt = hash_del(1, mid, i)) == (rt = gethash(mid + 1, n)));
-//             ok = 1;
-//     }
-//     else
-//     {
-//         if((lt = gethash(1, mid - 1)) == (rt = hash_del(mid, n, i)))
-//             ok = 1;
-//     }
-//     return ok;
+//     vector<ull> v;
+//     for(int l = 1, r = len; r <= len1; l++, r++) v.push_back(gethash(h1, l, r));
+//     sort(v.begin(), v.end());
+//     for(int l = 1, r = len; r <= len2; l++, r++)
+//         if(binary_search(v.begin(), v.end(), gethash(h2, l, r)))
+//             return 1;
+//     return 0;
 // }
 // int main()
 // {
 //     untie();
-//     cin >> n >> s;
-//     mid = (n + 1) >> 1;
-//     s = '0' + s;
-//     if(!(n & 1)) cout << "NOT POSSIBLE";
-//     else
+
+//     cin >> s1 >> s2;
+//     len1 = s1.size(), len2 = s2.size();
+//     if(len1 > len2) swap(s1, s2), swap(len1, len2);
+//     s1 = "{" + s1, s2 = "{" + s2;
+
+//     init(len2);
+
+//     int l = 0, r = min(len1, len2), ans = 0;
+//     while(l <= r)
 //     {
-//         h[0] = 1;
-//         p[0] = 1;
-//         for(int i = 1; i <= n; i++) h[i] = h[i - 1] * base + num(s[i]), p[i] = p[i - 1] * base;
-//         for(int i = 1; i <= n; i++)
-//         {
-//             if(check(i))
-//             {
-//                 pos = i;
-//                 ull tmp;
-//                 if(i <= mid) tmp = rt;
-//                 else tmp = lt;
-//                 if(vis[tmp]) continue;
-//                 vis[tmp] = 1;
-//                 ++cnt;
-//                 // if(++cnt > 1) break;
-//             }
-//         }
-//         if(!cnt) cout << "NOT POSSIBLE";
-//         else if(cnt > 1) cout << "NOT UNIQUE";
-//         else if(pos <= mid) cout << s.substr(mid + 1);
-//         else cout << s.substr(1, mid - 1);
+//         int mid = l + r >> 1;
+//         if(check(mid)) l = mid + 1, ans = max(ans, mid);
+//         else r = mid - 1;
 //     }
+//     cout << ans;
 //     return 0;
 // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -14504,6 +14554,200 @@ int main()
     若搜索到当前点(x, y)，且已经过步数或时间 step，仍可以用当前点与终点的曼哈顿距离剪枝
     如果 step + |x - ex| + |y - ey| > limit 则该路径无解
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*蓝桥杯训练*/
+//1.杨辉三角形（组合数计算 + 等差数列求和 + 枚举 + 二分）
+//以最中间的斜行(斜向左下的连线)为起点，向左上逆序枚举斜行（递减寻找），二分行号
+/*
+原理：基于杨辉三角形特殊的性质
+                    1
+                  1   1
+                1   2   1
+              1   3   3   1
+            1   4   6   4   1
+          1   5  10   10  5   1
+        1   6  15  20   15  6   1
+首先它具有对称性，要找第一个数，只看左半部分即可
+                    1
+                  1   
+                1   2   
+              1   3   
+            1   4   6   
+          1   5  10   
+        1   6  15  20   
+      1   7   21 35
+观察斜行（斜向左下），同一斜行上的数具有单调不减性（除去第0斜行的 1 1 ··· 1外，为严格递增）
+第k个斜行(从 2 的那一斜行 为 第一行)的第一个元素为 C(k, 2*k)，也是该横行的最大值
+
+基于第16斜行就能找到1e9以上的值，斜行行数基数小，可以 枚举
+并且本斜行找到一个值，比左上斜行找同一个值，所找到的位置要小，如值 6，第2斜行比第1斜行找到位置更前，故 逆向枚举
+
+基于单调性我们可以 二分 加速求最大值，
+*/
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <string>
+// #include <cstdlib>
+// #include <cmath>
+// #include <cctype>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// #define ll long long
+// const ll N = 1e9;
+// ll n;
+// ll cal(int x, int y)//第x行 第y列
+// {
+//     ll res = 1;
+//     for(ll i = x, j = 1; j <= y; --i, ++j)
+//     {
+//         res = res * i / j;
+//         if(res > n) return res;//防爆
+//     }
+//     return res;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     if(n == 1)
+//     {
+//         cout << "1";
+//         return 0;
+//     }
+//     for(int k = 20; k; k--)//逆向枚举斜行，验算得知最多到 k = 16
+//     {
+//         ll l = 0, r = N;
+//         while(l < r)
+//         {
+//             ll mid = l + r >> 1;
+//             if(cal(mid, k) < n) l = mid + 1;
+//             else r = mid;
+//         }
+//         if(cal(l, k) == n)
+//         {
+//             cout << (l + 1) * l / 2 + k + 1;
+//             return 0;
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+//2.时间显示(简单模拟)
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <string>
+// #include <cstdlib>
+// #include <cmath>
+// #include <cctype>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// #define ll long long
+// const ll N = 1e9;
+// ll n;
+
+// int main()
+// {
+//     scanf("%lld", &n);
+//     n /= 1000;
+//     ll h = n / 3600;
+//     h %= 24;
+//     n %= 3600;
+//     ll m = n / 60;
+//     n %= 60;
+//     printf("0%lld:" + (h > 9), h);
+//     printf("0%lld:" + (m > 9), m);
+//     printf("0%lld" + (n > 9), n);
+//     return 0;
+// }
+
+
+
+//3.
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <string>
+#include <cstdlib>
+#include <cmath>
+#include <cctype>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+#define ll int
+const ll N = 1e9;
+ll n, m;
+
+int main()
+{
+    scanf("%d%d", &n, &m);
+    
+
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑算法↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
