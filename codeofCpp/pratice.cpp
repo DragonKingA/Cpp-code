@@ -14693,7 +14693,98 @@ int main()
 
 
 
-//3.
+//3.双向排序
+//还没写捏
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <string>
+// #include <cstdlib>
+// #include <cmath>
+// #include <cctype>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// #define ll int
+// const ll N = 1e5 + 5;
+// struct nd{
+//     ll x, y;
+//     nd(ll a = 0, ll b = 0) {x = a, y = b;}
+// }arr[N];
+// ll n, m;
+// ll ans[N];
+// ll top = 0;
+// int main()
+// {
+//     scanf("%d%d", &n, &m);
+//     ll k = n;
+//     for(int i = 0; i < m; i++)
+//     {
+//         ll x, y;
+//         cin >> x >> y;
+
+
+
+//     }
+
+
+//     return 0;
+// }
+
+
+
+//4.括号序列
+//还没写捏
+
+
+
+
+//*5.砝码称重 (背包dp)
+//定义dp[i][j]为遍历到第 i 个数,是否有组成 j 值的方案存在(这个j值可以是原值 或 和值 或 差值)
+//三种选择,只要存在一种可行,说明j值存在
+//第i个不选(即不用选也能组成 j) | 选第i个放在前面砝码的同侧(叠加) | 选第i个放在前面砝码的异侧(求差)
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <string>
+// #include <cstdlib>
+// #include <cmath>
+// #include <cctype>
+// #include <set>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// #define ll int
+// const ll N = 1e2 + 5, M = 2e5 + 10;//max_sum = 1e5,而加上w[i]会超过1e5
+// int w[N];
+// bool dp[N][M];
+// int main()
+// {
+//     int n, sum = 0, ans = 0;
+//     cin >> n;
+//     for(int i = 1; i <= n; i++)
+//     {
+//         cin >> w[i];    
+//         sum += w[i];
+//     }
+//     dp[0][0] = 1;
+//     for(int i = 1; i <= n; i++)
+//     {
+//         for(int j = 0; j <= sum; j++)
+//         {
+//             dp[i][j] = dp[i - 1][j] || dp[i - 1][j + w[i]] || dp[i - 1][abs(j - w[i])];
+//         }
+//     }
+//     for(int i = 1; i <= sum; i++)//合法方案数,不包括 0
+//         ans += dp[n][i];
+//     cout << ans << '\n';
+//     return 0;
+// }
+
+
+
+//6.回文日期
 #include <cstdio>
 #include <iostream>
 #include <algorithm>
@@ -14702,20 +14793,36 @@ int main()
 #include <cstdlib>
 #include <cmath>
 #include <cctype>
+#include <set>
+#include <vector>
 using namespace std;
 #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
 #define ll int
-const ll N = 1e9;
-ll n, m;
 
 int main()
 {
-    scanf("%d%d", &n, &m);
-    
+    untie();
 
+    
 
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
