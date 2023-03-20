@@ -14429,6 +14429,19 @@ int main()
 
 
 
+/*十六. 字典树(TrieTree)*/
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -14785,41 +14798,110 @@ int main()
 
 
 //6.回文日期
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <string>
+// #include <cstdlib>
+// #include <cmath>
+// #include <cctype>
+// #include <set>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// #define ll int
+// string str;
+// int num;
+// int months[15] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+// bool check1(int date)//判断日期合法
+// {
+//     int yy = date / 10000, mm = date / 100 % 100, dd = date % 100;
+//     months[2] = 28;
+//     if(mm >= 1 && mm <= 12 && dd > 0)
+//     {
+//         if((yy % 4 == 0 && yy % 100 != 0) || (yy % 400 == 0)) months[2] = 29;
+//         return dd <= months[mm];
+//     }
+//     return 0;
+// }
+// bool check2(string s)//判断ABABBABA型
+// {
+//     return s[1] != s[2] && s[1] == s[3] && s[3] == s[6] && s[6] == s[8] && s[2] == s[4] && s[4] == s[5] && s[5] == s[7];
+// }
+// int main()
+// {
+//     untie();
+//     cin >> str;
+//     num = stoi(str.substr(0, 4).c_str()) + 1;
+//     bool ok = 1;
+//     while(num < 10000)
+//     {
+//         int yy = num, mm = num % 10 * 10 + num / 10 % 10, dd = num / 1000 + num / 100 % 10 * 10;
+//         int now = yy * 10000 + mm * 100 + dd;//num * 10000 + (num / 1000) + (num / 100 % 10 * 10) + (num / 10 % 10 * 100) + num % 10 * 1000
+//         string t = ' ' + to_string(now);
+//         if(check1(now))
+//         {
+//             if(ok) printf("%d%02d%02d\n", yy, mm, dd), ok = 0;
+//             if(check2(t)) 
+//             {
+//                 printf("%d%02d%02d\n", yy, mm, dd);
+//                 break;
+//             }
+//         }
+//         ++num;
+//     }
+//     return 0;
+// }
+
+
+
+//7.成绩分析
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// int main()
+// {
+//     int n, minx = 1e9, maxx = 0;
+//     double sum = 0;
+//     scanf("%d", &n);
+//     for(int i = 0; i < n; i++)
+//     {
+//         int x;
+//         scanf("%d", &x);
+//         minx = min(minx, x);
+//         maxx = max(maxx, x);
+//         sum += x;
+//     }
+//     sum /= (1.0 * n);
+//     sum = (int)(sum * 100 + 0.5) / 100.0;
+//     printf("%d\n%d\n%.2lf", maxx, minx, sum);
+//     return 0;
+// }
+
+
+
+//8.字串排序
 #include <cstdio>
 #include <iostream>
 #include <algorithm>
 #include <cstring>
 #include <string>
 #include <cstdlib>
-#include <cmath>
 #include <cctype>
-#include <set>
-#include <vector>
+#include <cmath>
 using namespace std;
 #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
 #define ll int
 
+
 int main()
 {
     untie();
-
     
-
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

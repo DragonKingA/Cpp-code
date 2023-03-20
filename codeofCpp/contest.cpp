@@ -139,19 +139,17 @@ void init(){ for(int i = 0; i < N; i++) orimat.mat[i][i] = 1;}
 #include <iostream>
 #include <cstdio>
 #include <algorithm>
-#include <set>
-#include <map>
-#include <queue>
 #include <cctype>
+#include <cstring>
+#include <string>
 #include <cmath>
 #include <set>
 #include <map>
 #include <queue>
-#include <cstring>
-#include <string>
 
 using namespace std;
 #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+#define ll long long
 
 int main()
 {
@@ -164,8 +162,341 @@ int main()
     return 0;
 }
 
+*/
+/*
+多样例模板
+
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <cctype>
+#include <cstring>
+#include <string>
+#include <cmath>
+#include <set>
+#include <map>
+#include <queue>
+
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+#define ll long long
+int T;
+
+void Solve()
+{
+
+
+}
+
+int main()
+{
+    untie();
+    cin >> T;
+    while(T--)
+    {
+        Solve();
+    }
+    return 0;
+}
 
 */
+
+
+//edu Round 145
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <cctype>
+// #include <cstring>
+// #include <string>
+// #include <cmath>
+// #include <set>
+// #include <map>
+// #include <queue>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define ll long long
+// int T;
+
+// void Solve()
+// {
+
+
+// }
+
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         Solve();
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//edu Round 144
+//A
+//变化周期为 8，即"FBFFBFFB"，询问的子串最长为10，故存在跨越3个周期的可能，那么将周期字符串定为24位即可（即"FBFFBFFBFBFFBFFBFBFFBFFB"）
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <cctype>
+// #include <cstring>
+// #include <string>
+// #include <cmath>
+// #include <set>
+// #include <map>
+// #include <queue>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define ll long long
+// int T;
+// string s = "FBFFBFFBFBFFBFFBFBFFBFFB";
+// void Solve()
+// {
+//     int n;
+//     string t;
+//     cin >> n >> t;
+//     cout << (s.find(t) != -1 ? "YES\n" : "NO\n");
+//     return;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         Solve();
+//     }
+//     return 0;
+// }
+
+
+
+//B
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <cctype>
+// #include <cstring>
+// #include <string>
+// #include <cmath>
+// #include <set>
+// #include <map>
+// #include <queue>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define ll long long
+// int T;
+// void Solve() {
+// 	string a, b;
+// 	cin >> a >> b;
+// 	int n = a.size(), m = b.size();
+// 	if (a[0] == b[0]) {
+// 		cout << "YES\n";
+// 		cout << a[0] << '*' << '\n';
+// 		return;
+// 	}
+// 	if (a[n - 1] == b[m - 1]) {
+// 		cout << "YES\n";
+// 		cout << '*' << a[n - 1] << '\n';
+// 		return;
+// 	}
+// 	for (int i = 0; i + 1 < n; i++) {
+// 		if (b.find(a.substr(i, 2)) != -1) {
+// 			cout << "YES\n";
+// 			cout << '*' << a.substr(i, 2) << '*' << '\n';
+// 			return;
+// 		}
+// 	}
+// 	cout << "NO\n";
+// }
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         Solve();
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -183,13 +514,10 @@ int main()
 // #include <queue>
 // #include <cstring>
 // #include <string>
-
 // using namespace std;
 // #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
 // #define ll long long
-
 // int n;
-
 // int main()
 // {
 //     untie();
@@ -204,10 +532,6 @@ int main()
 //     else
 //         cout << "-\n";
 //     }
-    
-
-
-
 //     return 0;
 // }
 
@@ -225,11 +549,9 @@ int main()
 // #include <queue>
 // #include <cstring>
 // #include <string>
-
 // using namespace std;
 // #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
 // #define ll long long
-
 // int n;
 // int arr[200];
 // int main()
@@ -269,11 +591,9 @@ int main()
 // #include <queue>
 // #include <cstring>
 // #include <string>
-
 // using namespace std;
 // #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
 // #define ll long long
-
 // int n;
 // char s[2050];
 // map<char, int> mp;
@@ -301,9 +621,7 @@ int main()
 //         }
 //         if(ok) cout << "YES\n";
 //         else cout << "NO\n";
-
 //     }
-
 //     return 0;
 // }
 
@@ -323,7 +641,6 @@ int main()
 // #include <queue>
 // #include <cstring>
 // #include <string>
-
 // using namespace std;
 // #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
 // #define ll unsigned long long
@@ -350,10 +667,7 @@ int main()
 //             if(now & 1) cout << "YES\n";
 //             else cout << "NO\n";
 //         }
-
-
 //     }
-
 //     return 0;
 // }
 
@@ -372,7 +686,6 @@ int main()
 // #include <queue>
 // #include <cstring>
 // #include <string>
-
 // using namespace std;
 // #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
 // #define ll long long
@@ -394,15 +707,11 @@ int main()
 //         for(int i = 1; i <= n; i++) s[i] = s[i - 1] + a[1];
 //         int l = 1, r = n;
 //         while(l <= r)
-//         {
-
-            
+//         {       
 //         }
-
 //         printf("\n");
 //         fflush(stdout);
 //     }
-
 //     return 0;
 // }
 
@@ -538,90 +847,91 @@ int main()
 
 
 //F
-#include <iostream>
-#include <cstdio>
-#include <algorithm>
-#include <set>
-#include <map>
-#include <queue>
-#include <cctype>
-#include <cmath>
-#include <set>
-#include <map>
-#include <queue>
-#include <cstring>
-#include <string>
-#include <vector>
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-#define ll unsigned long long
-const int N = 25010;
-string s;
-string tp[4] = {"DR","DL","UR","UL"};
-map<string, pair<int, int> > dir;
-int n, m, cnt = 0;
-int sx, sy, ex, ey, nx, ny;
-bool check(int x1, int y1, int x2, int y2)
-{
-    int k1 = (y1 - y2) / (x1 - x2), k2 = (ey - y1) / (ex - x1);
-    return k1 == k2;
-}
-void dfs(int x, int y, pair<int, int> op, vector<vector<int> > vis)
-{
-    if(vis[x][y])
-    {
-        cnt = -1;
-        return ;
-    }
-    vis[x][y] = 1;
-    pair<int, int> next;
-    int nx, ny;
-    int d1 = op.first > 0 ? (n - x) : (x - 1);
-    int d2 = op.second > 0 ? (n - y) : (y - 1);
-    if(d1 <= d2)
-    {
-        nx = op.first > 0 ? n : 1;
-        ny = op.second > 0 ? (y + d1) : (y - d1);
-    }
-    else
-    {
-        nx = op.first > 0 ? (x + d2) : (x - d2);
-        ny = op.second > 0 ? m : 1;
-    }
-    ++cnt;
-    if(check(x, y, nx, ny))
-    {
-        return;
-    }
-    if(nx == n || nx == 1) next.first = -op.first;
-    if(ny == m || ny == 1) next.second = -op.second;
-    dfs(nx, ny, next, vis);
+//未完成
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cctype>
+// #include <cmath>
+// #include <set>
+// #include <map>
+// #include <queue>
+// #include <cstring>
+// #include <string>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define ll unsigned long long
+// const int N = 25010;
+// string s;
+// string tp[4] = {"DR","DL","UR","UL"};
+// map<string, pair<int, int> > dir;
+// int n, m, cnt = 0;
+// int sx, sy, ex, ey, nx, ny;
+// bool check(int x1, int y1, int x2, int y2)
+// {
+//     int k1 = (y1 - y2) / (x1 - x2), k2 = (ey - y1) / (ex - x1);
+//     return k1 == k2;
+// }
+// void dfs(int x, int y, pair<int, int> op, vector<vector<int> > vis)
+// {
+//     if(vis[x][y])
+//     {
+//         cnt = -1;
+//         return ;
+//     }
+//     vis[x][y] = 1;
+//     pair<int, int> next;
+//     int nx, ny;
+//     int d1 = op.first > 0 ? (n - x) : (x - 1);
+//     int d2 = op.second > 0 ? (n - y) : (y - 1);
+//     if(d1 <= d2)
+//     {
+//         nx = op.first > 0 ? n : 1;
+//         ny = op.second > 0 ? (y + d1) : (y - d1);
+//     }
+//     else
+//     {
+//         nx = op.first > 0 ? (x + d2) : (x - d2);
+//         ny = op.second > 0 ? m : 1;
+//     }
+//     ++cnt;
+//     if(check(x, y, nx, ny))
+//     {
+//         return;
+//     }
+//     if(nx == n || nx == 1) next.first = -op.first;
+//     if(ny == m || ny == 1) next.second = -op.second;
+//     dfs(nx, ny, next, vis);
 
-}
-int main()
-{
-    untie();
+// }
+// int main()
+// {
+//     untie();
 
-    dir[tp[0]] = make_pair(1, 1);
-    dir[tp[1]] = make_pair(1, -1);
-    dir[tp[2]] = make_pair(-1, 1);
-    dir[tp[3]] = make_pair(-1, -1);
+//     dir[tp[0]] = make_pair(1, 1);
+//     dir[tp[1]] = make_pair(1, -1);
+//     dir[tp[2]] = make_pair(-1, 1);
+//     dir[tp[3]] = make_pair(-1, -1);
     
 
-    int t;
-    cin  >> t;
-    while(t--)    
-    {
-        cnt = 0;
-        cin >> n >> m >> sx >> sy >> ex >> ey >> s;
-        vector<vector<int> > vis(n + 5, vector<int>(m + 5, 0));
+//     int t;
+//     cin  >> t;
+//     while(t--)    
+//     {
+//         cnt = 0;
+//         cin >> n >> m >> sx >> sy >> ex >> ey >> s;
+//         vector<vector<int> > vis(n + 5, vector<int>(m + 5, 0));
 
-        dfs(sx, sy, dir[s], vis);
-        cout << cnt << '\n';
-    }
+//         dfs(sx, sy, dir[s], vis);
+//         cout << cnt << '\n';
+//     }
 
-    return 0;
-}
+//     return 0;
+// }
 
 
 
