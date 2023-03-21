@@ -14430,10 +14430,155 @@ int main()
 
 
 /*十六. 字典树(TrieTree)*/
+//1. P2580 于是他错误的点名开始了(模板)
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <string>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e6;
+
+// int n, m, cnt = 1;//编号0 留给根节点
+// string s;
+
+// struct nd{
+//     int son[26];//字母ch存在 son[ch - 'a] ≠ 0
+//     int num;    //统计这个前缀出现次数
+//     bool repeat;//这个前缀是否重复
+//     bool isend; //词尾标记，即该链遍历到该节点是否是一个完整的单词
+// }tree[N];
+
+// void Insert(string s)
+// {
+//     int p = 0;//从根结点开始搜
+//     for(int i = 0; i < s.size(); i++)
+//     {
+//         int id = s[i] - 'a';
+//         if(!tree[p].son[id])        //若不存在链 根节点 -> id 表示的前缀，则插入
+//             tree[p].son[id] = cnt++;//让它指向下一个空闲空间，延长链
+//         p = tree[p].son[id];        //获取链的下一个结点，沿着该链走
+//         //注意这里处理对象是下一个结点的数据，假设链 0 -> 1 表示字符'a'，'a'属于结点1的前缀，而并非是结点0的前缀
+//         tree[p].num++;              //前缀出现次数增加
+//     }
+//     tree[p].isend = 1;              //词尾标记
+// }
+
+// int Find(string s)
+// {
+//     int p = 0;
+//     for(int i = 0; i < s.size(); i++)
+//     {
+//         int id = s[i] - 'a';
+//         if(!tree[p].son[id])//链中断，该前缀不存在
+//             return 0;
+//         p = tree[p].son[id];
+//     }
+//     //此时 p 为单词终点，则结点p的前缀的存在性即为整个单词的存在性
+//     if(!tree[p].isend) return 0;
+//     if(tree[p].repeat) return 2;//重复
+//     tree[p].repeat = 1;
+//     return 1;
+// }
+
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 0; i < n; i++)
+//     {
+//         cin >> s;
+//         Insert(s);
+//     }
+//     cin >> m;
+//     for(int i = 0; i < m; i++)
+//     {
+//         cin >> s;
+//         int res = Find(s);
+//         if(res == 1) cout << "OK\n";
+//         else if(res == 2) cout << "REPEAT\n";
+//         else cout << "WRONG\n";
+//     }
+//     return 0;
+// }
 
 
 
+//2.Secret Message G
+//题意询问的是有多少与字符串s有相同的前缀，这个前缀可以不同，但要求前缀长度必须等于暗号和那条信息长度的较小者
+//若 询问字串s 比 被匹配字串s0 长，则前缀次数即单词s0的个数
+//若是其他情况，则
+#include <cstdio>
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <cstring>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+const int N = 1e6;
 
+int n, m, cnt = 1;
+char s[N];
+
+struct nd{
+    int son[26];
+    int num;    //统计这个前缀出现次数
+    int cnt;    //统计单词的出现次数
+}tree[N];
+
+void Insert(char *s, int len)
+{
+    int p = 0;
+    for(int i = 0; i < len; i++)
+    {
+        int id = s[i] - 'a';
+        if(!tree[p].son[id])
+            tree[p].son[id] = cnt++;
+        p = tree[p].son[id];
+        tree[p].num++;
+    }
+    tree[p].cnt++;
+}
+
+int Find(char *s, int len)
+{
+    int p = 0, res = 0;
+    bool ok = 0;
+    for(int i = 0; i < len; i++)
+    {
+        int id = s[i] - 'a';
+        if(!tree[p].son[id])//链中断
+        {
+            ok = 1;
+            break;
+        }
+        p = tree[p].son[id];
+        res += tree[p].num;
+    }
+    // return 0;
+    return res;
+}
+
+int main()
+{
+    untie();
+    cin >> n >> m;
+    int x;
+    while(n--)
+    {
+        cin >> x;
+        for(int i = 0; i < x; i++) cin >> s[i];
+        Insert(s, x);
+    }
+    while(m--)
+    {
+        cin >> x;
+        for(int i = 0; i < x; i++) cin >> s[i];
+        cout << Find(s, x) << '\n';
+    }
+    return 0;
+}
 
 
 
@@ -14883,25 +15028,27 @@ int main()
 
 
 //8.字串排序
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-#include <cstring>
-#include <string>
-#include <cstdlib>
-#include <cctype>
-#include <cmath>
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
-#define ll int
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// #include <string>
+// #include <cstdlib>
+// #include <cctype>
+// #include <cmath>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// #define ll int
 
 
-int main()
-{
-    untie();
+// int main()
+// {
+//     untie();
+//     int n;
+//     cin >> n;
     
-    return 0;
-}
+//     return 0;
+// }
 
 
 
