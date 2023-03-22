@@ -14505,96 +14505,528 @@ int main()
 
 
 
-//2.Secret Message G
-//题意询问的是有多少与字符串s有相同的前缀，这个前缀可以不同，但要求前缀长度必须等于暗号和那条信息长度的较小者
-//若 询问字串s 比 被匹配字串s0 长，则前缀次数即单词s0的个数
-//若是其他情况，则
+//2.Secret Message G（统计前缀问题）
+//题意：给定若干字符串s1，并询问若干字符串s2，问有多少s1能匹配s2，匹配机制是满足取两者 较小者 可当作 较大者的前缀，即实际上这里的前缀是一整个单词
+//当s2长度大于s1时，即s2长度超出字典树最大可匹配子串的长度，肯定遍历不完s2就结束查询循环，只需统计cnt即有多少个s1单词是在s2链上的
+//当s2长度小于等于s1时，此时s2整个单词作为s1的前缀，统计
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <string>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e6;
+// int n, m, cnt = 1;
+// char s[N];
+// struct nd{
+//     int son[2];
+//     int num;    //统计这个前缀出现次数
+//     int cnt;    //统计单词的出现次数
+//     //对于一条完整链，即一个单词，到达词尾时，会有 num 和 cnt 的重复计数，因为此时前缀就是一整个单词
+// }tree[N];
+// void Insert(char *s, int len)
+// {
+//     int p = 0;
+//     for(int i = 0; i < len; i++)
+//     {
+//         int id = s[i] - '0';
+//         if(!tree[p].son[id])
+//             tree[p].son[id] = cnt++;
+//         p = tree[p].son[id];
+//         tree[p].num++;
+//     }
+//     tree[p].cnt++;
+// }
+// int Find(char *s, int len)
+// {
+//     int p = 0, res = 0;
+//     bool ok = 0;
+//     for(int i = 0; i < len; i++)
+//     {
+//         int id = s[i] - '0';
+//         if(!tree[p].son[id])//链中断，即没有遍历完的情况s2 > s1
+//         {
+//             ok = 1;
+//             break;
+//         }
+//         p = tree[p].son[id];
+//         res += tree[p].cnt;//此时s2 >= s1，加上s1整个单词的出现次数（若最后 s2 == s1，则这里是重复计数了）
+//     }
+//     if(!ok)//s2 <= s1
+//     {
+//         //直接加上有多少单词以s2为前缀，并减去重复计数（s2 == s1时）的cnt
+//         res += tree[p].num - tree[p].cnt;
+//     }
+//     return res;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     int x;
+//     while(n--)
+//     {
+//         cin >> x;
+//         for(int i = 0; i < x; i++) cin >> s[i];
+//         Insert(s, x);
+//     }
+//     while(m--)
+//     {
+//         cin >> x;
+//         for(int i = 0; i < x; i++) cin >> s[i];
+//         cout << Find(s, x) << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+//3.Shortest Prefixes
+//题意：给n个字符串s，输出每个字符串的最短唯一前缀s0，即s0是且仅是s的前缀，而不是其他任何单词的前缀，且s0可以为s，
+//      题目还提出若当s0==s时s0还可能是其他单词的前缀的话仍是输出s0。
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <string>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e6;
+// int n, m, cnt = 1;
+// string s[1005];
+// struct nd{
+//     int son[26];
+//     int num;    //统计这个前缀出现次数
+// }tree[N];
+// void Insert(string s)
+// {
+//     int p = 0;
+//     for(int i = 0; i < s.size(); i++)
+//     {
+//         int id = s[i] - 'a';
+//         if(!tree[p].son[id])
+//             tree[p].son[id] = cnt++;
+//         p = tree[p].son[id];
+//         tree[p].num++;
+//     }
+// }
+// string Find(string s)
+// {
+//     int p = 0;
+//     for(int i = 0; i < s.size(); i++)
+//     {
+//         int id = s[i] - 'a';
+//         p = tree[p].son[id];
+//         if(tree[p].num == 1)
+//         {
+//             return s.substr(0, i + 1);
+//         }
+//     }
+//     return s;
+// }
+// int main()
+// {
+//     untie();
+//     int ind = 0;
+//     while(cin >> s[++ind])
+//     {
+//         Insert(s[ind]);
+//     }
+//     for(int i = 1; i <= ind; i++)
+//     {
+//         cout << s[i] << ' ' << Find(s[i]) << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+//4.Phone List（排序 + 字典树）
+//题意：给 T 个字符串组，每组有 n 个字符串，判断组内 n 个字符串 s 是否均独特（即 s 不与组内任一其他字符串公用前缀）
+//      如 9135 和 91125 不组成 独特字符串组，因为 91 是它们的公共前缀
+//思路：标记单词前缀。因为只有比 s 短的字串才可能成为 s 的前缀，所以可以由短到长排序，边插入边判断之前插入的短字串是否为前缀 即可。
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <string>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e5 + 10;
+// int n, m, cnt = 1;
+// string s[10005];
+// struct nd{
+//     int son[10];
+//     int num;    //统计前缀出现次数
+// }tree[N];
+// bool Insert(string s)
+// {
+//     int p = 0;
+//     for(int i = 0; i < s.size(); i++)
+//     {
+//         int id = s[i] - '0';
+//         if(!tree[p].son[id])
+//             tree[p].son[id] = cnt++;
+//         p = tree[p].son[id];
+//         tree[p].num++;
+//     }
+//     return tree[p].num > 1;//除了它自身还有别的字串
+// }
+// bool cmp(const string &s1, const string &s2) { return s1.size() > s2.size();}
+// void Solve()
+// {
+//     cnt = 1;
+//     memset(tree, 0, sizeof(tree));//记得初始化
+//     int n;
+//     cin >> n;
+//     for(int i = 0; i < n; i++) cin >> s[i];
+//     sort(s, s + n, cmp);
+//     for(int i = 0; i < n; i++)
+//     {
+//         if(Insert(s[i]))
+//         {
+//             cout << "NO\n";
+//             return;
+//         }
+//     }
+//     cout << "YES\n";
+// }
+// int main()
+// {
+//     untie();
+//     int T;
+//     cin >> T;
+//     while(T--) Solve();
+//     return 0;
+// }
+
+
+
+//5.全文检索（简单查找）
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <string>
+// #include <cstring>
+// #include <set>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e6;
+// int n, m, cnt = 1;
+// string text, t;
+// vector<int> ans;
+// bool vis[N];
+// struct nd{
+//     int son[10];
+//     int id;     //关键字编号
+// }tree[N];
+// void Insert(string s, int id)
+// {
+//     int p = 0;
+//     for(int i = 0; i < s.size(); i++)
+//     {
+//         int id = s[i] - '0';
+//         if(!tree[p].son[id])
+//             tree[p].son[id] = cnt++;
+//         p = tree[p].son[id];
+//     }
+//     tree[p].id = id;
+// }
+// int Find(string s)
+// {
+//     int p = 0;
+//     for(int i = 0; i < s.size(); i++)
+//     {
+//         int id = s[i] - '0';
+//         p = tree[p].son[id];
+//         if(!p) break;                           //词尾的下一个结点p为空
+//         if(tree[p].id != 0) return tree[p].id;  //找到
+//     }
+//     return 0;                                   //没找到
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     for(int i = 0; i < n; i++) cin >> t, text += t;//连起来，防止关键字跨行存在
+//     for(int i = 1; i <= m; i++)
+//     {
+//         string tt;
+//         cin >> tt >> tt >> tt >> t;
+//         Insert(t, i);
+//     }
+//     for(int i = 0; i < text.size(); i++)
+//     {
+//         int res = Find(text.substr(i));//枚举寻找，关键字长度不定，搜索后面时长度判断起来麻烦，干脆直接全取了
+//         if(res && !vis[res])
+//         {
+//             vis[res] = 1;
+//             ans.push_back(res);
+//         }
+//     }
+//     if(ans.empty()) cout << "No key can be found !\n";
+//     else
+//     {
+//         cout << "Found key:";
+//         for(int i = 0; i < ans.size(); i++) cout << " [Key No. " << ans[i] << "]";
+//         cout << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+//6.阅读理解
+//MLE
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <string>
+// #include <cstring>
+// #include <set>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e6;
+// int n, m, cnt = 1;
+// string t;
+// struct nd{
+//     int son[26];
+//     // vector<int> ids;     //编号
+//     set<int> ids;
+// }tree[N];
+// void Insert(string s, int id)
+// {
+//     int p = 0;
+//     for(int i = 0; i < s.size(); i++)
+//     {
+//         int id = s[i] - 'a';
+//         if(!tree[p].son[id])
+//             tree[p].son[id] = cnt++;
+//         p = tree[p].son[id];
+//     }
+//     tree[p].ids.insert(id);
+// }
+// void Find(string s)
+// {
+//     int p = 0;
+//     for(int i = 0; i < s.size(); i++)
+//     {
+//         int id = s[i] - 'a';
+//         p = tree[p].son[id];
+//         if(!p) break;
+//     }
+//     bool tmp = 0;
+//     for(auto id : tree[p].ids)
+//     {
+//         if(tmp) cout << " ";
+//         cout << id;
+//         tmp = 1;
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 1; i <= n; i++)
+//     {
+//         int num; cin >> num;
+//         while(num--)
+//         {
+//             cin >> t;
+//             Insert(t, i);
+//         }
+//     }
+//     cin >> m;
+//     while(m--)
+//     {
+//         cin >> t;
+//         Find(t);
+//         cout << '\n';
+//     }
+//     return 0;
+// }
+//存在 n = 1000 的数据卡空间，bool ans[N][1001] 会MLE，若不为 1001 则会 WA
+//AC
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <string>
+// #include <cstring>
+// #include <bitset>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 5e5 + 10;
+// int n, m, cnt = 1;
+// string t;
+// struct nd{
+//     int son[26];
+// }tree[N];
+// bitset<1001> ans[N];//ans[p][id] = 1，表示单词 p 在第 id 行是存在的，比起将id信息存进结点，这样更省空间
+// void Insert(string s, int id)
+// {
+//     int p = 0;
+//     for(int i = 0; i < s.size(); i++)
+//     {
+//         int id = s[i] - 'a';
+//         if(!tree[p].son[id])
+//             tree[p].son[id] = cnt++;
+//         p = tree[p].son[id];
+//     }
+//     ans[p][id] = 1;
+// }
+// void Find(string s)
+// {
+//     int p = 0, ok = 1;
+//     for(int i = 0; i < s.size(); i++)
+//     {
+//         int id = s[i] - 'a';
+//         p = tree[p].son[id];
+//         if(!p) 
+//         {
+//             ok = 0;
+//             break;
+//         }
+//     }
+//     if(!ok) return;
+//     for(int i = 1; i <= n; i++)
+//         if(ans[p][i]) cout << i << " ";
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 1; i <= n; i++)
+//     {
+//         int num; cin >> num;
+//         while(num--)
+//         {
+//             cin >> t;
+//             Insert(t, i);
+//         }
+//     }
+//     cin >> m;
+//     while(m--)
+//     {
+//         cin >> t;
+//         Find(t);
+//         cout << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+//7.Hat’s Words（单词串联问题）
+//题意：在含若干个单词的字典树中，按字典序输出所有“正好由其他两个单词串联而成的”单词，如 a、ahat、hat 中 ahat 就是 a 和 hat 的串联
+//思路：遍历每个单词，枚举所有分解情况，判断分解出的两个子串是否都存在，是则可输出
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <string>
+// #include <cstring>
+// #include <bitset>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 5e5 + 10;
+// int cnt = 1, ind = 0;
+// string s[N];
+// struct nd{
+//     int son[26];
+//     bool isend;
+// }tree[N];
+// void Insert(string s)
+// {
+//     int p = 0;
+//     for(int i = 0; i < s.size(); i++)
+//     {
+//         int id = s[i] - 'a';
+//         if(!tree[p].son[id])
+//             tree[p].son[id] = cnt++;
+//         p = tree[p].son[id];
+//     }
+//     tree[p].isend = 1;
+// }
+// bool Find(string s)
+// {
+//     int p = 0, ok = 1;
+//     for(int i = 0; i < s.size(); i++)
+//     {
+//         int id = s[i] - 'a';
+//         p = tree[p].son[id];
+//         if(!p) return 0;
+//     }
+//     return tree[p].isend;
+// }
+// int main()
+// {
+//     untie();
+//     while(cin >> s[++ind]) Insert(s[ind]);
+//     for(int i = 1; i <= ind; i++)
+//         for(int len = 1; len < s[i].size(); len++)        
+//             if(Find(s[i].substr(0, len)) && Find(s[i].substr(len)))
+//             {
+//                 cout << s[i] << '\n';
+//                 break;//防止重复输出同一个字符串
+//             }
+//     return 0;
+// }
+
+
+
+//8.Spy Syndrome 2
 #include <cstdio>
 #include <algorithm>
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <bitset>
 using namespace std;
 #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
-const int N = 1e6;
-
+const int N = 5e5 + 10;
 int n, m, cnt = 1;
-char s[N];
-
+string str, s[N];
 struct nd{
     int son[26];
-    int num;    //统计这个前缀出现次数
-    int cnt;    //统计单词的出现次数
+    bool isbegin;
+    bool isend;
 }tree[N];
-
-void Insert(char *s, int len)
+void Insert(string s, bool st)
 {
     int p = 0;
-    for(int i = 0; i < len; i++)
+    for(int i = 0; i < s.size(); i++)
     {
         int id = s[i] - 'a';
         if(!tree[p].son[id])
             tree[p].son[id] = cnt++;
         p = tree[p].son[id];
-        tree[p].num++;
     }
-    tree[p].cnt++;
+    tree[p].isend = 1;
 }
-
-int Find(char *s, int len)
+bool Find(string s)
 {
-    int p = 0, res = 0;
-    bool ok = 0;
-    for(int i = 0; i < len; i++)
+    int p = 0, ok = 1;
+    for(int i = 0; i < s.size(); i++)
     {
         int id = s[i] - 'a';
-        if(!tree[p].son[id])//链中断
-        {
-            ok = 1;
-            break;
-        }
         p = tree[p].son[id];
-        res += tree[p].num;
+        if(!p) return 0;
     }
-    // return 0;
-    return res;
+    return tree[p].isend;
 }
-
 int main()
 {
     untie();
-    cin >> n >> m;
-    int x;
-    while(n--)
+    cin >> n >> str >> m;
+    for(int i = 0; i < m; i++)
     {
-        cin >> x;
-        for(int i = 0; i < x; i++) cin >> s[i];
-        Insert(s, x);
-    }
-    while(m--)
-    {
-        cin >> x;
-        for(int i = 0; i < x; i++) cin >> s[i];
-        cout << Find(s, x) << '\n';
+        cin >> s[i];
+
     }
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
