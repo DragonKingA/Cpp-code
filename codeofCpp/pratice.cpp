@@ -15239,151 +15239,151 @@ int main()
 //重点：搜索 最小异或和 时，由于自己与自己异或为 0，故很容易搜索到自己然后只得到 0
 //所以在搜索 dis[i] 之后再加入 dis[i]，这样是可以包揽所有组合情况的 C(n, 2)，每次拓展字典树
 //如 1 2 3 4 5，dis[1] 查 0 -> dis[2] 从 {1} 查 -> dis[3] 从 {1 2} 查 -> dis[4] 从 {1 2 3} 查 -> dis[5] 从 {1 2 3 4}，所以含有所有两两组合
-// #include <cstdio>
-// #include <iostream>
-// #include <algorithm>
-// #include <cstring>
-// using namespace std;
-// const int N = 5e4 + 100;
-// int n, T, cnt, mmin, mmax;
-// int dis[N], bin[N], trie[N << 5][9];//dis[i] 存 a0 ~ ai 的异或和
-// void init()
-// {
-//     cnt = 1, mmin = 2e9, mmax = 0;
-//     memset(trie, 0, sizeof(trie));
-// }
-// void Insert(int x)
-// {
-//     int p = 0;
-//     for(int i = 31; i >= 0; --i)
-//     {
-//         bool id = x & bin[i];
-//         if(!trie[p][id]) trie[p][id] = cnt++;
-//         p = trie[p][id];
-//     }
-// }
-// int Find_xor_min(int x)
-// {
-//     int p = 0, res = 0;
-//     for(int i = 31; i >= 0; --i)
-//     {
-//         bool id = x & bin[i];
-//         if(trie[p][id]) p = trie[p][id];
-//         else p = trie[p][id ^ 1], res += bin[i];
-//         if(!p) break;
-//     }
-//     return res;
-// }
-// int Find_xor_max(int x)
-// {
-//     int p = 0, res = 0;
-//     for(int i = 31; i >= 0; --i)
-//     {
-//         bool id = x & bin[i];
-//         if(trie[p][id ^ 1]) p = trie[p][id ^ 1], res += bin[i];
-//         else p = trie[p][id];
-//         if(!p) break;
-//     }
-//     return res;
-// }
-// int main()
-// {
-//     bin[0] = 1;
-//     for(int i = 1; i <= 31; ++i) bin[i] = bin[i - 1] << 1;
-//     scanf("%d", &T);
-//     for(int _ = 1; _ <= T; ++_)
-//     {
-//         init();
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+const int N = 5e4 + 100;
+int n, T, cnt, mmin, mmax;
+int dis[N], bin[N], trie[N << 5][9];//dis[i] 存 a0 ~ ai 的异或和
+void init()
+{
+    cnt = 1, mmin = 2e9, mmax = 0;
+    memset(trie, 0, sizeof(trie));
+}
+void Insert(int x)
+{
+    int p = 0;
+    for(int i = 31; i >= 0; --i)
+    {
+        bool id = x & bin[i];
+        if(!trie[p][id]) trie[p][id] = cnt++;
+        p = trie[p][id];
+    }
+}
+int Find_xor_min(int x)
+{
+    int p = 0, res = 0;
+    for(int i = 31; i >= 0; --i)
+    {
+        bool id = x & bin[i];
+        if(trie[p][id]) p = trie[p][id];
+        else p = trie[p][id ^ 1], res += bin[i];
+        if(!p) break;//其实也不同判断，因为必然有 p != 0，如果想要走的路（分岔）走不通，那么就回到原路（原路必然存在）
+    }
+    return res;
+}
+int Find_xor_max(int x)
+{
+    int p = 0, res = 0;
+    for(int i = 31; i >= 0; --i)
+    {
+        bool id = x & bin[i];
+        if(trie[p][id ^ 1]) p = trie[p][id ^ 1], res += bin[i];
+        else p = trie[p][id];
+        if(!p) break;
+    }
+    return res;
+}
+int main()
+{
+    bin[0] = 1;
+    for(int i = 1; i <= 31; ++i) bin[i] = bin[i - 1] << 1;
+    scanf("%d", &T);
+    for(int _ = 1; _ <= T; ++_)
+    {
+        init();
         
-//         scanf("%d", &n);
-//         for(int i = 1; i <= n; i++) 
-//         {
-//             scanf("%d", &dis[i]);
-//             dis[i] ^= dis[i - 1];
-//         }
-//         Insert(0);//由于所有最值都至少是 dis[i] 本身，所以加入 0 让它们能异或 0 而得到自己本身的值
-//         for(int i = 1; i <= n; i++) 
-//         {
-//             // cout << i << ": " << Find_xor_max(dis[i]) << " " << Find_xor_min(dis[i]) << '\n';
-//             mmin = min(mmin, Find_xor_min(dis[i]));
-//             mmax = max(mmax, Find_xor_max(dis[i]));
-//             Insert(dis[i]);
-//         }
-//         printf("Case %d: %d %d\n", _, mmax, mmin);
-//     }
-//     return 0;
-// }
+        scanf("%d", &n);
+        for(int i = 1; i <= n; i++) 
+        {
+            scanf("%d", &dis[i]);
+            dis[i] ^= dis[i - 1];
+        }
+        Insert(0);//由于所有最值都至少是 dis[i] 本身，所以加入 0 让它们能异或 0 而得到自己本身的值
+        for(int i = 1; i <= n; i++) 
+        {
+            // cout << i << ": " << Find_xor_max(dis[i]) << " " << Find_xor_min(dis[i]) << '\n';
+            mmin = min(mmin, Find_xor_min(dis[i]));
+            mmax = max(mmax, Find_xor_max(dis[i]));
+            Insert(dis[i]);
+        }
+        printf("Case %d: %d %d\n", _, mmax, mmin);
+    }
+    return 0;
+}
 
 
 
 
 //11.Problem C（字典树多操作）
 //三种操作：插入单词、删除所有前缀为s的单词、查询前缀为s的单词是否存在
-#include <cstdio>
-#include <algorithm>
-#include <iostream>
-#include <cstring>
-using namespace std;
-const int N = 1e5 + 10;
-struct nd{
-    int son[26];
-    int num;    //前缀出现次数
-    void init()
-    {
-        num = 0;
-        memset(son, 0, sizeof(son));
-    }
-}trie[N << 5];
-int ind = 1;
-char s[100];
-void Insert(char *s)
-{
-    int len = strlen(s), p = 0;
-    for(int i = 0; i < len; i++)
-    {
-        int id = s[i] - 'a';
-        if(!trie[p].son[id]) trie[p].son[id] = ind++;
-        p = trie[p].son[id];
-        trie[p].num++;
-    }
-}
-void Delete(char *s)
-{
-    int len = strlen(s), p = 0;
-    for(int i = 0; i < len; i++)
-    {
-        int id = s[i] - 'a';
-        if(!trie[p].son[id]) return;
-        p = trie[p].son[id];
-        trie[p].num++;
-    }
-    trie[p].init();
-}
-int Find(char *s)
-{
-    int len = strlen(s), p = 0;
-    for(int i = 0; i < len; i++)
-    {
-        int id = s[i] - 'a';
-        p = trie[p].son[id];
-        if(!p) return 0;
-    }
-    return trie[p].num;
-}
-int main()
-{
-    int n;
-    scanf("%d", &n);
-    while(n--)
-    {
-        char op[10];
-        cin >> op >> s;
-        if(op[0] == 'i') Insert(s);
-        else if(op[0] == 'd') Delete(s);
-        else cout << (!Find(s) ? "No\n" : "Yes\n");
-    }
-    return 0;
-}
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cstring>
+// using namespace std;
+// const int N = 1e5 + 10;
+// struct nd{
+//     int son[26];
+//     int num;    //前缀出现次数
+//     void init()
+//     {
+//         num = 0;
+//         memset(son, 0, sizeof(son));
+//     }
+// }trie[N << 5];
+// int ind = 1;
+// char s[100];
+// void Insert(char *s)
+// {
+//     int len = strlen(s), p = 0;
+//     for(int i = 0; i < len; i++)
+//     {
+//         int id = s[i] - 'a';
+//         if(!trie[p].son[id]) trie[p].son[id] = ind++;
+//         p = trie[p].son[id];
+//         trie[p].num++;
+//     }
+// }
+// void Delete(char *s)
+// {
+//     int len = strlen(s), p = 0;
+//     for(int i = 0; i < len; i++)
+//     {
+//         int id = s[i] - 'a';
+//         if(!trie[p].son[id]) return;
+//         p = trie[p].son[id];
+//         trie[p].num++;
+//     }
+//     trie[p].init();
+// }
+// int Find(char *s)
+// {
+//     int len = strlen(s), p = 0;
+//     for(int i = 0; i < len; i++)
+//     {
+//         int id = s[i] - 'a';
+//         p = trie[p].son[id];
+//         if(!p) return 0;
+//     }
+//     return trie[p].num;
+// }
+// int main()
+// {
+//     int n;
+//     scanf("%d", &n);
+//     while(n--)
+//     {
+//         char op[10];
+//         cin >> op >> s;
+//         if(op[0] == 'i') Insert(s);
+//         else if(op[0] == 'd') Delete(s);
+//         else cout << (!Find(s) ? "No\n" : "Yes\n");
+//     }
+//     return 0;
+// }
 
 
 
