@@ -202,6 +202,285 @@ int main()
 */
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//A
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <cctype>
+// #include <cstring>
+// #include <string>
+// #include <cmath>
+// #include <set>
+// #include <map>
+// #include <queue>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// int main()
+// {
+//     untie();
+//   int t; cin >> t;
+//   while (t--)
+//   {
+//         char num[5];
+//         map<int, int> vis;
+//         for (int i = 1; i <= 4; i++) cin >> num[i], vis[num[i] - '1' + 1]++;
+//         if (vis.size() == 1) cout << "-1";
+//         else if (vis.size() == 2)
+//         {
+//         for (auto v : vis)
+//         {
+//             if (v.second != 2) cout << '6';
+//             else cout << '4';
+//             break;
+//         }
+//         }
+//         else cout << '4';
+//         cout << endl;
+//   }
+// }
+
+
+
+
+
+
+//B
+//求和公式 + 二分答案
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <cctype>
+// #include <cstring>
+// #include <string>
+// #include <cmath>
+// #include <set>
+// #include <map>
+// #include <queue>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define ll long long
+// int T;
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         ll n;
+//         cin >> n;
+//         ll ans1 = 0, ans2 = 0;
+
+//         ll l = 1, r = 1e9;
+//         while(l < r)
+//         {
+//             ll mid = l + r >> 1;
+//             ll cal = ((((mid - 1) << 3) * mid) >> 1);
+//             if(cal < n - 1) l = mid + 1;// ans1 = mid;
+//             else r = mid; 
+//         }
+//         ans1 = l;
+
+//         l = 1, r = 1e9;
+//         while(l < r)
+//         {
+//             ll mid = l + r >> 1;
+//             ll cal = (((8 + ((mid - 1) << 3)) * mid) >> 1);
+//             if(cal < n) l = mid + 1;// ans2 = mid;
+//             else r = mid;
+//         }
+//         ans2 = l;
+
+//         ans1 = (ans1 - 1) << 1;
+//         ans2 = (ans2 << 1) - 1;
+//         cout << min(ans1, ans2) << '\n';
+//     }
+//     return 0;
+// }
+//更好的二分
+//一块 x * x 的面积（此时 1 * 1 的面积代表一个点）表示正方形内所有点的个数，故代替求和公式
+//注意二分条件
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <cmath>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define ll long long
+// int T;
+// int main()
+// {
+//     untie();
+//     cin >> T;
+//     while(T--)
+//     {
+//         ll n;
+//         cin >> n;
+//         ll l = -1, r = 1e9;//二分答案设为 r，r ∈ [0, 1e9)  则 l ∈ [-1, 1e9)
+//         while(r - l > 1)
+//         {
+//             ll mid = l + r >> 1;
+//             ll cal = (mid + 1) * (mid + 1);
+//             if(cal < n) l = mid;
+//             else r = mid;
+//         } 
+//         cout << r << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //edu Round 145
 // #include <iostream>
 // #include <cstdio>

@@ -14977,78 +14977,413 @@ int main()
 
 
 //8.Spy Syndrome 2
+//题意：给定一个字符串 s，以及 m 个单词，而 s 是由原句经过 大写变小写、翻转、删除空格 转换的，现要求从 m 个单词和 s 推出原句 s0。
+//思路：由于要匹配的文本 s 是逆序的，将 m 个单词取小写并翻转后再存入字典树。
+//由于如 "ancestorandan" 和 设倒序后单词为"an"、"and"、"ancestor"，无法直接O(n)遍历推出 an 的位置是在哪里，因此需要 dfs 搜索每个单词的归属，输出可行方案  
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <string>
+// #include <cstring>
+// #include <cctype>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e6 + 10;
+// int n, m, cnt = 1;
+// string str, s[N];
+// vector<int> ans;
+// struct nd{
+//     int son[26];
+//     int id;
+// }tree[N];
+// void Insert(string s, int ind)
+// {
+//     int p = 0;
+//     for(int i = 0; i < s.size(); i++)
+//     {
+//         int id = s[i] - 'a';
+//         if(!tree[p].son[id])
+//             tree[p].son[id] = cnt++;
+//         p = tree[p].son[id];
+//     }
+//     tree[p].id = ind;
+// }
+// bool dfs(int now)//搜索长为 n 的文本 s
+// {
+//     if(now == n) 
+//     {
+//         for(auto i : ans)
+//             cout << s[i] << " ";
+//         return 1;
+//     }
+//     int p = 0;
+//     for(int i = now; i < str.size(); i++)
+//     {
+//         int id = str[i] - 'a';
+//         p = tree[p].son[id];
+//         if(!p) break;
+//         if(tree[p].id)//遍历到可匹配单词就深入搜索
+//         {
+//             ans.push_back(tree[p].id);
+//             if(dfs(i + 1)) return 1;
+//             ans.pop_back();//能到这里说明方案不行，回溯
+//         }
+//     }
+//     return 0;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> str >> m;
+//     for(int i = 1; i <= m; i++)
+//     {
+//         cin >> s[i];
+//         string t = s[i];
+//         reverse(t.begin(), t.end());
+//         for(auto &ch : t)//转小写并翻转存入字典树中
+//             if(isupper(ch)) ch += 'a' - 'A';
+//         Insert(t, i);
+//     }
+//     dfs(0);     
+//     return 0;
+// }
+
+
+
+//*9.The xor-longest Path（01-Trie + 最大异或和）
+// 异或和 定义：S(u, v) 为 两点间所有边权的异或值，如 4 个点间（起于u，终于v）有 3 条边 w1、w2、w3，其 S(u, v) = w1 ^ w2 ^ w3，即 “和” 的含义在异或操作中是“异或结合”
+// 题意：
+//      定义边权树 G(u, v)，定义最长路径为 最长异或路径，即两点权值的异或值越大，路径越长，求任意两点路径上异或值和的最大值 max{S(u, v)}，
+//      两结点间的异或长度为两点之间 所有边权值相异或 得到的值。
+// 分析：
+//      由于 (a xor b) xor (b xor c) = a xor c 即 b xor b = 0，假设有两段异或和 S1、S2，它们都经过一条公共路径 S0，
+//      分别取出各自的 S0，有 S1 ^ S2 = (S1' ^ S0) ^ (S2' ^ S0) = S1' ^ S2'，故直接 S1 ^ S2 就能取出它们间相异的部分 S1' ^ S2'
+// 思路：
+//      那么我们可以定义并预处理 S(0, u) 和 S(0, v)，则容易计算出 S(u, v) = S(0, u) ^ S(0, v)
+//      已知所给边权树必然两两可连通，故我们只需要保存 各点u 到 根节点（设为0）的 异或和 dis[u]，易于取得 S(u, v) = dis[u] ^ dis[v]
+//      设为无向图方便任意起点深搜，先 dfs 获得 根节点 到所有其他点 i 的路径异或权值和 dis[i]，而且树本身不成环，dfs过程中只要防止原路返回就行，最终会停止在叶子结点
+//      贪心思想 - 查询时能选择相异路径就选，否则只能选相同方向（如现在某位上是 1，尽量走 0，使得异或值最大）。
+//用vector邻接表存不论 C++ 还是 G++ 都会TLE
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <string>
+// #include <cstring>
+// #include <cctype>
+// #include <vector>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e5 + 10;
+// int n, m, cnt = 1, ans = 0;
+// int tree[N << 5][2], dis[N];
+// struct Edge{
+//     int to, w;
+//     Edge(int a = 0, int b = 0) {to = a, w = b;}
+// };
+// vector<Edge> G[N];
+// void init()
+// {
+//     cnt = 1;
+//     ans = 0;
+//     for(int i = 0; i <= n; i++) G[i].clear();
+//     memset(tree, 0, sizeof(tree));
+//     memset(dis, 0, sizeof(dis));
+// }
+// void dfs(int u, int father)
+// {
+//     for(int i = 0; i < G[u].size(); i++)
+//     {
+//         int v = G[u][i].to;
+//         if(v == father) continue;
+//         dis[v] = dis[u] ^ G[u][i].w;
+//         dfs(v, u);
+//     }
+// }
+// void Insert(int x)
+// {
+//     int p = 0;
+//     for(int i = 31; i >= 0; --i)//因为最大w为2^31，故可定为31位二进制，从高位（高位数对异或值影响最大）搜索最大异或方案
+//     {
+//         int id = (x >> i) & 1;//取第 i 数位
+//         if(!tree[p][id]) tree[p][id] = cnt++;
+//         p = tree[p][id];
+//     }
+// }
+// int Find(int x)
+// {
+//     int p = 0, res = 0;
+//     for(int i = 31; i >= 0; --i)
+//     {
+//         int id = (x >> i) & 1;                                   //如果 i 最大定为 32，下面的 1 << i 会越界
+//         if(tree[p][id ^ 1]) p = tree[p][id ^ 1], res += (1 << i);//尽量往不同方向走，使得异或值在第i位为1
+//         else p = tree[p][id];
+//         if(!p) break;
+//     }
+//     return res;
+// }
+// int main()
+// {
+//     untie();
+//     while(cin >> n)
+//     {
+//         init();
+//         for(int i = 1; i < n; i++)
+//         {
+//             int u, v, w;
+//             cin >> u >> v >> w;
+//             ++u, ++v;
+//             G[u].push_back(Edge(v, w));
+//             G[v].push_back(Edge(u, w));
+//         }
+//         dfs(1, 1);//设起点为1
+//         for(int i = 1; i <= n; i++) Insert(dis[i]);//插入所有路径异或和
+//         //Find()寻找一条与 dis[i] 异或性最强的另一条路径，两两异或，相同数位变0，不同才变1
+//         for(int i = 1; i <= n; i++) ans = max(ans, Find(dis[i]));
+//         cout << ans << '\n';
+//     }
+//     return 0;
+// }
+//链式前向星 和 bin[i]预处理 加速，G++ 可过
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <string>
+// #include <cstring>
+// #include <cctype>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e5 + 10;
+// int n, m, cnt = 1, ans = 0;
+// int tree[N << 5][2], dis[N];
+// int head[N], bin[50];
+// struct Edge{
+//     int to, w, next;
+//     Edge(int a = 0, int b = 0, int c = 0) {to = a, w = b, next = c;}
+// }edge[N << 2];
+// void init()
+// {
+//     cnt = 1;
+//     ans = 0;
+//     memset(head, 0, sizeof(head));
+//     memset(tree, 0, sizeof(tree));
+//     memset(dis, 0, sizeof(dis));
+// }
+// void addedge(int u, int v, int w)
+// {
+//     edge[cnt] = Edge(v, w, head[u]);
+//     head[u] = cnt++;
+// }
+// void dfs(int u, int father)
+// {
+//     for(int i = head[u]; i; i = edge[i].next)//编号从 1 开始
+//     {
+//         int v = edge[i].to;
+//         if(v == father) continue;
+//         dis[v] = dis[u] ^ edge[i].w;
+//         dfs(v, u);
+//     }
+// }
+// void Insert(int x)
+// {
+//     int p = 0;
+//     for(int i = 31; i >= 0; --i)//因为最大w为2^31，故可定为31位二进制，从高位（高位数对异或值影响最大）搜索最大异或方案
+//     {
+//         bool id = x & bin[i];//取第 i 数位，转 bool，相当于 id = (x & bin[i]) != 0
+//         if(!tree[p][id]) tree[p][id] = cnt++;
+//         p = tree[p][id];
+//     }
+// }
+// int Find(int x)
+// {
+//     int p = 0, res = 0;
+//     for(int i = 31; i >= 0; --i)//如果 i 最大定为 32， bin[i] = 1 << i 会越界
+//     {
+//         bool id = x & bin[i];            
+//         if(tree[p][id ^ 1]) p = tree[p][id ^ 1], res += bin[i];//尽量往不同方向走，使得异或值在第i位为1
+//         else p = tree[p][id];
+//         if(!p) break;//这里其实不需要，该树上二分叉必有一叉可走
+//     }
+//     return res;
+// }
+// int main()
+// {
+//     bin[0] = 1;
+//     for(int i = 1; i <= 32; i++) bin[i] = bin[i - 1] << 1;
+//     untie();
+//     while(cin >> n)
+//     {
+//         init();
+
+//         for(int i = 1; i < n; i++)
+//         {
+//             int u, v, w;
+//             cin >> u >> v >> w;
+//             ++u, ++v;
+//             addedge(u, v, w);
+//             addedge(v, u, w);
+//         }
+        
+//         dfs(1, 1);//设起点为1
+
+//         for(int i = 1; i <= n; i++) Insert(dis[i]);//插入 所有点i 到 零点 的异或和
+//         for(int i = 1; i <= n; i++) ans = max(ans, Find(dis[i]));
+//         cout << ans << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+//10.Consecutive Sum（极大极小异或和）
+//重点：搜索 最小异或和 时，由于自己与自己异或为 0，故很容易搜索到自己然后只得到 0
+//所以在搜索 dis[i] 之后再加入 dis[i]，这样是可以包揽所有组合情况的 C(n, 2)，每次拓展字典树
+//如 1 2 3 4 5，dis[1] 查 0 -> dis[2] 从 {1} 查 -> dis[3] 从 {1 2} 查 -> dis[4] 从 {1 2 3} 查 -> dis[5] 从 {1 2 3 4}，所以含有所有两两组合
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// const int N = 5e4 + 100;
+// int n, T, cnt, mmin, mmax;
+// int dis[N], bin[N], trie[N << 5][9];//dis[i] 存 a0 ~ ai 的异或和
+// void init()
+// {
+//     cnt = 1, mmin = 2e9, mmax = 0;
+//     memset(trie, 0, sizeof(trie));
+// }
+// void Insert(int x)
+// {
+//     int p = 0;
+//     for(int i = 31; i >= 0; --i)
+//     {
+//         bool id = x & bin[i];
+//         if(!trie[p][id]) trie[p][id] = cnt++;
+//         p = trie[p][id];
+//     }
+// }
+// int Find_xor_min(int x)
+// {
+//     int p = 0, res = 0;
+//     for(int i = 31; i >= 0; --i)
+//     {
+//         bool id = x & bin[i];
+//         if(trie[p][id]) p = trie[p][id];
+//         else p = trie[p][id ^ 1], res += bin[i];
+//         if(!p) break;
+//     }
+//     return res;
+// }
+// int Find_xor_max(int x)
+// {
+//     int p = 0, res = 0;
+//     for(int i = 31; i >= 0; --i)
+//     {
+//         bool id = x & bin[i];
+//         if(trie[p][id ^ 1]) p = trie[p][id ^ 1], res += bin[i];
+//         else p = trie[p][id];
+//         if(!p) break;
+//     }
+//     return res;
+// }
+// int main()
+// {
+//     bin[0] = 1;
+//     for(int i = 1; i <= 31; ++i) bin[i] = bin[i - 1] << 1;
+//     scanf("%d", &T);
+//     for(int _ = 1; _ <= T; ++_)
+//     {
+//         init();
+        
+//         scanf("%d", &n);
+//         for(int i = 1; i <= n; i++) 
+//         {
+//             scanf("%d", &dis[i]);
+//             dis[i] ^= dis[i - 1];
+//         }
+//         Insert(0);//由于所有最值都至少是 dis[i] 本身，所以加入 0 让它们能异或 0 而得到自己本身的值
+//         for(int i = 1; i <= n; i++) 
+//         {
+//             // cout << i << ": " << Find_xor_max(dis[i]) << " " << Find_xor_min(dis[i]) << '\n';
+//             mmin = min(mmin, Find_xor_min(dis[i]));
+//             mmax = max(mmax, Find_xor_max(dis[i]));
+//             Insert(dis[i]);
+//         }
+//         printf("Case %d: %d %d\n", _, mmax, mmin);
+//     }
+//     return 0;
+// }
+
+
+
+
+//11.Problem C（字典树多操作）
+//三种操作：插入单词、删除所有前缀为s的单词、查询前缀为s的单词是否存在
 #include <cstdio>
 #include <algorithm>
 #include <iostream>
-#include <string>
 #include <cstring>
-#include <bitset>
 using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
-const int N = 5e5 + 10;
-int n, m, cnt = 1;
-string str, s[N];
+const int N = 1e5 + 10;
 struct nd{
     int son[26];
-    bool isbegin;
-    bool isend;
-}tree[N];
-void Insert(string s, bool st)
-{
-    int p = 0;
-    for(int i = 0; i < s.size(); i++)
+    int num;    //前缀出现次数
+    void init()
     {
-        int id = s[i] - 'a';
-        if(!tree[p].son[id])
-            tree[p].son[id] = cnt++;
-        p = tree[p].son[id];
+        num = 0;
+        memset(son, 0, sizeof(son));
     }
-    tree[p].isend = 1;
-}
-bool Find(string s)
+}trie[N << 5];
+int ind = 1;
+char s[100];
+void Insert(char *s)
 {
-    int p = 0, ok = 1;
-    for(int i = 0; i < s.size(); i++)
+    int len = strlen(s), p = 0;
+    for(int i = 0; i < len; i++)
     {
         int id = s[i] - 'a';
-        p = tree[p].son[id];
+        if(!trie[p].son[id]) trie[p].son[id] = ind++;
+        p = trie[p].son[id];
+        trie[p].num++;
+    }
+}
+void Delete(char *s)
+{
+    int len = strlen(s), p = 0;
+    for(int i = 0; i < len; i++)
+    {
+        int id = s[i] - 'a';
+        if(!trie[p].son[id]) return;
+        p = trie[p].son[id];
+        trie[p].num++;
+    }
+    trie[p].init();
+}
+int Find(char *s)
+{
+    int len = strlen(s), p = 0;
+    for(int i = 0; i < len; i++)
+    {
+        int id = s[i] - 'a';
+        p = trie[p].son[id];
         if(!p) return 0;
     }
-    return tree[p].isend;
+    return trie[p].num;
 }
 int main()
 {
-    untie();
-    cin >> n >> str >> m;
-    for(int i = 0; i < m; i++)
+    int n;
+    scanf("%d", &n);
+    while(n--)
     {
-        cin >> s[i];
-
+        char op[10];
+        cin >> op >> s;
+        if(op[0] == 'i') Insert(s);
+        else if(op[0] == 'd') Delete(s);
+        else cout << (!Find(s) ? "No\n" : "Yes\n");
     }
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
