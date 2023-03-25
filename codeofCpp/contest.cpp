@@ -201,6 +201,170 @@ int main()
 
 */
 
+//ABC 295
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <cctype>
+// #include <cstring>
+// #include <string>
+// #include <cmath>
+// #include <set>
+// #include <map>
+// #include <queue>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define ll long long
+// int T;
+// string s[100] = {"and", "not", "that", "the", "you"};
+// string now;
+// map<string, bool> mp;
+// int main()
+// {
+//     for(int i = 0; i < 5; i++) mp[s[i]] = 1;
+//     untie();
+//     cin >> T;
+//     int ok = 0;
+
+//     while(T--)
+//     {
+//         cin >> now;
+//         if(mp[now] == 1) ok = 1;
+//     }
+//     if(ok) cout << "Yes\n";
+//     else cout << "No\n";
+//     return 0;
+// }
+
+
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <cctype>
+// #include <cstring>
+// #include <string>
+// #include <cmath>
+// #include <set>
+// #include <map>
+// #include <queue>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define ll long long
+// int T;
+// struct nd{
+//     int x, y;
+//     nd(int a = 0, int b = 0) {x = a, y = b;}
+// };
+// char mp[100][100];
+// int vis[25][25];
+// int n, m;
+// int num = 1;
+// int dir[4][2] = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+// void bfs(int sx, int sy, int d)
+// {
+//     queue<nd> q;
+//     q.push(nd(sx, sy));
+//     vis[sx][sy] = num;
+//     while(!q.empty())
+//     {
+//         nd now = q.front();
+//         q.pop();
+//         if(abs(now.x - sx) + abs(now.y - sy) > d)
+//         {
+//             return ;
+//         }
+//         if(!(mp[now.x][now.y] >= '1' && mp[now.x][now.y] <= '9'))
+//                 mp[now.x][now.y] = '.';
+        
+//         for(int i = 0 ; i < 4; ++i)
+//         {
+//             int nx = now.x + dir[i][0], ny = now.y + dir[i][1];
+//             if(nx >= 1 && nx <= n && ny >= 1 && ny <= m && vis[nx][ny] < num)
+//             {
+//                 if(abs(now.x - sx) + abs(now.y - sy) > d) continue;
+//                 if(!(mp[nx][ny] >= '1' && mp[nx][ny] <= '9'))
+//                     vis[nx][ny] = num;
+//                 q.push(nd(nx, ny));
+//             }
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     for(int i = 1; i <= n; i++)    
+//         for(int j = 1; j <= m; j++)  
+//             cin >> mp[i][j];
+//     for(int i = 1; i <= n; i++)    
+//     {
+//         for(int j = 1; j <= m; j++)      
+//         {
+//             if(mp[i][j] >= '1' && mp[i][j] <= '9')
+//             {
+//                 vis[i][j] = num;
+//                 int d = mp[i][j] - '0';
+//                 mp[i][j] = '.';
+//                 bfs(i, j, d);
+//                 num++;
+//             }
+//         }  
+//     }
+//     for(int i = 1; i <= n; i++)    
+//     {
+//         for(int j = 1; j <= m; j++) 
+//         {
+//             cout << mp[i][j];
+//         }
+//         cout << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+
+
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <cctype>
+#include <cstring>
+#include <string>
+#include <cmath>
+#include <set>
+#include <map>
+#include <queue>
+
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+#define ll long long
+string s;
+const int N = 5e5 + 10;
+int dp[N][9];
+int main()
+{
+    untie();
+    cin >> s;
+
+    return 0;
+}
+
+
+
+
+
+//00222233
+//4
+
+//0112223333444445555556666666777777778888888889999999999
+//185
+
+//2 + 2 + 4 + 4 + 6 + 6 + 8 + 8 + 10
+
+
 
 
 

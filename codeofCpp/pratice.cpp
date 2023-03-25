@@ -15239,80 +15239,80 @@ int main()
 //重点：搜索 最小异或和 时，由于自己与自己异或为 0，故很容易搜索到自己然后只得到 0
 //所以在搜索 dis[i] 之后再加入 dis[i]，这样是可以包揽所有组合情况的 C(n, 2)，每次拓展字典树
 //如 1 2 3 4 5，dis[1] 查 0 -> dis[2] 从 {1} 查 -> dis[3] 从 {1 2} 查 -> dis[4] 从 {1 2 3} 查 -> dis[5] 从 {1 2 3 4}，所以含有所有两两组合
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-#include <cstring>
-using namespace std;
-const int N = 5e4 + 100;
-int n, T, cnt, mmin, mmax;
-int dis[N], bin[N], trie[N << 5][9];//dis[i] 存 a0 ~ ai 的异或和
-void init()
-{
-    cnt = 1, mmin = 2e9, mmax = 0;
-    memset(trie, 0, sizeof(trie));
-}
-void Insert(int x)
-{
-    int p = 0;
-    for(int i = 31; i >= 0; --i)
-    {
-        bool id = x & bin[i];
-        if(!trie[p][id]) trie[p][id] = cnt++;
-        p = trie[p][id];
-    }
-}
-int Find_xor_min(int x)
-{
-    int p = 0, res = 0;
-    for(int i = 31; i >= 0; --i)
-    {
-        bool id = x & bin[i];
-        if(trie[p][id]) p = trie[p][id];
-        else p = trie[p][id ^ 1], res += bin[i];
-        if(!p) break;//其实也不同判断，因为必然有 p != 0，如果想要走的路（分岔）走不通，那么就回到原路（原路必然存在）
-    }
-    return res;
-}
-int Find_xor_max(int x)
-{
-    int p = 0, res = 0;
-    for(int i = 31; i >= 0; --i)
-    {
-        bool id = x & bin[i];
-        if(trie[p][id ^ 1]) p = trie[p][id ^ 1], res += bin[i];
-        else p = trie[p][id];
-        if(!p) break;
-    }
-    return res;
-}
-int main()
-{
-    bin[0] = 1;
-    for(int i = 1; i <= 31; ++i) bin[i] = bin[i - 1] << 1;
-    scanf("%d", &T);
-    for(int _ = 1; _ <= T; ++_)
-    {
-        init();
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// const int N = 5e4 + 100;
+// int n, T, cnt, mmin, mmax;
+// int dis[N], bin[N], trie[N << 5][9];//dis[i] 存 a0 ~ ai 的异或和
+// void init()
+// {
+//     cnt = 1, mmin = 2e9, mmax = 0;
+//     memset(trie, 0, sizeof(trie));
+// }
+// void Insert(int x)
+// {
+//     int p = 0;
+//     for(int i = 31; i >= 0; --i)
+//     {
+//         bool id = x & bin[i];
+//         if(!trie[p][id]) trie[p][id] = cnt++;
+//         p = trie[p][id];
+//     }
+// }
+// int Find_xor_min(int x)
+// {
+//     int p = 0, res = 0;
+//     for(int i = 31; i >= 0; --i)
+//     {
+//         bool id = x & bin[i];
+//         if(trie[p][id]) p = trie[p][id];
+//         else p = trie[p][id ^ 1], res += bin[i];
+//         if(!p) break;//其实也不同判断，因为必然有 p != 0，如果想要走的路（分岔）走不通，那么就回到原路（原路必然存在）
+//     }
+//     return res;
+// }
+// int Find_xor_max(int x)
+// {
+//     int p = 0, res = 0;
+//     for(int i = 31; i >= 0; --i)
+//     {
+//         bool id = x & bin[i];
+//         if(trie[p][id ^ 1]) p = trie[p][id ^ 1], res += bin[i];
+//         else p = trie[p][id];
+//         if(!p) break;
+//     }
+//     return res;
+// }
+// int main()
+// {
+//     bin[0] = 1;
+//     for(int i = 1; i <= 31; ++i) bin[i] = bin[i - 1] << 1;
+//     scanf("%d", &T);
+//     for(int _ = 1; _ <= T; ++_)
+//     {
+//         init();
         
-        scanf("%d", &n);
-        for(int i = 1; i <= n; i++) 
-        {
-            scanf("%d", &dis[i]);
-            dis[i] ^= dis[i - 1];
-        }
-        Insert(0);//由于所有最值都至少是 dis[i] 本身，所以加入 0 让它们能异或 0 而得到自己本身的值
-        for(int i = 1; i <= n; i++) 
-        {
-            // cout << i << ": " << Find_xor_max(dis[i]) << " " << Find_xor_min(dis[i]) << '\n';
-            mmin = min(mmin, Find_xor_min(dis[i]));
-            mmax = max(mmax, Find_xor_max(dis[i]));
-            Insert(dis[i]);
-        }
-        printf("Case %d: %d %d\n", _, mmax, mmin);
-    }
-    return 0;
-}
+//         scanf("%d", &n);
+//         for(int i = 1; i <= n; i++) 
+//         {
+//             scanf("%d", &dis[i]);
+//             dis[i] ^= dis[i - 1];
+//         }
+//         Insert(0);//由于所有最值都至少是 dis[i] 本身，所以加入 0 让它们能异或 0 而得到自己本身的值
+//         for(int i = 1; i <= n; i++) 
+//         {
+//             // cout << i << ": " << Find_xor_max(dis[i]) << " " << Find_xor_min(dis[i]) << '\n';
+//             mmin = min(mmin, Find_xor_min(dis[i]));
+//             mmax = max(mmax, Find_xor_max(dis[i]));
+//             Insert(dis[i]);
+//         }
+//         printf("Case %d: %d %d\n", _, mmax, mmin);
+//     }
+//     return 0;
+// }
 
 
 
@@ -15347,18 +15347,6 @@ int main()
 //         trie[p].num++;
 //     }
 // }
-// void Delete(char *s)
-// {
-//     int len = strlen(s), p = 0;
-//     for(int i = 0; i < len; i++)
-//     {
-//         int id = s[i] - 'a';
-//         if(!trie[p].son[id]) return;
-//         p = trie[p].son[id];
-//         trie[p].num++;
-//     }
-//     trie[p].init();
-// }
 // int Find(char *s)
 // {
 //     int len = strlen(s), p = 0;
@@ -15369,6 +15357,20 @@ int main()
 //         if(!p) return 0;
 //     }
 //     return trie[p].num;
+// }
+// void Delete(char *s)//d 为删去前缀的出现次数，对应其经过的每个字符上都要减去d
+// {
+//     int d = Find(s);
+//     if(!d) return;  //防止多次Del，先查是否存在
+//     int len = strlen(s), p = 0;
+//     for(int i = 0; i < len; i++)
+//     {
+//         int id = s[i] - 'a';
+//         p = trie[p].son[id];
+//         if(!p) return;
+//         trie[p].num -= d;//删除标记
+//     }
+//     trie[p].init();
 // }
 // int main()
 // {
@@ -15387,16 +15389,187 @@ int main()
 
 
 
+//12.Choosing The Commander
+// 题意：
+//      士兵中选指挥官 j（具有 Pj 和 Lj），当且仅当 Pi ^ Pj < Lj 则其他士兵 i 对 j 尊敬，
+//      有三种操作：插入士兵 Pi、删除士兵 Pi、选指挥官（具有 Pj 和 Lj）并统计有多少士兵对其尊敬
+// 思路：
+//      正常进行插入和删除操作，对于询问操作我们搜索 Pi，并贪心地讨论 Lj 的每一位 x（即从高位开始）
+//      举个例子，对数 1010110，我们从高位 1 开始找是否有比 1010110 小的数，明显该位上为 0 的数都可以；随后到 0，明显怎么找都找不到比 0 小的，
+//      并且注意，我们要找的是 Pi 与 Pj 异或的结果，
+// 结论：
+//      若数位 x 为 1，则 Pi ^ Pj 有机会两个数该数位异或结果为 0 而使得 Pi ^ Pj < Lj （只要高位小于，必成立），加上同数位上同方向的num，
+//      然后此时对该 x 满足条件的士兵 Pj 已经全部加上，那么搜索 Pj 就得切换方向找其他士兵，不然会只是重复运算而已
+//      若数位 x 为 0，则不可能找得到异或后比 Lj 小的数，那只能沿着 pi 的路走（此时局部上 Pi ^ Pj == Lj）
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cstring>
+// using namespace std;
+// const int N = 1e5 + 10, MAXL = 2e9;
+// struct nd{
+//     int son[2];
+//     int num;   //前缀出现次数
+// }trie[N << 5];
+// int q, cnt = 1, bin[50];
+// void Insert(int x)
+// {
+//     int p = 0;
+//     for(int i = 30; i >= 0; --i)
+//     {
+//         bool id = x & bin[i];
+//         if(!trie[p].son[id]) trie[p].son[id] = cnt++;
+//         p = trie[p].son[id];
+//         ++trie[p].num;
+//     }
+// }
+// void Delete(int x)
+// {
+//     int p = 0;
+//     for(int i = 30; i >= 0; --i)
+//     {
+//         bool id = x & bin[i];
+//         p = trie[p].son[id];
+//         --trie[p].num;
+//     }
+// }
+// int Search(int x, int lim)//x 为待评估指挥官 Pj
+// {
+//     int p = 0, res = 0;
+//     for(int i = 30; i >= 0; --i)//搜索其他士兵 Pi
+//     {
+//         bool id = x & bin[i];
+//         bool limx = lim & bin[i];
+//         if(limx)
+//         {
+//             //加上数位相同的士兵
+//             res += trie[trie[p].son[id]].num;//重点：要往下走一格，因为当前对应次数存在下一个结点
+//             p = trie[p].son[id ^ 1];         //可以选不一样的数字，找其他可能满足小于条件的士兵
+//         }
+//         else
+//         {
+//             p = trie[p].son[id];             //limx = 0 只能查原路（此后 Pi ^ Pj <= lim，即存在小于的可能性），因为另一条路是恒为 Pi ^ Pj > lim 的
+//         }
+//         if(!p) break;//存在 trie[p].son[] = 0 即无效路径，故这里防止再回到根节点 0
+//     }
+//     return res;
+// }
+// int main()
+// {
+//     bin[0] = 1;
+//     for(int i = 1; i <= 30; ++i) bin[i] = bin[i - 1] << 1;
+
+//     scanf("%d", &q);
+//     while(q--)
+//     {
+//         int op, p, l;
+//         scanf("%d%d", &op, &p);
+//         if(op == 1) Insert(p);
+//         else if(op == 2) Delete(p);
+//         else
+//         {
+//             scanf("%d", &l);
+//             printf("%d\n", Search(p, l));
+//         }
+//     }
+//     return 0;
+// }
 
 
 
+//13.Chip Factory
+// 题目：维护 max{ ( Si + Sj ) ^ Sk } = max{ sum ^ Sk } (i != j != k，且 sum 为 两数之和)
+// 思路：求最大异或值，搜索 Sk，由于 k != i != j 则搜索前要在字典树中删除一次 Si 和 Sj（强调是一次即可，即可能还有这个数，但下标不一样就可以了），搜索后再插入一次回来
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cstring>
+// using namespace std;
+// const int N = 5e3 + 10;
 
+// struct nd{
+//     int son[2];
+//     int num;
+// }trie[N << 5];
+// int T, n, cnt = 1;
+// int s[N], bin[50];
 
+// void init()
+// {
+//     cnt = 1;
+//     memset(trie, 0, sizeof(trie));
+// }
 
+// void Insert(int x)
+// {
+//     int p = 0;
+//     for(int i = 30; i >= 0; --i)
+//     {
+//         bool id = x & bin[i];
+//         if(!trie[p].son[id]) trie[p].son[id] = cnt++;
+//         p = trie[p].son[id];
+//         ++trie[p].num;
+//     }
+// }
 
+// void Delete(int x)
+// {
+//     int p = 0;
+//     for(int i = 30; i >= 0; --i)
+//     {
+//         bool id = x & bin[i];
+//         p = trie[p].son[id];
+//         --trie[p].num;
+//     }
+// }
 
+// int Find_xor_max(int x)
+// {
+//     int p = 0, res = 0;
+//     for(int i = 30; i >= 0; --i)
+//     {
+//         bool id = x & bin[i];
+//         if(trie[trie[p].son[id ^ 1]].num)//查当前前缀次数，需要往下一个结点找
+//         {
+//             res |= bin[i];               //存起异或结果值
+//             p = trie[p].son[id ^ 1];
+//         }
+//         else
+//             p = trie[p].son[id];
+//         if(!p) break;
+//     }
+//     return res;
+// }
 
+// int main()
+// {
+//     bin[0] = 1;
+//     for(int i = 1; i <= 31; ++i) bin[i] = bin[i - 1] << 1;
 
+//     scanf("%d", &T);
+//     while(T--)
+//     {
+//         init();
+
+//         scanf("%d", &n);
+//         for(int i = 0; i < n; i++) scanf("%d", &s[i]), Insert(s[i]);
+
+//         int mmax = 0;
+//         for(int i = 0; i < n; i++)//按组合情况枚举 s[i] + s[j] 组合
+//         {
+//             Delete(s[i]);
+//             for(int j = i + 1; j < n; j++)
+//             {
+//                 Delete(s[j]);
+//                 mmax = max(mmax, Find_xor_max(s[i] + s[j]));
+//                 Insert(s[j]);
+//             }
+//             Insert(s[i]);
+//         }
+//         printf("%d\n", mmax);
+//     }
+//     return 0;
+// }
 
 
 
