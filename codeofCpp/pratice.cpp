@@ -13699,6 +13699,51 @@ int main()
 //     return 0;
 // }
 
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define ll long long
+#define lowbit(x) ((x) & -(x))
+const int N = 1e3 + 10;
+ll n, m;
+ll tree[N];
+void update(int x, ll d)
+{
+    while(x <= N)
+    {
+        tree[x] += d;
+        x += lowbit(x);
+    }
+}
+ll sum(ll x)
+{
+    ll res = 0;
+    while(x > 0)
+    {
+        res += tree[x];
+        x -= lowbit(x);
+    }
+    return res;
+}
+int main()
+{
+    int n;
+    scanf("%d", &n);
+    for(int i = 1; i <= n; i++)
+    {
+        ll x;
+        x = i;
+        update(i, x);
+    }
+    for(int i = 1; i <= n; i++)
+    {
+        printf("tree[%d] = %lld\n", i, tree[i]);
+    }
+    
+    return 0;
+}
+
 
 
 //2.贪婪大陆
@@ -13743,6 +13788,74 @@ int main()
 //3.线段树 1
 //树状数组写法(差分)，重点在于开第二个数组 tree2[i]=tree1[i]*(i-1)
 //https://www.luogu.com.cn/problem/solution/P3372
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

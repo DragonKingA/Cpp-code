@@ -201,6 +201,101 @@ int main()
 
 */
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //ABC 295
 // #include <iostream>
 // #include <cstdio>
@@ -327,42 +422,6 @@ int main()
 
 
 
-#include <iostream>
-#include <cstdio>
-#include <algorithm>
-#include <cctype>
-#include <cstring>
-#include <string>
-#include <cmath>
-#include <set>
-#include <map>
-#include <queue>
-
-using namespace std;
-#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-#define ll long long
-string s;
-const int N = 5e5 + 10;
-int dp[N][9];
-int main()
-{
-    untie();
-    cin >> s;
-
-    return 0;
-}
-
-
-
-
-
-//00222233
-//4
-
-//0112223333444445555556666666777777778888888889999999999
-//185
-
-//2 + 2 + 4 + 4 + 6 + 6 + 8 + 8 + 10
 
 
 
