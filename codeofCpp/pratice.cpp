@@ -13652,7 +13652,7 @@ int main()
 
 
 
-//1.P3374 树状数组 1
+//1.P3374 树状数组 1（单点修改 + 区间查询 模板）
 //树状数组写法(492ms，明显更快)
 // #include <cstdio>
 // #include <iostream>
@@ -13661,133 +13661,432 @@ int main()
 // #define ll long long
 // #define lowbit(x) ((x) & -(x))
 // const int N = 5e5 + 10;
-// ll n, m;
-// ll tree[N];
-// void update(int x, ll d)
+// int n, m;
+// int tree[N];
+// void update(int x,int d)
 // {
-//     while(x <= N)
-//     {
+//     for(; x <= n; x += lowbit(x))
 //         tree[x] += d;
-//         x += lowbit(x);
-//     }
 // }
-// ll sum(ll x)
+// int sum(int x)
 // {
-//     ll res = 0;
-//     while(x > 0)
-//     {
+//     int res = 0;
+//     for(; x > 0; x -= lowbit(x))
 //         res += tree[x];
-//         x -= lowbit(x);
-//     }
 //     return res;
 // }
 // int main()
 // {
-//     scanf("%lld%lld", &n, &m);
+//     scanf("%d%d", &n, &m);
 //     for(int i = 1; i <= n; i++)
 //     {
-//         ll x; scanf("%lld", &x);
+//         int x;
+//         scanf("%d", &x);
 //         update(i, x);
 //     }
 //     while(m--)
 //     {
-//         ll op, x, y;
-//         scanf("%lld%lld%lld", &op, &x, &y);
+//         int op, x, y;
+//         scanf("%d%d%d", &op, &x, &y);
 //         if(op == 1) update(x, y);
-//         else printf("%lld\n", sum(y) - sum(x - 1));
+//         else printf("%d\n", sum(y) - sum(x - 1));
 //     }
 //     return 0;
 // }
 
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-using namespace std;
-#define ll long long
-#define lowbit(x) ((x) & -(x))
-const int N = 1e3 + 10;
-ll n, m;
-ll tree[N];
-void update(int x, ll d)
-{
-    while(x <= N)
-    {
-        tree[x] += d;
-        x += lowbit(x);
-    }
-}
-ll sum(ll x)
-{
-    ll res = 0;
-    while(x > 0)
-    {
-        res += tree[x];
-        x -= lowbit(x);
-    }
-    return res;
-}
-int main()
-{
-    int n;
-    scanf("%d", &n);
-    for(int i = 1; i <= n; i++)
-    {
-        ll x;
-        x = i;
-        update(i, x);
-    }
-    for(int i = 1; i <= n; i++)
-    {
-        printf("tree[%d] = %lld\n", i, tree[i]);
-    }
-    
-    return 0;
-}
+
+
+//2. hdu 1166 敌兵布阵
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 5e4 + 10;
+// int n, T;
+// int tree[N];
+// char op[10];
+// void update(int x,int d)
+// {
+//     for(; x <= n; x += lowbit(x))
+//         tree[x] += d;
+// }
+// int sum(int x)
+// {
+//     int res = 0;
+//     for(; x > 0; x -= lowbit(x))
+//         res += tree[x];
+//     return res;
+// }
+// int main()
+// {
+//     scanf("%d", &T);
+//     for(int _ = 1; _ <= T; ++_)
+//     {
+//         memset(tree, 0, sizeof(tree));//记得初始化
+
+//         printf("Case %d:\n", _);
+//         scanf("%d", &n);
+//         for(int i = 1; i <= n; i++)
+//         {
+//             int d;
+//             scanf("%d", &d);
+//             update(i, d);
+//         }
+//         while(~scanf("%s", op))
+//         {
+//             if(op[0] == 'E') break;
+//             int x, y;
+//             scanf("%d%d", &x, &y);
+//             if(op[0] == 'A') update(x, y);
+//             else if(op[0] == 'S') update(x, -y);
+//             else printf("%d\n", sum(y) - sum(x - 1));
+//         }
+//     }
+//     return 0;
+// }
 
 
 
-//2.贪婪大陆
-// 分析：起初以为可以 区间叠加1 并 求区间最大值 来计算种类，假设查询[1, 6]，已知两次埋地雷操作[1, 3]，[5, 6]，此时序列为 {1, 1, 1, 0, 1, 1}，应输出2，但求最大值却输出1
-//      证明这个思路是错的，所以这类查询”区间种类数“的题需要在其两端点数量关系下手，正序地看，[1, 3],[5, 6]的右端点3, 6均在[1, 6]上，且由于左端点1, 5也在[1, 6]上，所以
-//      这两个区间都与所求区间有关，假设某序列{1 1 [1 0 1 1 0 1 1 0 1 1] 1}，查询区间[L, R]设为[3, 12]，[1, R]的所有左端点都可能为答案做贡献，
-//      而我们还要删除那些右端点在 L 之前的，因为这些地雷的区间不在[L, R]之间是不合法的，现问题转化为 区间种数 = [1, R]上左端点数 - [1, L - 1]上右端点数
-// 考虑"操作和"问题，维护两个树状数组分别记录左右端点个数更方便
+//3.P3368 树状数组 2（区间修改 + 单点修改 模板）
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
 // using namespace std;
 // #define ll long long
 // #define lowbit(x) ((x) & -(x))
-// const int N = 1e5 + 10;
-// ll n, m, tl[N], tr[N];//tl[]记录左端点数，tr[]记录右端点数
-// void update(ll *t, ll x)
+// const int N = 5e5 + 10;
+// int a[N], tree[N];
+// int n, m;
+// void update(int x, int d)
 // {
-//     for(; x <= n; x += lowbit(x)) ++t[x];
+//     for(; x <= n; x += lowbit(x))
+//         tree[x] += d;
 // }
-// ll sum(ll *t, ll x)
+// int sum(int x)
 // {
-//     ll res = 0;
-//     for(; x > 0; x -= lowbit(x)) res += t[x];
+//     int res = 0;
+//     for(; x > 0; x -= lowbit(x))
+//         res += tree[x];
 //     return res;
 // }
 // int main()
 // {
-//     scanf("%lld%lld", &n, &m);
+//     scanf("%d%d", &n, &m);
+//     for(int i = 1; i <= n; ++i) 
+//     {
+//         scanf("%d", &a[i]);
+//         update(i, a[i] - a[i - 1]);//插入差分
+//     }
 //     while(m--)
 //     {
-//         ll op, L, R;
-//         scanf("%lld%lld%lld", &op, &L, &R);
-//         if(op == 1) update(tl, L), update(tr, R);//两次单点修改
-//         else printf("%lld\n", sum(tl, R) - sum(tr, L - 1));//[1,R]上左端个数 - [1,L-1]上右端个数
+//         int op, x, y;
+//         ll k;
+//         scanf("%d", &op);
+//         if(op == 1)
+//         {
+//             scanf("%d%d%d", &x, &y, &k);
+//             update(x, k);
+//             update(y + 1, -k);
+//         }
+//         else//此时前缀和 [1, x] 即原单值a[x]
+//         {
+//             scanf("%d", &x);
+//             printf("%d\n", sum(x));
+//         }
 //     }
 //     return 0;
 // }
 
 
 
-//3.线段树 1
-//树状数组写法(差分)，重点在于开第二个数组 tree2[i]=tree1[i]*(i-1)
+//4.线段树 1
+//树状数组写法(维护两个关于差分数组的树状数组)，t1[N] -> ∑b[i] ， t2[N] -> ∑(i * b[i])
 //https://www.luogu.com.cn/problem/solution/P3372
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 1e5 + 10;
+// ll t1[N], t2[N];
+// int n, m;
+// void update(ll x, ll d)
+// {
+
+//     for(int i = x; i <= n; i += lowbit(i))
+//     {
+//         t1[i] += d;
+//         t2[i] += x * d;
+//     }
+// }
+// ll sum(ll x)//查询前缀和 ∑a[1 .. x]
+// {
+//     ll res = 0;
+//     for(int i = x; i > 0; i -= lowbit(i))
+//     {
+//         res += (x + 1) * t1[i] - t2[i];
+//     }
+//     return res;
+// }
+// int main()
+// {
+//     scanf("%d%d", &n, &m);
+//     ll now, last = 0;
+//     for(int i = 1; i <= n; ++i)
+//     {
+//         scanf("%lld", &now);
+//         update(i, now - last);
+//         //相当于每次都插入 b[i] 和 i * b[i],然后
+//         //将     b[i] 更新到 t1[] 的所有有关结点
+//         //将 i * b[i] 更新到 t2[] 的所有有关结点
+//         last = now;
+//     }
+//     while(m--)
+//     {
+//         ll op, x, y, k;
+//         scanf("%lld%lld%lld", &op, &x, &y);
+//         if(op == 1) 
+//         {
+//             scanf("%lld", &k);
+//             //实质维护的都是差分数组 b[i]
+//             update(x, k);
+//             update(y + 1, -k);
+//         }
+//         else
+//         {
+//             printf("%lld\n", sum(y) - sum(x - 1));
+//         }
+//     }
+//     return 0;
+// }
+//注意开 long long 防数据溢出
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 1e5 + 10;
+// ll t1[N], t2[N];
+// int n, m;
+
+// void update(ll x, ll d)
+// {
+//     for(int i = x; i <= n; i += lowbit(i))
+//     {
+//         t1[i] += d;    
+//         t2[i] += x * d;
+//     }
+// }
+// ll sum(ll x)//查询前缀和 ∑a[1 .. x]
+// {
+//     ll res = 0;
+//     for(int i = x; i > 0; i -= lowbit(i))
+//     {
+//         res += (x + 1) * t1[i] - t2[i];//记得给 t1[i] 补上乘项 (x + 1)
+//     }
+//     return res;
+// }
+
+// int main()
+// {
+//     scanf("%d%d", &n, &m);
+//     ll now, last = 0;
+//     for(int i = 1; i <= n; ++i)
+//     {
+//         scanf("%lld", &now);
+//         update(i, now - last);//插入差分b[i]
+//         last = now;
+//     }
+//     while(m--)
+//     {
+//         ll op, x, y, k;
+//         scanf("%lld%lld%lld", &op, &x, &y);
+//         if(op == 1) 
+//         {
+//             scanf("%lld", &k);
+//             update(x, k);
+//             update(y + 1, -k);
+//         }
+//         else
+//         {
+//             printf("%lld\n", sum(y) - sum(x - 1));
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+//5.P2357 守墓人（区间修改 + 区间查询）
+//操作有 区间加值、区间和查询、首元素修改、首元素值查询，对于首元素修改我们可以直接将修改值存起来，待查询时再加入修改值
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 2e5 + 10;
+// ll t1[N], t2[N];
+// int n, m;
+
+// void update(ll x, ll d)
+// {
+//     for(int i = x; i <= n; i += lowbit(i))
+//     {
+//         t1[i] += d;    
+//         t2[i] += x * d;
+//     }
+// }
+// ll sum(ll x)//查询前缀和 ∑a[1 .. x]
+// {
+//     ll res = 0;
+//     for(int i = x; i > 0; i -= lowbit(i))
+//     {
+//         res += (x + 1) * t1[i] - t2[i];//记得给 t1[i] 补上乘项 (x + 1)
+//     }
+//     return res;
+// }
+
+// int main()
+// {
+//     scanf("%d%d", &n, &m);
+//     ll now, last = 0;
+//     for(int i = 1; i <= n; ++i)
+//     {
+//         scanf("%lld", &now);
+//         update(i, now - last);//插入差分b[i]
+//         last = now;
+//     }
+//     ll fir = 0;//首元素改变值（仅针对操作 2 和 3）
+//     while(m--)
+//     {
+//         ll op, x, y, k;
+//         scanf("%lld", &op);
+//         if(op == 1) 
+//         {
+//             scanf("%lld%lld%lld", &x, &y, &k);
+//             update(x, k);
+//             update(y + 1, -k);
+//         }
+//         else if(op == 2) scanf("%lld", &k), fir += k;
+//         else if(op == 3) scanf("%lld", &k), fir -= k;
+//         else if(op == 4)
+//         {
+//             scanf("%lld%lld", &x, &y);
+//             ll res = sum(y) - sum(x - 1);
+//             if(x == 1) res += fir;//若包含首元素，就加入修改值
+//             printf("%lld\n", res);
+//         }
+//         else printf("%lld\n", sum(1) + fir);//查询首元素，加入修改值
+//     }
+//     return 0;
+// }
+
+
+
+
+//6.P1908 逆序对（偏序问题 - 逆序对 + 离散化）
+//思路：逆序遍历数列，每遍历到一个数 x 时（把数 x 当作下标），cnt[x]++ 表示该数当前出现的次数，查询前缀和 sum(x - 1) 即在 x 前遍历过的比 x 小的数的个数
+//每次统计 ans += sum(x - 1) 并 cnt[x]++ 即可，而维护前缀和可以维护一个基础树状数组。
+//由于数 x < 1e9 较大，且本题只需知道元素间相对大小，故作离散化处理。
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 5e5 + 10;
+// struct nd{
+//     int id, val;
+//     bool operator <(const nd &x) const{//升序排序
+//         if(val == x.val) return id < x.id;//让原顺序先出现的相对值更小，防止离散后逆序遍历错误统计相等值对。
+//         return val < x.val;
+//     }
+// }q[N];
+// int n;
+// int tree[N];
+// int num[N];
+// void update(int x, int d)
+// {
+//     for(; x <= n; x += lowbit(x))
+//         tree[x] += d;
+// }
+// int sum(int x)
+// {
+//     int res = 0;
+//     for(; x > 0; x -= lowbit(x))
+//         res += tree[x];
+//     return res;
+// }
+// int main()
+// {
+//     scanf("%d", &n);
+//     for(int i = 1; i <= n; i++)
+//     {
+//         scanf("%d", &q[i].val);
+//         q[i].id = i;
+//     }
+//     //离散化处理
+//     sort(q + 1, q + 1 + n);
+//     for(int i = 1; i <= n; i++) num[q[i].id] = i;//新序列
+    
+//     ll ans = 0;//次数一般会很多，防爆
+//     for(int i = n; i > 0; i--)//倒序遍历
+//     {
+//         update(num[i], 1);
+//         ans += sum(num[i] - 1);
+//     }
+//     printf("%lld\n", ans);
+
+//     return 0;
+// }
+
+
+
+//7.贪婪大陆
+// 分析：起初以为可以 区间叠加1 并 求区间最大值 来计算种类，假设查询[1, 6]，已知两次埋地雷操作[1, 3]，[5, 6]，此时序列为 {1, 1, 1, 0, 1, 1}，应输出2，但求最大值却输出1
+//      证明这个思路是错的，所以这类查询”区间种类数“的题需要在其两端点数量关系下手，正序地看，[1, 3],[5, 6]的右端点3, 6均在[1, 6]上，且由于左端点1, 5也在[1, 6]上，所以
+//      这两个区间都与所求区间有关，假设某序列{1 1 [1 0 1 1 0 1 1 0 1 1] 1}，查询区间[L, R]设为[3, 12]，[1, R]的所有左端点都可能为答案做贡献，
+//      而我们还要删除那些右端点在 L 之前的，因为这些地雷的区间不在[L, R]之间是不合法的，现问题转化为 区间种数 = [1, R]上左端点数 - [1, L - 1]上右端点数
+// 考虑"操作和"问题，维护两个树状数组分别记录左右端点个数更方便
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define ll long long
+#define lowbit(x) ((x) & -(x))
+const int N = 1e5 + 10;
+ll n, m, tl[N], tr[N];//tl[]记录左端点数，tr[]记录右端点数
+void update(ll *t, ll x)
+{
+    for(; x <= n; x += lowbit(x)) ++t[x];
+}
+ll sum(ll *t, ll x)
+{
+    ll res = 0;
+    for(; x > 0; x -= lowbit(x)) res += t[x];
+    return res;
+}
+int main()
+{
+    scanf("%lld%lld", &n, &m);
+    while(m--)
+    {
+        ll op, L, R;
+        scanf("%lld%lld%lld", &op, &L, &R);
+        if(op == 1) update(tl, L), update(tr, R);//两次单点修改
+        else printf("%lld\n", sum(tl, R) - sum(tr, L - 1));//[1,R]上左端个数 - [1,L-1]上右端个数
+    }
+    return 0;
+}
+
+
+
 
 
 
