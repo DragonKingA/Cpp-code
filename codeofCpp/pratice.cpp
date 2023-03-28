@@ -13991,9 +13991,12 @@ int main()
 
 
 //6.P1908 逆序对（偏序问题 - 逆序对 + 离散化）
-//思路：逆序遍历数列，每遍历到一个数 x 时（把数 x 当作下标），cnt[x]++ 表示该数当前出现的次数，查询前缀和 sum(x - 1) 即在 x 前遍历过的比 x 小的数的个数
-//每次统计 ans += sum(x - 1) 并 cnt[x]++ 即可，而维护前缀和可以维护一个基础树状数组。
-//由于数 x < 1e9 较大，且本题只需知道元素间相对大小，故作离散化处理。
+// 思路：对案例 {5 4 2 6 3 1}，先看 5，检索它右边的区间{4 2 6 3 1}有{4 2 3 1} 符合条件；再看 6，检索{3 1}，都符合条件；最后看 3 ，只能检索{1}，且符合条件
+// 问题即如何维护第 i 个元素 x 的右侧区间 [i + 1, n] 上小于 x 的个数：每遍历到一个数 x 时（把数 x 当作下标），计数 cnt[x]++ ，cnt[x] 表示 x 当前出现的次数
+// 我们发现正序遍历并统计 cnt[x]，比如遍历到 2，此时 cnt[5] = cnt[4] = 1，故 2 之前有 2 个比 2 大的数，ans += 1 + 1，即 ans += ∑cnt[3 ... n]
+// 实现：正序遍历每个数 x 并统计后缀和 ∑cnt[(x + 1) ... n] ，为方便维护，我们可以反过来看，逆序遍历每个数 x 并统计前缀和∑cnt[1 ... (x - 1)]，
+// 转化成前缀和问题，维护树状数组即可。
+// 由于 cnt[x] 中 x < 1e9 过大，且本题只需知道元素间相对大小，故可作离散化处理，使得空间复杂度转化为与数据量正相关 - O(n) - n <= 5e5。
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
@@ -14004,7 +14007,7 @@ int main()
 // struct nd{
 //     int id, val;
 //     bool operator <(const nd &x) const{//升序排序
-//         if(val == x.val) return id < x.id;//让原顺序先出现的相对值更小，防止离散后逆序遍历错误统计相等值对。
+//         if(val == x.val) return id < x.id;//让原顺序先出现（逆序靠后出现）的相对值更小，防止离散后逆序遍历统计到 相等值 对。
 //         return val < x.val;
 //     }
 // }q[N];
@@ -14038,8 +14041,8 @@ int main()
 //     ll ans = 0;//次数一般会很多，防爆
 //     for(int i = n; i > 0; i--)//倒序遍历
 //     {
-//         update(num[i], 1);
 //         ans += sum(num[i] - 1);
+//         update(num[i], 1);
 //     }
 //     printf("%lld\n", ans);
 
@@ -14049,41 +14052,282 @@ int main()
 
 
 //7.贪婪大陆
-// 分析：起初以为可以 区间叠加1 并 求区间最大值 来计算种类，假设查询[1, 6]，已知两次埋地雷操作[1, 3]，[5, 6]，此时序列为 {1, 1, 1, 0, 1, 1}，应输出2，但求最大值却输出1
-//      证明这个思路是错的，所以这类查询”区间种类数“的题需要在其两端点数量关系下手，正序地看，[1, 3],[5, 6]的右端点3, 6均在[1, 6]上，且由于左端点1, 5也在[1, 6]上，所以
-//      这两个区间都与所求区间有关，假设某序列{1 1 [1 0 1 1 0 1 1 0 1 1] 1}，查询区间[L, R]设为[3, 12]，[1, R]的所有左端点都可能为答案做贡献，
-//      而我们还要删除那些右端点在 L 之前的，因为这些地雷的区间不在[L, R]之间是不合法的，现问题转化为 区间种数 = [1, R]上左端点数 - [1, L - 1]上右端点数
-// 考虑"操作和"问题，维护两个树状数组分别记录左右端点个数更方便
+//区间覆盖问题，要求统计区间[L, R]内的覆盖区间个数
+// 分析：比如在区间[1, 10]上查询涉及[4 7]的区间个数，假设有覆盖区间[1, 3] [2, 5] [3, 6] [5, 6] [9, 10]，
+// 1 2 3 4 5 6 7 8 9 10
+//       |=====|         查询区间
+// |---|                 0
+//  |-----|             1
+//    |-----|           1
+//        |-|           1
+//                |-|   0
+// ans = 0 + 1 + 1 + 1 + 0 = 3
+// 观察到查询区间 [L, R] 的右端点 R 之前即区间 [1, R] 上的所有左端点代表的覆盖区间都可能覆盖到[L, R]的某处，
+// 则此时那些右端点在 L 之后即区间 [L, n] 上的覆盖区间必然能覆盖到 [L, R] 某处，
+// 换句话说，右端点在 L 之前即区间 [1, L - 1] 上的覆盖区间必然不可能覆盖到 [L, R] 的某处
+// 故我们可以求左端点数 lsum(1, R) 即所有可能符合条件的区间个数，以及不合条件的右端点数 rsum(1, L - 1) 即不符合条件的区间个数，
+// 最终 ans = lsum(1, R) - rsum(1, L - 1) 得到符合条件的区间个数
+// 思路：问题转化为求 左、右端点个数 的前缀和，可分别维护两个树状数组 tl[]、tr[]
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 1e5 + 10;
+// int n, m, tl[N], tr[N];//tl[]记录左端点个数，tr[]记录右端点个数
+// void update(int *t, int x, int d)
+// {
+//     for(; x <= n; x += lowbit(x)) 
+//         t[x] += d;
+// }
+// int sum(int *t, int x)
+// {
+//     int res = 0;
+//     for(; x > 0; x -= lowbit(x)) res += t[x];
+//     return res;
+// }
+// int main()
+// {
+//     scanf("%d%d", &n, &m);
+//     while(m--)
+//     {
+//         int op, L, R;
+//         scanf("%d%d%d", &op, &L, &R);
+//         if(op == 1) 
+//         {
+//             update(tl, L, 1);//两次单点修改
+//             update(tr, R, 1);
+//         }
+//         else printf("%d\n", sum(tl, R) - sum(tr, L - 1));//ans = [1, R]上左端点个数 - [1, L - 1]上右端点个数
+//     }
+//     return 0;
+// }
+
+
+
+//8. Mobile phones
+//给定 n * n 大小的正方形区域，可给其中任意一点增加或减少值 d，求二维前缀和 sum[x2][y2] - sum[x2][y1-1] - sum[x1-1][y2] + sum[x1-1][y1-1]
+//二维树状数组
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <cstring>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 1500;
+// int n, op;
+// int tree[N][N];
+
+// void update(int x, int y, int d)
+// {
+//     for(int i = x; i <= n; i += lowbit(i))
+//         for(int j = y; j <= n; j += lowbit(j))
+//             tree[i][j] += d;
+// }
+// int sum(int x, int y)
+// {
+//     int res = 0;
+//     for(int i = x; i > 0; i -= lowbit(i))
+//         for(int j = y; j > 0; j -= lowbit(j))
+//             res += tree[i][j];
+//     return res;
+// }
+
+// int main()
+// {
+//     while(~scanf("%d", &op))
+//     {
+//         if(op == 3) break;
+//         if(op == 0)
+//         {
+//             scanf("%d", &n);
+//             memset(tree, 0, sizeof(tree));
+//         }
+//         else if(op == 1)
+//         {
+//             int x, y, d;
+//             scanf("%d%d%d", &x, &y, &d);//题意编号从 0 开始，这里改成从 1 开始
+//             ++x, ++y;
+//             update(x, y, d);
+//         }
+//         else
+//         {
+//             int x1, y1, x2, y2;
+//             scanf("%d%d%d%d", &x1, &y1, &x2, &y2);
+//             ++x1, ++y1, ++x2, ++y2;
+//             printf("%d\n", sum(x2, y2) - sum(x2, y1 - 1) - sum(x1 - 1, y2) + sum(x1 - 1, y1 - 1));
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+//9. P3531 LIT-Letters(偏序问题 - 逆序对)
+//给定只含有大写字母的两个字符串 S1 和 S2，每次可以交换 S1 相邻两个字符的次序，问 S1 变成 S2 的最少交换次数。
+//序列要从一种排列顺序 Ord1 变成另一种排列顺序 Ord2，我们将目标顺序 Ord2 的各字符位置存起 rk[ch] = pos，并用它来定义 Ord1
+//如 S1 = "CABC"，S2 = "CCAB" 
+//根据 S2 定义目标顺序 C C A B -> 1 2 3 4
+//A: 3
+//B: 4
+//C: 1, 2
+//则当前排列顺序为 C A B C -> 1 3 4 2
+//问题变成 1 3 4 2 要变换成正序 1 2 3 4，即逆序对问题
+//每个数对应的逆序对个数其实就是该数实现局部正序的步数，而所有的逆序对个数即为整个序列全局正序所需的步数。
+// 如 5 3 7 6 2 1 4 -> 1 2 3 4 5 6 7，逆序地看 2 的局部正序结构为 {1 2 4}，所需交换次数为 1
+// 6 的局部正序结构为 {1 2 4 6} ，需要 3 次相邻元素交换 ，同理，7 -> {1 2 4 6 7} -> 4次 ，3 -> {1 2 4 3} -> 3次 ···
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 1e6 + 10;
+
+// int n, tree[N];
+// int arr[N];//实际操作序列
+// char a[N], b[N];
+// vector<int> id[30];//id[ch] 即字符 ch 的编号集
+// int pos[30];//pos[ch] 对应字符 ch 编号集 id[ch] 当前遍历到的位置
+
+// void update(int x, int d)
+// {
+//     for(; x <= n; x += lowbit(x)) 
+//         tree[x] += d;
+// }
+// int sum(int x)
+// {
+//     int res = 0;
+//     for(; x > 0; x -= lowbit(x)) 
+//         res += tree[x];
+//     return res;
+// }
+// int main()
+// {
+//     scanf("%d%s%s", &n, a, b);
+//     for(int i = 0; i < n; i++)
+//     {
+//         int ch = b[i] - 'A';//由于看的是两者的相对顺序，取 S1 或 S2 都可以，此处以 S2 为例
+//         id[ch].push_back(i + 1);
+//     }
+//     for(int i = 0; i < n; i++)
+//     {
+//         int ch = a[i] - 'A';
+//         arr[i] = id[ch][pos[ch]++];//构造当前顺序序列
+//     }
+//     long long ans = 0;
+//     for(int i = n - 1; i >= 0; i--)//求逆序对个数
+//     {
+//         ans += sum(arr[i] - 1);
+//         update(arr[i], 1);
+//     }
+//     printf("%lld\n", ans);
+//     return 0;
+// }
+
+
+
+//10.P1637 三元上升子序列（三元偏序问题）
+//给定有 n 个数的序列 A，定义三元上升子序列为 Ai < Aj < Ak 且 i < j < k，求该种子序列的个数。
+// 不难想到先拆分成二元有序对，取中间元素 Am 为参照，问题分解为二重二元上升对：Ai < Am (i < m) 和 Am < Aj (m < j)，而配对后每组符合条件的 Ai、Am、Aj 都是答案
+// 现记 lef[m] 为 Am 左侧小于 Am 的元素个数，rig[m] 为 Am 右侧大于 Am 的元素个数
+// 取中间元素 a[i]，其左右合法的数两两配对，共 lef[i] * rig[i] 种组合情况（乘法原理）
+// 故枚举中间元素 a[i], 遍历序列并统计组合情况即可
+// 本题元素值最大为 M <= 1e5，是可接受的数组大小；若 M 级别达到 1e7 ~ 1e9，只能离散化处理将复杂度降到 O(n) ，n 为数据量。
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 3e4 + 10, M = 1e5 + 10;
+
+// int n, a[N], t1[M], t2[M];//t1[] -> lef[]，t2[] -> rig[]
+// int lef[M], rig[M];
+// int max_x = 0;
+
+// void update(int *t, int x, int d)
+// {
+//     for(; x <= max_x; x += lowbit(x)) //注意这里树状数组的下标为元素值，最大为 max_x (max_x < M)
+//         t[x] += d;
+// }
+// int sum(int *t, int x)
+// {
+//     int res = 0;
+//     for(; x > 0; x -= lowbit(x)) 
+//         res += t[x];
+//     return res;
+// }
+
+// int main()
+// {
+//     scanf("%d", &n);
+//     for(int i = 1; i <= n; i++)
+//     {
+//         scanf("%d", &a[i]);
+//         max_x = max(max_x, a[i]);
+//     }
+//     for(int i = 1; i <= n; i++)
+//     {
+//         lef[i] = sum(t1, a[i] - 1);
+//         update(t1, a[i], 1);
+//     }
+//     //rig[i] 要的是中间元素 a[i] 右侧比 a[i] 大的数的个数
+//     //而此时 sum(a[i]) 算的是右侧小于等于 a[i] 的数的个数，故用右侧区间长度 (n - i) 减去 sum(a[i]) 即为比 a[i] 大的数的个数
+//     for(int i = n; i >= 1; i--)
+//     {
+//         rig[i] = (n - i) - sum(t2, a[i]);//此处必须先计算再插入 a[i]，防止多计了中间元素
+//         update(t2, a[i], 1);
+//     }
+//     //枚举中间元素，统计答案
+//     long long ans = 0;
+//     for(int i = 2; i < n; i++)
+//     {
+//         ans += 1LL * lef[i] * rig[i];
+//     }
+//     printf("%lld\n", ans);
+//     return 0;
+// }
+
+
+
+//11. P5142 区间方差
 #include <cstdio>
 #include <iostream>
 #include <algorithm>
 using namespace std;
 #define ll long long
 #define lowbit(x) ((x) & -(x))
-const int N = 1e5 + 10;
-ll n, m, tl[N], tr[N];//tl[]记录左端点数，tr[]记录右端点数
-void update(ll *t, ll x)
+const int N = 3e4 + 10, M = 1e5 + 10;
+
+int n;
+
+
+void update(int *t, int x, int d)
 {
-    for(; x <= n; x += lowbit(x)) ++t[x];
+    for(; x <= n; x += lowbit(x)) //注意这里树状数组的下标为元素值，最大为 max_x (max_x < M)
+        t[x] += d;
 }
-ll sum(ll *t, ll x)
+int sum(int *t, int x)
 {
-    ll res = 0;
-    for(; x > 0; x -= lowbit(x)) res += t[x];
+    int res = 0;
+    for(; x > 0; x -= lowbit(x)) 
+        res += t[x];
     return res;
 }
+
 int main()
 {
-    scanf("%lld%lld", &n, &m);
-    while(m--)
-    {
-        ll op, L, R;
-        scanf("%lld%lld%lld", &op, &L, &R);
-        if(op == 1) update(tl, L), update(tr, R);//两次单点修改
-        else printf("%lld\n", sum(tl, R) - sum(tr, L - 1));//[1,R]上左端个数 - [1,L-1]上右端个数
-    }
+    scanf("%d", &n);
+    
     return 0;
 }
+
+
 
 
 
