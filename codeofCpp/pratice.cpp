@@ -14295,28 +14295,108 @@ int main()
 
 
 
-//11. P5142 区间方差
+//11. P5142 区间方差(数论 + 树状数组)
+//给定有 n 个初始值的序列 B，两种操作：第 x 个数赋值为 y，查询 Bx ~ By 的方差
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 1e5 + 10;
+// const ll mod = 1e9 + 7;
+
+// int n, m;
+// ll t1[N], t2[N];
+
+// ll quick_pow(ll base, ll index = mod - 2)//快速幂板子，这里默认求 base^(mod - 2)
+// {
+//     ll ans = 1;
+//     base %= mod;
+//     for(; index; index >>= 1)
+//     {
+//         if(index & 1) ans = ans * base % mod;
+//         base = base * base % mod;
+//     }
+//     return ans % mod;
+// }
+
+// void update(ll *t, int x, ll d)
+// {
+//     for(; x <= n; x += lowbit(x))
+//         t[x] = (t[x] + d) % mod;//注意取模
+// }
+
+// ll sum(ll *t, int x)
+// {
+//     ll res = 0;
+//     for(; x > 0; x -= lowbit(x))
+//         res = (res + t[x]) % mod;//注意取模
+//     return res % mod;
+// }
+
+// int main()
+// {
+//     scanf("%d%d", &n, &m);
+//     for(int i = 1; i <= n; i++)
+//     {
+//         ll x;
+//         scanf("%lld", &x);
+//         update(t1, i, x % mod);
+//         update(t2, i, x * x % mod);
+//     }
+//     while(m--)
+//     {
+//         ll op, x, y;
+//         scanf("%lld%lld%lld", &op, &x, &y);
+//         if(op == 1)//单点赋值
+//         {
+//             ll v1 = sum(t1, x) - sum(t1, x - 1);//当前 a[x]
+//             ll v2 = sum(t2, x) - sum(t2, x - 1);//当前 a[x] * a[x]
+//             //更新差值即可
+//             update(t1, x, (y - v1) % mod);
+//             update(t2, x, (y * y - v2) % mod);
+//         }
+//         else
+//         {
+//             ll s1 = (sum(t1, y) - sum(t1, x - 1)) % mod;//∑ai
+//             ll s2 = (sum(t2, y) - sum(t2, x - 1)) % mod;//∑(ai ^ 2)平方和
+//             ll k = quick_pow(y - x + 1);                // 1 / n   的逆元（分数取模）
+//             ll ave = s1 * k % mod;                      //∑ai / n  平均数
+//             ll ans = s2 * k % mod -  ave * ave % mod;   //∑(ai ^ 2) / n  -  (∑ai) ^ 2
+//             ans = (ans % mod + mod) % mod;              //存在求差运算，防止出现负数
+//             printf("%lld\n", ans);
+//         }
+//     }
+//     return 0;
+// }
+
+
+
+//12.P5094 [USACO04OPEN] MooFest G 加强版
+//先升序排序，然后枚举每个值做一次最大值 v_max，统计 x 对其前面的点(vi 都小于等于 v_max)的贡献
 #include <cstdio>
 #include <iostream>
 #include <algorithm>
 using namespace std;
 #define ll long long
 #define lowbit(x) ((x) & -(x))
-const int N = 3e4 + 10, M = 1e5 + 10;
+const int N = 5e4 + 10;
 
 int n;
+ll t1[N], t2[N];
 
-
-void update(int *t, int x, int d)
+void update(ll *t, int x, ll d)
 {
-    for(; x <= n; x += lowbit(x)) //注意这里树状数组的下标为元素值，最大为 max_x (max_x < M)
-        t[x] += d;
+    for(; x <= n; x += lowbit(x))
+        t[x] += d;//注意取模
 }
-int sum(int *t, int x)
+
+ll sum(ll *t, int x)
 {
-    int res = 0;
-    for(; x > 0; x -= lowbit(x)) 
-        res += t[x];
+    ll res = 0;
+    for(; x > 0; x -= lowbit(x))
+        res += t[x];//注意取模
     return res;
 }
 
@@ -14326,11 +14406,6 @@ int main()
     
     return 0;
 }
-
-
-
-
-
 
 
 
