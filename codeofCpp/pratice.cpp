@@ -14375,47 +14375,137 @@ int main()
 
 //12.P5094 [USACO04OPEN] MooFest G 加强版
 //先升序排序，然后枚举每个值做一次最大值 v_max，统计 x 对其前面的点(vi 都小于等于 v_max)的贡献
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-using namespace std;
-#define ll long long
-#define lowbit(x) ((x) & -(x))
-const int N = 5e4 + 10;
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 5e4 + 10;
 
-int n;
-ll t1[N], t2[N];
+// int n;
+// ll maxx = 0;
+// ll t1[N], t2[N];//t1[] 维护元素个数和， t2[] 维护位置和
 
-void update(ll *t, int x, ll d)
-{
-    for(; x <= n; x += lowbit(x))
-        t[x] += d;//注意取模
-}
+// struct nd{
+//     ll v, x;
+//     bool operator <(const nd &nex) const{
+//         return v < nex.v;
+//     }
+// }q[N];
 
-ll sum(ll *t, int x)
-{
-    ll res = 0;
-    for(; x > 0; x -= lowbit(x))
-        res += t[x];//注意取模
-    return res;
-}
+// void update(ll *t, ll x, ll d)
+// {
+//     for(; x <= maxx; x += lowbit(x))//注意树状数组的大小不是 n
+//         t[x] += d;
+// }
 
-int main()
-{
-    scanf("%d", &n);
-    
-    return 0;
-}
+// ll sum(ll *t, ll x)
+// {
+//     ll res = 0;
+//     for(; x > 0; x -= lowbit(x))
+//         res += t[x];
+//     return res;
+// }
+
+// int main()
+// {
+//     scanf("%d", &n);
+//     for(int i = 1; i <= n; i++) 
+//     {
+//         scanf("%lld%lld", &q[i].v, &q[i].x);
+//         maxx = max(maxx, q[i].x);
+//     }
+//     sort(q + 1, q + 1 + n);
+//     ll ans = 0;
+//     for(int i = 1; i <= n; i++)
+//     {
+//         ll x = q[i].x, v = q[i].v;
+//         ll cnt1 = sum(t1, x), sum1 = sum(t2, x);                                //比 xi 小，求区间 [1, x] 的信息
+//         ll cnt2 = sum(t1, maxx) - sum(t1, x), sum2 = sum(t2, maxx) - sum(t2, x);//比 xi 大，求区间 (x, maxx) 的信息
+
+//         ans += v * (x * cnt1 - sum1) + v * (sum2 - x * cnt2);
+
+//         update(t1, x, 1);//插入元素个数
+//         update(t2, x, x);//插入元素位置值
+//     }
+//     printf("%lld\n", ans);
+//     return 0;
+// }
 
 
 
+//13. P1972 [SDOI2009] HH的项链
+// 求区间和问题，现考虑用树状数组维护区间内独立元素个数。本题重点在于如何给各查询区间 [l, r] 内元素判重，首先对区间内所有元素暴力判重肯定是不行的。当我们询问区间 [l, r] 时，
+// 必须知道区间 [l, r] 的各元素重复情况即 vis[ a[l ... r] ] 分别是否为 0，不妨将询问区间离线存储并按 r 升序排序
+// （因为右端点 r 代表着该区间最远到达的地方，也就是此时 vis[] 需要拓展到的地方）
+// 这样我们就能线性有序地维护 vis[x]。
+// 定义索引指针 p 记录 vis[] 拓展到的位置
+// 现遍历所有区间 [l, r]，对位置 p 上的数 x，有 t[p] 单点修改加 1（值的个数加 1）并记录 vis[x]，若 vis[x] != 0 则对当时 x 的位置 t[last_p] 单点修改减 1（即防止重复）
+// 不妨定义记录操作为 vis[x] = p，即定义 vis[x] 值为 x 上次出现的位置
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// using namespace std;
+// #define lowbit(x) ((x) & -(x))
+// const int N = 1e6 + 10;
+// struct nd{
+//     int id;//代表查询区间原来的查询顺序
+//     int l, r;
+//     bool operator <(const nd &x) const{
+//         return r < x.r;
+//     }
+// }q[N];
+
+// int n, m;
+// int a[N], ans[N];//a[]为原数组，ans[id]表示编号为 id 的区间的答案
+// int vis[N];      //vis[x] = p 定义为 元素值 x 上次出现的位置 p
+// int tree[N];
+
+// void update(int x, int d)
+// {
+//     for(; x <= n; x += lowbit(x))
+//         tree[x] += d;
+// }
+
+// int sum(int x)
+// {
+//     int res = 0;
+//     for(; x > 0; x -= lowbit(x))
+//         res += tree[x];
+//     return res;
+// }
+
+// int main()
+// {
+//     scanf("%d", &n);
+//     for(int i = 1; i <= n; i++) scanf("%d", &a[i]);
+//     scanf("%d", &m);
+//     for(int i = 1; i <= m; i++)
+//     {
+//         scanf("%d%d", &q[i].l, &q[i].r);
+//         q[i].id = i;
+//     }
+//     sort(q + 1, q + 1 + m);
+//     int p = 1;
+//     for(int i = 1; i <= m; i++)
+//     {
+//         //更新 vis[1 ... r] 以及 [1, r] 独立元素个数和
+//         for(; p <= q[i].r; p++)
+//         {
+//             if(vis[a[p]]) update(vis[a[p]], -1);//若元素已存在，撤销其上一次位置的状态，防止重复
+//             update(p, 1);                       //更新当前元素值状态为"存在"
+//             vis[a[p]] = p;                      //记录当前元素值位置 p
+//         }
+//         ans[q[i].id] = sum(q[i].r) - sum(q[i].l - 1);        
+//     }
+//     for(int i = 1; i <= m; i++) printf("%d\n", ans[i]);
+//     return 0;
+// }
 
 
 
-
-
-
-
+//14.
 
 
 
