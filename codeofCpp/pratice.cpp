@@ -14505,19 +14505,99 @@ int main()
 
 
 
-//14.
+//14. P4113 [HEOI2012]采花
+//HH的项链 的进阶版
+//此题中同一区间内两个及两个以上相同的元素记为一个，其余均不计数
+//也就是说判重操作是发生在第二次重复
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// using namespace std;
+// #define ll long long
+// #define lowbit(x) ((x) & -(x))
+// const int N = 2e6 + 10;
+
+// struct nd{
+//     int id;
+//     int l, r;
+//     bool operator <(const nd &ne) const{
+//         return r < ne.r;
+//     }
+// }q[N];
+
+// int n, c, m;
+// int a[N], tree[N];
+// int last1[N], last2[N];//last1[x] 和 last2[x] 分别表示 x 上上次出现 和 上次出现 的位置
+// int ans[N];
+
+// void update(int x, int d)
+// {
+//     for(; x <= n; x += lowbit(x))
+//         tree[x] += d;
+// }
+
+// int sum(int x)
+// {
+//     int res = 0;
+//     for(; x > 0; x -= lowbit(x))
+//         res += tree[x];
+//     return res;
+// }
+
+// int main()
+// {
+//     scanf("%d%d%d", &n, &c, &m);
+//     for(int i = 1; i <= n; i++) scanf("%d", &a[i]);
+//     for(int i = 1; i <= m; i++)
+//     {
+//         scanf("%d%d", &q[i].l, &q[i].r);
+//         q[i].id = i;
+//     }
+//     sort(q + 1, q + 1 + m);
+//     int p = 1;
+//     for(int i = 1; i <= m; i++)
+//     {
+//         for(; p <= q[i].r; p++)
+//         {
+//             if(!last1[a[p]]) last1[a[p]] = p;   //第一次出现
+//             else
+//             {
+//                 if(!last2[a[p]])                //第二次出现，a[p] 有效
+//                 {
+//                     update(last1[a[p]], 1);     //在上上次出现处计数，因为只有区间左端点 l <= last1[a[p]] 才算有效
+//                     last2[a[p]] = p;
+//                 }
+//                 else                            //*重点：第三次出现，判重
+//                 {
+//                     update(last1[a[p]], -1);    //去除最左边的重复元素，然后状态往后推
+//                     update(last2[a[p]], 1);
+//                     last1[a[p]] = last2[a[p]];  //两个状态一起往后推
+//                     last2[a[p]] = p;
+//                 }
+//             }
+//         }
+//         ans[q[i].id] = sum(q[i].r) - sum(q[i].l - 1);
+//     }
+//     for(int i = 1; i <= m; i++) printf("%d\n", ans[i]);
+//     return 0;
+// }
 
 
 
 
+//   1 2 2 3 1 1
+//l1 1 2
+//l2         5
 
+//2 2 3
+//若 0 1 0，则查询 {2 3} 时会得到 1，是错误的
+//若 1 0 0，则查询 {2 2 3} 才是 1，而查 {2 3} 是 0
+//所以应在上上次出现处单点加1
 
-
-
-
-
-
-
+//   2 2 2 2 3
+//   0 1 0 0 0
+//l1 1
+//l2 2
 
 
 
