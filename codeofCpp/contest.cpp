@@ -204,9 +204,45 @@ int main()
 
 
 
+//D
+//Î´Íê³É
+// #include <iostream>
+// #include <cstdio>
+// #include <algorithm>
+// #include <cstring>
+// #include <string>
+// #include <cmath>
+
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define ll long long
+// int T;
+// ll fib[50];
+// void init()
+// {
+//     fib[0] = fib[1] = 1;
+//     for(int i = 2; i < 50; i++)
+//         fib[i] = fib[i - 1] + fib[i - 2];
+// }
+// void Solve()
+// {
+//     ll n, x, y;
+//     cin >> n >> x >> y;
 
 
+// }
 
+// int main()
+// {
+//     untie();
+//     init();
+//     cin >> T;
+//     while(T--)
+//     {
+//         Solve();
+//     }
+//     return 0;
+// }
 
 
 
