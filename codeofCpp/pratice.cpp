@@ -16538,25 +16538,165 @@ int main()
 
 
 /*十七. KMP字符串匹配算法*/
+//模板 KMP字符串匹配
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <vector>
+// #include <string>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e6 + 10;
+
+// int lps[N];//这里 lps[i] 是指 p[0] ~ p[i] 的lps
+// string s, p;
+
+// void getlps(string p)
+// {
+//     int plen = p.size();
+//     lps[0] = 0;
+//     for(int i = 1; i < plen; i++)
+//     {
+//         int j = lps[i - 1];
+//         while(j > 0 && p[i] != p[j]) j = lps[j - 1];
+//         if(p[i] == p[j]) ++j;//新增字符与 s[j] 相等就增长
+//         lps[i] = j;
+//     }
+// }
+
+// void kmp(string s, string p)
+// {
+//     getlps(p);//预处理 lps[i]
+//     int slen = s.size(), plen = p.size();
+//     int j = 0;
+//     for(int i = 0; i < slen; i++)//在主串上匹配
+//     {
+//         while(j > 0 && s[i] != p[j]) j = lps[j - 1];
+//         if(s[i] == p[j]) ++j;
+//         if(j == plen) cout << i - plen + 2 << '\n';//若 P 完全匹配 S'，输出 S 的匹配起始位置
+//     }
+//     //输出 lps[i]
+//     for(int i = 0; i < plen; i++) cout << lps[i] << ' ';
+// }
+
+// int main()
+// {
+//     untie();
+//     cin >> s >> p;
+//     kmp(s, p);
+//     return 0;
+// }
 
 
 
+//1.Wow! Such Doge! (hdu-4847)
+// 查找输入文章中单词doge(大小写不敏感)的出现次数
+// 由于"doge"各字符不同，lps 恒为 0，直接匹配即可
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <vector>
+// #include <string>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e6 + 10;
+
+// int ans = 0;
+// string s, p[20] = {"doge","Doge","dOge","doGe", "dogE", "DOge", "DOGe", "DOGE","DOgE","DoGE","DoGe","DogE","dOGE","dOgE","dOGe","doGE"};
+
+// void kmp(string s, string p)
+// {
+//     int slen = s.size(), plen = p.size();
+//     for(int i = 0, j = 0; i < slen; i++)//在主串上匹配
+//     {
+//         while(j > 0 && s[i] != p[j]) j = 0;
+//         if(s[i] == p[j]) ++j;
+//         if(j == plen) ++ans;//P 完全匹配 S'
+//     }
+// }
+
+// int main()
+// {
+//     untie();
+//     while(cin >> s)
+//     {
+//         for(int i = 0; i < 16; ++i)
+//             kmp(s, p[i]);
+//     }
+//     cout << ans << '\n';
+//     return 0;
+// }
 
 
 
+//2.Compress Words (cf1200E)（前后缀匹配）
+//两个单词合并时要求删除第二个单词中与第一个单词后缀重合的前缀
+//重点：不能频繁地用 string类的 size()函数，严重影响效率，会TLE
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// #include <vector>
+// #include <string>
+// #include <cstring>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 1e6 + 10;
+
+// int lps[N];
+// int n, slen = 0, ind = 0;
+// string s, p;
+
+// void getlps(int plen)
+// {
+//     lps[0] = 0;
+//     for(int i = 1; i < plen; i++)
+//     {
+//         int j = lps[i - 1];
+//         while(j && p[i] != p[j]) j = lps[j - 1];
+//         if(p[i] == p[j]) ++j;
+//         lps[i] = j;
+//     }
+// }
+
+// int kmp(int plen)
+// {
+//     int res = 0;
+//     getlps(plen);
+//     for(int i = ind, j = 0; i < slen; i++)
+//     {
+//         while(j && s[i] != p[j]) j = lps[j - 1];
+//         if(s[i] == p[j]) ++j;
+//         res = j;
+//     }
+//     return res;
+// }
+
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     cin >> s;
+//     n--;
+//     ind = 0;
+//     slen = s.size();
+//     while(n--)
+//     {
+//         cin >> p;//读入模串
+//         int plen = p.size();
+//         ind = max(0, slen - plen);//至少判断的后缀长度[slen - plen, slen - 1]跟模p长度相同 或 模P比当前S更长就 ind = 0
+//         int res = kmp(plen);//最长匹配前后缀长度
+//         s += p.substr(res);//主串延伸
+//         slen += plen - res;
+//     }
+//     cout << s;
+//     return 0;
+// }
 
 
 
-
-
-
-
-
-
-
-
-
-
+//3.最长前缀 Longest Prefix（KMP + DP）
 
 
 
