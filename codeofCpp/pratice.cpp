@@ -17499,23 +17499,256 @@ int main()
 
 
 
-//9.子串分值
-//乘法原理（线性相加变成多项乘法和）
+//9. X 进制减法
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// using namespace std;
+// #define ll long long
+// const int N = 1e5 + 10, mod = 1e9 + 7;
+// ll a[N], b[N], c[N], numa = 0, numb = 0;
+// int main()
+// {
+//     int n;
+//     int ma, mb;
+//     cin >> n >> ma;
+//     for(int i = ma; i > 0; i--) cin >> a[i];
+//     cin >> mb;
+//     for(int i = mb; i > 0; i--) cin >> b[i];
+//     c[0] = 1;
+//     for(int i = 1; i <= max(ma, mb); i++)
+//     {
+//         ll x = max(a[i], b[i]);
+//         c[i] = (x ? (x + 1) : 2);
+//         c[i] = c[i] * c[i - 1] % mod;
+//     }
+//     for(int i = 1; i <= ma; i++) numa = (numa + a[i] * c[i - 1] % mod) % mod;
+//     for(int i = 1; i <= mb; i++) numb = (numb + b[i] * c[i - 1] % mod) % mod;
+//     cout << ((numa - numb) % mod + mod) % mod << '\n';//A-B结果可能为负数，因为取模后很可能有 B > A
+//     return 0;
+// }
+
+
+
+//10. 刷题统计
+// #include <iostream>
+// using namespace std;
+// #define ll long long
+// ll a, b, n;
+// ll cnt = 0;
+// int main()
+// {
+//     cin >> a >> b >> n;
+//     cnt += n / (5LL * a + 2LL * b) * 7LL;
+//     n %= 5LL * a + 2LL * b;
+//     for(int i = 1; n > 0 && i <= 7; i++)// 写 i < 7 会 WA
+//     {
+//         if(i <= 5) n -= a;
+//         else n -= b;
+//         cnt++;
+//     }
+//     cout << cnt; 
+//     return 0;
+// }
+
+
+
+//11.修剪灌木
+// #include <iostream>
+// using namespace std;
+// int n;
+// int main()
+// {
+//     cin >> n;
+//     for(int i = 1; i <= n / 2; ++i) cout << ((n - i) << 1) << '\n';   
+//     for(int i = n / 2; i < n; ++i) cout << (i << 1) << '\n';   
+//     return 0;
+// }
+
+
+
+//*12.统计子矩阵（二维前缀和 + 双指针降维）
+//维护纵向前缀和，枚举上下界，尺取左右界（枚举右界，调节左界），这样就框选了一个矩形范围
+// #include <cstdio>
+// #include <algorithm>
+// #include <iostream>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 510;
+// int n, m, k, a[N][N];
+// int main()
+// {
+//     untie();
+//     long long ans = 0;
+//     cin >> n >> m >> k;
+//     for(int i = 1; i <= n; i++)
+//         for(int j = 1; j <= m; j++)
+//             cin >> a[i][j], a[i][j] += a[i - 1][j];//纵向前缀和
+//     for(int i = 1; i <= n; i++)//枚举上界
+//     {
+//         for(int j = i; j <= n; j++)//枚举下界
+//         {
+//             int sum = 0;
+//             for(int r = 1, l = 1; r <= m; ++r)//枚举右界，调节左界
+//             {
+//                 sum += a[j][r] - a[i - 1][r];//加上第 r 列，上下界为[i, j] 的值
+//                 while(sum > k)
+//                 {
+//                     sum -= a[j][l] - a[i - 1][l];//超过 k，就收束左界，去掉第 l 列（上下界为[i, j]）的值
+//                     ++l;
+//                 }
+//                 ans += r - l + 1;//该上下界范围内，且在该左右界范围内，符合条件的子矩阵数
+//             }
+//         }
+//     }
+//     cout << ans;
+//     return 0;
+// }
+
+
+
+//13.积木画（线性 dp）
+//每一列分三种填补情况：1 两格填满，2 填上格，3 填下格
+//1：转移四种状态
+//2：转移两种状态
+//3：转移两种状态
+// #include <cstdio>
+// using namespace std;
+// #define ll long long
+// const int N = 10000010, mod = 1000000007;
+// ll dp[N][3];
+// int n;
+// int main()
+// {
+//     scanf("%d", &n);
+//     dp[0][0] = 1;
+//     for(int i = 1; i <= n; i++)
+//     {
+//         dp[i][0] = ((dp[i - 1][0] + dp[i - 1][1]) % mod + (dp[i - 1][2] + (i >= 2 ? dp[i - 2][0] : 0)) % mod) % mod;
+//         dp[i][1] = (dp[i - 1][2] + (i >= 2 ? dp[i - 2][0] : 0)) % mod;
+//         dp[i][2] = (dp[i - 1][1] + (i >= 2 ? dp[i - 2][0] : 0)) % mod;
+//     }
+//     printf("%lld", dp[n][0] % mod);
+//     return 0;
+// }
+
+
+
+//14.扫雷（map + dfs）
+//r <= 10，可以枚举每个排雷火箭的爆炸范围上的每个坐标点，并且 dfs 枚举每个 被排雷火箭 或者 其他炸弹 引爆的炸弹 的爆炸范围，传递爆炸
+// #include <cstdio>
+// #include <cmath>
+// #include <algorithm>
 // #include <iostream>
 // #include <map>
-// #include <string>
 // using namespace std;
-// const int N = 1e5 + 10;
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// #define p pair<int, int>
+// const int N = 5e4 + 10;
+// int n, m, ans = 0;
+// map<p, p > mp;//mp[点坐标] = (半径，点数量）
+// void dfs(int x, int y, int r)//对发现的每个炸弹都要深度搜索（连环性）
+// {
+//     //枚举排雷火箭圆形区域，发现炸弹就计数并删去炸弹点
+//     for(int dx = -r; dx <= r; ++dx)//枚举与 (x, y) 的距离
+//     {
+//         for(int dy = -r; x + dx >= 0 && dy <= r; ++dy)//注意边界判断 和 与圆心距离小于等于欧几里得距离
+//         {
+//             if(y + dy < 0 || dx * dx + dy * dy > r * r) continue;
+//             p now = make_pair(x + dx, y + dy);
+//             auto it = mp.find(now);
+//             if(it != mp.end())//若该点存在炸弹，就执行操作
+//             {
+//                 p boom = it -> second;
+//                 ans += boom.second;
+//                 mp.erase(it);
+//                 dfs(now.first, now.second, boom.first);//炸弹坐标 和 爆炸半径
+//             }
+//         }
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n >> m;
+//     int x, y, r;   
+//     for(int i = 0; i < n; i++)//存雷
+//     {
+//         cin >> x >> y >> r;
+//         p now = make_pair(x, y);
+//         if(!mp.count(now)) mp[now] = make_pair(r, 1);
+//         else//相同点的取最大半径，并叠加个数
+//         {
+//             mp[now].first = max(mp[now].first, r);
+//             ++mp[now].second;
+//         }
+//     }
+//     //枚举排雷火箭
+//     while(m--)
+//     {
+//         cin >> x >> y >> r;
+//         dfs(x, y, r);
+//     }
+//     cout << ans;
+//     return 0;
+// }
+
+
+
+//15.李白打酒加强版（dp）
+#include <iostream>
+using namespace std;
+#define ll long long
+int n, m;
+ll dp[105][105][200];//dp[i][j][k]
+int main()
+{
+    cin >> n >> m;
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// .子串分值
+//乘法原理（线性相加变成多项乘法和）
+// #include <iostream>
+// #include <string>
+// #include <cstring>
+// using namespace std;
+// const int N = 1e5 + 10, M = 140;
+// #define ll long long
 // string s;
-// map<char, int> mp;
+// ll pre[N], nex[N];
+// int id[M];
 // int main()
 // {
 //     cin >> s;
-//     for(auto ch : s) ++mp[ch];
-//     for(int i = 0; i < s.size(); i++)
+//     int n = s.size();
+//     s = ' ' + s;
+//     for(int i = 1; i <= n; i++)
 //     {
 
 //     }
+    
 //     return 0;
 // }
 
