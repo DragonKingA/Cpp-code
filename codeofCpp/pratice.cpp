@@ -17695,18 +17695,188 @@ int main()
 
 
 
-//15.李白打酒加强版（dp）
-#include <iostream>
-using namespace std;
-#define ll long long
-int n, m;
-ll dp[105][105][200];//dp[i][j][k]
-int main()
-{
-    cin >> n >> m;
+//*15.李白打酒加强版（dp）
+//dp[i][j][k] 表示走过了 i 个店、j 朵 花 并 剩下 k 斗酒
+//由于要求走过 m 朵花后酒剩余 0，即恰好消耗 m 斗酒，所以 k <= m
+//要求最后一次遇到的是花 且恰好喝完酒，（即已经走过了 n 个店 和 m - 1 朵花 并剩下 1 斗酒）故答案为 dp[n][m - 1][1]
+//已知遇店 *2 而 遇花 -1，易知若剩余奇数斗酒，上次必只有遇到花的情况，而偶数斗酒有两种情况：上次遇到店 和 上次遇到花
+// #include <iostream>
+// using namespace std;
+// #define ll long long
+// const int N = 110, mod = 1000000007;
+// int n, m;
+// ll dp[N][N][N];
+// int main()
+// {
+//     cin >> n >> m;
+//     dp[0][0][2] = 1;//初始有 2 斗酒
+//     for(int i = 0; i <= n; ++i)
+//         for(int j = 0; j <= m; ++j)
+//             for(int k = 0; k <= m; ++k)
+//             {
+//                 if(k & 1) dp[i][j][k] += j ? dp[i][j - 1][k + 1] : 0;
+//                 else dp[i][j][k] += (i ? dp[i - 1][j][k / 2] : 0) + (j ? dp[i][j - 1][k + 1] : 0);
+//                 dp[i][j][k] %= mod;
+//             }
+//     cout << dp[n][m - 1][1] % mod;
+//     return 0;
+// }
 
-    return 0;
-}
+
+
+//16.砍竹子
+//题目要求依据给定削减公式砍一段连续的竹子，问全部砍到高度为 1 所要的最少次数。
+//那么相邻的两个竹子，当且仅当两者的削减过程有重合的部分，才能合并部分次数。
+//如一个较高的竹子A 和 相邻的一个较矮的竹子B，仅当 A 消耗一定的次数削减到 B 后，A 和 B 可以共用次数来削减（即此时不用重复计数）
+//现可以用 set 记录上一个竹子的削减过程（即每次削减后的结果数值），那么在削减当前竹子时，每次可寻找是否有重合的削减操作，对操作不计数
+// #include <cstdio>
+// #include <iostream>
+// #include <cmath>
+// #include <set>
+// using namespace std;
+// #define ll long long
+// #define untie() {cin.tie(0)->sync_with_stdio(false); cout.tie(0);}
+// const int N = 2e5 + 100;
+// int n;
+// ll ans = 0;
+// set<ll> last;//上一个竹子的削减过程
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 0; i < n; ++i)
+//     {
+//         ll x;
+//         cin >> x;
+//         set<ll> now;//当前竹子被削减的过程（包含自己）
+//         while(x > 1)
+//         {
+//             now.insert(x);
+//             if(!last.count(x)) ++ans;//不重复就计数
+//             x = sqrtl(x / 2 + 1);//注意 h >= 1e18，要用 long long 和对应的 sqrtl() 函数
+//         }
+//         last = now;//传递状态
+//     }
+//     cout << ans << '\n';
+//     return 0;
+// }
+
+
+
+
+
+
+
+//17. 卡片（填空题）
+//设枚举到某个数 n，若拼接 n 的最后一位数时恰好用完卡片，则输出 n（因为每次检索都是检索 n 合不合法），否则就输出 n - 1（数 n 不合法）
+// #include <iostream>
+// using namespace std;
+// int num[15];
+// bool check()
+// {
+//     for(int i = 0; i < 10; ++i)
+//         if(num[i] <= 0) return 1;
+//     return 0;
+// }
+// int main()
+// {
+//     fill(num, num + 10, 2021);
+//     int n = 1;
+//     while(1)
+//     {
+//         int t = n;
+//         while(t)
+//         {
+//             if(t > 9 && check())//不判最后一位数
+//             {
+//                 cout << n - 1;
+//                 return 0;
+//             }
+//             --num[t % 10];
+//             t /= 10;
+//         }
+//         if(check())//判最后一位数 拼完了才消耗完，说明数 n 合法
+//         {
+//             cout << n;
+//             return 0;
+//         }
+//         ++n;
+//     }
+//     return 0;
+// }
+
+
+
+
+//18. 直线（填空题）
+//存每条直线的信息（斜率 和 截距）并判重即可，这里为了避免 double 带来的不准确判重，避免将 k 的误差带到 b 上，造成二重误差
+//故 b 另用公式求取(把 k 回代入某点直线方程中，得到没有 k 变量的式子，并将其简化)
+//b = (x1 * y2 - x2 * y1) / (x1 - x2)
+// #include <iostream>
+// #include <algorithm>
+// #include <map>
+// #include <set>
+// using namespace std;
+// #define pdd pair<double, double>
+// int n = 20, m = 21;
+// set<pdd> mp;
+// int main()
+// {
+//     for(int i = 1; i <= n; ++i)
+//     {
+//         for(int j = 1; j <= m; ++j)
+//         {
+//             for(int x = i + 1; x <= n; ++x)
+//             {
+//                 for(int y = 1; y <= m; ++y)
+//                 {
+//                     if(y == j) continue;
+//                     double k = 1.0 * (y - j) / (x - i);
+//                     double b = 1.0 * (i * y - j * x) / (x - i);
+//                     mp.insert(make_pair(k, b));
+//                 }
+//             }
+//         }
+//     }
+//     cout << (n + m + (long long)mp.size());
+//     return 0;
+// }
+
+
+
+//19. 货物摆放
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// using namespace std;
+// #define ll long long
+// ll n;
+// int main()
+// {
+//     cin >> n;
+    
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
