@@ -209,27 +209,114 @@ int main()
 
 
 
+//湖南省第十八届大学生计算机程序设计竞赛
+//I
+//bitset 用于权值数组时，在统计两个整体间的数的存在性个数时有优势
+// #include <cstdio>
+// #include <iostream>
+// #include <algorithm>
+// #include <bitset>
+// using namespace std;
+// const int M = 1e4 + 5, N = 55;
+// bitset<M> q[N];
+// bitset<M> a1, a2;
+// int main()
+// {
+//     int n;
+//     while(cin >> n)
+//     {
+//         for(int i = 1; i <= n; ++i) q[i].reset();
+//         for(int i = 1; i <= n; ++i)
+//         {
+//             int m;
+//             cin >> m;
+//             while(m--)
+//             {
+//                 int x;
+//                 cin >> x;
+//                 q[i][x] = 1;
+//             }
+//         }
+//         int Q;
+//         cin >> Q;
+//         while(Q--)
+//         {
+//             int x, y;
+//             cin >> x >> y;
+//             a1.reset(), a2.reset();
+//             for(int i = 1; i <= n; ++i)
+//             {
+//                 if(q[i][x])//a1 统计有 x 的集合的数的存在性
+//                 {
+//                     a1 |= q[i];
+//                 }
+//                 if(q[i][y])//a2 统计有 y 的集合的数的存在性
+//                 {
+//                     a2 |= q[i];
+//                 }
+//             }
+//             //求两者共现的数的个数
+//             a1 &= a2;
+//             long long ans = a1.count();
+//             //去除 x 和 y
+//             if(a1[x]) --ans;
+//             if(a1[y]) --ans;
+//             cout << ans << '\n';                
+//         }
+//     }
+//     return 0;
+// }
 
 
 
+//abcabc
+//
 
+// #include <bits/stdc++.h>
+// using namespace std;
+// #define ll long long
+// const int N = 1e5 + 10;
+// ll lps[N], num[N], len;
+// string s;
+// void test(int n)
+// {
+//     for(int i = 0; i < n; ++i) cout << s[i] << ' ';
+//     cout << '\n';
+//     for(int i = 1; i <= n; ++i)
+//     {
+//         cout << num[i] << ' ';        
+//     }
+//     cout << "\n\n";
+// }
+// void getlps()
+// {
+//     ll ans = 0;
+//     lps[0] = lps[1] = 0;
+//     for(int i = 1; i < len; ++i)
+//     {
+//         int j = lps[i - 1];
+//         while(j && s[i] != s[j]) j = lps[j - 1];
+//         if(s[i] == s[j]) ++j;
+//         lps[i] = j;
 
+//         num[i + 1] = num[j] + j;//num[i] 表示前 i 个字符
+//         ans += num[i + 1];
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//         test(i + 1);
+//     }
+//     cout << ans << '\n';
+//     return;
+// }
+// int main()
+// {
+//     while(cin >> s)
+//     {
+//         memset(num, 0, sizeof(num));
+//         len = s.size();
+//         getlps();
+//     }
+//     return 0;
+// }
 
 
 
