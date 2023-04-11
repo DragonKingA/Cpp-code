@@ -8365,6 +8365,219 @@ O(log2n * n) = O(nlogn)
 
 
 
+
+
+
+
+
+
+//区间dp
+//1.石子归并 
+//dp[l][r] 为合并区间[l, r]的最小代价（完成了 r - l 次合并）
+//每次合并成区间[l, r]经历 len - 1 次合并，而最后一次合并花费 s[r] - sum[l - 1] 的代价
+//基础做法：
+// #include <bits/stdc++.h>
+// using namespace std;
+// const int N = 1e3 + 10;
+// int s[N], dp[N][N];
+// int main()
+// {
+//     int n;
+//     cin >> n;
+//     memset(dp, 0x7f, sizeof(dp));
+//     for(int i = 1; i <= n; ++i)
+//     {
+//         cin >> s[i];
+//         s[i] += s[i - 1];//前缀和方便取区间代价
+//         dp[i][i] = 0;//初始化，自合并的代价为 0
+//     }
+//     for(int len = 2; len <= n; ++len)   
+//     {
+//         for(int l = 1; l + len - 1 <= n; ++l)
+//         {
+//             int r = l + len - 1;
+//             int cost = s[r] - s[l - 1];//合并任意两个连续子区间 [l, k] 和 [k + 1, r] 所需的代价
+//             for(int k = l; k < r; ++k)
+//             {
+//                 dp[l][r] = min(dp[l][r], dp[l][k] + dp[k + 1][r] + cost);
+//             }
+//         }
+//     }
+//     cout << dp[1][n];
+//     return 0;
+// }
+//四边形不等式优化：
+// #include <bits/stdc++.h>
+// using namespace std;
+// const int N = 1e3 + 10;
+// int s[N], dp[N][N], opt[N][N];
+// int main()
+// {
+//     int n;
+//     cin >> n;
+//     memset(dp, 0x7f, sizeof(dp));
+//     for(int i = 1; i <= n; ++i)
+//     {
+//         cin >> s[i];
+//         s[i] += s[i - 1];
+//         dp[i][i] = 0;
+//         opt[i][i] = i;//最优分割点初始化
+//     }
+//     for(int len = 2; len <= n; ++len)//从 len = 1 开始会出错，因为 opt[l][r - 1] 会存在 opt[1][0]，故出错
+//     {
+//         for(int l = 1; l + len - 1 <= n; ++l)
+//         {
+//             int r = l + len - 1, cost = s[r] - s[l - 1];
+//             for(int k = opt[l][r - 1]; k <= opt[l + 1][r]; ++k)//四边形不等式优化
+//             {
+//                 if(dp[l][r] > dp[l][k] + dp[k + 1][r] + cost)
+//                 {
+//                     dp[l][r] = dp[l][k] + dp[k + 1][r] + cost;
+//                     opt[l][r] = k;//最优分割点更新
+//                 }
+//             }
+//         }
+//     }
+//     cout << dp[1][n];
+//     return 0;
+// }
+
+
+
+//2.P1880 [NOI1995] 石子合并（环问题）
+//不同于弱化版的链状问题，该问题基于一个环路
+//将长度为 n 的环路展开成链状，并延伸至 2 * n - 1 长度即可，在这上面取得的所有区间即所有可能的环区间
+//基础写法：
+// #include <bits/stdc++.h>
+// using namespace std;
+// const int N = 500;
+// int n, a[N], s[N], dp1[N][N], dp2[N][N];
+// int main()
+// {
+//     memset(dp1, 0x7f, sizeof(dp1));
+//     memset(dp2, -1, sizeof(dp2));
+//     cin >> n;
+//     int nn = (n << 1) - 1;
+//     for(int i = 1; i <= n; ++i) cin >> a[i];
+//     for(int i = n + 1; i <= nn; ++i) a[i] = a[i - n];
+//     for(int i = 1; i <= nn; ++i)
+//     {
+//         s[i] = s[i - 1] + a[i];
+//         dp1[i][i] = dp2[i][i] = 0;
+//     }
+//     for(int len = 2; len <= nn; ++len)
+//     {
+//         for(int l = 1; l + len - 1 <= nn; ++l)
+//         {
+//             int r = l + len - 1;
+//             int cost = s[r] - s[l - 1];
+//             for(int k = l; k < r; ++k)
+//             {
+//                 dp1[l][r] = min(dp1[l][r], dp1[l][k] + dp1[k + 1][r] + cost);
+//                 dp2[l][r] = max(dp2[l][r], dp2[l][k] + dp2[k + 1][r] + cost);
+//             }
+//         }
+//     }
+//     int xmin = 2e9, xmax = 0;
+//     for(int st = 1; st + n - 1 <= nn; ++st)
+//     {
+//         int ed = st + n - 1;
+//         xmin = min(xmin, dp1[st][ed]);
+//         xmax = max(xmax, dp2[st][ed]);
+//     }
+//     cout << xmin << "\n" << xmax;
+//     return 0;
+// }
+
+
+
+//3.Brackets
+//定义 dp[l][r] 为区间[l, r]内最长匹配长度
+//如果 s[l]为'('或'['，且对应 s[r]为')'或']'，则 dp[l][r] = dp[l + 1][r - 1] + 2 （内层区间加上匹配的最外一层） 
+//如果 s[l] != s[r]，则至少可以
+// #include <iostream>
+// #include <algorithm>
+// #include <string>
+// #include <cstring>
+// using namespace std;
+// const int N = 200;
+// string s;
+// int dp[N][N];
+// int main()
+// {
+//     while(cin >> s)
+//     {
+//         if(s[0] == 'e') break;
+//         memset(dp, 0, sizeof(dp));
+//         int n = s.size();
+//         s = '*' + s;
+//         for(int len = 2; len <= n; ++len)
+//         {
+//             for(int l = 1; l + len - 1 <= n; ++l)
+//             {
+//                 int r = l + len - 1;
+//                 if((s[l] == '(' && s[r] == ')') || (s[l] == '[' && s[r] == ']')) //若可匹配则这样更新，但此时不一定是最优解
+//                     dp[l][r] = dp[l + 1][r - 1] + 2;
+//                 for(int k = l; k < r; ++k)//不论可不可匹配都取最优分割（因为不一定直接匹配就比分割合并来的大），如 ()[]()，显然分割合并为6，比匹配左右界的4大
+//                 {
+//                     dp[l][r] = max(dp[l][r], dp[l][k] + dp[k + 1][r]);
+//                 }
+//             }
+//         }
+//         cout << dp[1][n] << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+//4.Multiplication Puzzle
+//每次删除一个卡片，现删除中间所有卡片，最后会留下左右两端的两个卡片，求最小代价
+//dp[l][r] 表示区间[l, r]经过最佳删除方案后剩下卡片l、r的最小删除代价
+//删除区间的长度至少为3，即中间元素至少有1个，遍历 k 分割两个区间时，显然 dp[l][k] 和 dp[k][r] 恰好是分开的连续子区间（因为两端点不算）
+//dp[l][k] + dp[k][r] 就代表删除 [l + 1, k - 1] 和 [k + 1, r - 1] 元素后剩下卡片 l, k, r 的合并，即此时删除卡片 k 为一次合并
+//重点在于初始状态的初始化
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+using namespace std;
+const int N = 200, inf = 0x7fffffff;
+int n, c[N], dp[N][N];
+int main()
+{
+    // memset(dp, 0x7f, sizeof(dp)); 这样初始化是错的
+    cin >> n;
+    for(int i = 1; i <= n; ++i) cin >> c[i];
+    for(int l = 1; l + 2 <= n; ++l) dp[l][l + 2] = c[l] * c[l + 1] * c[l + 2];//初始化
+    for(int len = 4; len <= n; ++len)//len = 3 已经被计算过了
+    {
+        for(int l = 1; l + len - 1 <= n; ++l)
+        {
+            int r = l + len - 1;
+            dp[l][r] = inf;//计算前才需要重新初始化？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
+            for(int k = l + 1; k < r; ++k)
+            {
+                dp[l][r] = min(dp[l][r], dp[l][k] + dp[k][r] + c[l] * c[k] * c[r]);
+            }
+        }
+    }
+    cout << dp[1][n] << '\n';
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 //状压dp
 //1.P8687 [蓝桥杯 2019 省 A] 糖果
 //状压dp，这里对每种糖果种类有取与不取两种状态，故用二进制。如 0110 表示第二、三种糖果取，其它不取
@@ -8403,6 +8616,15 @@ O(log2n * n) = O(nlogn)
 //     cout << dp[(1 << m) - 1];
 //     return 0;
 // }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8508,14 +8730,29 @@ O(log2n * n) = O(nlogn)
 
 
 //4.P8725 [蓝桥杯 2020 省 AB3] 画中漂流
-#include <bits/stdc++.h>
-using namespace std;
-
-int main()
-{
-    
-    return 0;
-}
+// //dp[i][j] 表示当到时间 i 时 剩下体力 j 的方案数，上一秒到当前秒要么消耗了体力，要么不消耗
+// //由于要求体力必须花光，故答案为 dp[t][0]
+// #include <bits/stdc++.h>
+// using namespace std;
+// #define ll long long
+// const int N = 3e3 + 10, M = 15e2 + 10, mod = 1e9 + 7;
+// int d, t, m;
+// int dp[N][M];
+// int main()
+// {
+//     cin >> d >> t >> m;
+//     dp[0][m] = 1;
+//     for(int i = 1; i <= t; ++i)//枚举时间
+//     {
+//         for(int j = 0; j <= m; ++j)//枚举体力剩余量，则消耗量为 m - j
+//         {
+//             int now = d + (m - j) - (i - (m - j));
+//             if(now > 0) dp[i][j] = (dp[i - 1][j] + dp[i - 1][j + 1]) % mod;
+//         }
+//     }
+//     cout << (dp[t][0] % mod);
+//     return 0;
+// }
 
 
 
