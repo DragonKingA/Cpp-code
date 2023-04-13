@@ -8646,7 +8646,183 @@ O(log2n * n) = O(nlogn)
 
 
 //6.Zuma
-//题意：给你一个长度为 n 的字符串，每次你可以消去一段连续的回文子串，剩下的两端重新拼接成一个新的串，问最少需要消去多少次。
+//题意：给你一个长度为 n 的数串，每次你可以消去一段连续的回文子串（单个数字也算），剩下的两端重新拼接成一个新的串，问最少需要消去多少次能把整个子串变空串。
+//定义 dp[l][r] 表示完全删除区间 [l, r] 所需最少次数
+// #include <bits/stdc++.h>
+// using namespace std;
+// const int N = 550, inf = 0x7fffffff;
+// int n, a[N], dp[N][N];
+// int main()
+// {
+//     cin >> n;
+//     for(int i = 1; i <= n; ++i) cin >> a[i];
+//     for(int i = 1; i <= n; ++i) dp[i][i] = 1;//单个字符消除需要 1 次
+//     for(int len = 2; len <= n; ++len)
+//     {
+//         for(int l = 1; l + len - 1 <= n; ++l)
+//         {
+//             int r = l + len - 1;
+//             dp[l][r] = inf;
+//             if(len == 2 && a[l] == a[r]) dp[l][r] = 1;//特判长度为 2 时
+//             else if(a[l] == a[r]) dp[l][r] = dp[l + 1][r - 1];//len > 2 时，直接继承中间区间的次数，不会增加删除操作次数
+//             //分割的情况，如 1 2 1 4 4 分成 {1 2 1} 和 {4 4} 处理，即两次
+//             for(int k = l; k < r; ++k)
+//             {
+//                 dp[l][r] = min(dp[l][r], dp[l][k] + dp[k + 1][r]);
+//             }
+//         }
+//     }
+//     cout << dp[1][n];
+//     return 0;
+// }
+
+
+
+//7.Clear the String
+//题意：给定长度为 n 的字符串，每次可以删除一段只有一种字符的连续子串，求删完整个字符串所需的最少操作次数。
+//特判若 len == 2，dp[l][r] = 1 + (s[l] != s[r])
+//当 len > 2，若 s[l] == s[r]，则此时区间 [l, r - 1] 和 [l + 1, r] 是等效的，把其中一个端点字符 s[l] 或 s[r] 纳入中间区间 [l + 1, r- 1] 内
+//就可以得到加上 外层相同字符对<s[l], s[r]> 之后的删除次数，这样就能考虑到 s[l] 与 s[l + 1] 或者说 s[r] 与 s[r - 1] 的关系
+//如 aabcba，对于 aabcb 和 abcba，前者先删去 aa 再加上 bcb 的操作次数，后者先进行 bcb 的删除再删去 aa，它是等效的
+// #include <bits/stdc++.h>
+// using namespace std;
+// const int N = 600, inf = 0x7fffffff;
+// int n, dp[N][N];
+// string s;
+// int main()
+// {
+//     cin >> n >> s;
+//     s = ' ' + s;
+//     for(int i = 1; i <= n; ++i) dp[i][i] = 1;
+//     for(int len = 2; len <= n; ++len)
+//     {
+//         for(int l = 1; l + len - 1 <= n; ++l)
+//         {
+//             int r = l + len - 1;
+//             dp[l][r] = inf;
+//             if(len == 2) dp[l][r] = (s[l] == s[r] ? 1 : 2);
+//             else if(s[l] == s[r]) dp[l][r] = dp[l + 1][r];//或者 dp[l][r - 1] 也行
+//             for(int k = l; k < r; ++k)
+//             {
+//                 dp[l][r] = min(dp[l][r], dp[l][k] + dp[k + 1][r]);
+//             }
+//         }
+//     }
+//     cout << dp[1][n] << '\n';
+//     return 0;
+// }
+
+
+
+//8.P1220 关路灯
+//题意：要关 n 个路灯，每秒走一格，每秒每个仍开着的灯会消耗电能（功率 * 时间），走的时候可以掉转方向，现给定初始位置 x，问关完全部路灯所需最小功耗。
+//一般地，先有 dp[l][r] 表示关完 [l, r] 上所有灯所需最小功耗。关灯后有两种决策：继续沿原方向关灯 和 掉头去关没关掉的灯。
+//由于需要通过计算位置差来算功耗，我们还需要知道关完 [l, r] 的灯后所处的位置，也只有两种情况：在左端点 或 右端点
+//故添加方向状态维度即 dp[l][r][k]，则 dp[l][r][0] 或 dp[l][r][1] 分别表示关完灯在左端点或右端点所需的最小功耗
+//存前缀和 sum[] 方便求取区间代价。定义 cost(t, x, y) 函数表示除去区间 [x, y] 上的灯外其他灯在 t 秒内的功耗。
+//状态转移：不论是在左端点还是右端点，都可能是从上个状态 掉头 或 沿原方向走 来的
+//dp[l][r][0] = min{dp[l + 1][r][0] + cost(a[l + 1] - a[l], l + 1, r), dp[l + 1][r][1] + cost(a[r] - a[l], l + 1, r)} 不用掉头 与 要掉头
+//dp[l][r][1] = min{dp[l][r - 1][1] + cost(a[r] - a[r - 1], l, r - 1), dp[l][r - 1][0] + cost(a[r] - a[l], l, r - 1)}
+//注：功耗计算是包括了那盏即将关掉的灯
+// #include <bits/stdc++.h>
+// using namespace std;
+// const int N = 55, inf = 0x7fffffff;
+// int n, pos;
+// int a[N], sum[N], dp[N][N][2];
+// int cost(int t, int x, int y)
+// {
+//     return t * (sum[n] - (sum[y] - sum[x - 1]));
+// }
+// int main()
+// {
+//     memset(dp, 0x7f, sizeof(dp));//因为规定从 pos 开始，其余地方初值都为 inf
+//     cin >> n >> pos;
+//     dp[pos][pos][0] = dp[pos][pos][1] = 0;//第一个被关的灯无功耗
+//     for(int i = 1; i <= n; ++i)
+//     {
+//         cin >> a[i] >> sum[i];
+//         sum[i] += sum[i - 1];
+//     }
+//     for(int len = 2; len <= n; ++len)
+//     {
+//         for(int l = 1; l + len - 1 <= n; ++l)
+//         {
+//             int r = l + len - 1;
+//             dp[l][r][0] = min(dp[l + 1][r][0] + cost(a[l + 1] - a[l], l + 1, r), dp[l + 1][r][1] + cost(a[r] - a[l], l + 1, r));
+//             dp[l][r][1] = min(dp[l][r - 1][1] + cost(a[r] - a[r - 1], l, r - 1), dp[l][r - 1][0] + cost(a[r] - a[l], l, r - 1));
+//         }
+//     }
+//     cout << min(dp[1][n][0], dp[1][n][1]) << '\n';
+//     return 0;
+// }
+
+
+
+//9.P4767 [IOI2000]邮局
+//题意：给定 n 个村庄和 m 个邮局，求 m 个邮局按最佳方案放置后，计算每个村庄和最近的邮局之间所有距离的最小可能的总和。
+//定义 dp[i][j] 为共放置 i 个邮局后前 j 个村庄的最小距离总和
+//可知，邮局放在中间位置（偶数则中间两个位置都可）得到距离和最小，定义 cost() 函数计算
+//状态转移：枚举断点 k，从上一个状态（已经用 i - 1 个邮局规划好 [1, k] 的村庄）再安置一个邮局来规划 [k + 1, j] 的村庄，
+//最后综合起来就是用 i 个邮局来规划 [1, j] 的村庄的最优方案，即dp[i][j] = min(dp[i - 1][k] + w(k + 1, j)) ，k ∈ [0, j)
+//若不进行优化则 70pts，故需要用四边形不等式优化 断点k 的遍历（这里 opt 两个维度的变化互换了，因为本题是邮局数导致的凸性）
+// #include <bits/stdc++.h>
+// using namespace std;
+// const int N = 3e3 + 10, inf = 0x7fffffff;
+// int n, m;
+// int xx[N], sum[N], opt[N][N], dp[N][N];
+// int cost(int x, int y)
+// {
+//     int mid = x + y >> 1, xmid = sum[mid] - sum[mid - 1], len1 = mid - x, len2 = y - mid;
+//     // return len1 * xmid - (sum[mid - 1] - sum[x - 1]) + (sum[y] - sum[mid]) - len2 * mid;
+//     return sum[x - 1] + sum[y] + (len1 - len2) * xmid - sum[mid - 1] - sum[mid];
+// }
+// int main()
+// {
+//     memset(dp, 0x7f, sizeof(dp));
+//     cin >> n >> m;
+//     for(int i = 1; i <= n; ++i) cin >> xx[i];
+//     sort(xx + 1, xx + 1 + n);//坐标位置可能是乱序的
+//     for(int i = 1; i <= n; ++i) 
+//     {
+//         sum[i] = sum[i - 1] + xx[i];
+//         // opt[i][i] = i; 本题不需要该初始化
+//     }
+
+//     dp[0][0] = 0;
+//     for(int i = 1; i <= m; ++i)//枚举邮局数
+//     {
+//         opt[i][n + 1] = n;//重点初始化，因为开始时 opt[][n + 1] 是没计算过的，直接赋初始值为右端点
+//         for(int j = n; j > 0; --j)//前 j 个村庄，由于下面用到 opt[][j + 1]，故逆序遍历
+//         {
+//             for(int k = opt[i - 1][j]; k <= opt[i][j + 1]; ++k)//分成已安排好的村庄区间（前 k 个） 和 待加入邮局的村庄区间[k + 1, j]，后者加入最优距离代价cost
+//             {
+//                 int now = dp[i - 1][k] + cost(k + 1, j);
+//                 if(now < dp[i][j])
+//                 {
+//                     dp[i][j] = now;
+//                     opt[i][j] = k;
+//                 }
+//             }
+//         }
+//     }
+
+//     cout << dp[m][n] << '\n';
+//     return 0;
+// }
+
+
+
+//10.Coloring Brackets
+
+
+
+
+
+
+
+
+
+
 
 
 
