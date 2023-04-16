@@ -162,6 +162,22 @@ int main()
     return 0;
 }
 
+
+#include <bits/stdc++.h>
+using namespace std;
+#define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+#define ll long long
+
+int main()
+{
+    untie();
+
+
+
+
+
+    return 0;
+}
 */
 /*
 ¶àÑùÀıÄ£°å
@@ -200,6 +216,38 @@ int main()
 }
 
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

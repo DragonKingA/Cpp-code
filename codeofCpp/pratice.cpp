@@ -8765,6 +8765,39 @@ O(log2n * n) = O(nlogn)
 //状态转移：枚举断点 k，从上一个状态（已经用 i - 1 个邮局规划好 [1, k] 的村庄）再安置一个邮局来规划 [k + 1, j] 的村庄，
 //最后综合起来就是用 i 个邮局来规划 [1, j] 的村庄的最优方案，即dp[i][j] = min(dp[i - 1][k] + w(k + 1, j)) ，k ∈ [0, j)
 //若不进行优化则 70pts，故需要用四边形不等式优化 断点k 的遍历（这里 opt 两个维度的变化互换了，因为本题是邮局数导致的凸性）
+//70pts
+// #include <bits/stdc++.h>
+// using namespace std;
+// const int N = 3e3 + 10, inf = 0x7fffffff;
+// int n, m;
+// int xx[N], sum[N], dp[N][N];
+// int cost(int x, int y)
+// {
+//     int mid = x + y >> 1, xmid = sum[mid] - sum[mid - 1], len1 = mid - x, len2 = y - mid;
+//     return sum[x - 1] + sum[y] + (len1 - len2) * xmid - sum[mid - 1] - sum[mid];
+// }
+// int main()
+// {
+//     memset(dp, 0x7f, sizeof(dp));
+//     cin >> n >> m;
+//     for(int i = 1; i <= n; ++i) cin >> xx[i];
+//     sort(xx + 1, xx + 1 + n);//坐标位置可能是乱序的
+//     for(int i = 1; i <= n; ++i) sum[i] = sum[i - 1] + xx[i];
+//     dp[0][0] = 0;
+//     for(int i = 1; i <= m; ++i)//枚举邮局数
+//     {
+//         for(int j = 1; j <= n; ++j)//前 j 个村庄
+//         {
+//             for(int k = 0; k < j; ++k)//分成已安排好的村庄区间（前 k 个） 和 待加入邮局的村庄区间[k + 1, j]，后者加入最优距离代价cost
+//             {
+//                 dp[i][j] = min(dp[i][j], dp[i - 1][k] + cost(k + 1, j));
+//             }
+//         }
+//     }
+//     cout << dp[m][n] << '\n';
+//     return 0;
+// }
+//优化下，100pts
 // #include <bits/stdc++.h>
 // using namespace std;
 // const int N = 3e3 + 10, inf = 0x7fffffff;
@@ -8787,7 +8820,6 @@ O(log2n * n) = O(nlogn)
 //         sum[i] = sum[i - 1] + xx[i];
 //         // opt[i][i] = i; 本题不需要该初始化
 //     }
-
 //     dp[0][0] = 0;
 //     for(int i = 1; i <= m; ++i)//枚举邮局数
 //     {
@@ -8805,25 +8837,134 @@ O(log2n * n) = O(nlogn)
 //             }
 //         }
 //     }
-
 //     cout << dp[m][n] << '\n';
+//     return 0;
+// }
+//或者定义 dp[i][j] 为前 i 个村庄放了 j 个邮局，并且将双层循环顺序交换，此处四边形不等式就是熟悉的？？？？？？
+// #include <bits/stdc++.h>
+// using namespace std;
+// const int N = 3e3 + 10, inf = 0x7fffffff;
+// int n, m;
+// int xx[N], sum[N], opt[N][N], dp[N][N];
+// int cost(int x, int y)
+// {
+//     int mid = x + y >> 1, xmid = sum[mid] - sum[mid - 1], len1 = mid - x, len2 = y - mid;
+//     return sum[x - 1] + sum[y] + (len1 - len2) * xmid - sum[mid - 1] - sum[mid];
+// }
+// int main()
+// {
+//     memset(dp, 0x7f, sizeof(dp));
+//     cin >> n >> m;
+//     for(int i = 1; i <= n; ++i) cin >> xx[i];
+//     sort(xx + 1, xx + 1 + n);//坐标位置可能是乱序的
+//     for(int i = 1; i <= n; ++i) 
+//     {
+//         sum[i] = sum[i - 1] + xx[i];
+//     }
+
+//     dp[0][0] = 0;
+//     for(int j = 1; j <= m; ++j)//枚举邮局
+//     {
+//         opt[n + 1][j] = n;
+//         for(int i = n; i > 0; --i)//枚举村庄
+//         {
+//             for(int k = opt[i][j - 1]; k <= opt[i + 1][j]; ++k)//分成已安排好的村庄区间（前 k 个） 和 待加入邮局的村庄区间[k + 1, j]，后者加入最优距离代价cost
+//             {
+//                 int now = dp[k][j - 1] + cost(k + 1, i);
+//                 if(now < dp[i][j])
+//                 {
+//                     dp[i][j] = now;
+//                     opt[i][j] = k;
+//                 }
+//             }
+//         }
+//     }
+
+//     cout << dp[n][m] << '\n';
 //     return 0;
 // }
 
 
 
-//10.Coloring Brackets
+//*10.Coloring Brackets
+//题意：给定长度为 n 的合法括号字符序列，每个括号有三种状态：不上色、红色 和 蓝色；
+//要求匹配的一对括号中必须有且仅有一个有颜色，且任意两个相邻括号的颜色必须不同（但可以都无色）。求填色方案数。
+//由于相邻括号有限制，必须增设左右端点颜色状态方便区间状态合并，即定义 dp[l][r][x][y] 为区间 [l, r] 上左端点颜色为 x，右端点颜色为 y 时的方案数
+//已知每个括号符号都有其唯一对应的另一个括号符号，单纯的用 s[l] == '(' && s[r] == ')' 来判断配对区间显然是不可取的，
+//故用 p[i] = j 记录与 i 上字符相匹配的字符的位置 j。
+//当 p[l] == r 时，说明 [l, r] 为匹配区间，直接继承中间区间的状态
+//当 p[l] != r 时，则需要遍历断点方案，且只需 p[l] = k 处作为断点即可，合并时采用乘法原理
+// #include <bits/stdc++.h>
+// using namespace std;
+// #define ll long long
+// const int N = 800, mod = 1e9 + 7;
+// int n, top = 0, sta[N], p[N];//p[i] 记录与 i 相匹配的字符的位置
+// ll dp[N][N][3][3];
+// string s;
+// void init()//预处理 p[i]，而 sta[i] 为接收括号字符 '(' 的栈，当遇到 ')' 时将一个 ')' 出栈
+// {
+//     for(int i = 1; i <= n; ++i)
+//     {
+//         if(s[i] == '(') sta[++top] = i;
+//         else
+//         {
+//             int pos = sta[top--];
+//             p[i] = pos;
+//             p[pos] = i;
+//         }
+//     }
+// }
+// int main()
+// {
+//     cin >> s;
+//     n = s.size();
+//     s = '*' + s;
+//     init();
 
+//     for(int len = 2; len <= n; ++len)
+//     {
+//         for(int l = 1; l + len - 1 <= n; ++l)
+//         {
+//             int r = l + len - 1;
+//             if(p[l] == r) //为匹配区间
+//             {
+//                 if(len == 2) //特判长度为 2 时，初始化dp状态
+//                 {
+//                     dp[l][r][0][1] = dp[l][r][0][2] = dp[l][r][1][0] = dp[l][r][2][0] = 1;
+//                     continue;
+//                 }
+//                 //分别继承中间区间的对应状态
+//                 for(int i = 0; i < 3; ++i)
+//                 { 
+//                     for(int j = 0; j < 3; ++j)
+//                     {
+//                         if(j != 1) dp[l][r][0][1] = (dp[l][r][0][1] + dp[l + 1][r - 1][i][j]) % mod;
+//                         if(j != 2) dp[l][r][0][2] = (dp[l][r][0][2] + dp[l + 1][r - 1][i][j]) % mod;
+//                         if(i != 1) dp[l][r][1][0] = (dp[l][r][1][0] + dp[l + 1][r - 1][i][j]) % mod;
+//                         if(i != 2) dp[l][r][2][0] = (dp[l][r][2][0] + dp[l + 1][r - 1][i][j]) % mod;
+//                     }
+//                 }
+//             }
+//             else //不为匹配区间
+//             {
+//                 int k = p[l];//仅此处能作为断点
+//                 for(int x = 0; x < 3; ++x)
+//                     for(int y = 0; y < 3; ++y)
+//                         for(int p = 0; p < 3; ++p)
+//                             for(int q = 0; q < 3; ++q)
+//                                 if(p == 0 || q == 0 || p != q) //相邻两个若有颜色，则颜色不能相同
+//                                     dp[l][r][x][y] = (dp[l][r][x][y] + dp[l][k][x][p] * dp[k + 1][r][q][y] % mod) % mod;//乘法原理
+//             }
+//         }
+//     }
 
-
-
-
-
-
-
-
-
-
+//     ll ans = 0;
+//     for(int i = 0; i < 3; ++i)
+//         for(int j = 0; j < 3; ++j)
+//             ans = (ans + dp[1][n][i][j]) % mod;
+//     cout << ans << '\n';
+//     return 0;
+// }
 
 
 
@@ -8875,6 +9016,79 @@ O(log2n * n) = O(nlogn)
 //     cout << dp[(1 << m) - 1];
 //     return 0;
 // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//树形dp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9106,7 +9320,7 @@ O(log2n * n) = O(nlogn)
 // #include <vector>
 // using namespace std;
 // #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-// const int N = 1e3 +5;// N 个点
+// const int N = 1e3 + 5;
 // int n, m;                 
 // struct edge{
 //     int from, to, w;                                          
@@ -9198,10 +9412,14 @@ O(log2n * n) = O(nlogn)
 // #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
 // const int N = 1e3 + 5, M = 2e3 + 5;
 // int n, m, head[N], cnt = 1;
-// struct node{ int to, next, w;} edge[M];
+// struct node{ 
+//     int to, next, w;
+//     node(){}
+//     node(int a, int b, int c) { to = a, next = b, w = c;}
+// }edge[M];
 // void addedge(int u, int v, int w)
 // {
-//     edge[cnt] = node{v, head[u], w};
+//     edge[cnt] = node(v, head[u], w);
 //     head[u] = cnt++;
 // }
 // int main()
@@ -9213,9 +9431,11 @@ O(log2n * n) = O(nlogn)
 //         int u, v, w;
 //         cin >> u >> v >> w;
 //         addedge(u, v, w);
+//         // 无向边加上下句，并且注意判重
+//         // addedge(v, u, w);
 //     }
 //     //遍历各节点的所有邻居
-//     for(int u = 0; u <= n; u++)
+//     for(int u = 1; u <= n; u++)
 //     {
 //         if(!head[u]) continue;
 //         cout << "node " << u << " 's neighbours: ";
@@ -9237,6 +9457,17 @@ TEST:
 2 4 7
 4 1 8
 2 5 9
+4 5 10
+5 6 11
+
+//无向图去重后
+6 8
+1 2 1
+5 2 3
+6 3 4 
+2 3 5
+1 4 6
+2 4 7
 4 5 10
 5 6 11
 */
