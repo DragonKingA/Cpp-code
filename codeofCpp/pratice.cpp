@@ -9048,34 +9048,209 @@ O(log2n * n) = O(nlogn)
 
 //树形dp
 
+//1.没有上司的舞会
+//题意：有 n 名职员，编号为1 … n，他们的关系是一棵以老板为根节点的树，父节点就是其子节点的直接上司。每个职员有一个快乐指数 Hi，并给定从属关系，
+//现在要召开一场舞会，使得没有职员和直接上司一起参会。主办方希望邀请一部分职员参会，使得所有参会职员的快乐指数总和最大，求这个最大值。
+//思路：建图时是上司连向下属。对于一个结点要求父节点被选定后不能选，但父节点以上的结点被选定后仍能选，故这里需要dp进行状态转移。
+//定义 dp[u][0/1] 代表以 u 为根的子树中不选与选 u 的最大权值和
+//选择 u 时，以 u 为父节点的子节点 v 不能选，即 dp[u][1] += dp[v][0]
+//不选 u 时，v 从选与不选两个状态中去最大者，即 dp[u][0] += max(dp[v][0], dp[v][1])
+// #include <bits/stdc++.h>
+// using namespace std;
+// const int N = 6e3 + 100, M = N;
+// int n, m, head[N], a[N], cnt = 1;
+// bool isson[N];
+// int dp[N][2];
+// struct Edge{
+//     int to, next, w;
+//     Edge(int a = 0, int b = 0, int c = 0) { to = a, next = b, w = c;}
+//     void add(int u, int v, int c = 0){ *this = Edge(v, head[u], c), head[u] = cnt++;}
+// }e[M];
+// void dfs(int u)
+// {
+//     for(int i = head[u]; i; i = e[i].next)
+//     {
+//         int v = e[i].to;
+//         dfs(v);//先dfs到叶子节点，从子节点向上更新dp状态
+//         //更新父节点信息
+//         dp[u][1] += dp[v][0];
+//         dp[u][0] += max(dp[v][0], dp[v][1]);
+//     }
+// }
+// int main()
+// {
+//     cin >> n;
+//     m = n - 1;
+//     for(int i = 1; i <= n; ++i) cin >> dp[i][1];//初始化选 i 时的价值
+//     for(int i = 1; i <= m; ++i)
+//     {
+//         int v, u;
+//         cin >> v >> u;
+//         e[cnt].add(u, v);
+//         isson[v] = 1;//标记为非根节点
+//     }
+//     int root = 0;
+//     for(int i = 1; i <= n; ++i)//该图有且只有一个根节点
+//     {
+//         if(!isson[i])
+//         {
+//             root = i;
+//             break;
+//         }
+//     }
+//     dfs(root);
+//     cout << max(dp[root][0], dp[root][1]) << '\n';
+//     return 0;
+// }
 
 
 
+//2.P2016 战略游戏
+// dp[u][1]以 u 为根的子树在 u 上 放置 的士兵的最少所需的士兵数目
+// dp[u][0]以 u 为根的子树在 u 上不放置的士兵的最少所需的士兵数目
+// #include <bits/stdc++.h>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e4, M = N;
+// int n, m, head[N], a[N], cnt = 1, root = 0;
+// bool isson[N];
+// int dp[N][2];
+// struct Edge{
+//     int to, next, w;
+//     Edge(int a = 0, int b = 0, int c = 0) { to = a, next = b, w = c;}
+// }e[M];
+// void addedge(int u, int v, int w = 0)
+// {
+//     e[cnt] = Edge(v, head[u], w);
+//     head[u] = cnt++;
+// }
+// void dfs(int u)
+// {
+//     //初始化
+//     dp[u][0] = 0;
+//     dp[u][1] = 1;
+//     for(int i = head[u]; i; i = e[i].next)
+//     {
+//         int v = e[i].to;
+//         dfs(v);
+//         dp[u][1] += min(dp[v][0], dp[v][1]);//放的话，选择放了(也有可能成为最优解)和不放士兵的子树的最少数量者
+//         dp[u][0] += dp[v][1];//不放士兵就得加上放了士兵的子树
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 1; i <= n; ++i)
+//     {
+//         int u, k, v;
+//         cin >> u >> k;
+//         ++u;
+//         while(k--)
+//         {
+//             cin >> v;
+//             ++v;
+//             addedge(u, v);
+//             isson[v] = 1;
+//         }
+//     }
+//     for(int i = 1; i <= n; ++i)
+//     {
+//         if(!isson[i])
+//         {
+//             root = i;
+//             break;
+//         }
+//     }
+//     dfs(root);
+//     cout << min(dp[root][0], dp[root][1]) << '\n';
+//     return 0;
+// }
 
 
 
+//3.Phone Network G（无向图树形dp + 最小支配集）
+//题意：给定一个有 n 个结点及 n - 1 条边的无向图，问选中结点的最少数量，使得所有结点要么自身被选中，要么其至少一个邻居结点被选中。
+//状态定义：
+//以下状态都是认为结点 u 下的所有子树上的结点都已被覆盖，然后讨论覆盖 u 的三种方式：
+// dp[u][0]：结点 u 被自己覆盖（u 被选中）的最小花费
+// dp[u][1]：结点 u 被其父节点 fa 覆盖（即其父节点被选中，此时不用选中 u）的最小花费
+// dp[u][2]：结点 u 被其子节点 v 覆盖（即至少存在一个子节点被选中,此时不用选中 u）的最小花费
+//状态转移：
+// * 由于 u 下结点都已被覆盖，且 dp[u][0] 保证了 u 被选中即被覆盖，则直接从子节点转移出最小花费的状态，
+//   即 dp[u][0] += min(dp[v][0], dp[v][1], dp[v][2])
+// * 此时 u 没被选中，被父节点 fa 覆盖，则其子节点 v 要么自己覆盖自己，要么 v 的子节点覆盖 v，就是不能被 u 覆盖，
+//   即 dp[u][1] += min(dp[v][0], dp[v][2])
+// * 首先作为 v 的父节点 u 没被选中，那么至少状态 dp[v][1] 不用考虑转移到当前结点 u 上，初步得到 dp[u][2] += min(dp[v][0], dp[v][2])
+//   但这样会产生一个问题，会出现 dp[u][2] 全是 dp[v][2] 转移过来的，但这样就说明 u 的子节点全都没有被选中，也就不可能覆盖 u，
+//   所以初步转移方程显然不够完善，则我们需要用 flag 标记判断是否全是 dp[v][2] 转移过来的：
+//   * flag == 1 ：说明 dp[u][2] 至少一次由 dp[v][0] 转移过来，则无需多余操作
+//   * flag == 0 ：说明 dp[u][2] 全都由 dp[v][2] 转移过来，需要取一个最优花费的子节点 _v 的状态 dp[_v][0]，
+//     为方便操作，每次由 dp[v][2] 转移时记录 p = min(dp[v][0] - dp[v][2])，最终 p = dp[_v][0] - dp[_v][2]，
+//     然后需要重算时给 dp[u][2] += p，这样就加上了 dp[_v][0] 还抵消了该递归层上错误转移的 dp[_v][2]（反悔机制）。
+// #include <bits/stdc++.h>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e4 + 10, M = N, inf = N;
+// int n, m, head[N], cnt = 1;
+// int dp[N][3];
+// struct Edge{
+//     int to, next, w;
+//     Edge(int a = 0, int b = 0, int c = 0) { to = a, next = b, w = c;}
+// }e[M << 1];//记得无向边需要开两倍空间
+// int _min(int x1, int x2, int x3) { return x1 < x2 ? (x1 < x3 ? x1 : x3) : (x2 < x3 ? x2 : x3);}
+// void addedge(int u, int v, int w = 0)
+// {
+//     e[cnt] = Edge(v, head[u], w);
+//     head[u] = cnt++;
+// }
+// void dfs(int u, int fa = -1)// fa 防止 dfs 成环
+// {
+//     dp[u][0] = 1;
+//     dp[u][1] = dp[u][2] = 0;
+
+//     bool flag = 0;
+//     int p = inf;
+//     for(int i = head[u]; i; i = e[i].next)
+//     {
+//         int v = e[i].to;
+//         if(v == fa) continue;
+//         dfs(v, u);
+//         dp[u][0] += _min(dp[v][0], dp[v][1], dp[v][2]);
+//         dp[u][1] += min(dp[v][0], dp[v][2]);
+//         if(dp[v][0] <= dp[v][2])
+//         {
+//             flag = 1;
+//             dp[u][2] += dp[v][0];
+//         }
+//         else//反悔 - 虽然现在选了 dp[v][2]，但可能反悔选回该层的 dp[v][0]
+//         {
+//             p = min(p, dp[v][0] - dp[v][2]);
+//             dp[u][2] += dp[v][2];
+//         }
+//     }
+//     if(!flag) dp[u][2] += p;
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     m = n - 1;
+//     int u, v;
+//     for(int i = 1; i <= m; ++i)
+//     {
+//         cin >> u >> v;
+//         addedge(u, v);
+//         addedge(v, u);//方向不定，无向图
+//     }
+//     dfs(u);//无根，随便选个点开始
+//     cout << min(dp[u][0], dp[u][2]) << '\n';
+//     return 0;
+// }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//4.
 
 
 
