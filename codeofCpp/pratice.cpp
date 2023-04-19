@@ -9250,12 +9250,133 @@ O(log2n * n) = O(nlogn)
 
 
 
-//4.
+//4.P3478 [POI2008] STA-Station
+// #include <bits/stdc++.h>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define ll long long
+// const int N = 1e6 + 100;
+// struct Edge{
+//     int to, next;
+//     Edge(int a = 0, int b = 0) { to = a, next = b;}
+// }e[N << 1];
+// int n, cnt = 1;
+// int ans = 1;//答案为结点编号
+// int head[N];
+// ll sz[N], dp[N];
+// void addedge(int u, int v)
+// {
+//     e[cnt] = Edge(v, head[u]);
+//     head[u] = cnt++;
+// }
+// ll pre_dfs(int u, int fa = -1, ll dep = 1)
+// {
+//     sz[u] = 1;
+//     ll sum = dep;
+//     for(int i = head[u]; i; i = e[i].next)
+//     {
+//         int v = e[i].to;
+//         if(v == fa) continue;
+//         sum += pre_dfs(v, u, dep + 1);
+//         sz[u] += sz[v];
+//     }
+//     return sum;
+// }
+// void dp_dfs(int u, int fa = -1)
+// {
+//     if(dp[u] > dp[ans]) ans = u;//取最大深度和的结点
+//     for(int i = head[u]; i; i = e[i].next)
+//     {
+//         int v = e[i].to;
+//         if(v == fa) continue;
+//         dp[v] = dp[u] + n - (sz[v] << 1LL);
+//         dp_dfs(v, u);
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 1; i < n; ++i)
+//     {
+//         int u, v;
+//         cin >> u >> v;
+//         addedge(u, v);
+//         addedge(v, u);
+//     }
+//     pre_dfs(1);
+//     dp[1] = sz[1];
+//     dp_dfs(1);
+//     cout << ans << '\n';
+//     return 0;
+// }
 
 
 
-
-
+//5.P2986 Great Cow Gathering G（换根dp）
+//定义 sz[u] 为以 u 为根的子树下奶牛的总数量, len[u] 为以 u 为根的子树下总路径长度
+//根节点 u -> v 时有 dp[u] -> dp[v]，则所有在 v 的子树上的子节点总距离减少 num[v] * w，不在则增加 (n - sz[v]) * w
+// #include <bits/stdc++.h>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define ll long long
+// const int N = 2e5 + 100;
+// struct Edge{
+//     int to, next, w;
+//     Edge(int a = 0, int b = 0, int c = 0) { to = a, next = b, w = c;}
+// }e[N << 1];
+// int n, a[N], head[N], cnt = 1;
+// ll sz[N], num[N], dp[N], cow = 0;//cow 为总奶牛数
+// ll ans = 1e9;
+// void addedge(int u, int v, int w)
+// {
+//     e[cnt] = Edge(v, head[u], w);
+//     head[u] = cnt++;
+// }
+// ll pre_dfs(int u, int fa = -1)
+// {
+//     ll res = 0;
+//     num[u] = a[u];//必须在这初始化，不能写在下面，因为是自底向上更新，至少叶子结点需要先初始化
+//     for(int i = head[u]; i; i = e[i].next)
+//     {
+//         int v = e[i].to, w = e[i].w;
+//         if(v == fa) continue;
+//         res += pre_dfs(v, u) + num[v] * w;
+//         num[u] += num[v];
+//     }
+//     return res;
+// }
+// void dp_dfs(int u, int fa = -1)
+// {
+//     // if(dp[u] < ans) ans = dp[u];//当点 1 不存在导致 ans 被错误地初始化为 0，故不能这么写
+//     for(int i = head[u]; i; i = e[i].next)
+//     {
+//         int v = e[i].to, w = e[i].w;
+//         if(v == fa) continue;
+//         ll d = (cow - 2 * num[v]) * w;
+//         dp[v] = dp[u] + d;
+//         ans = min(ans, dp[v]);
+//         dp_dfs(v, u);
+//     }
+// }
+// int main()
+// {
+//     untie();
+//     cin >> n;
+//     for(int i = 1; i <= n; ++i) cin >> a[i], cow += a[i];
+//     for(int i = 1; i < n; ++i)
+//     {
+//         int u, v, w;
+//         cin >> u >> v >> w;
+//         addedge(u, v, w);
+//         addedge(v, u, w);
+//     }
+//     dp[1] = pre_dfs(1);
+//     ans = dp[1];
+//     dp_dfs(1);
+//     cout << ans << '\n';
+//     return 0;
+// }
 
 
 
