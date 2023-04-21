@@ -7800,8 +7800,8 @@ O(log2n * n) = O(nlogn)
 //背包问题
 //背包九讲：https://github.com/CSGrandeur/s-1problem1day1ac/discussions/554
 
-//1.Bone Collector
-//01背包问题
+// 1.Bone Collector
+// 01背包问题
 // #include <iostream>
 // #include <algorithm>
 // #include <cstring>
@@ -7834,8 +7834,8 @@ O(log2n * n) = O(nlogn)
 /*
 形式上，我们只需要将 01 背包问题的「一维空间优化」解法中的「容量维度」遍历方向从「从大到小 改为 从小到大」就可以解决完全背包问题。
 但本质是因为两者进行状态转移时依赖了不同的格子：
- 01背包 依赖的是「上一行正上方的格子」和「上一行左边的格子」。
-完全背包 依赖的是「上一行正上方的格子」和「本行左边的格子」。
+ 01背包 依赖的是「正上方上一行的格子」和「上一行左边的格子」。
+完全背包 依赖的是「正上方上一行的格子」和「本行左边的格子」。
 */
 // #include <iostream>
 // #include <algorithm>
@@ -7864,7 +7864,7 @@ O(log2n * n) = O(nlogn)
 //多重背包问题 -- 一样物品可以选多件，即不同物品有不同的选择上限
 
 //一法：转化为 01背包 -- 枚举 k 件物品，把问题看成仅有一件的占用空间为 k*Vi ，价值为 k*Wi 的物品该不该拿
-//无优化(单例最高耗时922ms)
+// 无优化(单例最高耗时922ms)
 // #include <iostream>
 // #include <algorithm>
 // #include <vector>
@@ -7890,7 +7890,7 @@ O(log2n * n) = O(nlogn)
 //     return 0;
 // }
 
-//二进制优化(最好用) -- 一种有一定数量 sum 的物品，拆分成 x 个基元，由这 x 个基元组成 1 ~ sum 所有的取件数情况 (单例最高耗时141ms) -- 优化效果显著
+// 二进制优化(最好用) -- 一种有一定数量 sum 的物品，拆分成 x 个基元，由这 x 个基元组成 1 ~ sum 所有的取件数情况 (单例最高耗时141ms) -- 优化效果显著
 // 先按 2 的倍数升序拆分为 x - 1 个数，最后剩下一个余数，共 x 个基数，
 // 如 sum = 25，分成 1, 2, 4, 8, 10(10 < 2^4 = 16) 五个基元，并且由 5 个数任意自由组合得到 1 ~ 25 的所有数字
 // 多重背包问题 就转化成对 每种物品 的 每个基元数 的 选与不选，即 01背包问题
@@ -7939,7 +7939,7 @@ O(log2n * n) = O(nlogn)
 
 
 
-//二法：转化为 01背包 + 完全背包 (3.8s微小优化，*仅供加深两种背包的理解*)
+// 二法：转化为 01背包 + 完全背包 (3.8s微小优化，*仅供加深两种背包的理解*)
 // #include <iostream>
 // #include <algorithm>
 // #include <vector>
@@ -8000,8 +8000,8 @@ O(log2n * n) = O(nlogn)
 //     cout << dp[H][T];
 //     return 0;
 // }
-//有时,"二维费用" 的条件是以这样一种隐含的方式给出的：最多只能取 U 件物品。
-//这事实上相等于每件物品多了一种 "件数" 的费用，每个物品的件数费用均为 1，可以付出的最大件数费用为 U。
+// 有时,"二维费用" 的条件是以这样一种隐含的方式给出的：最多只能取 U 件物品。
+// 这事实上相等于每件物品多了一种 "件数" 的费用，每个物品的件数费用均为 1，可以付出的最大件数费用为 U。
 
 
 
@@ -8059,7 +8059,7 @@ O(log2n * n) = O(nlogn)
 400 3 5
 7430
 */
-//先处理附件价值状态，再往主件中加入附件 (230 ms)
+// 先处理附件价值状态，再往主件中加入附件 (230 ms)
 // #include <iostream>
 // #include <algorithm>
 // #include <vector>
@@ -8099,8 +8099,8 @@ O(log2n * n) = O(nlogn)
 //     return 0;
 // }
 
-//实际上也可以当成有 5 种操作的 01背包来写 (38 ms)
-//| 1.不变 | 2.只拿主件 | 3.主件 + 附件1 | 4.主件 + 附件2 | 5.主件 + 附件1 + 附件2 |
+// 实际上也可以当成有 5 种操作的 01背包来写 (38 ms)
+// | 1.不变 | 2.只拿主件 | 3.主件 + 附件1 | 4.主件 + 附件2 | 5.主件 + 附件1 + 附件2 |
 // #include <iostream>
 // #include <algorithm>
 // #include <vector>
@@ -8141,8 +8141,8 @@ O(log2n * n) = O(nlogn)
 //求第 k 优解(第 k 大价值)
 // 在原来 01背包 的基础上在加一维记录即可，即 dp[i][j][k] - 遍历到第 i 个物品，且体积不超过 j 时可得的第 k 大价值
 // 当然可以滚动掉第一维，剩余 dp[j][k]
-//a数组记录的是 不选第 i 个物品 的 k 个最大价值
-//b数组记录的是 选第 i 个物品 的 k 个最大价值
+// a数组记录的是 不选第 i 个物品 的 k 个最大价值
+// b数组记录的是 选第 i 个物品 的 k 个最大价值
 // #include <iostream>
 // #include <algorithm>
 // #include <vector>
@@ -8191,7 +8191,7 @@ O(log2n * n) = O(nlogn)
 
 
 //8.投资的最大效益
-//经典技巧降低时空复杂度：由于 a 是 1000 的倍数，那就全程用 a /= 1000 计算
+// 经典技巧降低时空复杂度：由于 a 是 1000 的倍数，那就全程用 a /= 1000 计算
 // #include <iostream>
 // #include <algorithm>
 // #include <vector>
@@ -8230,7 +8230,7 @@ O(log2n * n) = O(nlogn)
 
 //9.樱花
 //混合背包问题
-//老实分算三个背包，并且二进制优化多重背包 (55ms)
+// 老实分算三个背包，并且二进制优化多重背包 (55ms)
 // #include <iostream>
 // #include <algorithm>
 // #include <vector>
@@ -8287,7 +8287,7 @@ O(log2n * n) = O(nlogn)
 //     return 0;
 // }
 
-//全部转化为01背包，用二进制优化(77ms)
+// 全部转化为01背包，用二进制优化(77ms)
 // #include <iostream>
 // #include <algorithm>
 // #include <vector>
@@ -8323,7 +8323,7 @@ O(log2n * n) = O(nlogn)
 //     return 0;
 // }
 
-//亦可单调队列优化
+// 亦可单调队列优化
 
 
 
@@ -9348,7 +9348,7 @@ O(log2n * n) = O(nlogn)
 // }
 // void dp_dfs(int u, int fa = -1)
 // {
-//     // if(dp[u] < ans) ans = dp[u];//当点 1 不存在导致 ans 被错误地初始化为 0，故不能这么写
+//     // if(dp[u] < ans) ans = dp[u];//当点 1 不存在时，该句导致 ans 被错误地初始化为 0，故不能这么写
 //     for(int i = head[u]; i; i = e[i].next)
 //     {
 //         int v = e[i].to, w = e[i].w;
@@ -9377,6 +9377,142 @@ O(log2n * n) = O(nlogn)
 //     cout << ans << '\n';
 //     return 0;
 // }
+
+
+
+//6. 二叉苹果树（树形01背包）
+// #include <bits/stdc++.h>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// const int N = 1e3 + 10, inf = 0x3f3f3f3f;
+// struct Edge{
+//     int to, next, w;
+//     Edge(int a = 0, int b = 0, int c = 0) { to = a, next = b, w = c;}
+// }e[N << 1];
+// int n, m, root = 1, cnt = 1;
+// int head[N], dp[N][N], ans = 0;
+// void addedge(int u, int v, int w)
+// {
+//     e[cnt] = Edge(v, head[u], w);
+//     head[u] = cnt ++;
+// }
+// void dfs(int u, int fa = -1)
+// {
+//     for(int i = head[u]; i; i = e[i].next)
+//     {
+//         int v = e[i].to, w = e[i].w;
+//         if(v == fa) continue;
+//         dfs(v, u);//自底向上更新dp
+//         for(int j = m; j >= 1; --j)//枚举容量 j
+//         {
+//             for(int k = 0; k < j; ++k)//枚举留给子结点的容量（u 自己用 1 个单位容量，故 v 最大剩余容量 j - 1）
+//             {
+//                 dp[u][j] = max(dp[u][j], dp[v][k] + dp[u][j - k - 1] + w);
+//                 //注意结点 u 容量为 j 时，消耗容量 k 给子节点的同时，u -> v 也有一条边需要消耗，故转移的状态为 dp[u][j - k - 1]
+//             }
+//         }
+//     }
+// }
+// int main()
+// {   
+//     untie();
+//     cin >> n >> m;
+//     for(int i = 1; i < n; ++i)
+//     {
+//         int u, v, w;
+//         cin >> u >> v >> w;
+//         addedge(u, v, w);
+//         addedge(v, u, w);
+//     }
+//     dfs(root);
+//     cout << dp[root][m];
+//     return 0;
+// }
+
+
+
+//7.选课
+// 题意：有 n 门课，第 i 门课的学分是 Si。每门课有一门或没有先修课，有则需要上了先修课才能上这门课。现要选 m 门课，使得学分总和最大。
+// 思路：题目相当于给一个可能有多个入度为0的根节点即有多个不连通的树构成森林，故添加超级源点 0 连通那些没有先修课的课，连接起孤立的树。
+// 定义 dp[u][j] 为选中结点 u 的 j 个子节点的最大价值（即不包括 u）
+// #include <bits/stdc++.h>
+// using namespace std;
+// const int N = 400, inf = 0x3f3f3f3f;
+// int n, m, dp[N][N];
+// vector<int> G[N];
+// void dfs(int u)
+// {
+//     for(int v : G[u])
+//     {
+//         dfs(v);//自底向上
+//         for(int j = m; j >= 1; --j)//至少选一门 v
+//         {
+//             for(int k = 0; k < j; ++k)//分配给子节点
+//             {
+//                 dp[u][j] = max(dp[u][j], dp[v][k] + dp[u][j - k]);//dp[u][j] 不包括结点 u 本身，即相当于只选了 v 的子树 k，只用 j - k 即可
+//             }
+//         }
+//     }
+// }
+// int main()
+// {
+//     cin >> n >> m;
+//     ++m;//由于加入了源点 0，至少需要选点 0
+//     for(int v = 1, u; v <= n; ++v)
+//     {
+//         cin >> u >> dp[v][1];//直接初始化选 v 时的价值
+//         G[u].push_back(v);
+//     }
+//     dfs(0);
+//     cout << dp[0][m] << '\n';
+//     return 0;
+// }
+
+
+
+//8.有线电视网（树上分组背包）
+//定义 dp[u][j] 为以 u 为根的子树里满足 j 个客户需求所能获得的最大收益。最终答案即 dp[1][j] >= 0 的最大的 j 值。
+
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 3e3 + 100;
+struct Edge{
+    int to, w;
+    Edge(int a = 0, int b = 0) { to = a, w = b;}
+};
+int n, m, root = 1, cnt = 1;
+int money[N], dp[N][N];
+vector<Edge> g[N];
+
+int main()
+{
+    cin >> n >> m;
+    for(int u = 1; u <= n - m; ++u)
+    {
+        int h, v, w;
+        cin >> h;
+        while(h--)
+        {
+            cin >> v >> w;
+            g[u].push_back(Edge(v, w));
+        }
+    }
+    for(int i = 1; i <= m; ++i)
+    {
+        cin >> money[i];
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
