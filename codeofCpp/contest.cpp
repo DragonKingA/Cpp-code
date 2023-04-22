@@ -220,7 +220,35 @@ int main()
 
 
 
-
+#include <bits/stdc++.h>
+using namespace std;
+int t;
+string s;
+int main()
+{
+    cin >> t;
+    while(t--)
+    {
+        cin >> s;
+        int cnt = 0;
+        for(auto ch : s) cnt += (ch == '?');
+        if(s[0] == '0')
+        {
+            cout << "0\n";
+            continue;
+        }
+        if(cnt == 0)
+        {
+            cout << "1\n";
+            continue;
+        }
+        long long ans = 1;
+        if(s[0] == '?') cnt--, ans = 9;
+        for(int i = 1; i <= cnt; ++i) ans *= 10;
+        cout << ans << '\n';
+    }
+    return 0;
+}
 
 
 
