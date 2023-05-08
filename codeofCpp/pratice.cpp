@@ -9472,37 +9472,39 @@ O(log2n * n) = O(nlogn)
 
 //8.有线电视网（树上分组背包）
 //定义 dp[u][j] 为以 u 为根的子树里满足 j 个客户需求所能获得的最大收益。最终答案即 dp[1][j] >= 0 的最大的 j 值。
+//未完成
+// #include <bits/stdc++.h>
+// using namespace std;
+// const int N = 3e3 + 100;
+// struct Edge{
+//     int to, w;
+//     Edge(int a = 0, int b = 0) { to = a, w = b;}
+// };
+// int n, m, root = 1, cnt = 1;
+// int money[N], dp[N][N];
+// vector<Edge> g[N];
 
-#include <bits/stdc++.h>
-using namespace std;
-const int N = 3e3 + 100;
-struct Edge{
-    int to, w;
-    Edge(int a = 0, int b = 0) { to = a, w = b;}
-};
-int n, m, root = 1, cnt = 1;
-int money[N], dp[N][N];
-vector<Edge> g[N];
+// int main()
+// {
+//     cin >> n >> m;
+//     for(int u = 1; u <= n - m; ++u)
+//     {
+//         int h, v, w;
+//         cin >> h;
+//         while(h--)
+//         {
+//             cin >> v >> w;
+//             g[u].push_back(Edge(v, w));
+//         }
+//     }
+//     for(int i = 1; i <= m; ++i)
+//     {
+//         cin >> money[i];
+//     }
+//     return 0;
+// }
 
-int main()
-{
-    cin >> n >> m;
-    for(int u = 1; u <= n - m; ++u)
-    {
-        int h, v, w;
-        cin >> h;
-        while(h--)
-        {
-            cin >> v >> w;
-            g[u].push_back(Edge(v, w));
-        }
-    }
-    for(int i = 1; i <= m; ++i)
-    {
-        cin >> money[i];
-    }
-    return 0;
-}
+
 
 
 
@@ -18381,6 +18383,168 @@ int main()
 //     }
 //     return 0;
 // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*十八、 树上问题基础*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

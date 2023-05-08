@@ -178,6 +178,7 @@ int main()
 
     return 0;
 }
+
 */
 /*
 多样例模板
@@ -220,35 +221,276 @@ int main()
 
 
 
-#include <bits/stdc++.h>
-using namespace std;
-int t;
-string s;
-int main()
-{
-    cin >> t;
-    while(t--)
-    {
-        cin >> s;
-        int cnt = 0;
-        for(auto ch : s) cnt += (ch == '?');
-        if(s[0] == '0')
-        {
-            cout << "0\n";
-            continue;
-        }
-        if(cnt == 0)
-        {
-            cout << "1\n";
-            continue;
-        }
-        long long ans = 1;
-        if(s[0] == '?') cnt--, ans = 9;
-        for(int i = 1; i <= cnt; ++i) ans *= 10;
-        cout << ans << '\n';
-    }
-    return 0;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// #include <iostream>
+// #include <algorithm>
+// #include <cstring>
+// using namespace std;
+// const int N = 2e4 + 100, M = 1e4;
+// int n;
+// int s[N][N];
+// int main()
+// {
+//     int x0, y0;
+//     cin >> n >> x0 >> y0;
+//     x0 += M, y0 += M;
+//     for(int i = 0; i < n; ++i)
+//     {
+//         int x1, y1, x2, y2;
+//         cin >> x1 >> y1 >> x2 >> y2;
+//         x1 += M, y1 += M, x2 += M, y2 += M;
+//         s[x1][y1] += 1;
+//         s[x2 + 1][y1] -= 1;
+//         s[x1][y2 + 1] -= 1;
+//         s[x2 + 1][y2 + 1] += 1;
+//     }
+//     for(int x = M; x <= x0; ++x)
+//     {
+//         for(int y = M; y <= y0; ++y)
+//         {
+//             s[x][y] += s[x - 1][y] + s[x][y - 1] - s[x - 1][y - 1];
+//             // cout << s[x][y] << ' ';
+//         }
+//         // cout << '\n';
+//     }
+//     cout << (s[x0][y0] - s[x0][M - 1] - s[M - 1][y0] + s[M - 1][M - 1]) << '\n';
+//     return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// #include <bits/stdc++.h>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define ll long long
+// const int N = 10000;
+// int q;
+// struct nd{
+//     int id, a, b;
+//     bool operator<(const nd &x) const{
+//         if(a == x.a) 
+//         {
+//             if(b == x.b) return id < x.id;
+//             return b < x.b;
+//         }
+//         return a < x.a;
+//     }
+// }qq[N];
+// int a[N], b[N];
+// int main()
+// {
+//     untie();
+//     int t, n;
+//     cin >> q;
+//     while(q--)
+//     {
+//         cin >> n >> t;
+//         for(int i = 1; i <= n; ++i) 
+//         {
+//             cin >> a[i];
+//         }
+//         for(int i = 1; i <= n; ++i) 
+//         {
+//             cin >> b[i];
+//         }
+//         for(int i = 1; i <= n; ++i) 
+//         {
+//             nd now;
+//             now.id = i;
+//             now.a = a[i] + i - 1;
+//             now.b = b[i];
+//             qq[i] = now;
+//         }
+//         sort(qq + 1, qq + n + 1);
+//         int ans = -1, tp = 0;
+//         for(int i = 1; i <= n; ++i)
+//         {
+//             if(qq[i].a <= t && qq[i].b > tp)
+//             {
+//                 ans = qq[i].id;
+//                 tp = qq[i].b;
+//             }
+//             else if(qq[i].a > t)
+//                 break;
+//         }
+//         cout << ans << '\n';
+//     }
+
+
+
+
+//     return 0;
+// }
+
+
+
+
+
+// #include <bits/stdc++.h>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define ll long long
+// const int N = 2e5 + 50;
+// int t;
+// ll n;
+// int main()
+// {
+//     untie();
+//     cin >> t;
+//     while(t--)
+//     {
+//         cin >> n;
+//         cout << n * (n + 2) + 2LL << '\n';
+//     }
+//     return 0;
+// }
+
+
+
+//D. Super-Permutation （数学）
+//如果 n 是奇数，则它们的和 Bn = n * (n + 1) / 2 可被 n 整除，此时有 Bn % n + 1 == 1，即数 1 已被使用：
+//  再分情况讨论 n 的位置（n 的特殊性在于题目余数为 n）：
+//      若 n 置于中间或结尾 Bi 处，则 Bi-1 必然等于 Bi，因为 Bi = (Bi-1 + n) % n = Bi-1 即 Bi + 1 == Bi-1 + 1，故不符合条件
+//      若 n 置于开头处 B1，此时 B1 + 1 == n % n + 1 == 1，则 1 重复出现，故不符合条件
+//  综上，n 为奇数是恒不符合条件，输出 -1
+//如果 n 是偶数，由上文知无论 n 的奇偶性如何，n 必不能置于中间或结尾，故此时 n 只能置于开头，并占用数 1
+//  现讨论如何使 bi % n 不重复
+//  取模 n 后数集区间 [0, n - 1] 的左右界 l = 0, r = n - 1
+// #include <bits/stdc++.h>
+// using namespace std;
+// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
+// #define ll long long
+// const int N = 2e5 + 50;
+// int t; ll n;
+// ll a[N];
+// int main()
+// {
+//     untie();
+//     cin >> t;
+//     while(t--)
+//     {
+//         cin >> n;
+//         if(n == 1) cout << "1\n";
+//         else if(n & 1) cout << "-1\n";
+//         else
+//         {
+//             a[0] = n;
+//             for(int i = 1; i < n; ++i)
+//             {
+//                 a[i] = n - i;
+//                 if(a[i] % 2 == 0) a[i] = n - a[i];
+//             }
+//             for(int i = 0; i < n; ++i) cout << a[i] << ' ';
+//             cout << '\n';
+//         }
+//     }
+//     return 0;
+// }
+
+
+/*
+差分》？？？
+6  5  4 3  2  1
+6 11 15 18 20 21
+
+1 2 6 3  4 5
+1 3 9 12 16 21
+
+6  5  2 3  4  1
+6 11 13 16 20 21
+
+8  7  6  5  4  3  2  1
+8 15 21 26 30 33 35 36
+
+7 6 5 4 3 1 2
+7 13 18 22 25 26 28
+1 7  5  2  
+
+1 2 3 4 6 5
+1 3 6 10 16 21
+2 4 1 5
+
+1 2 3 4 5 6
+1 3 6 10 15 21
+         4  
+
+6 1  4  3  2  5
+6 7 11 14 16 21
+0 1 5  2   4  3
+
+
+1 2 6  3   5  4
+
+x % 6
+n - 1 = 5
+0 1 2 3 4 5
+*/
+
+
 
 
 
