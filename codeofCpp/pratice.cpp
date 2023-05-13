@@ -18426,6 +18426,16 @@ int main()
 
 
 /*十八、 树上问题基础*/
+//树的直径
+//模板
+//1.两次dfs：
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 1e4 + 10;
+
+
+
+//2.树形dp：
 
 
 
@@ -18433,8 +18443,7 @@ int main()
 
 
 
-
-
+//1. P3304 [SDOI2013]直径
 
 
 

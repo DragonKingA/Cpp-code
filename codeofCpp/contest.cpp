@@ -1,6 +1,6 @@
 /*
-//ģ��
-//���鼯��
+//模板
+//并查集：
 #include <cstdio>
 #include <iostream>
 using namespace std;
@@ -12,9 +12,9 @@ void merge_set(int x, int y){ if((x = find_set(x)) != (y = find_set(y))) ds[x] =
 
 
 
-//��άǰ׺��
-//�洢��ʽ��sum[i][j] =  sum[i-1][j] + sum[i][j-1] - sum[i-1][j-1] + arr[i][j]
-// ��ȡ��ʽ��res = sum[x2][y2] - sum[x2][y1-1] - sum[x1-1][y2] + sum[x1-1][y1-1]
+//二维前缀和
+//存储公式：sum[i][j] =  sum[i-1][j] + sum[i][j-1] - sum[i-1][j-1] + arr[i][j]
+// 读取公式：res = sum[x2][y2] - sum[x2][y1-1] - sum[x1-1][y2] + sum[x1-1][y1-1]
 #include <iostream>
 using namespace std;
 const int N = ;
@@ -22,12 +22,12 @@ int arr[N][N];
 int sum[N][N];
 int main()
 {       
-    int x1,x2,y1,y2;//����ķ�Χ
-    //��ʼ������
+    int x1,x2,y1,y2;//待求的范围
+    //初始化数列
     for(int i=1;i<=N-1;i++) 
         for(int j=1;j<=N-1;j++)
             arr[i][j]=i+j;
-    //ǰ׺�Ͳ���(ʵ���Ͽ��Ա߶�ȡarr���������߽�����Ͳ���)
+    //前缀和操作(实际上可以边读取arr数列数，边进行求和操作)
     for(int i=1;i<=N-1;i++) 
         for(int j=1;j<=N-1;j++)
             sum[i][j] +=  sum[i-1][j] + sum[i][j-1] - sum[i-1][j-1] + arr[i][j];//sum[0][0]=0
@@ -42,7 +42,7 @@ int main()
 
 
 
-//��ά���
+//二维差分
 #include<iostream>
 #include<cstdio>
 using namespace std;
@@ -64,24 +64,24 @@ int main()
             cin >> a[i][j];
     for (int i = 1; i <= n; i++)
         for (int j = 1; j <= m; j++)
-            insert(i, j, i, j, a[i][j]);      //�����������
+            insert(i, j, i, j, a[i][j]);      //构建差分数组
     while (q--)
     {
         int x1, y1, x2, y2, c;
         cin >> x1 >> y1 >> x2 >> y2 >> c;
-        insert(x1, y1, x2, y2, c);          //��ֲ���
+        insert(x1, y1, x2, y2, c);          //差分操作
     }
     for (int i = 1; i <= n; i++)
         for (int j = 1; j <= m; j++)
-            b[i][j] += b[i - 1][j] + b[i][j - 1] - b[i - 1][j - 1];  //תΪ��άǰ׺��
+            b[i][j] += b[i - 1][j] + b[i][j - 1] - b[i - 1][j - 1];  //转为二维前缀和
     return 0;
 }
 
 
 
-//������
-//base ������index ָ��
-//�������������ݣ�
+//快速幂
+//base 底数；index 指数
+//线性整数快速幂：
 typedef long long ntype;
 ntype mod = ;
 ntype quick_pow(ll base, ntype index)
@@ -94,10 +94,10 @@ ntype quick_pow(ll base, ntype index)
     }
     return ans;
 }
-//��������ݣ�
+//矩阵快速幂：
 #include <cstdio>
 typedef long long ntype;
-const ntype mod = , N = ;//���� N ָ�����α߳���n ָʵ�ʾ��α߳�
+const ntype mod = , N = ;//这里 N 指最大矩形边长，n 指实际矩形边长
 ntype n, k;
 struct matrix{
     ntype mat[N][N];
@@ -181,7 +181,7 @@ int main()
 
 */
 /*
-������ģ��
+多样例模板
 
 #include <iostream>
 #include <cstdio>
@@ -217,6 +217,16 @@ int main()
 }
 
 */
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -411,15 +421,15 @@ int main()
 
 
 
-//D. Super-Permutation ����ѧ��
-//��� n �������������ǵĺ� Bn = n * (n + 1) / 2 �ɱ� n ��������ʱ�� Bn % n + 1 == 1������ 1 �ѱ�ʹ�ã�
-//  �ٷ�������� n ��λ�ã�n ��������������Ŀ����Ϊ n����
-//      �� n �����м���β Bi ������ Bi-1 ��Ȼ���� Bi����Ϊ Bi = (Bi-1 + n) % n = Bi-1 �� Bi + 1 == Bi-1 + 1���ʲ���������
-//      �� n ���ڿ�ͷ�� B1����ʱ B1 + 1 == n % n + 1 == 1���� 1 �ظ����֣��ʲ���������
-//  ���ϣ�n Ϊ�����Ǻ㲻������������� -1
-//��� n ��ż����������֪���� n ����ż����Σ�n �ز��������м���β���ʴ�ʱ n ֻ�����ڿ�ͷ����ռ���� 1
-//  ���������ʹ bi % n ���ظ�
-//  ȡģ n ���������� [0, n - 1] �����ҽ� l = 0, r = n - 1
+//D. Super-Permutation （数学）
+//如果 n 是奇数，则它们的和 Bn = n * (n + 1) / 2 可被 n 整除，此时有 Bn % n + 1 == 1，即数 1 已被使用：
+//  再分情况讨论 n 的位置（n 的特殊性在于题目余数为 n）：
+//      若 n 置于中间或结尾 Bi 处，则 Bi-1 必然等于 Bi，因为 Bi = (Bi-1 + n) % n = Bi-1 即 Bi + 1 == Bi-1 + 1，故不符合条件
+//      若 n 置于开头处 B1，此时 B1 + 1 == n % n + 1 == 1，则 1 重复出现，故不符合条件
+//  综上，n 为奇数是恒不符合条件，输出 -1
+//如果 n 是偶数，由上文知无论 n 的奇偶性如何，n 必不能置于中间或结尾，故此时 n 只能置于开头，并占用数 1
+//  现讨论如何使 bi % n 不重复
+//  取模 n 后数集区间 [0, n - 1] 的左右界 l = 0, r = n - 1
 // #include <bits/stdc++.h>
 // using namespace std;
 // #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
@@ -453,7 +463,7 @@ int main()
 
 
 /*
-��֡�������
+差分》？？？
 6  5  4 3  2  1
 6 11 15 18 20 21
 
@@ -519,9 +529,9 @@ n - 1 = 5
 
 
 
-//����ʡ��ʮ�˽��ѧ�������������ƾ���
+//湖南省第十八届大学生计算机程序设计竞赛
 //I
-//bitset ����Ȩֵ����ʱ����ͳ���������������Ĵ����Ը���ʱ������
+//bitset 用于权值数组时，在统计两个整体间的数的存在性个数时有优势
 // #include <cstdio>
 // #include <iostream>
 // #include <algorithm>
@@ -556,19 +566,19 @@ n - 1 = 5
 //             a1.reset(), a2.reset();
 //             for(int i = 1; i <= n; ++i)
 //             {
-//                 if(q[i][x])//a1 ͳ���� x �ļ��ϵ����Ĵ�����
+//                 if(q[i][x])//a1 统计有 x 的集合的数的存在性
 //                 {
 //                     a1 |= q[i];
 //                 }
-//                 if(q[i][y])//a2 ͳ���� y �ļ��ϵ����Ĵ�����
+//                 if(q[i][y])//a2 统计有 y 的集合的数的存在性
 //                 {
 //                     a2 |= q[i];
 //                 }
 //             }
-//             //�����߹��ֵ����ĸ���
+//             //求两者共现的数的个数
 //             a1 &= a2;
 //             long long ans = a1.count();
-//             //ȥ�� x �� y
+//             //去除 x 和 y
 //             if(a1[x]) --ans;
 //             if(a1[y]) --ans;
 //             cout << ans << '\n';                
@@ -609,7 +619,7 @@ n - 1 = 5
 //         if(s[i] == s[j]) ++j;
 //         lps[i] = j;
 
-//         num[i + 1] = num[j] + j;//num[i] ��ʾǰ i ���ַ�
+//         num[i + 1] = num[j] + j;//num[i] 表示前 i 个字符
 //         ans += num[i + 1];
 
 //         test(i + 1);
@@ -647,7 +657,7 @@ n - 1 = 5
 
 
 //D
-//δ���
+//未完成
 // #include <iostream>
 // #include <cstdio>
 // #include <algorithm>
@@ -974,7 +984,7 @@ n - 1 = 5
 
 
 //B
-//��͹�ʽ + ���ִ�
+//求和公式 + 二分答案
 // #include <iostream>
 // #include <cstdio>
 // #include <algorithm>
@@ -1026,9 +1036,9 @@ n - 1 = 5
 //     }
 //     return 0;
 // }
-//���õĶ���
-//һ�� x * x ���������ʱ 1 * 1 ���������һ���㣩��ʾ�����������е�ĸ������ʴ�����͹�ʽ
-//ע���������
+//更好的二分
+//一块 x * x 的面积（此时 1 * 1 的面积代表一个点）表示正方形内所有点的个数，故代替求和公式
+//注意二分条件
 // #include <iostream>
 // #include <cstdio>
 // #include <algorithm>
@@ -1045,7 +1055,7 @@ n - 1 = 5
 //     {
 //         ll n;
 //         cin >> n;
-//         ll l = -1, r = 1e9;//���ִ���Ϊ r��r �� [0, 1e9)  �� l �� [-1, 1e9)
+//         ll l = -1, r = 1e9;//二分答案设为 r，r ∈ [0, 1e9)  则 l ∈ [-1, 1e9)
 //         while(r - l > 1)
 //         {
 //             ll mid = l + r >> 1;
@@ -1260,7 +1270,7 @@ n - 1 = 5
 
 //edu Round 144
 //A
-//�仯����Ϊ 8����"FBFFBFFB"��ѯ�ʵ��Ӵ��Ϊ10���ʴ��ڿ�Խ3�����ڵĿ��ܣ���ô�������ַ�����Ϊ24λ���ɣ���"FBFFBFFBFBFFBFFBFBFFBFFB"��
+//变化周期为 8，即"FBFFBFFB"，询问的子串最长为10，故存在跨越3个周期的可能，那么将周期字符串定为24位即可（即"FBFFBFFBFBFFBFFBFBFFBFFB"）
 // #include <iostream>
 // #include <cstdio>
 // #include <algorithm>
@@ -1826,7 +1836,7 @@ n - 1 = 5
 
 
 //F
-//δ���
+//未完成
 // #include <iostream>
 // #include <cstdio>
 // #include <algorithm>
@@ -2403,11 +2413,11 @@ n - 1 = 5
 
 
 
-//E (˼ά �� DP)
+//E (思维 或 DP)
 //dp
-//���� dp[i][0] Ϊ�� i �������ͣ���ǰ����ת����dp[i][1] Ϊ��ǰ��ת������ 
-//����ת��ֱ�Ӽ̳����� 1 ~ i-1 ��״̬�� dp[i][0] =  a[i] + max(dp[i - 1][0], dp[i - 1][1]);
-//��ת����ֵ ��ȥ��ת���ֵ �� ����a[i - 1]ԭ�����Ƿ�ı䣨dp[i-1][1]˵���ı�����ʷ���ȡ��,�� dp[i][1] = -a[i] + max(dp[i - 1][0] - 2 * a[i - 1], dp[i - 1][1] + 2 * a[i - 1]);
+//定义 dp[i][0] 为到 i 处的最大和（当前不翻转），dp[i][1] 为当前翻转后最大和 
+//不翻转则直接继承最大的 1 ~ i-1 的状态即 dp[i][0] =  a[i] + max(dp[i - 1][0], dp[i - 1][1]);
+//翻转，和值 减去翻转后差值 并 讨论a[i - 1]原符号是否改变（dp[i-1][1]说明改变过，故符号取反,即 dp[i][1] = -a[i] + max(dp[i - 1][0] - 2 * a[i - 1], dp[i - 1][1] + 2 * a[i - 1]);
 // #include <iostream>
 // #include <cstdio>
 // #include <algorithm>
@@ -2434,19 +2444,19 @@ n - 1 = 5
 //         dp[2][0] = a[1] + a[2], dp[2][1] = -dp[2][0];
 //         for(int i = 3; i <= n; i++)
 //         {
-//             dp[i][0] =  a[i] + max(dp[i - 1][0], dp[i - 1][1]);                              //����ת��ֱ�Ӽ̳����� 1 ~ i-1 ��״̬
-//             dp[i][1] = -1LL * a[i] + max(dp[i - 1][0] - 2LL * a[i - 1], dp[i - 1][1] + 2LL * a[i - 1]);//��ת����ֵ ��ȥ��ת���ֵ �� ����a[i - 1]ԭ�����Ƿ�ı䣨dp[i-1][1]˵���ı�����ʷ���ȡ����
+//             dp[i][0] =  a[i] + max(dp[i - 1][0], dp[i - 1][1]);                              //不翻转则直接继承最大的 1 ~ i-1 的状态
+//             dp[i][1] = -1LL * a[i] + max(dp[i - 1][0] - 2LL * a[i - 1], dp[i - 1][1] + 2LL * a[i - 1]);//翻转，和值 减去翻转后差值 并 讨论a[i - 1]原符号是否改变（dp[i-1][1]说明改变过，故符号取反）
 //         }
 //         cout << max(dp[n][0], dp[n][1]) << "\n";
 //     }
 //     return 0;
 // }
-//˼ά - ת������
-//���Է���,��ת������Ԫ�صķ���,�Ҳ����ƴ���,��ʵ�Ϳ��Է�ת������ ��������Ԫ�� �ķ���(ֻҪ��������һ��Ԫ���ڼ�һֱ��ת)
-//��ֻ��Ҫ�����������,һ��ת���ɽ����и����������
-//�������������������: ż����(ֱ���������) �� ������(��ʣ��һ������û���,��ôֻ��Ҫ��ת���������� ����ֵ��С�� �� ʣ��������) 
-//����������ʱ,���һ�������ķ�ת���Ӧ�� ��ת���������� ����ֵ��С����,������ֵ��С�����Լ�,����������ת
-//�� -4 -5 -6 1 2 3, ���Ӧ�����һ������ �� 1 ���
+//思维 - 转换问题
+//可以发现,翻转相邻两元素的符号,且不限制次数,其实就可以翻转数组内 任意两个元素 的符号(只要遍历到另一个元素期间一直翻转)
+//故只需要负数两两配对,一起翻转即可将所有负数变成正数
+//按负数个数分两种情况: 偶数个(直接两两配对) 和 奇数个(会剩下一个奇数没配对,那么只需要将转正后数组中 绝对值最小的 数 剩下来即可) 
+//奇数个负数时,最后一个负数的翻转配对应该 是转正后数组中 绝对值最小的数,若绝对值最小是它自己,则它放弃翻转
+//如 -4 -5 -6 1 2 3, 最后应将最后一个负数 与 1 配对
 // #include <iostream>
 // #include <cstdio>
 // #include <algorithm>
@@ -2487,9 +2497,9 @@ n - 1 = 5
 
 
 
-//F (��������� - ��״���� \ �߶���)
-//������ 99999999 �仯һ�κ�Ϊ 72 ,���κ�Ϊ 9,���ܱ仯����������2����
-//ֻ��Ҫά�������ڲ���������,�� ai ʱ���仯�������㼴��,������cnt[i]��¼��i��Ԫ�ر仯����
+//F (区间和问题 - 树状数组 \ 线段树)
+//最大的数 99999999 变化一次后为 72 ,两次后为 9,故总变化次数不超过2两次
+//只需要维护区间内操作次数和,求 ai 时按变化次数计算即可,这里用cnt[i]记录第i个元素变化次数
 // #include <iostream>
 // #include <cstdio>
 // #include <algorithm>
@@ -2545,9 +2555,9 @@ n - 1 = 5
 //             {
 //                 cin >> x;
 //                 ll tmp = query(x), ans = a[x];
-//                 for(int i = cnt[x]; i < tmp && a[x] > 9; i++)//��ֹ�ظ����� �� ��Ч����
+//                 for(int i = cnt[x]; i < tmp && a[x] > 9; i++)//防止重复计算 和 无效计算
 //                 {
-//                     a[x] = cal(a[x]);//�仯ֱ��Ӧ�õ�ԭ������
+//                     a[x] = cal(a[x]);//变化直接应用到原数组上
 //                 }
 //                 cnt[x] = tmp;
 //                 cout << a[x] << '\n';
@@ -2992,9 +3002,9 @@ blue - 3 - red
 
 
 
-//2018�궫��ũҵ��ѧ����У������������
+//2018年东北农业大学春季校赛（重现赛）
 
-//F��M ǩ��
+//F、M 签到
 
 //B
 //1
@@ -3188,9 +3198,9 @@ blue - 3 - red
 
 
 //E
-//�� n �Ľ׳˵�ĩβ�м���0����׺0����sum��
-//���� n! ������֪��Ҫ������׺0����С�׳�ʱ 5!����Ϊ������ 5 * 2 = 10 ������ӣ�����ÿ��һ�� 5! �Ͷ�һ����׺0
-//ÿ�ξ� sum += n / 5, n /= 5 ���õ�sum���� 5! �ĸ��� �� 5*2 = 10 �ĸ��� Ҳ����׺0�ĸ���
+//求 n 的阶乘的末尾有几个0（后缀0个数sum）
+//对于 n! ，容易知道要产生后缀0的最小阶乘时 5!，因为它包含 5 * 2 = 10 这个因子，所以每有一个 5! 就多一个后缀0
+//每次就 sum += n / 5, n /= 5 最后得到sum就是 5! 的个数 即 5*2 = 10 的个数 也即后缀0的个数
 
 
 
@@ -3219,7 +3229,7 @@ blue - 3 - red
 // int n, k, cx, cy, ans = 1e9;
 // int dir[4][2] = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
 // string mp[N];
-// bool vis[3][N][N];//vis[step][x][y] �ò�ͬ��ʽ�߹��ĵ� ������ ״̬
+// bool vis[3][N][N];//vis[step][x][y] 用不同方式走过的点 不共用 状态
 
 // void bfs(int sx, int sy)
 // {
@@ -3304,7 +3314,7 @@ blue - 3 - red
 //     int x, y, t;
 //     nd(int a = 0, int b = 0, int c = 0) { x = a, y = b, t = c;}
 // };
-// int bfs(int sx, int sy, int step, int c)//0��c��1��X
+// int bfs(int sx, int sy, int step, int c)//0求到c，1求到X
 // {
 //     memset(vis, 0, sizeof(vis));
 //     vis[sx][sy] = 1;
@@ -3360,7 +3370,7 @@ blue - 3 - red
 //                 else if(mp[i][j] == 'C') car.push_back(make_pair(i, j));
 //             }
 //         }
-//         int t1 = bfs(sx, sy, 2, -1);//������ȥx
+//         int t1 = bfs(sx, sy, 2, -1);//正常走去x
 //         int mint = t1, d, t2;
 //         if(!car.empty())
 //         {
@@ -3368,7 +3378,7 @@ blue - 3 - red
 //             {
 //                 mint = min(bfs(sx, sy, 2, i) + bfs(car[i].first, car[i].second, 1, -1), mint);
 //             }
-//             // d = bfs(sx, sy, 2, 0);//�ȵ���
+//             // d = bfs(sx, sy, 2, 0);//先到车
 //             // cx = car[0].first, cy = car[0].second;
 //             // for(int i = 1; i < car.size(); i++)
 //             // {
@@ -3379,7 +3389,7 @@ blue - 3 - red
 //             //         d = res;
 //             //     }
 //             // }
-//             // t2 = bfs(cx, cy, 1, -1);//����x
+//             // t2 = bfs(cx, cy, 1, -1);//车到x
 //             // mint = min(t1, d + t2);
 //         }
         
@@ -3391,8 +3401,8 @@ blue - 3 - red
 
 
 //I
-//���� ��λ��ֵx
-//�����ж�ʽ���Ƶ���sum = ��v / ��w >= x  --->  sum = ��v - x * ��w >= 0 ---> ������˵�
+//二分 单位价值x
+//二分判断式子推导：sum = Σv / Σw >= x  --->  sum = Σv - x * Σw >= 0 ---> 收束左端点
 // #include <cstdio>
 // #include <algorithm>
 // #include <iostream>
@@ -3408,7 +3418,7 @@ blue - 3 - red
 //     for(int i = 1; i <= n; i++)
 //         sum[i] = v[i] - x * w[i];
 //     sort(sum + 1, sum + 1 + n);
-//     for(int i = n; i >= n - k + 1; i--)//ѡǰk��
+//     for(int i = n; i >= n - k + 1; i--)//选前k大
 //         s += sum[i];
 //     return s >= 0;
 // }
@@ -3439,11 +3449,11 @@ blue - 3 - red
 
 
 //J
-//����dp
+//区间dp
 
 //K.
-//whileѰ�ҳ��ȡģ��ĳ���mod��ȡģ�ᵼ�º���������ں��������f[0]=0,f[1]=1����ȡģ������� f[0]==0 && f[1]==1 == 1 ʱ˵��ȡģ�����н�����һ������
-//��f[a^b] % c����� a^b ������(�� mod ȡģ)
+//while寻找初项到取模点的长度mod，取模会导致函数变成周期函数，最初f[0]=0,f[1]=1，在取模点可能有 f[0]==0 && f[1]==1 == 1 时说明取模后数列进入下一个周期
+//求f[a^b] % c，则对 a^b 快速幂(用 mod 取模)
 
 
 
@@ -3502,7 +3512,7 @@ CCX
 //ABC 292
 
 //*G Count Strictly Increasing Sequences (DP)
-//ûд
+//没写
 //dp[l][r][k][m]
 // #include <iostream>
 // #include <algorithm>
@@ -3558,7 +3568,7 @@ CCX
 
 
 
-//��ʮ�Ľ����ű�ģ�����������ڣ�
+//第十四届蓝桥杯模拟赛（第三期）
 //1.
 // #include <iostream>
 // #include <algorithm>
@@ -3741,7 +3751,7 @@ CCX
 //     }
 //     for(int i = 1; i <= n; i++)
 //         for(int j = 1; j <= m; j++)
-//             b[i][j] += b[i - 1][j] + b[i][j - 1] - b[i - 1][j - 1];  //תΪ��άǰ׺��
+//             b[i][j] += b[i - 1][j] + b[i][j - 1] - b[i - 1][j - 1];  //转为二维前缀和
 //     int sum = n * m;
 //     for(int i = 1; i <= n; i++)
 //         for(int j = 1; j <= m; j++)
