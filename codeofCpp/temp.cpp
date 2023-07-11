@@ -1,35 +1,25 @@
-// ¼òµ¥Í¼ÂÛ + dfs
 #include <bits/stdc++.h>
 using namespace std;
 #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
 #define ll long long
 #define all(v) v.begin(), v.end()
-const int N = 3e5 + 10;
-vector<int> G[N];
-ll lim[N], ans = 0;
-
-void dfs(int u, ll d = -2e9)
-{
-    d = max(d, lim[u]);
-    if(d >= 0) ++ans;
-    for(int v : G[u]) dfs(v, d - 1);
-}
-
+const int N = 200;
+int a[N];
 void Solve()
 {
-    int n, m; cin >> n >> m;
-    for(int i = 2; i <= n; ++i)
+    int n, k;
+    cin >> n >> k;
+    for(int i = 1; i <= n; ++i) cin >> a[i];
+    vector<int> v;
+    ll ans = 0;
+    for(int i = 2; i <= n; ++i) 
     {
-        int j; cin >> j;
-        G[j].push_back(i);
+        int x = abs(a[i] - a[i - 1]);
+        ans += 1LL * x;
+        v.push_back(x);
     }
-    memset(lim, -0x3f, sizeof(lim));
-    while(m--)
-    {
-        ll x, y; cin >> x >> y;
-        lim[x] = max(lim[x], y);        
-    }
-    dfs(1);
+    sort(all(v), greater<int>());
+    for(int i = 0; i < k - 1; i++) ans -= v[i];
     cout << ans << "\n";
 }
 
@@ -38,9 +28,15 @@ int main()
     untie();
     int T = 1;
     // int T = 1;
+    cin >> T;
     while(T--)
     {
         Solve();
     }
     return 0;
 }
+
+/*
+
+
+*/
