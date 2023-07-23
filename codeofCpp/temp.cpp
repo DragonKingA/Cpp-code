@@ -1,66 +1,51 @@
-// #include <bits/stdc++.h>
-// using namespace std;
-// #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-// #define ll long long
-// #define all(v) v.begin(), v.end()
-// const int N = 2e5 + 10;
-
-
-// void Solve()
-// {
-//     ll ans = 0;
-//     int n; cin >> n;
-//     map<ll, ll> xx, yy, xoy, yox;
-//     for(int i = 0; i < n; ++i)
-//     {
-//         ll x, y; cin >> x >> y;
-//         xx[x]++;
-//         yy[y]++;
-//         xoy[x + y]++;
-//         yox[x - y]++;
-//         // 两个斜方向的直线方程分别是 y = x + c1 和 y = -x + c2，则就有定值 x - y = c1 和 x + y = c2
-//         // 所以 x + y 代表斜向右上的方向且其值能具体到某条直线，x - y 则代表斜向右下
-//     }
-//     for(auto mp : {xx, yy, xoy, yox})
-//         for(auto [val, cnt] : mp)
-//             ans += cnt * (cnt - 1);
-//     cout << ans << "\n";
-// }
-
-// int main()
-// {
-//     untie();
-//     int T = 1;
-//     // int T = 100;
-//     cin >> T;
-//     while(T--)
-//     {
-//         Solve();
-//     }
-//     return 0;
-// }
-
-
 #include <bits/stdc++.h>
 using namespace std;
 #define untie() {cin.tie(0)->sync_with_stdio(false), cout.tie(0);}
-#define ll unsigned long long
+#define ll long long
 #define all(v) v.begin(), v.end()
-const int N = 2e5 + 10;
+const int N = 200 + 10;
 
+string s[N];
+bool vis[N][N][4]; // 四个方向的点状态
+int dir[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+int n, m, cnt = 0; 
+
+void dfs(int x, int y, int d)
+{
+    if(vis[x][y][0] + vis[x][y][1] + vis[x][y][2] + vis[x][y][3] == 0) ++cnt;
+    vis[x][y][d] = 1;
+    int tx = x + dir[d][0], ty = y + dir[d][1];
+    if(s[tx][ty] == '.')
+    {
+        dfs(tx, ty, d);
+    }
+    else
+    {
+        for(int i = 0; i < 4; ++i)
+        {
+            int nx = x + dir[i][0], ny = y + dir[i][1];
+            if(s[nx][ny] == '.' && !vis[nx][ny][i])
+            {
+                dfs(nx, ny, i);
+            }
+        }
+    }
+    
+}
 
 void Solve()
 {
-    int n, m; cin >> n >> m;
-
+    cin >> n >> m;
+    for(int i = 0; i < n; ++i) cin >> s[i];
+    for(int i = 0; i < 4; ++i) dfs(1, 1, i);
+    cout << cnt << "\n";
 }
 
 int main()
 {
-    untie();
+    // untie();
     int T = 1;
-    // int T = 100;
-    cin >> T;
+    // cin >> T;
     while(T--)
     {
         Solve();
