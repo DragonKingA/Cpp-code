@@ -4,33 +4,33 @@ using namespace std;
 #define ll long long
 #define all(v) v.begin(), v.end()
 const int N = 2e5 + 10;
-
+const ll mod = 998244353LL;
 
 void Solve()
 {
-    string s, t; cin >> s;
-    t = s;
-    int n = s.size();
-    for(int i = n - 1; i >= 0; --i)
+    int n;
+    string s;
+    cin >> n >> s;
+    s = ' ' + s;
+    for(int i = 1; i < n; i++)
+        if(s[i] != '1' && s[i + 1] != '1')
+            return cout << "-1\n", void();
+
+    vector<ll> dp(n + 1, 0);
+    dp[n] = 1;
+    for(int i = n - 1; i > 0; --i)
     {
-        bool ok = 0;
-        if(s[i] - '0' >= 5)
-        {
-            if(i == 0) s[i] = '0', s = "1" + s;
-            else s[i - 1]++;
-            ok = 1;
-        } 
-        if(i != 0) s[i] = '0';
-        if(ok) t = s;
+        dp[i] = dp[i + 1] + 1 + (ll)(s[i + 1] - '1') * dp[i + 1] % mod;
+        dp[i] %= mod;
     }
-    cout << t << "\n";
+    cout << (dp[1] - dp[n] + mod) % mod << "\n"; // 即 dp[1] - 1，减去 s 为初始的情况
 }
 
 int main()
 {
     untie();
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while(T--)
     {
         Solve();
