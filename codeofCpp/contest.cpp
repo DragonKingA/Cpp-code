@@ -225,9 +225,11 @@ using namespace std;
 #define all(v) v.begin(), v.end()
 const int N = 1e4;
 
+
 void Solve()
 {
     
+
 }
 
 int main()
