@@ -4,16 +4,43 @@ using namespace std;
 #define ll long long
 #define all(v) v.begin(), v.end()
 #define gcd(a, b) __gcd(a, b)
-const int N = 1e4;
+#define lcm(a, b) (a) * (b) /__gcd(a, b)
+const int N = 2e5 + 10, inf = 0x7fffffff;
+vector<int> G[N];
+int ds[N];
 
+int find_set(int x)
+{
+    return x == ds[x] ? x : (ds[x] = find_set(ds[x]));
+}
 
 void Solve()
 {
-    ll n, x, y;
-    cin >> n >> x >> y;
-    ll ct = n / lcm(x, y);
-    ll s = n * (n + 1) / 2 - (n - n / x + ct) * (n - n / x + 1 + ct) / 2 - (n / y - ct) * (n / y + 1 - ct) / 2;
-    cout << s << "\n";
+    
+    int n, a, b;
+    set<int> st;
+    cin >> n >> a >> b;
+    for(int i = 0; i <= n; ++i) ds[i] = i;
+    for(int i = 0; i <= n; ++i) G[i].clear();
+    for(int i = 0; i < n; ++i)
+    {
+        int u, v;
+        cin >> u >> v;
+        G[u].push_back(v);
+        G[v].push_back(u);
+        int fu = find_set(u), fv = find_set(v);
+        if(fu == fv) st.insert(fu);
+        else ds[fu] = fv;
+    }
+    vector<bool> vis(n + 5, 0);
+    for(int i = 1; i <= 7; ++i)
+    {
+        int fi = find_set(i);
+        if(st.find(fi) != st.end()) vis[i] = 1;
+    }
+    for(int i = 1; i <= 7; ++i)
+    cout << i << (vis[i] ? " True" : " False") << "\n";
+    if(a == b) return cout << "NO\n", void();
 }
 
 int main()
